@@ -42,15 +42,25 @@
                 border: 0;
             }
 
+            button:hover {
+                cursor: pointer;
+                background-color: rgb(135, 80, 199);
+            }
+
             .card {
                 position: absolute;
-                bottom: 0;
+                bottom: -100%;
                 left: 0;
                 width: 100%;
-                height: 76%;
+                height: 100%;
                 color: #222;
                 background-color: white;
                 border-radius: 16px 16px 0 0;
+                transition: bottom 0.5s ease;
+            }
+
+            .card.visible {
+                bottom: -25%;
             }
 
             .card .handler {
@@ -103,8 +113,8 @@
     <body>
         <h1 style="text-align: center;">Welcome to Grind Wallet</h1>
         <h2>You don't have any wallet,<br>create a new one or import an existing one<br> from the recovery pharse.</h2>
-        <button>Create account</button>
-        <button>Import account</button>
+        <button id="create-account">Create account</button>
+        <button id="import-account">Import account</button>
         <div class="card">
             <div class="handler"></div>
             <div class="x">&#10005;</div>

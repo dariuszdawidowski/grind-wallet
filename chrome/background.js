@@ -2,6 +2,5 @@
  * Background
  */
 
-chrome.runtime.onInstalled.addListener(() => {
-    console.log('Grind Wallet installed.');
-});
+// chrome.runtime.onInstalled.addListener(() => {
+// });

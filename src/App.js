@@ -46,4 +46,6 @@ window.grind = {
  * Start
  */
 
-initEvents();
+window.addEventListener('load', () => {
+    initEvents();
+});

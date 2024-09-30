@@ -44,7 +44,10 @@ export default class GrindCard {
                 this.content.append(content);
         }
 
-        this.element.classList.add('visible');
+        this.element.style.display = 'block';
+        setTimeout(() => {
+            this.element.classList.add('visible');
+        }, 10);
     }
 
     /**
@@ -53,5 +56,8 @@ export default class GrindCard {
 
     hide() {
         this.element.classList.remove('visible');
+        setTimeout(() => {
+            this.element.style.display = 'none';
+        }, 500);
     }
 }

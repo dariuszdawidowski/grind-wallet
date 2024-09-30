@@ -5,7 +5,7 @@
  *   hidded: hide at start
  */
 
-export default class GrindCard {
+export class GrindCard {
 
     constructor(args) {
 

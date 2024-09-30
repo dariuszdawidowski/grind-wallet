@@ -1,7 +1,26 @@
 # Grind Wallet
 
-Internet Computer cryptocurrency wallet as a Chrome browser plugin.
+Internet Computer cryptocurrency wallet as a browser plugin.
 Copyright (C) 2024  Dariusz Dawidowski
+
+
+## Compatibility
+
+Currently, it only works in Chrome and in browsers that support compatible extensions (like Opera).
+
+
+## Local build
+
+npm install
+npm run build
+
+
+## Local installation
+
+Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
+
+
+## License GNU GPL-3
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

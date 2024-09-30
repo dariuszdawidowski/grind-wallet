@@ -1,51 +1,34 @@
 import './popup.css';
-import GrindCard from './Card.js';
+import { App } from './Boost.js';
+import { GrindCard } from './Card.js';
+import { PageNew } from './pages/New.js';
+
 
 /**
- * Bind events
+ * Main class
  */
 
-function initEvents() {
+class GrindWalletPlugin extends App {
 
-    // Create account
-    document.querySelector('#create-account').addEventListener('click', () => {
-        grindWallet.card.show({
-            title: 'Create an account',
-            content: 'Content for the creating account...'
-        });
-    });
-
-    // Import account
-    document.querySelector('#import-account').addEventListener('click', () => {
-        grindWallet.card.show({
-            title: 'Import an account',
-            content: 'Content for the importing account...'
-        });
-    });
+    init() {
+        this.card = new GrindCard({selector: '#card', hidden: true});
+        this.pageNew = new PageNew(this);
+        this.append(this.pageNew);
+    }
 
 }
 
-/**
- * Global manager
- */
-
-const grindWallet = {
-
-    card: new GrindCard({selector: '.card', hidden: true}),
-
-};
 
 /**
  * Global interface
  */
 
-window.grind = {
-};
+// window.grind = {
+// };
+
 
 /**
  * Start
  */
 
-window.addEventListener('load', () => {
-    initEvents();
-});
+const app = new GrindWalletPlugin('#app');

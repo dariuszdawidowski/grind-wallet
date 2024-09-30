@@ -114,3 +114,20 @@ button:hover {
     font-size: 12px;
     padding: 0px 25px;
 }
+
+#card .content .form {
+    display: flex;
+    flex-direction: column;
+}
+
+#card .content .form h3 {
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+
+#card .content .form .button-description {
+    font-size: 10px;
+    text-align: center;
+    color: rgb(136, 136, 136);
+}

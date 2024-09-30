@@ -20,3 +20,16 @@ export class Button extends Component {
     }
 
 }
+
+export class ButtonDescription extends Component {
+
+    constructor(args) {
+        super(args.app);
+
+        // Build
+        this.element.classList.add('button-description');
+        this.element.innerHTML = args.text;
+
+    }
+
+}

@@ -10,7 +10,7 @@ function initEvents() {
     // Create account
     document.querySelector('#create-account').addEventListener('click', () => {
         grindWallet.card.show({
-            title: 'Create account',
+            title: 'Create an account',
             content: 'Content for the creating account...'
         });
     });
@@ -18,7 +18,7 @@ function initEvents() {
     // Import account
     document.querySelector('#import-account').addEventListener('click', () => {
         grindWallet.card.show({
-            title: 'Import account',
+            title: 'Import an account',
             content: 'Content for the importing account...'
         });
     });

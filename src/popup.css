@@ -15,6 +15,10 @@ h1 {
     margin: 1.6em;
 }
 
+h1 img {
+    margin: 20px;
+}
+
 h2 {
     width: 80%;
     margin: 1em auto;
@@ -83,8 +87,8 @@ button:hover {
     color: white;
     background-color: #333;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     display: flex;
     justify-content: center;
     align-items: center;

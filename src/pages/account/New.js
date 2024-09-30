@@ -1,5 +1,7 @@
-import { Component } from '../Boost.js';
-import { Button } from '../Button.js';
+import { Component } from '../../Boost.js';
+import { Button } from '../../Button.js';
+import { CardNewAccount } from './NewAccount.js';
+import { CardImportAccount } from './ImportAccount.js';
 
 
 export class PageNew extends Component {
@@ -30,9 +32,10 @@ export class PageNew extends Component {
             id: 'create-account',
             text: 'Create account',
             click: () => {
+                const newAccount = new CardNewAccount(app);
                 app.card.show({
-                    title: 'Create an account',
-                    content: 'Content for the creating account...'
+                    title: 'Create new account',
+                    content: newAccount.element
                 });
             }
         }));
@@ -41,9 +44,10 @@ export class PageNew extends Component {
             id: 'import-account',
             text: 'Import account',
             click: () => {
+                const importAccount = new CardImportAccount(app);
                 app.card.show({
-                    title: 'Import an account',
-                    content: 'Content for the importing account...'
+                    title: 'Import existing account',
+                    content: importAccount.element
                 });
             }
         }));

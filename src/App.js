@@ -1,7 +1,7 @@
 import './popup.css';
 import { App } from './Boost.js';
 import { GrindCard } from './Card.js';
-import { PageNew } from './pages/New.js';
+import { PageNew } from './pages/account/New.js';
 
 
 /**

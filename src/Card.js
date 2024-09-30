@@ -38,10 +38,13 @@ export class GrindCard {
 
         if (title) this.title.innerText = title;
         if (content) {
-            if (typeof(content) == 'string')
+            if (typeof(content) == 'string') {
                 this.content.innerHTML = content;
-            else if (typeof(content) == 'object')
+            }
+            else if (typeof(content) == 'object') {
+                this.content.innerHTML = '';
                 this.content.append(content);
+            }
         }
 
         this.element.style.display = 'block';

@@ -1,10 +1,11 @@
 import { Component } from '../../Boost.js';
-import { Button, ButtonDescription } from '../../Button.js';
+import { Button, ButtonDescription } from '../../widgets/Button.js';
+import { InputPhrase } from '../../widgets/Input.js';
 
 
 export class CardImportAccount extends Component {
 
-    constructor(app, args) {
+    constructor(app) {
         super(app);
 
         // Build
@@ -16,7 +17,20 @@ export class CardImportAccount extends Component {
             </h3>
         `;
 
-        // Buttons
+        // Inputs
+        this.number = 12;
+        this.inputs = [];
+        for (let nr = 1; nr < this.number; nr ++) {
+            const input = new InputPhrase({
+                app,
+                id: `phrase-${nr}`,
+                nr
+            });
+            this.inputs.push(input);
+            this.append(input);
+        }
+
+        // Button
         this.append(new Button({
             app,
             id: 'import-account-proceed',

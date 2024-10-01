@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { Button, ButtonDescription } from '../../Button.js';
+import { Button, ButtonDescription } from '../../widgets/Button.js';
 
 
 export class CardNewAccount extends Component {

@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { Button } from '../../Button.js';
+import { Button } from '../../widgets/Button.js';
 import { CardNewAccount } from './NewAccount.js';
 import { CardImportAccount } from './ImportAccount.js';
 

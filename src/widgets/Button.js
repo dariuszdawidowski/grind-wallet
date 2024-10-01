@@ -1,4 +1,4 @@
-import { Component } from './Boost.js';
+import { Component } from '../Boost.js';
 
 
 export class Button extends Component {

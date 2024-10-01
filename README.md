@@ -34,3 +34,7 @@ Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point 
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+## License for the Internet Computer logo
+
+The file in assets/IC_logo_horizontal.svg has a separate license. Please see https://dfinity.org.

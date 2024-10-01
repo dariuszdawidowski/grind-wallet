@@ -37,7 +37,15 @@ module.exports = {
                         return JSON.stringify(manifest, null, 2);
                     }
                 },
-                { from: 'src/assets/**/*.png', to: 'assets/[name][ext]' },
+                {
+                    from: 'src/assets',
+                    to: 'assets',
+                    globOptions: {
+                        ignore: [
+                            '**/card-ICP-01.svg',
+                        ]
+                    }
+                },
             ],
         }),
 

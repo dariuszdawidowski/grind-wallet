@@ -3,7 +3,7 @@ import { Button, ButtonDescription } from '../../widgets/Button.js';
 import { InputPhrase } from '../../widgets/Input.js';
 
 
-export class CardImportAccount extends Component {
+export class SheetImportAccount extends Component {
 
     constructor(app) {
         super(app);

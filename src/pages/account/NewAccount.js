@@ -2,7 +2,7 @@ import { Component } from '../../Boost.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
 
 
-export class CardNewAccount extends Component {
+export class SheetNewAccount extends Component {
 
     constructor(app, args) {
         super(app);

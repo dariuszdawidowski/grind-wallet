@@ -37,7 +37,7 @@ module.exports = {
                         return JSON.stringify(manifest, null, 2);
                     }
                 },
-                { from: 'src/assets', to: 'assets' },
+                { from: 'src/assets/**/*.png', to: 'assets/[name][ext]' },
             ],
         }),
 

@@ -47,6 +47,7 @@ button {
     color: white;
     background-color: rgb(101, 37, 179);
     border: 0;
+    transition: background-color 0.3s ease-in-out;
 }
 
 button:hover {
@@ -65,6 +66,80 @@ input.phrase {
     background-size: cover;
     border-radius: 20px;
     margin: 20px auto;
+    position: relative;
+    color: white;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    cursor: pointer;
+    box-shadow: 0 0 6px red;
+}
+
+.card .name {
+    position: absolute;
+    left: 24px;
+    top: 14px;
+    font-size: 18px;
+}
+
+.card .subname {
+    position: absolute;
+    left: 24px;
+    top: 44px;
+    font-size: 10px;
+}
+
+.card .currency {
+    position: absolute;
+    right: 24px;
+    top: 70px;
+    font-size: 10px;
+}
+
+.card .amount {
+    position: absolute;
+    right: 24px;
+    top: 85px;
+    font-size: 18px;
+}
+
+.card .account1 {
+    position: absolute;
+    left: 24px;
+    bottom: 74px;
+    font-size: 17px;
+    font-family: "Courier New";
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;
+}
+
+.card .account2 {
+    position: absolute;
+    left: 24px;
+    bottom: 58px;
+    font-size: 10px;
+    font-family: "Courier New";
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;
+}
+
+.card img.logo {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    width: 120px;
+}
+
+.card .open {
+    position: absolute;
+    right: 24px;
+    bottom: 14px;
+    font-size: 10px;
+}
+
+.card .open svg {
+    margin-bottom: -3px;
 }
 
 #bottom-sheet {

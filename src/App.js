@@ -1,6 +1,6 @@
 import './popup.css';
 import { App } from './Boost.js';
-import { GrindCard } from './widgets/Card.js';
+import { BottomSheet } from './widgets/BottomSheet.js';
 import { PageNew } from './pages/account/New.js';
 
 
@@ -11,7 +11,7 @@ import { PageNew } from './pages/account/New.js';
 class GrindWalletPlugin extends App {
 
     init() {
-        this.card = new GrindCard({selector: '#card', hidden: true});
+        this.card = new BottomSheet({selector: '#bottom-sheet', hidden: true});
         this.pageNew = new PageNew(this);
         this.append(this.pageNew);
     }

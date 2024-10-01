@@ -5,7 +5,7 @@
  *   hidded: hide at start
  */
 
-export class GrindCard {
+export class BottomSheet {
 
     constructor(args) {
 

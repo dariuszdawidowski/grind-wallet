@@ -1,6 +1,7 @@
 import { Component } from '../../Boost.js';
 import { formatCurrency } from '../../Utils.js';
 import { Button, Butticon } from '../../widgets/Button.js';
+import { SheetSendAccount } from './Send.js';
 import { SheetReceiveAccount } from './Receive.js';
 
 
@@ -28,6 +29,11 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
+                    const sendTokens = new SheetSendAccount(args);
+                    this.app.card.show({
+                        title: args.name,
+                        content: sendTokens.element
+                    });
                 }
             }),
             receive: new Butticon({

@@ -1,6 +1,48 @@
 import { Component } from '../Boost.js';
 
 
+export class InputCurrency extends Component {
+
+    constructor(args) {
+        super(args);
+
+        // Build
+        this.element.id = args.id;
+        this.element.classList.add('currency');
+
+        this.input = document.createElement('input');
+        if ('placeholder' in args) this.input.placeholder = args.placeholder;
+        this.element.append(this.input);
+
+        if ('symbol' in args) {
+            const symbol = document.createElement('div');
+            symbol.innerHTML = args.symbol;
+            this.element.append(symbol);
+        }
+
+    }
+
+}
+
+
+export class InputAccount extends Component {
+
+    constructor(args) {
+        super(args);
+
+        // Build
+        this.element.id = args.id;
+        this.element.classList.add('account');
+
+        this.input = document.createElement('input');
+        if ('placeholder' in args) this.input.placeholder = args.placeholder;
+        this.element.append(this.input);
+
+    }
+
+}
+
+
 export class InputPhrase extends Component {
 
     constructor(args) {

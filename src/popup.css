@@ -145,6 +145,43 @@ button.butticon img {
     outline: none;
 }
 
+.currency {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    margin: 20px auto;
+}
+
+.currency input {
+    color: #222;
+    text-align: right;
+    width: 200px;
+    font-size: 20px;
+    font-weight: 400;
+    border: none;
+    outline: none;
+    margin-left: 9px;
+}
+
+.account {
+    width: 100%;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.account input {
+    color: #222;
+    text-align: center;
+    width: 280px;
+    font-size: 14px;
+    font-weight: 400;
+    border: none;
+    border-bottom: 1px solid #4f4f67;
+    outline: none;
+}
+
 /* Separators */
 
 hr {

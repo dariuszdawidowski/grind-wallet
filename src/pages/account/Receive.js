@@ -1,5 +1,4 @@
 import { Component } from '../../Boost.js';
-import { formatCurrency } from '../../Utils.js';
 import { Button } from '../../widgets/Button.js';
 
 
@@ -10,7 +9,6 @@ export class SheetReceiveAccount extends Component {
 
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = '<div id="qrcode"></div>';
 
         const qr = document.createElement('div');
         qr.classList.add('qrcode');

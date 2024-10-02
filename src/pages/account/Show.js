@@ -1,6 +1,7 @@
 import { Component } from '../../Boost.js';
 import { formatCurrency } from '../../Utils.js';
 import { Button, Butticon } from '../../widgets/Button.js';
+import { SheetReceiveAccount } from './Receive.js';
 
 
 export class SheetShowAccount extends Component {
@@ -35,6 +36,11 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
+                    const receiveTokens = new SheetReceiveAccount(args);
+                    this.app.card.show({
+                        title: args.name,
+                        content: receiveTokens.element
+                    });
                 }
             }),
             swap: new Butticon({

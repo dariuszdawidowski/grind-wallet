@@ -266,6 +266,7 @@ hr {
     margin: 14px auto;
     font-size: 20px;
     border-radius: 2px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 #bottom-sheet .handler:hover {
@@ -292,6 +293,7 @@ hr {
     justify-content: center;
     align-items: center;
     font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 #bottom-sheet .x:hover {

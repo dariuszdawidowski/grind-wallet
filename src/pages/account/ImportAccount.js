@@ -1,6 +1,6 @@
 import { Component } from '../../Boost.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
-import { InputPhrase } from '../../widgets/Input.js';
+import { RecoveryPhrase } from '../../widgets/Input.js';
 
 
 export class SheetImportAccount extends Component {
@@ -17,18 +17,12 @@ export class SheetImportAccount extends Component {
             </h3>
         `;
 
-        // Inputs
-        this.number = 12;
-        this.inputs = [];
-        for (let nr = 1; nr < this.number; nr ++) {
-            const input = new InputPhrase({
-                app: args.app,
-                id: `phrase-${nr}`,
-                nr
-            });
-            this.inputs.push(input);
-            this.append(input);
-        }
+        // Recovery pharse
+        this.append(new RecoveryPhrase({
+            app: args.app,
+            id: 'import-account-recovery',
+            number: 12
+        }));
 
         // Button
         this.append(new Button({

@@ -56,7 +56,7 @@ class SheetCardAccount extends Component {
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${args.balance !== null ? formatCurrency(args.balance, 8) : 'Fetching...'}
+               ${args.balance !== null ? formatCurrency(args.balance, 8) + ' ICP' : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');

@@ -109,8 +109,36 @@ button.butticon img {
 
 /* Inputs */
 
-input.phrase {
+.recovery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px auto 30px auto;
+}
 
+.phrase {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 6px;
+}
+
+.phrase div {
+    border-bottom: 1px solid #4f4f67;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 2px;
+    width: 16px;
+}
+
+.phrase input {
+    width: 70px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-bottom: 1px solid #4f4f67;
+    margin-right: 12px;
+    outline: none;
 }
 
 /* Separators */

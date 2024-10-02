@@ -87,6 +87,7 @@ class SheetCardAccount extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Swap',
                 click: () => {
+                    chrome.tabs.create({ url: 'https://app.icpswap.com' });
                 }
             }),
             fiat: new Butticon({
@@ -95,6 +96,7 @@ class SheetCardAccount extends Component {
                 icon: '<img src="assets/material-design-icons/currency-usd.svg">',
                 text: 'Fiat',
                 click: () => {
+                    chrome.tabs.create({ url: 'https://www.coinbase.com' });
                 }
             })
         };
@@ -102,6 +104,21 @@ class SheetCardAccount extends Component {
         Object.values(this.buttons).forEach(button => {
             buttonbar.append(button.element);
         });
+
+        this.append(new Button({
+            app: args.app,
+            id: 'use-account-dashboard',
+            text: 'Show in ICP Dashboard',
+            click: () => {
+                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${args.account}` });
+            }
+        }));
+
+        // Remove
+        const remove = document.createElement('div');
+        remove.classList.add('softbutton');
+        remove.innerHTML = 'Remove this account from the list →';
+        this.element.append(remove);
 
     }
 

@@ -1,3 +1,9 @@
+/* Variables */
+:root {
+    --button-color: rgb(101, 37, 179);
+    --button-hilit: rgb(135, 80, 199);
+}
+
 /* Main structures */
 
 body {
@@ -63,14 +69,15 @@ button {
     margin: 10px auto;
     width: 300px;
     color: white;
-    background-color: rgb(101, 37, 179);
+    background-color: var(--button-color);
     border: 0;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 button:hover {
     cursor: pointer;
-    background-color: rgb(135, 80, 199);
+    background-color: var(--button-hilit);
+    transform: scale(1.03);
 }
 
 button.butticon {
@@ -85,6 +92,19 @@ button.butticon {
 
 button.butticon img {
     margin-bottom: 5px;
+}
+
+.softbutton {
+    text-align: center;
+    margin: 8px;
+    font-size: 12px;
+    transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.softbutton:hover {
+    cursor: pointer;
+    color: var(--button-hilit);
+    transform: scale(1.03);
 }
 
 /* Inputs */
@@ -114,12 +134,13 @@ hr {
     margin: 20px auto;
     position: relative;
     color: white;
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .card:hover {
     cursor: pointer;
     box-shadow: 0 0 6px rgb(135, 80, 199);
+    transform: scale(1.02);
 }
 
 .card .name {

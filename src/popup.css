@@ -1,3 +1,5 @@
+/* Main structures */
+
 body {
     width: 360px;
     height: 583px;
@@ -18,6 +20,8 @@ body {
     display: flex;
     flex-direction: column;    
 }
+
+/* Headers */
 
 h1 {
     font-size: 20px;
@@ -41,6 +45,16 @@ h2 {
     text-align: center;
 }
 
+/* Buttons */
+
+.buttonbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 button {
     width: 300px;
     height: 40px;
@@ -59,9 +73,27 @@ button:hover {
     background-color: rgb(135, 80, 199);
 }
 
+button.butticon {
+    height: 76px;
+    width: 76px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+button.butticon img {
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+
 input.phrase {
 
 }
+
+/* Separators */
 
 hr {
     width: 95%;
@@ -70,6 +102,8 @@ hr {
     background-image: linear-gradient(90deg, #6525b344, #6525b3, #6525b344);
     margin: 20px auto;
 }
+
+/* Credit card */
 
 .card {
     width: 343px;
@@ -153,6 +187,8 @@ hr {
 .card .open svg {
     margin-bottom: -4px;
 }
+
+/* Bottom sheet */
 
 #bottom-sheet {
     position: absolute;

@@ -1,6 +1,6 @@
 import { Component } from '../Boost.js';
 import { formatWithSpaces, formatCurrency } from '../Utils.js';
-import { Button } from './Button.js';
+import { Button, Butticon } from './Button.js';
 
 
 export class Card extends Component {
@@ -55,19 +55,53 @@ class SheetCardAccount extends Component {
         // Build
         this.element.classList.add('form');
         this.element.innerHTML = `
-            <h3>
-               An account
-            </h3>
+            <h1 style="margin-top: 0;">
+               ${args.balance !== null ? formatCurrency(args.balance, 8) : 'Fetching...'}
+            </h1>
         `;
+        const buttonbar = document.createElement('div');
+        buttonbar.classList.add('buttonbar');
+        this.element.append(buttonbar);
 
         // Buttons
-        this.append(new Button({
-            app: args.app,
-            id: 'create-account-proceed',
-            text: 'Proceed',
-            click: () => {
-            }
-        }));
+        this.buttons = {
+            send: new Butticon({
+                app: args.app,
+                id: 'use-account-send',
+                icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
+                text: 'Send',
+                click: () => {
+                }
+            }),
+            receive: new Butticon({
+                app: args.app,
+                id: 'use-account-receive',
+                icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
+                text: 'Receive',
+                click: () => {
+                }
+            }),
+            swap: new Butticon({
+                app: args.app,
+                id: 'use-account-swap',
+                icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
+                text: 'Swap',
+                click: () => {
+                }
+            }),
+            fiat: new Butticon({
+                app: args.app,
+                id: 'use-account-fiat',
+                icon: '<img src="assets/material-design-icons/currency-usd.svg">',
+                text: 'Fiat',
+                click: () => {
+                }
+            })
+        };
+
+        Object.values(this.buttons).forEach(button => {
+            buttonbar.append(button.element);
+        });
 
     }
 

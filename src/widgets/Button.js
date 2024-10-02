@@ -21,6 +21,21 @@ export class Button extends Component {
 
 }
 
+
+export class Butticon extends Button {
+
+    constructor(args) {
+        super({...args, create: 'button'});
+
+        // Build
+        this.element.classList.add('butticon');
+        this.element.innerHTML = args.icon + args.text;
+
+    }
+
+}
+
+
 export class ButtonDescription extends Component {
 
     constructor(args) {

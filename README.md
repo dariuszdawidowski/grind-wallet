@@ -41,7 +41,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 The file in assets/IC_logo_horizontal.svg has a separate license. Please see https://dfinity.org.
 
 
-## License for icons Pictogrammers Free License
+## License for icons
+
+Pictogrammers Free License
 
 Files in the assets/material-design-icons/* have a separate license. Please see https://pictogrammers.com/docs/general/license/.
 
@@ -55,3 +57,11 @@ for commercial projects, open-source projects, or anything really.
 Some of the icons are redistributed under the Apache 2.0 license. All other
 icons are either redistributed under their respective licenses or are
 distributed under the Apache 2.0 license.
+
+
+## License for the QR code library
+
+The file in libs/qrcode.min.js has a separate license. Please see https://davidshimjs.github.io/qrcodejs/.
+
+MIT License
+

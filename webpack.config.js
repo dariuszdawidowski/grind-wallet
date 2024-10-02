@@ -46,6 +46,10 @@ module.exports = {
                         ]
                     }
                 },
+                {
+                    from: 'src/libs',
+                    to: 'libs',
+                },
             ],
         }),
 

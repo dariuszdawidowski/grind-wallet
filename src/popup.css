@@ -241,6 +241,14 @@ hr {
     margin-bottom: -4px;
 }
 
+/* QR code */
+
+.qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+}
+
 /* Bottom sheet */
 
 #bottom-sheet {

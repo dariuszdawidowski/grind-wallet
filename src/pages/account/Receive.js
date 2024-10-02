@@ -10,7 +10,20 @@ export class SheetReceiveAccount extends Component {
 
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = 'Receive';
+        this.element.innerHTML = '<div id="qrcode"></div>';
+
+        const qr = document.createElement('div');
+        qr.classList.add('qrcode');
+        this.element.append(qr);
+
+        const qrcode = new QRCode(qr, {
+            text: args.account,
+            width: 200,
+            height: 200,
+            colorDark : '#000',
+            colorLight : '#fff',
+            correctLevel : QRCode.CorrectLevel.H
+        });
 
     }
 

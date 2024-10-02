@@ -25,6 +25,17 @@ export class SheetReceiveAccount extends Component {
             correctLevel : QRCode.CorrectLevel.H
         });
 
+        this.append(new Button({
+            app: args.app,
+            id: 'receive-account-copy',
+            text: 'Copy adress to clipboard',
+            click: () => {
+                navigator.clipboard.writeText(args.account).then(() => {
+                }).catch(err => {
+                });
+            }
+        }));
+
     }
 
 }

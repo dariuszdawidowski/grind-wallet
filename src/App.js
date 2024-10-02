@@ -12,8 +12,8 @@ class GrindWalletPlugin extends App {
 
     init() {
         this.card = new BottomSheet({selector: '#bottom-sheet', hidden: true});
-        // this.page = new PageNew(this);
-        this.page = new PageListAccounts(this);
+        // this.page = new PageNew({app: this});
+        this.page = new PageListAccounts({app: this});
         this.append(this.page);
     }
 

@@ -4,8 +4,8 @@ import { Button, ButtonDescription } from '../../widgets/Button.js';
 
 export class SheetNewAccount extends Component {
 
-    constructor(app, args) {
-        super(app);
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('form');
@@ -18,7 +18,7 @@ export class SheetNewAccount extends Component {
 
         // Buttons
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'create-account-proceed',
             text: 'Proceed',
             click: () => {
@@ -27,7 +27,7 @@ export class SheetNewAccount extends Component {
 
         // Description
         this.append(new ButtonDescription({
-            app,
+            app: args.app,
             text: 'The actual creation will take place with the first transaction,<br>until now it will only be kept in the application.'
         }));
     }

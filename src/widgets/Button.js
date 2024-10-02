@@ -4,7 +4,7 @@ import { Component } from '../Boost.js';
 export class Button extends Component {
 
     constructor(args) {
-        super(args.app, 'button');
+        super({...args, create: 'button'});
 
         // Build
         this.element.id = args.id;
@@ -24,7 +24,7 @@ export class Button extends Component {
 export class ButtonDescription extends Component {
 
     constructor(args) {
-        super(args.app);
+        super(args);
 
         // Build
         this.element.classList.add('button-description');

@@ -8,8 +8,8 @@ const { version } = require('../../../package.json');
 
 export class PageListAccounts extends Component {
 
-    constructor(app) {
-        super(app);
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('page');
@@ -19,7 +19,7 @@ export class PageListAccounts extends Component {
 
         // Cards
         this.append(new Card({
-            app,
+            app: args.app,
             id: 'account-aa39b30e61dd2b181a5f2df050d3f0de1ca8811ac7a352a3af97b0ffb29f423a',
             name: 'ICP #1',
             balance: 0.0,
@@ -40,24 +40,25 @@ export class PageListAccounts extends Component {
 
         // Buttons
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'create-account',
             text: 'Create account',
             click: () => {
-                const newAccount = new SheetNewAccount(app);
-                app.card.show({
+                const newAccount = new SheetNewAccount(args);
+                this.app.card.show({
                     title: 'Create new account',
                     content: newAccount.element
                 });
             }
         }));
+
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'import-account',
             text: 'Import account',
             click: () => {
-                const importAccount = new SheetImportAccount(app);
-                app.card.show({
+                const importAccount = new SheetImportAccount(args);
+                this.app.card.show({
                     title: 'Import existing account',
                     content: importAccount.element
                 });

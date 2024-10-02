@@ -5,8 +5,8 @@ import { InputPhrase } from '../../widgets/Input.js';
 
 export class SheetImportAccount extends Component {
 
-    constructor(app) {
-        super(app);
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('form');
@@ -22,7 +22,7 @@ export class SheetImportAccount extends Component {
         this.inputs = [];
         for (let nr = 1; nr < this.number; nr ++) {
             const input = new InputPhrase({
-                app,
+                app: args.app,
                 id: `phrase-${nr}`,
                 nr
             });
@@ -32,7 +32,7 @@ export class SheetImportAccount extends Component {
 
         // Button
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'import-account-proceed',
             text: 'Proceed',
             click: () => {
@@ -41,7 +41,7 @@ export class SheetImportAccount extends Component {
 
         // Description
         this.append(new ButtonDescription({
-            app,
+            app: args.app,
             text: 'If you enter an incorrect phrase, a new account will<br>be created based on it.'
         }));
     }

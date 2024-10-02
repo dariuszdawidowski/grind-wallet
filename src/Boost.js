@@ -1,5 +1,5 @@
 /**
- * Boost v 0.4.2
+ * Boost v 0.5.0
  * Ultra-minimalistic component rendering and event handling framework for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  */
@@ -79,10 +79,19 @@ export class App {
 
 export class Component {
 
-    constructor(app, selector = null) {
+    /**
+     * Constructor
+     *   args.app: app reference
+     *   args.selector: selector of existed element instead of create div [optional]
+     *   args.create: name of element to create [default: div]
+     */
+
+    constructor(args) {
+
+        const { selector = null, create = 'div' } = args;
 
         // Main app reference
-        this.app = app;
+        this.app = args.app;
 
         // Event support
         this.event = {
@@ -112,7 +121,7 @@ export class Component {
         };
 
         // Main element
-        this.element = selector ? ((selector.startsWith('.') || selector.startsWith('#')) ? document.querySelector(selector) : document.createElement(selector)) : document.createElement('div');
+        this.element = selector ? document.querySelector(selector) : document.createElement(create);
 
         // Changes observer
         const observer = new MutationObserver(async () => {

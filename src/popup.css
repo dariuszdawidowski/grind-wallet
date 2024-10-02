@@ -85,7 +85,7 @@ hr {
 
 .card:hover {
     cursor: pointer;
-    box-shadow: 0 0 6px red;
+    box-shadow: 0 0 6px rgb(135, 80, 199);
 }
 
 .card .name {

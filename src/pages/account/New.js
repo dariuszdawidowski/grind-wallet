@@ -6,8 +6,8 @@ import { SheetImportAccount } from './ImportAccount.js';
 
 export class PageNew extends Component {
 
-    constructor(app, args) {
-        super(app);
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('page');
@@ -28,24 +28,24 @@ export class PageNew extends Component {
 
         // Buttons
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'create-account',
             text: 'Create account',
             click: () => {
-                const newAccount = new SheetNewAccount(app);
-                app.card.show({
+                const newAccount = new SheetNewAccount(args);
+                this.app.card.show({
                     title: 'Create new account',
                     content: newAccount.element
                 });
             }
         }));
         this.append(new Button({
-            app,
+            app: args.app,
             id: 'import-account',
             text: 'Import account',
             click: () => {
-                const importAccount = new SheetImportAccount(app);
-                app.card.show({
+                const importAccount = new SheetImportAccount(args);
+                this.app.card.show({
                     title: 'Import existing account',
                     content: importAccount.element
                 });

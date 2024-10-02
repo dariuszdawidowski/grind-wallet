@@ -120,7 +120,12 @@ button.butticon img {
 .phrase {
     display: flex;
     flex-direction: row;
+    margin-right: 10px;
     margin-bottom: 6px;
+}
+
+.phrase:nth-child(3n) {
+    margin-right: 0;
 }
 
 .phrase div {
@@ -137,7 +142,6 @@ button.butticon img {
     font-weight: 700;
     border: none;
     border-bottom: 1px solid #4f4f67;
-    margin-right: 12px;
     outline: none;
 }
 

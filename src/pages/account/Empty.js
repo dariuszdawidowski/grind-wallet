@@ -1,7 +1,7 @@
 import { Component } from '../../Boost.js';
 import { Button } from '../../widgets/Button.js';
 import { SheetNewAccount } from './NewAccount.js';
-import { SheetImportAccount } from './ImportAccount.js';
+import { SheetImportAccount } from './Import.js';
 
 
 export class PageNew extends Component {

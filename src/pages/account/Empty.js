@@ -1,6 +1,6 @@
 import { Component } from '../../Boost.js';
 import { Button } from '../../widgets/Button.js';
-import { SheetNewAccount } from './NewAccount.js';
+import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 
 

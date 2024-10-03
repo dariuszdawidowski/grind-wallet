@@ -1,6 +1,29 @@
 import { Component } from '../Boost.js';
 
 
+export class InputPassword extends Component {
+
+    constructor(args) {
+        super(args);
+
+        // Build
+        this.element.id = args.id;
+        this.element.classList.add('input-password');
+
+        this.input = document.createElement('input');
+        this.input.setAttribute('type', 'password');
+        if ('placeholder' in args) this.input.placeholder = args.placeholder;
+        this.element.append(this.input);
+
+    }
+
+    get() {
+        return this.input.value;
+    }
+
+}
+
+
 export class InputCurrency extends Component {
 
     constructor(args) {

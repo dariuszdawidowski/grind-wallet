@@ -109,6 +109,25 @@ button.butticon img {
 
 /* Inputs */
 
+.input-password {
+    width: 100%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.input-password input {
+    color: #fff;
+    text-align: center;
+    width: 200px;
+    font-size: 14px;
+    font-weight: 400;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background-color: transparent;
+    padding: 4px;
+}
+
 .input-recovery {
     display: flex;
     flex-direction: row;
@@ -143,6 +162,7 @@ button.butticon img {
     border: none;
     border-bottom: 1px solid #4f4f67;
     outline: none;
+    background-color: transparent;
 }
 
 .input-currency {
@@ -163,6 +183,7 @@ button.butticon img {
     border: none;
     outline: none;
     margin-left: 9px;
+    background-color: transparent;
 }
 
 .input-account {
@@ -180,6 +201,7 @@ button.butticon img {
     border: none;
     border-bottom: 1px solid #4f4f67;
     outline: none;
+    background-color: transparent;
 }
 
 /* Separators */
@@ -366,4 +388,10 @@ hr {
     font-size: 10px;
     text-align: center;
     color: rgb(136, 136, 136);
+}
+
+/* Tweaks */
+
+#new-password-ok {
+    margin-top: 20px;
 }

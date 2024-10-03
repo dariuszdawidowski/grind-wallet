@@ -33,3 +33,18 @@ export function formatCurrency(value, fixed = 2) {
     const [whole, fractional] = s.split('.');
     return formatWithSpaces(whole, 3, false) + '.' + fractional;
 }
+
+
+export function isPasswordStrong(password) {
+  const minLength = 8;
+  const hasLowercase = /[a-z]/.test(password);
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (password.length >= minLength && hasLowercase && hasUppercase && hasNumber && hasSpecialChar) {
+    return true; // Password is strong
+  } else {
+    return false; // Password is not strong
+  }
+}

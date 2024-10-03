@@ -54,7 +54,7 @@ export class NewPassword extends Component {
                         generateSalt().then(salt => {
                             hashPassword(password.get(), salt).then(hashed => {
                                 chrome.storage.local.set({ salt: salt, password: hashed }, () => {
-                                    // Return to main screen
+                                    this.app.page('login');
                                 });
                             });
                         });

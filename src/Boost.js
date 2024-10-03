@@ -1,5 +1,5 @@
 /**
- * Boost v 0.5.0
+ * Boost v 0.5.1
  * Ultra-minimalistic component rendering and event handling framework for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  */
@@ -41,6 +41,10 @@ export class App {
                     console.log('CALL:', match)
                     this.event.listeners[match].element.dispatchEvent(new Event(this.event.listeners[match].type));
                 });
+            },
+
+            clear: () => {
+                this.event.listeners = {};
             }
         };
 

@@ -41,7 +41,8 @@ export class EnterPassword extends Component {
             click: () => {
                 verifyPassword(password.get(), args.salt, args.hash).then(valid => {
                     if (valid) {
-                        console.log('PWD OK');
+                        this.app.user.password = password.get();
+                        this.app.page('empty');
                     }
                     else {
                         alert('Incorrect password. Please try again.');

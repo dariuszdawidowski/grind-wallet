@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { isPasswordStrong } from '../../Utils.js';
+import { isPasswordStrong } from '../../utils/Password.js';
 import { Button } from '../../widgets/Button.js';
 import { InputPassword } from '../../widgets/Input.js';
 
@@ -21,7 +21,7 @@ export class NewPassword extends Component {
             </h2>
             <p style="text-align: center; margin-top: 0px;">
                 It is for this specific plugin in this specific browser,<br>
-                not related to a blockchain.
+                not related to the blockchain.
             </p>
         `;
 

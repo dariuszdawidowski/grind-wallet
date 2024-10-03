@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { formatCurrency } from '../../Utils.js';
+import { formatCurrency } from '../../utils/Currency.js';
 import { Button } from '../../widgets/Button.js';
 import { InputCurrency, InputAccount } from '../../widgets/Input.js';
 

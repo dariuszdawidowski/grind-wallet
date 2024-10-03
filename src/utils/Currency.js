@@ -1,7 +1,9 @@
-/**
- * Utils
- */
+/*** Currency helpers ***/
 
+
+/**
+ * Group number to blocks separated by spaces e.g. 0000 0000 0000
+ */
 
 export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true) {
     let result = '';
@@ -28,23 +30,12 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
 }
 
 
+/**
+ * Display number as currency
+ */
+
 export function formatCurrency(value, fixed = 2) {
     const s = value.toFixed(fixed).toString()
     const [whole, fractional] = s.split('.');
     return formatWithSpaces(whole, 3, false) + '.' + fractional;
-}
-
-
-export function isPasswordStrong(password) {
-  const minLength = 8;
-  const hasLowercase = /[a-z]/.test(password);
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-  if (password.length >= minLength && hasLowercase && hasUppercase && hasNumber && hasSpecialChar) {
-    return true; // Password is strong
-  } else {
-    return false; // Password is not strong
-  }
 }

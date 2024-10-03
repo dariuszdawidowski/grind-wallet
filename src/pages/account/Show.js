@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { formatCurrency } from '../../Utils.js';
+import { formatCurrency } from '../../utils/Currency.js';
 import { Button, Butticon } from '../../widgets/Button.js';
 import { SheetSendAccount } from './Send.js';
 import { SheetReceiveAccount } from './Receive.js';

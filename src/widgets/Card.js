@@ -1,5 +1,5 @@
 import { Component } from '../Boost.js';
-import { formatWithSpaces, formatCurrency } from '../Utils.js';
+import { formatWithSpaces, formatCurrency } from '../utils/Currency.js';
 
 
 export class Card extends Component {

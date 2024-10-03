@@ -4,7 +4,7 @@ import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 
 
-export class PageNew extends Component {
+export class PageEmpty extends Component {
 
     constructor(args) {
         super(args);
@@ -12,7 +12,7 @@ export class PageNew extends Component {
         // Build
         this.element.classList.add('page');
         this.element.innerHTML = `
-            <h1 style="text-align: center;">Welcome to Grind Wallet<br><img src="assets/icon128.png"></h1>
+            <h1 style="text-align: center;">Welcome to Grind Wallet<br><img src="assets/icon728.png" width="155"></h1>
             <h2>
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none" stroke="white" stroke-width="3">
                     <rect x="5" y="15" width="40" height="25" rx="3" ry="3" fill="none" stroke="white" stroke-width="3"/>

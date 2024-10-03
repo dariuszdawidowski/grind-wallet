@@ -1,7 +1,7 @@
 import './popup.css';
 import { App } from './Boost.js';
 import { BottomSheet } from './widgets/BottomSheet.js';
-import { PageNew } from './pages/account/Empty.js';
+import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
 
 /**
@@ -12,8 +12,8 @@ class GrindWalletPlugin extends App {
 
     init() {
         this.card = new BottomSheet({selector: '#bottom-sheet', hidden: true});
-        // this.page = new PageNew({app: this});
-        this.page = new PageListAccounts({app: this});
+        this.page = new PageEmpty({app: this});
+        // this.page = new PageListAccounts({app: this});
         this.append(this.page);
     }
 

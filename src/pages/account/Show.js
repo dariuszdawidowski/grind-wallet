@@ -30,7 +30,7 @@ export class SheetShowAccount extends Component {
                 text: 'Send',
                 click: () => {
                     const sendTokens = new SheetSendAccount(args);
-                    this.app.card.show({
+                    this.app.sheet.show({
                         title: args.name,
                         content: sendTokens.element
                     });
@@ -43,7 +43,7 @@ export class SheetShowAccount extends Component {
                 text: 'Receive',
                 click: () => {
                     const receiveTokens = new SheetReceiveAccount(args);
-                    this.app.card.show({
+                    this.app.sheet.show({
                         title: args.name,
                         content: receiveTokens.element
                     });

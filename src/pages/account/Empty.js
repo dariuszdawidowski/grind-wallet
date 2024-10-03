@@ -36,7 +36,7 @@ export class PageEmpty extends Component {
             text: 'Create account',
             click: () => {
                 const newAccount = new SheetNewAccount(args);
-                this.app.card.show({
+                this.app.sheet.show({
                     title: 'Create new account',
                     content: newAccount.element
                 });
@@ -48,7 +48,7 @@ export class PageEmpty extends Component {
             text: 'Import account',
             click: () => {
                 const importAccount = new SheetImportAccount(args);
-                this.app.card.show({
+                this.app.sheet.show({
                     title: 'Import existing account',
                     content: importAccount.element
                 });

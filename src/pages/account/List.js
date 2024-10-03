@@ -34,7 +34,7 @@ export class PageListAccounts extends Component {
             ...cardArgs,
             click: () => {
                 const showAccount = new SheetShowAccount({app: args.app, ...cardArgs});
-                this.app.card.show({
+                this.app.sheet.show({
                     title: args.name,
                     content: showAccount.element
                 });
@@ -57,7 +57,7 @@ export class PageListAccounts extends Component {
             text: 'Create account',
             click: () => {
                 const newAccount = new SheetNewAccount(args);
-                this.app.card.show({
+                this.app.sheet.show({
                     title: 'Create new account',
                     content: newAccount.element
                 });
@@ -70,7 +70,7 @@ export class PageListAccounts extends Component {
             text: 'Import account',
             click: () => {
                 const importAccount = new SheetImportAccount(args);
-                this.app.card.show({
+                this.app.sheet.show({
                     title: 'Import existing account',
                     content: importAccount.element
                 });

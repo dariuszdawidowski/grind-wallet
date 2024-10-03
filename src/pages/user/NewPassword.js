@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { isPasswordStrong } from '../../utils/Password.js';
+import { isPasswordStrong, generateSalt, hashPassword } from '../../utils/Password.js';
 import { Button } from '../../widgets/Button.js';
 import { InputPassword } from '../../widgets/Input.js';
 const { version } = require('../../../package.json');
@@ -24,7 +24,7 @@ export class NewPassword extends Component {
                 Please create a password
             </h2>
             <p style="text-align: center; margin-top: 0px;">
-                It is for specific to this particular extension<br>
+                It is specific to this particular extension<br>
                 not related to the blockchain
             </p>
         `;
@@ -51,7 +51,13 @@ export class NewPassword extends Component {
             click: () => {
                 if (password.get() === passwordConfirm.get()) {
                     if (isPasswordStrong(password.get())) {
-
+                        generateSalt().then(salt => {
+                            hashPassword(password.get(), salt).then(hashed => {
+                                chrome.storage.local.set({ salt: salt, password: hashed }, () => {
+                                    // Return to main screen
+                                });
+                            });
+                        });
                     }
                     else {
                         alert('Password is not strong enough. Please ensure it is at least 8 characters long and includes a mix of uppercase and lowercase letters, numbers, and special characters.');

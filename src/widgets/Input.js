@@ -21,6 +21,10 @@ export class InputPassword extends Component {
         return this.input.value;
     }
 
+    focus() {
+        this.input.focus();
+    }
+
 }
 
 

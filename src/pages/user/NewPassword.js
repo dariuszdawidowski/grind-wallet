@@ -13,13 +13,16 @@ export class NewPassword extends Component {
         this.element.classList.add('page');
         this.element.innerHTML = `
             <h1 style="text-align: center;">
-                Welcome to Grind Wallet<br>
-                <img src="assets/icon728.png" width="155">
+                Welcome to Grind Wallet (ICP)
             </h1>
+            <img src="assets/icon728.png" class="biglogo">
             <h2>
-                Welcome! To get started,<br>
-                please create a password for your account.
+                To get started<br>please create a password.
             </h2>
+            <p style="text-align: center; margin-top: 0px;">
+                It is for this specific plugin in this specific browser,<br>
+                not related to a blockchain.
+            </p>
         `;
 
         // Inputs

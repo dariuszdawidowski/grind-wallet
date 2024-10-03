@@ -109,7 +109,7 @@ button.butticon img {
 
 /* Inputs */
 
-.recovery {
+.input-recovery {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -117,18 +117,18 @@ button.butticon img {
     margin: 20px auto 30px auto;
 }
 
-.phrase {
+.input-phrase {
     display: flex;
     flex-direction: row;
     margin-right: 10px;
     margin-bottom: 6px;
 }
 
-.phrase:nth-child(3n) {
+.input-phrase:nth-child(3n) {
     margin-right: 0;
 }
 
-.phrase div {
+.input-phrase div {
     border-bottom: 1px solid #4f4f67;
     display: flex;
     align-items: flex-end;
@@ -136,7 +136,7 @@ button.butticon img {
     width: 16px;
 }
 
-.phrase input {
+.input-phrase input {
     width: 70px;
     font-size: 14px;
     font-weight: 700;
@@ -145,7 +145,7 @@ button.butticon img {
     outline: none;
 }
 
-.currency {
+.input-currency {
     width: 100%;
     text-align: center;
     display: flex;
@@ -154,7 +154,7 @@ button.butticon img {
     margin: 20px auto;
 }
 
-.currency input {
+.input-currency input {
     color: #222;
     text-align: right;
     width: 200px;
@@ -165,13 +165,13 @@ button.butticon img {
     margin-left: 9px;
 }
 
-.account {
+.input-account {
     width: 100%;
     text-align: center;
     margin: 20px auto;
 }
 
-.account input {
+.input-account input {
     color: #222;
     text-align: center;
     width: 280px;

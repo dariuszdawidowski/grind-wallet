@@ -8,7 +8,7 @@ export class InputCurrency extends Component {
 
         // Build
         this.element.id = args.id;
-        this.element.classList.add('currency');
+        this.element.classList.add('input-currency');
 
         this.input = document.createElement('input');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
@@ -32,7 +32,7 @@ export class InputAccount extends Component {
 
         // Build
         this.element.id = args.id;
-        this.element.classList.add('account');
+        this.element.classList.add('input-account');
 
         this.input = document.createElement('input');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
@@ -50,7 +50,7 @@ export class InputPhrase extends Component {
 
         // Build
         this.element.id = args.id;
-        this.element.classList.add('phrase');
+        this.element.classList.add('input-phrase');
 
         const number = document.createElement('div');
         number.innerText = `${args.nr}.`;
@@ -71,7 +71,7 @@ export class RecoveryPhrase extends Component {
 
         // Build
         this.element.id = args.id;
-        this.element.classList.add('recovery');
+        this.element.classList.add('input-recovery');
 
         // Inputs
         this.number = args.number;

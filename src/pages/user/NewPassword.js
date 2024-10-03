@@ -2,6 +2,7 @@ import { Component } from '../../Boost.js';
 import { isPasswordStrong } from '../../utils/Password.js';
 import { Button } from '../../widgets/Button.js';
 import { InputPassword } from '../../widgets/Input.js';
+const { version } = require('../../../package.json');
 
 
 export class NewPassword extends Component {
@@ -12,16 +13,19 @@ export class NewPassword extends Component {
         // Build
         this.element.classList.add('page');
         this.element.innerHTML = `
-            <h1 style="text-align: center;">
-                Welcome to Grind Wallet (ICP)
+            <h1 style="text-align: center; margin-bottom: 0;">
+                Welcome to Grind Wallet <span>v${version}</span>
             </h1>
-            <img src="assets/icon728.png" class="biglogo">
+            <p style="text-align: center; margin-bottom: 32px;">
+                for the Internet Computer blockchain (ICP)
+            </p>
+            <img src="assets/icon728.png" class="biglogo" style="margin-bottom: 55px;">
             <h2>
-                To get started<br>please create a password.
+                Please create a password
             </h2>
             <p style="text-align: center; margin-top: 0px;">
-                It is for this specific plugin in this specific browser,<br>
-                not related to the blockchain.
+                It is for specific to this particular extension<br>
+                not related to the blockchain
             </p>
         `;
 

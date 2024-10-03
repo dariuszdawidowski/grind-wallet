@@ -15,7 +15,10 @@ export class PageListAccounts extends Component {
         // Build
         this.element.classList.add('page');
         this.element.innerHTML = `
-            <h1 style="text-align: center; margin-bottom: 25px;">Grind Wallet <span>v${version}</span></h1>
+            <h1 style="text-align: center; margin-bottom: 25px;">
+                <img src="assets/icon16.png">
+                Grind Wallet <span>v${version}</span>
+            </h1>
         `;
 
         // Cards

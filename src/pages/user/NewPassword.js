@@ -33,7 +33,8 @@ export class NewPassword extends Component {
         const password = new InputPassword({
             app: args.app,
             id: 'new-password-first',
-            placeholder: 'Create password'
+            placeholder: 'Create password',
+            focus: true
         });
         const passwordConfirm = new InputPassword({
             app: args.app,

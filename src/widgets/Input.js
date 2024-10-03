@@ -12,6 +12,7 @@ export class InputPassword extends Component {
 
         this.input = document.createElement('input');
         this.input.setAttribute('type', 'password');
+        if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
 
@@ -19,10 +20,6 @@ export class InputPassword extends Component {
 
     get() {
         return this.input.value;
-    }
-
-    focus() {
-        this.input.focus();
     }
 
 }

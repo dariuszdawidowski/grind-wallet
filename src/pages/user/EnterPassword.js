@@ -29,7 +29,8 @@ export class EnterPassword extends Component {
         const password = new InputPassword({
             app: args.app,
             id: 'enter-password',
-            placeholder: 'Password'
+            placeholder: 'Password',
+            focus: true
         });
         this.append(password);
 
@@ -50,9 +51,6 @@ export class EnterPassword extends Component {
                 });
             }
         }));
-
-        // Focus
-        password.focus();
 
     }
 

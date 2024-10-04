@@ -29,6 +29,11 @@ class GrindWalletPlugin extends App {
 
     init() {
 
+        // Detect macOS
+        if (navigator.platform.toUpperCase().indexOf('MAC') >= 0) {
+            document.body.classList.add('macos');
+        }
+
         // Bottom Sheet
         this.sheet = new BottomSheet({app: this, selector: '#bottom-sheet', hidden: true});
 

@@ -10,6 +10,7 @@ body {
     width: 360px;
     height: 583px;
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
     color: rgb(241, 230, 253);
     background-color: rgb(42, 26, 57);
     overflow: hidden;
@@ -78,6 +79,9 @@ button {
 button:hover {
     cursor: pointer;
     background-color: var(--button-hilit);
+}
+
+.macos button:hover {
     transform: scale(1.03);
 }
 
@@ -105,6 +109,9 @@ button.butticon img {
 .softbutton:hover {
     cursor: pointer;
     color: var(--button-hilit);
+}
+
+.macos .softbutton:hover {
     transform: scale(1.03);
 }
 
@@ -232,6 +239,9 @@ hr {
 .card:hover {
     cursor: pointer;
     box-shadow: 0 0 6px rgb(135, 80, 199);
+}
+
+.macos .card:hover {
     transform: scale(1.02);
 }
 

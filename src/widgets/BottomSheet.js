@@ -5,18 +5,17 @@
  *   hidded: hide at start
  */
 
-export class BottomSheet {
+import { Component } from '../Boost.js';
+
+
+export class BottomSheet extends Component {
 
     constructor(args) {
-
-        const {selector = '', hidden = true} = args;
-
-        // Main container
-        this.element = document.querySelector(selector);
+        super(args);
 
         // X close button
         this.x = this.element.querySelector('.x');
-        this.x.addEventListener('click', () => this.hide());
+        this.x.addEventListener('click', () => this.clear());
 
         // Title
         this.title = this.element.querySelector('h1.title');
@@ -25,28 +24,28 @@ export class BottomSheet {
         this.content = this.element.querySelector('.content');
 
         // Hide
-        if (hidden) this.hide();
+        if (('hidden' in args) && args.hidden) this.clear();
     }
 
     /**
-     * Show card
+     * Append content and show sheet
+     * args (different than regular component):
+     *   title: string - title of the sheet
+     *   component: Component - component to attach
      */
 
-    show(args) {
+    append(args) {
 
-        const { title = null, content = null } = args;
+        // Title
+        this.title.innerText = args.title;
 
-        if (title) this.title.innerText = title;
-        if (content) {
-            if (typeof(content) == 'string') {
-                this.content.innerHTML = content;
-            }
-            else if (typeof(content) == 'object') {
-                this.content.innerHTML = '';
-                this.content.append(content);
-            }
-        }
+        // Append to childred list
+        this.children.push(args.component);
 
+        // Append
+        this.content.append(args.component.element);
+
+        // Show animation
         this.element.style.display = 'block';
         setTimeout(() => {
             this.element.classList.add('visible');
@@ -54,10 +53,21 @@ export class BottomSheet {
     }
 
     /**
-     * Hide card
+     * Clear content and hide sheet
      */
 
-    hide() {
+    clear() {
+
+        // Destroy child components
+        this.children.forEach(child => {
+            child.destructor();
+        });
+        this.children = [];
+
+        // Clear DOM
+        this.content.innerHTML = '';
+
+        // Hide animation
         this.element.classList.remove('visible');
         setTimeout(() => {
             this.element.style.display = 'none';

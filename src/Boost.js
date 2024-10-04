@@ -1,5 +1,5 @@
 /**
- * Boost v 0.5.2
+ * Boost v 0.6.0
  * Ultra-minimalistic component rendering and event handling framework for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  */
@@ -24,27 +24,39 @@ export class App {
 
             on: (args) => {
                 this.event.find(args.id).forEach(match => {
-                    console.log('ON:', match)
+                    //console.log('ON:', match)
                     this.event.listeners[match].element.addEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
                 });
             },
         
             off: (args) => {
                 this.event.find(args.id).forEach(match => {
-                    console.log('OFF:', match)
+                    //console.log('OFF:', match)
                     this.event.listeners[match].element.removeEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
                 });
             },
         
             call: (args) => {
                 this.event.find(args.id).forEach(match => {
-                    console.log('CALL:', match)
+                    //console.log('CALL:', match)
                     this.event.listeners[match].element.dispatchEvent(new Event(this.event.listeners[match].type));
                 });
             },
 
-            clear: () => {
-                this.event.listeners = {};
+            clear: (args = {}) => {
+                // All
+                if (Object.keys(args).length == 0) {
+                    //console.log('CLEAR: ALL')
+                    this.event.listeners = {};
+                }
+
+                // Particular id
+                else {
+                    //console.log('CLEAR:', args.id)
+                    this.event.off({id: args.id});
+                    delete this.event.listeners[args.id];
+                }
+
             }
         };
 
@@ -97,12 +109,18 @@ export class Component {
         // Main app reference
         this.app = args.app;
 
+        // Children components
+        this.children = [];
+
         // Event support
         this.event = {
 
+            registry: [],
+
             on: (args) => {
-                console.log('on:', args)
+                //console.log('on:', args)
                 if (args.id in this.app.event.listeners) console.error(`Conflicting events ${args.id}`)
+                this.event.registry.push(args.id);
                 this.app.event.listeners[args.id] = {
                     type: ('type' in args ? args.type : null),
                     callback: args.callback.bind(this),
@@ -112,14 +130,23 @@ export class Component {
             },
         
             off: (args) => {
-                console.log('off:', args)
+                //console.log('off:', args)
                 this.element.removeEventListener(this.app.event.listeners[args.id].type, this.app.event.listeners[args.id].callback);
                 delete this.app.event.listeners[args.id];
             },
         
             call: (args) => {
-                console.log('call:', args)
+                //console.log('call:', args)
                 this.element.dispatchEvent(new Event(args.id));
+            },
+
+            clear: () => {
+                //console.log('clear: all')
+                // All
+                this.event.registry.forEach(eventId => {
+                    this.app.event.clear({id: eventId});
+                });
+                this.event.registry = [];
             }
         
         };
@@ -144,10 +171,15 @@ export class Component {
      */
 
     destructor() {
-        /*** OVERLOAD ***/
+        this.children.forEach(child => {
+            child.destructor();
+        });
+        this.children = [];
+        this.event.clear();
     }
 
     append(component) {
+        this.children.push(component);
         this.element.append(component.element);
     }
 

@@ -35,10 +35,9 @@ export class PageEmpty extends Component {
             id: 'create-account',
             text: 'Create account',
             click: () => {
-                const newAccount = new SheetNewAccount(args);
-                this.app.sheet.show({
+                this.app.sheet.append({
                     title: 'Create new account',
-                    content: newAccount.element
+                    component: new SheetNewAccount(args)
                 });
             }
         }));
@@ -47,10 +46,9 @@ export class PageEmpty extends Component {
             id: 'import-account',
             text: 'Import account',
             click: () => {
-                const importAccount = new SheetImportAccount(args);
-                this.app.sheet.show({
+                this.app.sheet.append({
                     title: 'Import existing account',
-                    content: importAccount.element
+                    component: SheetImportAccount(args)
                 });
             }
         }));

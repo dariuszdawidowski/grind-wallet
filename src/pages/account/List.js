@@ -33,10 +33,9 @@ export class PageListAccounts extends Component {
             id: 'account-aa39b30e61dd2b181a5f2df050d3f0de1ca8811ac7a352a3af97b0ffb29f423a',
             ...cardArgs,
             click: () => {
-                const showAccount = new SheetShowAccount({app: args.app, ...cardArgs});
-                this.app.sheet.show({
+                this.app.sheet.append({
                     title: args.name,
-                    content: showAccount.element
+                    component: new SheetShowAccount({app: args.app, ...cardArgs})
                 });
             }
         }));
@@ -56,10 +55,9 @@ export class PageListAccounts extends Component {
             id: 'create-account',
             text: 'Create account',
             click: () => {
-                const newAccount = new SheetNewAccount(args);
-                this.app.sheet.show({
+                this.app.sheet.append({
                     title: 'Create new account',
-                    content: newAccount.element
+                    component: new SheetNewAccount(args)
                 });
             }
         }));
@@ -69,10 +67,9 @@ export class PageListAccounts extends Component {
             id: 'import-account',
             text: 'Import account',
             click: () => {
-                const importAccount = new SheetImportAccount(args);
-                this.app.sheet.show({
+                this.app.sheet.append({
                     title: 'Import existing account',
-                    content: importAccount.element
+                    component: new SheetImportAccount(args)
                 });
             }
         }));

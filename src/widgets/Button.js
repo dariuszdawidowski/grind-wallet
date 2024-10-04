@@ -38,6 +38,7 @@ export class Button extends Component {
     }
 
     destructor() {
+        super.destructor();
         if (this.enterCallback) {
             document.body.removeEventListener('keydown', this.enterCallback.bind(this));
         }

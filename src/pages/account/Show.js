@@ -29,10 +29,9 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
-                    const sendTokens = new SheetSendAccount(args);
-                    this.app.sheet.show({
+                    this.app.sheet.append({
                         title: args.name,
-                        content: sendTokens.element
+                        component: new SheetSendAccount(args)
                     });
                 }
             }),
@@ -42,10 +41,9 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
-                    const receiveTokens = new SheetReceiveAccount(args);
-                    this.app.sheet.show({
+                    this.app.sheet.append({
                         title: args.name,
-                        content: receiveTokens.element
+                        content: new SheetReceiveAccount(args)
                     });
                 }
             }),

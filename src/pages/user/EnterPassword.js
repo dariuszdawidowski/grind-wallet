@@ -42,7 +42,11 @@ export class EnterPassword extends Component {
             click: () => {
                 verifyPassword(password.get(), args.salt, args.hash).then(valid => {
                     if (valid) {
+                        // Store password
                         this.app.user.password = password.get();
+                        // Save session
+                        chrome.storage.session.set({ active: true, password: this.app.user.password });
+                        // Accounts page
                         this.app.page('empty');
                     }
                     else {

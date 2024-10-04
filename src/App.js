@@ -37,8 +37,6 @@ class GrindWalletPlugin extends App {
 
         // User credentials
         this.user = {
-            salt: null,
-            hash: null,
             password: null,
         };
 
@@ -51,20 +49,30 @@ class GrindWalletPlugin extends App {
                 chrome.storage.local.set({ version: 1 });
             }
 
-            // Check that password exists
-            chrome.storage.local.get(['salt', 'password'], (data) => {
+            // Check session
+            chrome.storage.session.get(['active', 'password'], (result) => {
 
-                // Login
-                if (data.salt && data.password) {
-                    // Fill user info
-                    this.user.salt = data.salt;
-                    this.user.hash = data.password;
-                    this.page('login');
+                // Continue session
+                if (result.active) {
+                    this.user.password = result.password;
+                    this.page('empty');
                 }
 
-                // First time - create password
+                // No active session
                 else {
-                    this.page('register');
+                    // Check that password exists
+                    chrome.storage.local.get(['salt', 'password'], (data) => {
+
+                        // Login
+                        if (data.salt && data.password) {
+                            this.page('login', {salt: data.salt, hash: data.password});
+                        }
+
+                        // First time - create password
+                        else {
+                            this.page('register');
+                        }
+                    });
                 }
             });
 
@@ -76,7 +84,7 @@ class GrindWalletPlugin extends App {
      * Clear and switch to a new page
      */
 
-    page(name) {
+    page(name, args = {}) {
 
         // Clear events
         this.event.clear();
@@ -94,7 +102,7 @@ class GrindWalletPlugin extends App {
                 this.append(this.current);
                 break;
             case 'login':
-                this.current = new EnterPassword({app: this, salt: this.user.salt, hash: this.user.hash});
+                this.current = new EnterPassword({app: this, ...args});
                 this.append(this.current);
                 break;
             case 'empty':

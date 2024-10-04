@@ -95,7 +95,10 @@ class GrindWalletPlugin extends App {
         this.event.clear();
 
         // Remove DOM
-        if (this.current) this.current.element.remove();
+        if (this.current) {
+            this.current.destructor();
+            this.current.element.remove();
+        }
 
         // Destroy object
         this.current = null;

@@ -1,5 +1,5 @@
 /**
- * Boost v 0.5.1
+ * Boost v 0.5.2
  * Ultra-minimalistic component rendering and event handling framework for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  */
@@ -137,6 +137,14 @@ export class Component {
         // Reload event
         window.addEventListener('reload', this.update.bind(this));
 
+    }
+
+    /**
+     * Destructor
+     */
+
+    destructor() {
+        /*** OVERLOAD ***/
     }
 
     append(component) {

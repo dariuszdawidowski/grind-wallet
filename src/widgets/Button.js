@@ -1,6 +1,16 @@
 import { Component } from '../Boost.js';
 
 
+/**
+ * Default button
+ * args:
+ *   app: reference to the main app
+ *   id: unique idientifier
+ *   text: display
+ *   click: callback
+ *   enter: submit on enter (default false)
+ */
+
 export class Button extends Component {
 
     constructor(args) {
@@ -17,10 +27,34 @@ export class Button extends Component {
             callback: args.click
         });
 
+        // Enter key to submit
+        this.enterCallback = null;
+        if ('enter' in args) {
+            this.enterCallback = (event) => {
+                if (event.key == 'Enter') this.element.click();
+            };
+            document.body.addEventListener('keydown', this.enterCallback.bind(this));
+        }
+    }
+
+    destructor() {
+        if (this.enterCallback) {
+            document.body.removeEventListener('keydown', this.enterCallback.bind(this));
+        }
     }
 
 }
 
+
+/**
+ * Square icon button
+ * args:
+ *   app: reference to the main app
+ *   id: unique idientifier
+ *   text: display
+ *   click: callback
+ *   enter: submit on enter (default false)
+ */
 
 export class Butticon extends Button {
 
@@ -35,6 +69,14 @@ export class Butticon extends Button {
 
 }
 
+
+/**
+ * Non-interactive description under button
+ * args:
+ *   app: reference to the main app
+ *   id: unique idientifier
+ *   text: display
+ */
 
 export class ButtonDescription extends Component {
 

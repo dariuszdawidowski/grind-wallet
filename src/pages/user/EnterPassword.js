@@ -39,6 +39,7 @@ export class EnterPassword extends Component {
             app: args.app,
             id: 'end-password-ok',
             text: 'Unlock',
+            enter: true,
             click: () => {
                 verifyPassword(password.get(), args.salt, args.hash).then(valid => {
                     if (valid) {

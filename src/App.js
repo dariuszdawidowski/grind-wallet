@@ -10,6 +10,7 @@ import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
 import { PageRegister } from './pages/user/Register.js';
 import { PageLogin } from './pages/user/Login.js';
+import { keysRecoverFromPhraseSecp256k1 } from './utils/Keys.js';
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -43,6 +44,13 @@ class GrindWalletPlugin extends App {
         // User credentials
         this.user = {
             password: null,
+        };
+
+        // Blockchain adapter
+        this.bc = {
+            icp: {
+                keysRecoverFromPhrase: keysRecoverFromPhraseSecp256k1
+            }
         };
 
         // Check data version

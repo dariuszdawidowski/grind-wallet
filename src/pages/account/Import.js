@@ -18,11 +18,12 @@ export class SheetImportAccount extends Component {
         `;
 
         // Recovery pharse
-        this.append(new RecoveryPhrase({
+        this.phrase = new RecoveryPhrase({
             app: args.app,
             id: 'import-account-recovery',
             number: 12
-        }));
+        });
+        this.append(this.phrase);
 
         // Button
         this.append(new Button({
@@ -30,6 +31,8 @@ export class SheetImportAccount extends Component {
             id: 'import-account-proceed',
             text: 'Proceed',
             click: () => {
+                // console.log(this.phrase.get())
+                console.log(this.app.bc.icp.keysRecoverFromPhrase(this.phrase.get().join(' ')));
             }
         }));
 

@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -15,7 +16,23 @@ module.exports = {
         clean: true
     },
   
+    resolve: {
+        fallback: {
+            'assert': require.resolve('assert/'),
+            'buffer': require.resolve('buffer/'),
+            'crypto': require.resolve('crypto-browserify'),
+            'process': require.resolve('process/browser'),
+            'stream': require.resolve('stream-browserify'),
+            'vm': require.resolve('vm-browserify'),
+        },
+    },
+
     plugins: [
+
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+            process: 'process/browser',
+        }),
 
         new HtmlWebpackPlugin({
             template: './src/popup.html',

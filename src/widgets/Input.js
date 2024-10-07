@@ -82,7 +82,14 @@ export class InputPhrase extends Component {
 
         this.input = document.createElement('input');
         this.element.append(this.input);
+    }
 
+    set(value) {
+        this.input.value = value;
+    }
+
+    get() {
+        return this.input.value.trim();
     }
 
 }
@@ -110,7 +117,35 @@ export class RecoveryPhrase extends Component {
             this.append(input);
         }
 
+        // Detect paste
+        this.paste = (event) => {
+            event.preventDefault();
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const words = pastedText.trim().split(/\s+/);
+            if (words.length === 12) {
+                this.inputs.forEach((input, index) => {
+                    input.set(words[index]);
+                });
+            }
+            else {
+                this.inputs[0].set(pastedText);
+            }
+        };
 
+        this.inputs[0].input.addEventListener('paste', this.paste.bind(this));
+
+    }
+
+    destructor() {
+        this.inputs[0].input.removeEventListener('paste', this.paste.bind(this));
+    }
+
+    get() {
+        const phrase = [];
+        this.inputs.forEach(input => {
+            phrase.push(input.get());
+        });
+        return phrase;
     }
 
 }

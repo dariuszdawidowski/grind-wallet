@@ -48,7 +48,7 @@ export class PageEmpty extends Component {
             click: () => {
                 this.app.sheet.append({
                     title: 'Import existing account',
-                    component: SheetImportAccount(args)
+                    component: new SheetImportAccount(args)
                 });
             }
         }));

@@ -15,11 +15,9 @@ export function keysRecoverFromPhraseSecp256k1(mnemonic = null) {
 
     // Generate
     if (!mnemonic) mnemonic = bip39.generateMnemonic();
-    console.log('mnemonic', mnemonic)
     const valid = bip39.validateMnemonic(mnemonic);
-    // if (!valid) return null;
+    if (!valid) return null;
     const seed = bip39.mnemonicToSeedSync(mnemonic);
-    console.log('seed', seed)
     const root = hdkey.fromMasterSeed(seed);
     const addrnode = root.derive("m/44'/223'/0'/0/0");
     const identity = Secp256k1KeyIdentity.fromSecretKey(addrnode.privateKey);

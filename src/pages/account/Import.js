@@ -31,8 +31,8 @@ export class SheetImportAccount extends Component {
             id: 'import-account-proceed',
             text: 'Proceed',
             click: () => {
-                // console.log(this.phrase.get())
-                console.log(this.app.bc.icp.keysRecoverFromPhrase(this.phrase.get().join(' ')));
+                const wallet = this.app.bc.icp.keysRecoverFromPhrase(this.phrase.get().join(' '));
+                console.log(wallet);
             }
         }));
 

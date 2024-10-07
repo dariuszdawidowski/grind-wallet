@@ -8,8 +8,8 @@ import { App } from './Boost.js';
 import { BottomSheet } from './widgets/BottomSheet.js';
 import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
-import { NewPassword } from './pages/user/NewPassword.js';
-import { EnterPassword } from './pages/user/EnterPassword.js';
+import { PageRegister } from './pages/user/Register.js';
+import { PageLogin } from './pages/user/Login.js';
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -106,11 +106,11 @@ class GrindWalletPlugin extends App {
         // Create and attach new
         switch(name) {
             case 'register':
-                this.current = new NewPassword({app: this});
+                this.current = new PageRegister({app: this});
                 this.append(this.current);
                 break;
             case 'login':
-                this.current = new EnterPassword({app: this, ...args});
+                this.current = new PageLogin({app: this, ...args});
                 this.append(this.current);
                 break;
             case 'empty':

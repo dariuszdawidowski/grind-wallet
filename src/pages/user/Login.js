@@ -5,7 +5,7 @@ import { InputPassword } from '../../widgets/Input.js';
 const { version } = require('../../../package.json');
 
 
-export class EnterPassword extends Component {
+export class PageLogin extends Component {
 
     constructor(args) {
         super(args);

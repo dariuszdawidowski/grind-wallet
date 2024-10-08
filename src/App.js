@@ -4,6 +4,7 @@
  */
 
 import './popup.css';
+import { Actor, HttpAgent } from '@dfinity/agent';
 import { App } from './Boost.js';
 import { BottomSheet } from './widgets/BottomSheet.js';
 import { PageEmpty } from './pages/account/Empty.js';
@@ -11,6 +12,7 @@ import { PageListAccounts } from './pages/account/List.js';
 import { PageRegister } from './pages/user/Register.js';
 import { PageLogin } from './pages/user/Login.js';
 import { keysRecoverFromPhraseSecp256k1 } from './utils/Keys.js';
+import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -47,12 +49,16 @@ class GrindWalletPlugin extends App {
             wallets: []
         };
 
-        // Blockchain adapter
-        this.bc = {
-            icp: {
-                keysRecoverFromPhrase: keysRecoverFromPhraseSecp256k1
+        // Blockchain manager
+        this.icp = {
+            agent: null,
+            keysRecoverFromPhrase: keysRecoverFromPhraseSecp256k1,
+            ledger: {
+                actor: null
             }
         };
+        this.icp.agent = new HttpAgent({ host: 'https://icp-api.io' });
+        this.icp.ledger.actor = Actor.createActor(ledgerIdlFactory, { agent: this.icp.agent, canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai' });
 
         // Check persistent data version
         const PERSISTENT_DATA_VERSION = 1;

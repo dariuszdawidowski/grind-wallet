@@ -1,6 +1,6 @@
 import { Component } from '../Boost.js';
 import { formatWithSpaces, formatCurrency } from '../utils/Currency.js';
-
+import { icpLedgerBalance } from '../utils/Transactions.js';
 
 export class Card extends Component {
 
@@ -38,6 +38,12 @@ export class Card extends Component {
             type: 'click',
             callback: args.click
         });
+
+        // Fetch balance
+        icpLedgerBalance(this.app.icp.ledger, this.account).then(balance => {
+            console.log(balance);
+        });
+        
 
     }
 

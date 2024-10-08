@@ -1,6 +1,6 @@
 {
   "name": "grind-wallet",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/App.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@dfinity/agent": "^2.1.2",
     "@dfinity/identity-secp256k1": "^2.1.2",
     "@dfinity/ledger-icp": "^2.6.0",
     "@dfinity/utils": "^2.5.1",

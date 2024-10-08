@@ -31,7 +31,7 @@ export class SheetImportAccount extends Component {
             id: 'import-account-proceed',
             text: 'Proceed',
             click: () => {
-                const wallet = this.app.bc.icp.keysRecoverFromPhrase(this.phrase.get().join(' '));
+                const wallet = this.app.icp.keysRecoverFromPhrase(this.phrase.get().join(' '));
                 this.app.user.wallets.push({'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'bc': 'icp'});
                 this.app.page('accounts');
                 this.app.sheet.clear();

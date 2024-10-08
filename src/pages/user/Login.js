@@ -48,7 +48,7 @@ export class PageLogin extends Component {
                         // Save session
                         chrome.storage.session.set({ active: true, password: this.app.user.password });
                         // Accounts page
-                        this.app.page('empty');
+                        this.app.page('accounts');
                     }
                     else {
                         alert('Incorrect password. Please try again.');

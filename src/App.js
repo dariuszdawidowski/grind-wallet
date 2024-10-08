@@ -18,7 +18,7 @@ import { keysRecoverFromPhraseSecp256k1 } from './utils/Keys.js';
  * version: 1 migration version
  * salt: <string> generated salt for password
  * password: <string> hash of the main password to this extension
- * accounts: [{name: string, principal: string, account: string, private: encrypted string}, ...]
+ * wallets: [{name: string, public: string, private: encrypted string, bc: 'ICP'}, ...]
  */
 
 
@@ -44,6 +44,7 @@ class GrindWalletPlugin extends App {
         // User credentials
         this.user = {
             password: null,
+            wallets: []
         };
 
         // Blockchain adapter
@@ -53,40 +54,56 @@ class GrindWalletPlugin extends App {
             }
         };
 
-        // Check data version
+        // Check persistent data version
+        const PERSISTENT_DATA_VERSION = 1;
         chrome.storage.local.get(['version'], (data) => {
-            if (data.version) {
+            if (data.version && data.version < PERSISTENT_DATA_VERSION) {
                 // Migrate in the future
             }
             else {
-                chrome.storage.local.set({ version: 1 });
+                chrome.storage.local.set({ version: PERSISTENT_DATA_VERSION });
             }
 
             // Check session
-            chrome.storage.session.get(['active', 'password'], (result) => {
+            chrome.storage.session.get(['active', 'password'], (session) => {
 
-                // Continue session
-                if (result.active) {
-                    this.user.password = result.password;
-                    this.page('empty');
-                }
+                // Get wallets
+                chrome.storage.local.get(['wallets'], (store) => {
 
-                // No active session
-                else {
-                    // Check that password exists
-                    chrome.storage.local.get(['salt', 'password'], (data) => {
-
-                        // Login
-                        if (data.salt && data.password) {
-                            this.page('login', {salt: data.salt, hash: data.password});
+                    if (store.wallets) {
+                        console.log('wallets', store.wallets)
+                        try {
+                            this.user.wallets = JSON.parse(store.wallets);
                         }
-
-                        // First time - create password
-                        else {
-                            this.page('register');
+                        catch (error) {
+                            this.user.wallets = [];
                         }
-                    });
-                }
+                    }
+
+                    // Continue session
+                    if (session.active === true) {
+                        this.user.password = session.password;
+                        this.page('accounts');
+                    }
+
+                    // No active session
+                    else {
+                        // Check that password exists
+                        chrome.storage.local.get(['salt', 'password'], (credentials) => {
+
+                            // Login
+                            if (credentials.salt && credentials.password) {
+                                this.page('login', {salt: credentials.salt, hash: credentials.password});
+                            }
+
+                            // First time - create password
+                            else {
+                                this.page('register');
+                            }
+                        });
+                    }
+
+                });
             });
 
         });
@@ -121,11 +138,15 @@ class GrindWalletPlugin extends App {
                 this.current = new PageLogin({app: this, ...args});
                 this.append(this.current);
                 break;
-            case 'empty':
-                this.current = new PageEmpty({app: this});
-                this.append(this.current);
-                break;
             case 'accounts':
+                if (this.user.wallets.length === 0) {
+                    this.current = new PageEmpty({app: this});
+                    this.append(this.current);
+                }
+                else {
+                    this.current = new PageListAccounts({app: this});
+                    this.append(this.current);
+                }
                 break;
         }
 

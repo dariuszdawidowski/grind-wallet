@@ -39,3 +39,12 @@ export function formatCurrency(value, fixed = 2) {
     const [whole, fractional] = s.split('.');
     return formatWithSpaces(whole, 3, false) + '.' + fractional;
 }
+
+
+/**
+ * Format 8-precision int as float
+ */
+
+export function formatE8S(e8s) {
+    return Number(e8s) / 1e8;
+}

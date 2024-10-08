@@ -2,6 +2,7 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 
+
 /**
  * Check balance for given account
  * @param actor: ledger actor
@@ -15,8 +16,7 @@ export async function icpLedgerBalance(actor, account) {
     try {
         const response = await actor.account_balance({ account });
         if ('e8s' in response) {
-            const icpBalance = Number(response.e8s) / 1e8;
-            return icpBalance;
+            return response.e8s;
         }
     }
     catch (error) {

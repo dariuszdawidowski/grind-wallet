@@ -1,6 +1,7 @@
 import { Component } from '../Boost.js';
 import { formatWithSpaces, formatCurrency } from '../utils/Currency.js';
 import { icpLedgerBalance } from '../utils/Transactions.js';
+import { formatE8S } from '../utils/Currency.js';
 
 export class Card extends Component {
 
@@ -10,7 +11,8 @@ export class Card extends Component {
         // Identity
         this.identity = args.identity;
         this.principal = args.principal;
-        this.account = args.principal;
+        this.account = args.account;
+        this.balance = null;
 
         // Build
         this.element.id = args.id;
@@ -19,7 +21,7 @@ export class Card extends Component {
             <div class="name">${args.name}</div>
             <div class="subname">CRYPTOCURRENCY WALLET</div>
             <div class="currency">ICP</div>
-            <div class="amount">${args.balance !== null ? formatCurrency(args.balance, 8) : 'Fetching...'}</div>
+            <div class="amount">Fetching...</div>
             <div class="account1">${formatWithSpaces(args.account.substring(0, 24), 4)}</div>
             <div class="account2">${formatWithSpaces(args.account.substring(24), 4)}</div>
             <img class="logo" src="${args.logo}">
@@ -40,8 +42,9 @@ export class Card extends Component {
         });
 
         // Fetch balance
-        icpLedgerBalance(this.app.icp.ledger, this.account).then(balance => {
-            console.log(balance);
+        icpLedgerBalance(this.app.icp.ledger.actor, this.account).then(balance => {
+            this.balance = balance;
+            this.element.querySelector('.amount').innerHTML = formatE8S(this.balance);
         });
         
 

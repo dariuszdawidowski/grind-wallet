@@ -23,15 +23,14 @@ export class PageListAccounts extends Component {
         `;
 
         // Accounts like credit cards
-        this.app.user.wallets.forEach(wallet => {
+        Object.values(this.app.user.wallets).forEach(wallet => {
 
             // Recreate identity based on private key
-            const info = identityFromPrivate(wallet.private) ;
+            const info = identityFromPrivate(wallet.private);
 
             // Create card
             const cardArgs = {
                 name: wallet.name,
-                balance: 0.0,
                 identity: info.identity,
                 principal: info.principal,
                 account: info.account,

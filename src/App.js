@@ -20,7 +20,7 @@ import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
  * version: 1 migration version
  * salt: <string> generated salt for password
  * password: <string> hash of the main password to this extension
- * wallets: [{name: string, public: string, private: encrypted string, bc: 'ICP'}, ...]
+ * wallets: {public_key: {name: string, public: string, private: encrypted string, crypto: 'ICP'}, ...}
  */
 
 
@@ -46,7 +46,9 @@ class GrindWalletPlugin extends App {
         // User credentials
         this.user = {
             password: null,
-            wallets: []
+            // Persistent params: crypto: 'ICP', name: string, public: string, private: encrypted string
+            // Dynamic params: identity: Object, principal: string, account: string, balance: Number
+            wallets: {}
         };
 
         // Blockchain manager
@@ -82,7 +84,7 @@ class GrindWalletPlugin extends App {
                             this.user.wallets = JSON.parse(store.wallets);
                         }
                         catch (error) {
-                            this.user.wallets = [];
+                            this.user.wallets = {};
                         }
                     }
 
@@ -145,7 +147,7 @@ class GrindWalletPlugin extends App {
                 this.append(this.current);
                 break;
             case 'accounts':
-                if (this.user.wallets.length === 0) {
+                if (Object.keys(this.user.wallets).length === 0) {
                     this.current = new PageEmpty({app: this});
                     this.append(this.current);
                 }

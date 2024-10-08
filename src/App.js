@@ -59,8 +59,6 @@ class GrindWalletPlugin extends App {
                 actor: null
             }
         };
-        this.icp.agent = new HttpAgent({ host: 'https://icp-api.io' });
-        this.icp.ledger.actor = Actor.createActor(ledgerIdlFactory, { agent: this.icp.agent, canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai' });
 
         // Check persistent data version
         const PERSISTENT_DATA_VERSION = 1;

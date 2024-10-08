@@ -1,7 +1,9 @@
 import { Component } from '../Boost.js';
 import { formatWithSpaces, formatCurrency } from '../utils/Currency.js';
-import { icpLedgerBalance } from '../utils/Transactions.js';
+import { icpLedgerBalance, icpLedgerTransfer } from '../utils/Transactions.js';
 import { formatE8S } from '../utils/Currency.js';
+import { Actor, HttpAgent } from '@dfinity/agent';
+import { idlFactory as ledgerIdlFactory } from '../did/ledger_canister.did.js';
 
 export class Card extends Component {
 
@@ -10,9 +12,17 @@ export class Card extends Component {
 
         // Identity
         this.identity = args.identity;
+        console.log('ID', this.identity._principal)
         this.principal = args.principal;
         this.account = args.account;
         this.balance = null;
+
+        this.app.icp.agent = new HttpAgent({ host: 'https://icp-api.io', caller: args.identity}, args.identity);
+        this.app.icp.agent.fetchRootKey().catch((err) => {
+            console.warn("Unable to fetch root key.");
+            console.error(err);
+        });
+        this.app.icp.ledger.actor = Actor.createActor(ledgerIdlFactory, { agent: this.app.icp.agent, canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai' });
 
         // Build
         this.element.id = args.id;
@@ -38,7 +48,15 @@ export class Card extends Component {
         this.event.on({
             id: `card:${this.element.id}`,
             type: 'click',
-            callback: args.click
+            //callback: args.click
+            callback: () => {
+                console.log('TRANSFER')
+                icpLedgerTransfer(
+                    this.app.icp.ledger.actor,
+                    '...principal...',
+                    '...account...'
+                ).then(result => console.log(result));
+            }
         });
 
         // Fetch balance

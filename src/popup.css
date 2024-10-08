@@ -148,7 +148,7 @@ button.butticon img {
     display: flex;
     flex-direction: row;
     margin-right: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .input-phrase:nth-child(3n) {

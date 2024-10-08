@@ -52,7 +52,7 @@ export function identityFromPrivate(privateKey) {
  * Encrypt key
  */
 
-async function encryptKey(privateKey, password) {
+export async function encryptKey(text, password) {
     const enc = new TextEncoder();
     const keyMaterial = await crypto.subtle.importKey(
         "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
@@ -74,7 +74,7 @@ async function encryptKey(privateKey, password) {
     const ciphertext = await crypto.subtle.encrypt(
         { name: "AES-GCM", iv: iv },
         key,
-        enc.encode(privateKey)
+        enc.encode(text)
     );
     return { ciphertext, iv, salt };
 }
@@ -84,7 +84,7 @@ async function encryptKey(privateKey, password) {
  * Decrypt key
  */
 
-async function decryptKey(encryptedData, password) {
+export async function decryptKey(encryptedData, password) {
     const enc = new TextEncoder();
     const keyMaterial = await crypto.subtle.importKey(
         "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]

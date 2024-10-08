@@ -46,3 +46,66 @@ export function identityFromPrivate(privateKey) {
     const account = AccountIdentifier.fromPrincipal({ principal });
     return { identity, principal: principal.toString(), account: account.toHex()};
 }
+
+
+/**
+ * Encrypt key
+ */
+
+async function encryptKey(privateKey, password) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
+    );
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const key = await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: 100000,
+            hash: "SHA-256",
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+       ["encrypt"]
+    );
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ciphertext = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        enc.encode(privateKey)
+    );
+    return { ciphertext, iv, salt };
+}
+  
+
+/**
+ * Decrypt key
+ */
+
+async function decryptKey(encryptedData, password) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
+    );
+    const key = await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: encryptedData.salt,
+            iterations: 100000,
+            hash: "SHA-256",
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+    );
+    const decrypted = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: encryptedData.iv },
+        key,
+        encryptedData.ciphertext
+    );
+    return new TextDecoder().decode(decrypted);
+  }
+  

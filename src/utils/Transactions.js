@@ -41,7 +41,7 @@ export async function icpLedgerTransfer(actor, principal, account) {
         to: {owner: Principal.fromText(principal), subaccount: []},
         fee: [],
         memo: [],
-        amount: BigInt(100000), // 0.0001 ICP
+        amount: BigInt(10000), // 0.0001 ICP
         from_subaccount: [],
         created_at_time: [],
     });
@@ -49,9 +49,9 @@ export async function icpLedgerTransfer(actor, principal, account) {
     /*
     let response = await actor.transfer({
         to: account,
-        fee: { e8s: BigInt(100000) }, // 0.001 ICP
+        fee: { e8s: BigInt(10000) }, // 0.001 ICP
         memo: BigInt(0),
-        amount: { e8s: BigInt(100000) }, // 0.001 ICP
+        amount: { e8s: BigInt(10000) }, // 0.001 ICP
         from_subaccount: [],
         created_at_time: [],
     });
@@ -61,7 +61,7 @@ export async function icpLedgerTransfer(actor, principal, account) {
     //     to: {owner: principal, subaccount: []},
     //     fee: [],
     //     memo: [],
-    //     amount: BigInt(100000), // 0.0001 ICP
+    //     amount: BigInt(10000), // 0.0001 ICP
     //     from_subaccount: [],
     //     created_at_time: [],
     // });

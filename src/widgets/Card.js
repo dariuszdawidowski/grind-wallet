@@ -12,16 +12,11 @@ export class Card extends Component {
 
         // Identity
         this.identity = args.identity;
-        console.log('ID', this.identity._principal)
         this.principal = args.principal;
         this.account = args.account;
         this.balance = null;
 
-        this.app.icp.agent = new HttpAgent({ host: 'https://icp-api.io', caller: args.identity}, args.identity);
-        this.app.icp.agent.fetchRootKey().catch((err) => {
-            console.warn("Unable to fetch root key.");
-            console.error(err);
-        });
+        this.app.icp.agent = new HttpAgent({ host: 'https://icp-api.io', identity: args.identity});
         this.app.icp.ledger.actor = Actor.createActor(ledgerIdlFactory, { agent: this.app.icp.agent, canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai' });
 
         // Build

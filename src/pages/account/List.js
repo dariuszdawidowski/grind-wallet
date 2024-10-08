@@ -4,6 +4,7 @@ import { Card } from '../../widgets/Card.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetShowAccount } from './Show.js';
+import { identityFromPrivate } from '../../utils/Keys.js';
 const { version } = require('../../../package.json');
 
 
@@ -21,24 +22,35 @@ export class PageListAccounts extends Component {
             </h1>
         `;
 
-        // Cards
-        const cardArgs = {
-            name: 'ICP #1',
-            balance: 0.0,
-            account: 'aa39b30e61dd2b181a5f2df050d3f0de1ca8811ac7a352a3af97b0ffb29f423a',
-            logo: 'assets/IC_logo_horizontal.svg',
-        };
-        this.append(new Card({
-            app: args.app,
-            id: 'account-aa39b30e61dd2b181a5f2df050d3f0de1ca8811ac7a352a3af97b0ffb29f423a',
-            ...cardArgs,
-            click: () => {
-                this.app.sheet.append({
-                    title: args.name,
-                    component: new SheetShowAccount({app: args.app, ...cardArgs})
-                });
-            }
-        }));
+        // Accounts like credit cards
+        this.app.user.wallets.forEach(wallet => {
+
+            // Recreate identity based on private key
+            const info = identityFromPrivate(wallet.private) ;
+
+            // Create card
+            const cardArgs = {
+                name: wallet.name,
+                balance: 0.0,
+                identity: info.identity,
+                principal: info.principal,
+                account: info.account,
+                public: wallet.public,
+                logo: 'assets/IC_logo_horizontal.svg',
+            };
+            this.append(new Card({
+                app: args.app,
+                id: `account-${info.account}`,
+                ...cardArgs,
+                click: () => {
+                    this.app.sheet.append({
+                        title: wallet.name,
+                        component: new SheetShowAccount({app: args.app, ...cardArgs})
+                    });
+                }
+            }));
+            
+        });
 
         // Separator
         this.element.append(document.createElement('hr'));

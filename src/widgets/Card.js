@@ -7,6 +7,11 @@ export class Card extends Component {
     constructor(args) {
         super(args);
 
+        // Identity
+        this.identity = args.identity;
+        this.principal = args.principal;
+        this.account = args.principal;
+
         // Build
         this.element.id = args.id;
         this.element.classList.add('card');

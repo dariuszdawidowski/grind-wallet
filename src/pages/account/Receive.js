@@ -2,7 +2,7 @@ import { Component } from '../../Boost.js';
 import { Button } from '../../widgets/Button.js';
 
 
-export class SheetReceiveAccount extends Component {
+export class SheetAccountReceive extends Component {
 
     constructor(args) {
         super(args);
@@ -37,4 +37,3 @@ export class SheetReceiveAccount extends Component {
     }
 
 }
-

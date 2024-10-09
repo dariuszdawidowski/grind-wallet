@@ -4,10 +4,11 @@ import { Button } from '../../widgets/Button.js';
 import { InputCurrency, InputAccount } from '../../widgets/Input.js';
 
 
-export class SheetSendAccount extends Component {
+export class SheetAccountSend extends Component {
 
     constructor(args) {
         super(args);
+        console.log('T1', this)
 
         // Build
         this.element.classList.add('form');

@@ -35,6 +35,7 @@ export class SheetImportAccount extends Component {
                 this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'crypto': 'ICP'};
                 this.app.page('accounts');
                 this.app.sheet.clear();
+                this.app.sheet.hide();
             }
         }));
 

@@ -43,15 +43,15 @@ export class Card extends Component {
         this.event.on({
             id: `card:${this.element.id}`,
             type: 'click',
-            //callback: args.click
-            callback: () => {
+            callback: args.click
+            /*callback: () => {
                 console.log('TRANSFER')
                 icpLedgerTransfer(
                     this.app.icp.ledger.actor,
                     '...principal...',
                     '...account...'
                 ).then(result => console.log(result));
-            }
+            }*/
         });
 
         // Fetch balance

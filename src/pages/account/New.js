@@ -27,6 +27,7 @@ export class SheetNewAccount extends Component {
                 this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'bc': 'ICP'};
                 this.app.page('accounts');
                 this.app.sheet.clear();
+                this.app.sheet.hide();
             }
         }));
 

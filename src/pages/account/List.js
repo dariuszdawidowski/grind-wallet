@@ -3,7 +3,7 @@ import { Button } from '../../widgets/Button.js';
 import { Card } from '../../widgets/Card.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
-import { SheetShowAccount } from './Show.js';
+import { SheetAccountDetails } from './Details.js';
 import { identityFromPrivate } from '../../utils/Keys.js';
 const { version } = require('../../../package.json');
 
@@ -44,7 +44,7 @@ export class PageListAccounts extends Component {
                 click: () => {
                     this.app.sheet.append({
                         title: wallet.name,
-                        component: new SheetShowAccount({app: args.app, ...cardArgs})
+                        component: new SheetAccountDetails({app: args.app, ...cardArgs})
                     });
                 }
             }));

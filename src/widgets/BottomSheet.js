@@ -15,7 +15,10 @@ export class BottomSheet extends Component {
 
         // X close button
         this.x = this.element.querySelector('.x');
-        this.x.addEventListener('click', () => this.clear());
+        this.x.addEventListener('click', () => {
+            this.clear();
+            this.hide();
+        });
 
         // Title
         this.title = this.element.querySelector('h1.title');
@@ -24,7 +27,7 @@ export class BottomSheet extends Component {
         this.content = this.element.querySelector('.content');
 
         // Hide
-        if (('hidden' in args) && args.hidden) this.clear();
+        if (('hidden' in args) && args.hidden) this.hide();
     }
 
     /**
@@ -53,7 +56,7 @@ export class BottomSheet extends Component {
     }
 
     /**
-     * Clear content and hide sheet
+     * Clear content
      */
 
     clear() {
@@ -67,6 +70,14 @@ export class BottomSheet extends Component {
         // Clear DOM
         this.content.innerHTML = '';
 
+    }
+
+
+    /**
+     * Hide sheet
+     */
+
+    hide() {
         // Hide animation
         this.element.classList.remove('visible');
         setTimeout(() => {

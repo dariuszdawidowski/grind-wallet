@@ -1,14 +1,16 @@
 import { Component } from '../../Boost.js';
 import { formatCurrency } from '../../utils/Currency.js';
 import { Button, Butticon } from '../../widgets/Button.js';
-import { SheetSendAccount } from './Send.js';
-import { SheetReceiveAccount } from './Receive.js';
+import { SheetAccountSend } from './Send.js';
+import { SheetAccountReceive } from './Receive.js';
 
 
-export class SheetShowAccount extends Component {
+export class SheetAccountDetails extends Component {
 
     constructor(args) {
         super(args);
+
+        if (!('balance' in args)) args.balance = 0;
 
         // Build
         this.element.classList.add('form');
@@ -29,9 +31,10 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
+                    this.app.sheet.clear();
                     this.app.sheet.append({
                         title: args.name,
-                        component: new SheetSendAccount(args)
+                        component: new SheetAccountSend(args)
                     });
                 }
             }),
@@ -41,9 +44,10 @@ export class SheetShowAccount extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
+                    this.app.sheet.clear();
                     this.app.sheet.append({
                         title: args.name,
-                        content: new SheetReceiveAccount(args)
+                        component: new SheetAccountReceive(args)
                     });
                 }
             }),

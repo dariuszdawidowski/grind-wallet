@@ -49,6 +49,10 @@ export class InputCurrency extends Component {
 
     }
 
+    get() {
+        return this.input.value;
+    }
+
 }
 
 
@@ -65,6 +69,10 @@ export class InputAccount extends Component {
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
 
+    }
+
+    get() {
+        return this.input.value;
     }
 
 }

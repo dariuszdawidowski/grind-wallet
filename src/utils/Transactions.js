@@ -1,7 +1,8 @@
 /*** Transaction functions ***/
 
 import { hexStringToUint8Array } from '@dfinity/utils';
-import { Principal } from "@dfinity/principal";
+import { Principal } from '@dfinity/principal';
+import { ICP2ICPt } from './Currency.js';
 
 /**
  * Check balance for given account
@@ -30,18 +31,21 @@ export async function icpLedgerBalance(actor, account) {
 /**
  * Transfer ICP
  * @param actor: ledger actor - actor with bound spender identity through agent
+ * @param principal: string hex or Principal - destination principal
  * @param account: string hex or Uint8Array - destination account
+ * @param icp: Number - amount in ICP to send
  */
 
-export async function icpLedgerTransfer(actor, principal, account) {
+export async function icpLedgerTransfer(actor, principal, account, icp) {
 
+    if (typeof(principal) == 'string') principal = Principal.fromText(principal);
 	if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
     let response = await actor.icrc1_transfer({
-        to: {owner: Principal.fromText(principal), subaccount: []},
+        to: {owner: principal, subaccount: []},
         fee: [],
         memo: [],
-        amount: BigInt(10000), // 0.0001 ICP
+        amount: ICP2ICPt(icp),
         from_subaccount: [],
         created_at_time: [],
     });
@@ -65,8 +69,6 @@ export async function icpLedgerTransfer(actor, principal, account) {
     //     from_subaccount: [],
     //     created_at_time: [],
     // });
-
-    console.log(response)
 
     return response;
 }

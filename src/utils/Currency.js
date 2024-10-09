@@ -48,3 +48,23 @@ export function formatCurrency(value, fixed = 2) {
 export function formatE8S(e8s) {
     return Number(e8s) / 1e8;
 }
+
+
+/**
+ * Convert Number ICP to BigInt ICPt
+ */
+
+const E8S_PER_ICP = BigInt(100000000);
+
+export const ICP2ICPt = (amount) => {
+    const [integral, fractional] = `${amount}`.split('.');
+
+    if ((fractional ?? '0').length > 8) {
+        throw new Error('More than 8 decimals not supported.');
+    }
+
+    return (
+        BigInt(integral ?? 0) * E8S_PER_ICP +
+        BigInt((fractional ?? '0').padEnd(8, '0'))
+    );
+};

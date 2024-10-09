@@ -11,7 +11,7 @@ import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
 import { PageRegister } from './pages/user/Register.js';
 import { PageLogin } from './pages/user/Login.js';
-import { keysRecoverFromPhraseSecp256k1 } from './utils/Keys.js';
+import { keysRecoverFromPhraseSecp256k1, encryptKey, decryptKey } from './utils/Keys.js';
 import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
 
 /**
@@ -77,13 +77,7 @@ class GrindWalletPlugin extends App {
                 chrome.storage.local.get(['wallets'], (store) => {
 
                     if (store.wallets) {
-                        console.log('wallets', store.wallets)
-                        try {
-                            this.user.wallets = JSON.parse(store.wallets);
-                        }
-                        catch (error) {
-                            this.user.wallets = {};
-                        }
+                        this.load('wallets', store.wallets);
                     }
 
                     // Continue session
@@ -156,6 +150,37 @@ class GrindWalletPlugin extends App {
                 break;
         }
 
+    }
+
+    load(resource, data) {
+
+        // Wallets
+        if (resource == 'wallets') {
+            try {
+                this.user.wallets = JSON.parse(data);
+            }
+            catch (error) {
+                this.user.wallets = {};
+            }
+        }
+
+    }
+
+    save(resource) {
+
+        // Wallets
+        if (resource == 'wallets') {
+            const serializeWallets = {};
+            Object.values(this.user.wallets).forEach(wallet => {
+                serializeWallets[wallet.public] = {
+                    name: wallet.name,
+                    public: wallet.public,
+                    private: wallet.private,
+                    crypto: wallet.crypto
+                };
+            });
+            // chrome.storage.local.set('wallets', JSON.stringify(serializeWallets));
+        }
     }
 
 }

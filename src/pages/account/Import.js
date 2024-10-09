@@ -33,6 +33,7 @@ export class SheetImportAccount extends Component {
             click: () => {
                 const wallet = this.app.icp.keysRecoverFromPhrase(this.phrase.get().join(' '));
                 this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'crypto': 'ICP'};
+                this.app.save('wallets');
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

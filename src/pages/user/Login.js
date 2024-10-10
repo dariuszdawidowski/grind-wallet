@@ -19,7 +19,7 @@ export class PageLogin extends Component {
             <p style="text-align: center; margin-bottom: 32px;">
                 for the Internet Computer blockchain (ICP)
             </p>
-            <img src="assets/icon728.png" class="biglogo" style="margin-bottom: 120px;">
+            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 120px;"></div>
             <h2>
                 Please enter your password
             </h2>

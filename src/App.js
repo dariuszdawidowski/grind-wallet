@@ -11,7 +11,7 @@ import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
 import { PageRegister } from './pages/user/Register.js';
 import { PageLogin } from './pages/user/Login.js';
-import { keysRecoverFromPhraseSecp256k1, encryptKey, decryptKey } from './utils/Keys.js';
+import { keysRecoverFromPhraseSecp256k1, encryptKey, decryptKey, identityFromPrivate } from './utils/Keys.js';
 import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
 
 /**
@@ -20,7 +20,7 @@ import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
  * version: 1 migration version
  * salt: <string> generated salt for password
  * password: <string> hash of the main password to this extension
- * wallets: {public_key: {name: string, public: string, private: encrypted string, crypto: 'ICP'}, ...}
+ * wallets: {public_key: {name: string, public: string, private: string, crypto: 'ICP', style: string}, ...}
  */
 
 
@@ -47,8 +47,8 @@ class GrindWalletPlugin extends App {
         this.user = {
             password: null,
             /**
-             * Persistent params: crypto: 'ICP', name: string, public: string, private: encrypted string
-             * Dynamic params: identity: Object, principal: string, account: string, balance: Number
+             * Persistent params: name: string, public: string, private: encrypted string, crypto: 'ICP', style: 'ICP-01'
+             * Dynamic params: identity: Object, principal: string, account: string, balance: Number, agent: HttpAgent, actor: Actor
              */
             wallets: {}
         };
@@ -158,15 +158,44 @@ class GrindWalletPlugin extends App {
 
         // Wallets
         if (resource == 'wallets') {
+
+            // Deserialize
             try {
                 this.user.wallets = JSON.parse(data);
             }
             catch (error) {
                 this.user.wallets = {};
             }
+
+            // Init
+            this.create('wallets');
         }
 
     }
+
+    create(resource) {
+
+        // Wallets
+        if (resource == 'wallets') {
+            Object.values(this.user.wallets).forEach(wallet => {
+                const info = identityFromPrivate(wallet.private);
+                if (!('identity' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].identity = info.identity;
+                if (!('principal' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].principal = info.principal;
+                if (!('account' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].account = info.account;
+                if (!('balance' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].balance = 0;
+                if (!('agent' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].agent = new HttpAgent({
+                    host: 'https://icp-api.io',
+                    identity: this.user.wallets[wallet.public].identity
+                });
+                if (!('actor' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].actor = Actor.createActor(ledgerIdlFactory, {
+                    agent: this.user.wallets[wallet.public].agent,
+                    canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai'
+                });
+            });
+        }
+
+    }
+
 
     save(resource) {
 
@@ -178,7 +207,8 @@ class GrindWalletPlugin extends App {
                     name: wallet.name,
                     public: wallet.public,
                     private: wallet.private,
-                    crypto: wallet.crypto
+                    crypto: wallet.crypto,
+                    style: wallet.style
                 };
             });
             chrome.storage.local.set({ 'wallets': JSON.stringify(serializeWallets) });

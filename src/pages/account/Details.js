@@ -92,6 +92,7 @@ export class SheetAccountDetails extends Component {
             click: () => {
                 if (confirm('Delete this account?')) {
                     console.log('Delete account');
+                    chrome.storage.local.set({ 'wallets': {} });
                 }
             }
         }));

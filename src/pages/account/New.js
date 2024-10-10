@@ -23,8 +23,9 @@ export class SheetNewAccount extends Component {
             text: 'Proceed',
             click: () => {
                 const wallet = this.app.icp.keysRecoverFromPhrase();
-                console.log(wallet)
-                this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'bc': 'ICP'};
+                this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'crypto': 'ICP', style: 'ICP-01'};
+                this.app.save('wallets');
+                this.app.create('wallets');
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

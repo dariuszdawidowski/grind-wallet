@@ -51,7 +51,6 @@ export class Card extends Component {
             this.balance = balance;
             this.element.querySelector('.amount').innerHTML = formatE8S(this.balance);
         });
-        
 
     }
 

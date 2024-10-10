@@ -1,5 +1,6 @@
 import { Component } from '../../Boost.js';
 import { verifyPassword } from '../../utils/Password.js';
+import { Form } from '../../widgets/Form.js';
 import { Button } from '../../widgets/Button.js';
 import { InputPassword } from '../../widgets/Input.js';
 const { version } = require('../../../package.json');
@@ -25,6 +26,19 @@ export class PageLogin extends Component {
             </h2>
         `;
 
+        // Form
+        const form = new Form({
+            app: args.app,
+            id: 'login-form',
+        });
+        this.append(form);
+
+        // const form = document.createElement('form');
+        // form.addEventListener('submit', (event) => {
+        //     event.preventDefault();
+        // });
+        // this.element.append(form);
+
         // Inputs
         const password = new InputPassword({
             app: args.app,
@@ -32,10 +46,10 @@ export class PageLogin extends Component {
             placeholder: 'Password',
             focus: true
         });
-        this.append(password);
+        form.append(password);
 
         // Buttons
-        this.append(new Button({
+        const button = new Button({
             app: args.app,
             id: 'end-password-ok',
             text: 'Unlock',
@@ -55,7 +69,8 @@ export class PageLogin extends Component {
                     }
                 });
             }
-        }));
+        });
+        form.append(button);
 
     }
 

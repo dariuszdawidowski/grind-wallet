@@ -57,6 +57,12 @@ h2 {
     text-align: center;
 }
 
+/* Form */
+
+form {
+    text-align: center;
+}
+
 /* Buttons */
 
 .buttonbar {
@@ -414,14 +420,14 @@ hr {
     top: 0;
     position: absolute;
     background: inherit;
-    filter: blur(26px) brightness(110%);
-    transform: scale(1.2);
+    filter: blur(20px) brightness(110%);
+    transform: scale(1.0);
     z-index: -1;
     transition: transform 1.5s ease;
 }
 
 .backlight:hover::after {
-    transform: scale(1.4);
+    transform: scale(1.1);
 }
 
 /* Tweaks */

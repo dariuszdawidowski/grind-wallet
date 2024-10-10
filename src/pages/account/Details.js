@@ -1,6 +1,6 @@
 import { Component } from '../../Boost.js';
 import { formatCurrency } from '../../utils/Currency.js';
-import { Button, Butticon } from '../../widgets/Button.js';
+import { Button, ButtIcon, ButtLink } from '../../widgets/Button.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
 
@@ -25,7 +25,7 @@ export class SheetAccountDetails extends Component {
 
         // Buttons
         this.buttons = {
-            send: new Butticon({
+            send: new ButtIcon({
                 app: args.app,
                 id: 'use-account-send',
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
@@ -38,7 +38,7 @@ export class SheetAccountDetails extends Component {
                     });
                 }
             }),
-            receive: new Butticon({
+            receive: new ButtIcon({
                 app: args.app,
                 id: 'use-account-receive',
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
@@ -51,7 +51,7 @@ export class SheetAccountDetails extends Component {
                     });
                 }
             }),
-            swap: new Butticon({
+            swap: new ButtIcon({
                 app: args.app,
                 id: 'use-account-swap',
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
@@ -60,7 +60,7 @@ export class SheetAccountDetails extends Component {
                     chrome.tabs.create({ url: 'https://app.icpswap.com' });
                 }
             }),
-            fiat: new Butticon({
+            fiat: new ButtIcon({
                 app: args.app,
                 id: 'use-account-fiat',
                 icon: '<img src="assets/material-design-icons/currency-usd.svg">',
@@ -85,10 +85,16 @@ export class SheetAccountDetails extends Component {
         }));
 
         // Remove
-        const remove = document.createElement('div');
-        remove.classList.add('softbutton');
-        remove.innerHTML = 'Remove this account from the list →';
-        this.element.append(remove);
+        this.append(new ButtLink({
+            app: args.app,
+            id: 'use-account-delete',
+            text: 'Remove this account from the list',
+            click: () => {
+                if (confirm('Delete this account?')) {
+                    console.log('Delete account');
+                }
+            }
+        }));
 
     }
 

@@ -57,7 +57,7 @@ export class Button extends Component {
  *   enter: submit on enter (default false)
  */
 
-export class Butticon extends Button {
+export class ButtIcon extends Button {
 
     constructor(args) {
         super({...args, create: 'button'});
@@ -65,6 +65,36 @@ export class Butticon extends Button {
         // Build
         this.element.classList.add('butticon');
         this.element.innerHTML = args.icon + args.text;
+
+    }
+
+}
+
+
+/**
+ * Link-like button
+ * args:
+ *   app: reference to the main app
+ *   id: unique idientifier
+ *   text: display
+ *   click: callback
+ */
+
+export class ButtLink extends Component {
+
+    constructor(args) {
+        super(args);
+
+        // Build
+        this.element.classList.add('buttlink');
+        this.element.innerHTML = args.text + ' →';
+
+        // Events
+        this.event.on({
+            id: `button:${this.element.id}`,
+            type: 'click',
+            callback: args.click
+        });
 
     }
 

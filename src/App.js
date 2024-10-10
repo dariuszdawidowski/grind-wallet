@@ -46,8 +46,10 @@ class GrindWalletPlugin extends App {
         // User credentials
         this.user = {
             password: null,
-            // Persistent params: crypto: 'ICP', name: string, public: string, private: encrypted string
-            // Dynamic params: identity: Object, principal: string, account: string, balance: Number
+            /**
+             * Persistent params: crypto: 'ICP', name: string, public: string, private: encrypted string
+             * Dynamic params: identity: Object, principal: string, account: string, balance: Number
+             */
             wallets: {}
         };
 
@@ -179,7 +181,7 @@ class GrindWalletPlugin extends App {
                     crypto: wallet.crypto
                 };
             });
-            // chrome.storage.local.set('wallets', JSON.stringify(serializeWallets));
+            chrome.storage.local.set({ 'wallets': JSON.stringify(serializeWallets) });
         }
     }
 

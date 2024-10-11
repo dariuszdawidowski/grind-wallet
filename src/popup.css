@@ -27,6 +27,30 @@ body {
     flex-direction: column;
 }
 
+/* Scroll */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
 /* Headers */
 
 h1 {
@@ -353,7 +377,7 @@ hr {
 /* Bottom sheet */
 
 #bottom-sheet {
-    position: absolute;
+    position: fixed;
     bottom: -100%;
     left: 0;
     width: 100%;
@@ -457,4 +481,6 @@ hr {
     margin-top: 20px;
 }
 
-
+#import-account {
+    margin-bottom: 50px;
+}

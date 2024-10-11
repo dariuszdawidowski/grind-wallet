@@ -25,26 +25,15 @@ export class PageListAccounts extends Component {
         // Accounts like credit cards
         Object.values(this.app.user.wallets).forEach(wallet => {
 
-            // Recreate identity based on private key
-            const info = identityFromPrivate(wallet.private);
-
             // Create card
-            const cardArgs = {
-                name: wallet.name,
-                identity: info.identity,
-                principal: info.principal,
-                account: info.account,
-                public: wallet.public,
-                logo: 'assets/IC_logo_horizontal.svg',
-            };
             this.append(new Card({
                 app: args.app,
-                id: `account-${info.account}`,
-                ...cardArgs,
+                id: `account-${wallet.account}`,
+                wallet,
                 click: () => {
                     this.app.sheet.append({
                         title: wallet.name,
-                        component: new SheetAccountDetails({app: args.app, ...cardArgs})
+                        component: new SheetAccountDetails({app: args.app, wallet})
                     });
                 }
             }));

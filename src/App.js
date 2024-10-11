@@ -33,7 +33,7 @@ class GrindWalletPlugin extends App {
     init() {
 
         // Detect macOS
-        if (navigator.platform.toUpperCase().indexOf('MAC') >= 0) {
+        if (navigator.userAgent.includes('Mac')) {
             document.body.classList.add('macos');
         }
 
@@ -47,19 +47,15 @@ class GrindWalletPlugin extends App {
         this.user = {
             password: null,
             /**
-             * Persistent params: name: string, public: string, private: encrypted string, crypto: 'ICP', style: 'ICP-01'
-             * Dynamic params: identity: Object, principal: string, account: string, balance: Number, agent: HttpAgent, actor: Actor
+             * Persistent params: name: string, public: string, private: string, crypto: 'ICP', style: 'ICP-01'
+             * Dynamic params: identity: Object, principal: string, account: string, balance: e8s (ICPt), agent: HttpAgent, actor: Actor
              */
             wallets: {}
         };
 
         // Blockchain manager
         this.icp = {
-            agent: null,
             keysRecoverFromPhrase: keysRecoverFromPhraseSecp256k1,
-            ledger: {
-                actor: null
-            }
         };
 
         // Check persistent data version
@@ -80,6 +76,7 @@ class GrindWalletPlugin extends App {
 
                     if (store.wallets) {
                         this.load('wallets', store.wallets);
+                        this.create('wallets');
                     }
 
                     // Continue session

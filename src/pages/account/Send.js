@@ -11,6 +11,9 @@ export class SheetAccountSend extends Component {
     constructor(args) {
         super(args);
 
+        // Wallet reference
+        this.wallet = this.app.user.wallets[this.public];
+
         // Build
         this.element.classList.add('form');
 

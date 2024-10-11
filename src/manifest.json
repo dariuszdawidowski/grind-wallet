@@ -1,6 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Grind Wallet",
+    "description": "A Crypto Wallet for the Internet Computer (ICP) blockchain.",
     "version": "0.0.0",
     "permissions": ["storage", "activeTab", "scripting"],
     "action": {

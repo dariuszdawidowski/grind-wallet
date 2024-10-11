@@ -1,5 +1,5 @@
 import { Component } from '../../Boost.js';
-import { formatCurrency } from '../../utils/Currency.js';
+import { formatE8S } from '../../utils/Currency.js';
 import { Button, ButtIcon, ButtLink } from '../../widgets/Button.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
@@ -10,13 +10,14 @@ export class SheetAccountDetails extends Component {
     constructor(args) {
         super(args);
 
-        if (!('balance' in args)) args.balance = 0;
+        // Wallet reference
+        this.wallet = args.wallet;
 
         // Build
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${args.balance !== null ? formatCurrency(args.balance, 8) + ' ICP' : 'Fetching...'}
+               ${this.wallet.balance !== null ? formatE8S(this.wallet.balance) + ' ICP' : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');
@@ -33,7 +34,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: args.name,
+                        title: this.wallet.name,
                         component: new SheetAccountSend(args)
                     });
                 }
@@ -46,7 +47,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: args.name,
+                        title: this.wallet.name,
                         component: new SheetAccountReceive(args)
                     });
                 }
@@ -80,7 +81,7 @@ export class SheetAccountDetails extends Component {
             id: 'use-account-dashboard',
             text: 'Show in ICP Dashboard',
             click: () => {
-                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${args.account}` });
+                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
             }
         }));
 
@@ -91,7 +92,6 @@ export class SheetAccountDetails extends Component {
             text: 'Remove this account from the list',
             click: () => {
                 if (confirm('Delete this account?')) {
-                    console.log('Delete account');
                     chrome.storage.local.set({ 'wallets': {} });
                 }
             }

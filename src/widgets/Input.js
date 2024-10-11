@@ -92,7 +92,10 @@ export class InputPhrase extends Component {
         this.element.append(number);
 
         this.input = document.createElement('input');
+        if (('readonly' in args) && args.readonly == true) this.input.readOnly = true;
         this.element.append(this.input);
+
+        if (('value' in args) && args.value != null) this.set(args.value);
     }
 
     set(value) {
@@ -111,6 +114,9 @@ export class RecoveryPhrase extends Component {
     constructor(args) {
         super(args);
 
+        // Priovided phrase
+        this.phrase = ('phrase' in args) ? args.phrase.split(' ') : [];
+
         // Build
         this.element.id = args.id;
         this.element.classList.add('input-recovery');
@@ -122,7 +128,9 @@ export class RecoveryPhrase extends Component {
             const input = new InputPhrase({
                 app: args.app,
                 id: `phrase-${nr}`,
-                nr
+                nr,
+                readonly: ('readonly' in args) ? args.readonly : false,
+                value: this.phrase.length ? this.phrase[nr - 1] : null
             });
             this.inputs.push(input);
             this.append(input);

@@ -1,5 +1,5 @@
 /**
- * Boost v 0.6.0
+ * Boost v 0.6.1
  * Ultra-minimalistic component rendering and event handling framework for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  */
@@ -119,7 +119,7 @@ export class Component {
 
             on: (args) => {
                 //console.log('on:', args)
-                if (args.id in this.app.event.listeners) console.error(`Conflicting events ${args.id}`)
+                // if (args.id in this.app.event.listeners) console.error(`Conflicting events ${args.id}`)
                 this.event.registry.push(args.id);
                 this.app.event.listeners[args.id] = {
                     type: ('type' in args ? args.type : null),

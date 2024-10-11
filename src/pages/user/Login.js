@@ -33,12 +33,6 @@ export class PageLogin extends Component {
         });
         this.append(form);
 
-        // const form = document.createElement('form');
-        // form.addEventListener('submit', (event) => {
-        //     event.preventDefault();
-        // });
-        // this.element.append(form);
-
         // Inputs
         const password = new InputPassword({
             app: args.app,
@@ -55,23 +49,42 @@ export class PageLogin extends Component {
             text: 'Unlock',
             enter: true,
             click: () => {
-                verifyPassword(password.get(), args.salt, args.hash).then(valid => {
-                    if (valid) {
-                        // Store password
-                        this.app.user.password = password.get();
-                        // Save session
-                        chrome.storage.session.set({ active: true, password: this.app.user.password });
-                        // Accounts page
-                        this.app.page('accounts');
-                    }
-                    else {
-                        alert('Incorrect password. Please try again.');
-                    }
-                });
+                this.verify(password.get(), args.salt, args.hash);
             }
         });
         form.append(button);
 
+    }
+
+    verify(password, salt, hash) {
+        verifyPassword(password, salt, hash).then((valid) => {
+            if (valid) {
+                // Store password
+                this.app.user.password = password;
+                // Save session
+                chrome.storage.session.set({ active: true, password: this.app.user.password });
+                // Load and decode wallets
+                chrome.storage.local.get(['wallets'], (store) => {
+
+                    if (store.wallets && Object.keys(store.wallets).length) {
+                        this.app.load('wallets', store.wallets);
+                        this.app.create('wallets').then(() => {
+                            // Show accounts list
+                            this.app.page('accounts');
+                        });
+                    }
+
+                    // Empty accounts page
+                    else {
+                        this.app.page('accounts');
+                    }
+
+                });
+            }
+            else {
+                alert('Incorrect password. Please try again.');
+            }
+        });
     }
 
 }

@@ -2,6 +2,7 @@ import { Component } from '../../Boost.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
 import { RecoveryPhrase } from '../../widgets/Input.js';
 import { genWalletName } from '../../utils/General.js';
+import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '../../utils/Keys.js';
 
 
 export class SheetNewAccount extends Component {
@@ -31,17 +32,21 @@ export class SheetNewAccount extends Component {
     }
 
     createNewWallet() {
-        const wallet = this.app.icp.keysRecoverFromPhrase();
+        const wallet = keysRecoverFromPhraseSecp256k1();
         const crypto = 'ICP';
         const style = 'ICP-01'
         const name = genWalletName(this.app.user.wallets, crypto);
-        this.app.user.wallets[wallet.public] = {name, public: wallet.public, private: wallet.private, crypto, style};
-        this.app.save('wallets');
-        this.app.create('wallets');
-        this.app.sheet.clear();
-        this.app.sheet.append({
-            title: name,
-            component: new SheetNewAccountPhrase({app: this.app, phrase: wallet.mnemonic})
+        encryptKey(wallet.private, this.app.user.password).then(encrypted => {
+            const secret = serializeEncryptKey(encrypted);
+            this.app.user.wallets[wallet.public] = {name, public: wallet.public, secret, crypto, style};
+            this.app.save('wallets');
+            this.app.create('wallets').then(() => {
+                this.app.sheet.clear();
+                this.app.sheet.append({
+                    title: name,
+                    component: new SheetNewAccountPhrase({app: this.app, phrase: wallet.mnemonic})
+                });
+            });
         });
     }
 

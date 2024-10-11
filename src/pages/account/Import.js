@@ -1,6 +1,8 @@
 import { Component } from '../../Boost.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
 import { RecoveryPhrase } from '../../widgets/Input.js';
+import { genWalletName } from '../../utils/General.js';
+import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '../../utils/Keys.js';
 
 
 export class SheetImportAccount extends Component {
@@ -31,13 +33,7 @@ export class SheetImportAccount extends Component {
             id: 'import-account-proceed',
             text: 'Proceed',
             click: () => {
-                const wallet = this.app.icp.keysRecoverFromPhrase(this.phrase.get().join(' '));
-                this.app.user.wallets[wallet.public] = {'name': 'ICP #1', 'public': wallet.public, 'private': wallet.private, 'crypto': 'ICP', style: 'ICP-01'};
-                this.app.save('wallets');
-                this.app.create('wallets');
-                this.app.page('accounts');
-                this.app.sheet.clear();
-                this.app.sheet.hide();
+                this.importNewWallet();
             }
         }));
 
@@ -46,6 +42,23 @@ export class SheetImportAccount extends Component {
             app: args.app,
             text: 'If you enter an incorrect phrase, a new account will<br>be created based on it.'
         }));
+    }
+
+    importNewWallet() {
+        const wallet = keysRecoverFromPhraseSecp256k1(this.phrase.get().join(' '));
+        const crypto = 'ICP';
+        const style = 'ICP-01'
+        const name = genWalletName(this.app.user.wallets, crypto);
+        encryptKey(wallet.private, this.app.user.password).then(encrypted => {
+            const secret = serializeEncryptKey(encrypted);
+            this.app.user.wallets[wallet.public] = {name, public: wallet.public, secret, crypto, style};
+            this.app.save('wallets');
+            this.app.create('wallets').then(() => {
+                this.app.page('accounts');
+                this.app.sheet.clear();
+                this.app.sheet.hide();
+            });
+        });
     }
 
 }

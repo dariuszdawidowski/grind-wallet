@@ -91,8 +91,12 @@ export class SheetAccountDetails extends Component {
             id: 'use-account-delete',
             text: 'Remove this account from the list',
             click: () => {
-                if (confirm('Delete this account?')) {
-                    chrome.storage.local.set({ 'wallets': {} });
+                if (confirm('Delete this account?\n It will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
+                    delete this.app.user.wallets[this.wallet.public]
+                    this.app.save('wallets');
+                    this.app.page('accounts');
+                    this.app.sheet.clear();
+                    this.app.sheet.hide();
                 }
             }
         }));

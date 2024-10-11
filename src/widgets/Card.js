@@ -41,7 +41,6 @@ export class Card extends Component {
 
         // Fetch balance
         icpLedgerBalance(this.wallet.actor, this.wallet.account).then(balance => {
-            console.log('balance', balance)
             this.app.user.wallets[this.wallet.public].balance = balance;
             this.element.querySelector('.amount').innerHTML = formatE8S(balance);
         });

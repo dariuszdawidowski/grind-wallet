@@ -8,6 +8,9 @@ export class Form extends Component {
 
         // Build
         this.element.id = args.id;
+        this.element.setAttribute('action', '#');
+        this.element.setAttribute('method', 'POST');
+        this.element.setAttribute('autocomplete', 'on');
 
         // Prevent submit
         this.submitCallback = (event) => {

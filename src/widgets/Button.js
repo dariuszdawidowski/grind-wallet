@@ -19,6 +19,7 @@ export class Button extends Component {
         // Build
         this.element.id = args.id;
         this.element.innerHTML = args.text;
+        this.element.setAttribute('type', 'submit');
 
         // Events
         this.event.on({

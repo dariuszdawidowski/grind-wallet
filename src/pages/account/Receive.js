@@ -7,6 +7,9 @@ export class SheetAccountReceive extends Component {
     constructor(args) {
         super(args);
 
+        // Wallet
+        this.wallet = args.wallet;
+
         // Build
         this.element.classList.add('form');
 
@@ -15,7 +18,7 @@ export class SheetAccountReceive extends Component {
         this.element.append(qr);
 
         const qrcode = new QRCode(qr, {
-            text: args.account,
+            text: this.wallet.account,
             width: 200,
             height: 200,
             colorDark : '#000',
@@ -28,7 +31,7 @@ export class SheetAccountReceive extends Component {
             id: 'receive-account-copy',
             text: 'Copy adress to clipboard',
             click: () => {
-                navigator.clipboard.writeText(args.account).then(() => {
+                navigator.clipboard.writeText(this.wallet.account).then(() => {
                 }).catch(err => {
                 });
             }

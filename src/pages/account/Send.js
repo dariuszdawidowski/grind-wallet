@@ -12,7 +12,10 @@ export class SheetAccountSend extends Component {
         super(args);
 
         // Wallet reference
-        this.wallet = this.app.user.wallets[this.public];
+        this.wallet = args.wallet;
+
+        // Sucessfuly sent
+        this.sent = false;
 
         // Build
         this.element.classList.add('form');
@@ -32,20 +35,55 @@ export class SheetAccountSend extends Component {
         });
         this.append(this.address);
 
-        this.append(new Button({
+        this.submit = new Button({
             app: args.app,
             id: 'send-account-ok',
             text: 'Send',
             click: () => {
-                icpLedgerTransfer(
-                    this.app.icp.ledger.actor,
-                    this.address.get(),
-                    AccountIdentifier.fromPrincipal({ principal: Principal.fromText(this.address.get()) }),
-                    this.amount.get()
-                ).then(result => console.log(result));
+                // Not sent yet
+                if (!this.sent) {
+                    this.transfer();
+                }
+                // Succesful sent
+                else {
+                    this.app.sheet.clear();
+                    this.app.sheet.hide();
+                }
             }
-        }));
+        });
+        this.append(this.submit);
 
+    }
+
+    transfer() {
+        let principal = null;
+        let account = null;
+        try {
+            principal = Principal.fromText(this.address.get());
+            account = AccountIdentifier.fromPrincipal({ principal });
+        }
+        catch(error) {
+            alert('Invalid Principal ID');
+        }
+        if (principal && account) {
+            this.submit.busy(true);
+            icpLedgerTransfer(
+                this.wallet.actor,
+                this.address.get(),
+                account,
+                this.amount.get()
+            ).then(result => {
+                this.submit.busy(false);
+                if ('Ok' in result) {
+                    this.submit.set('OK');
+                    this.sent = true;
+                }
+                else {
+                    alert(result);
+                }
+                console.log(result)
+            });
+        }
     }
 
 }

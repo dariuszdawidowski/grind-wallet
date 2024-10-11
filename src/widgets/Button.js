@@ -18,8 +18,18 @@ export class Button extends Component {
 
         // Build
         this.element.id = args.id;
-        this.element.innerHTML = args.text;
         this.element.setAttribute('type', 'submit');
+
+        // Text
+        this.text = document.createElement('span');
+        this.text.classList.add('text');
+        this.text.innerHTML = args.text;
+        this.element.append(this.text);
+
+        // Spinner
+        this.spinner = document.createElement('div');
+        this.spinner.classList.add('spinner');
+        this.text.append(this.spinner);
 
         // Events
         this.event.on({
@@ -43,6 +53,26 @@ export class Button extends Component {
         if (this.enterCallback) {
             document.body.removeEventListener('keydown', this.enterCallback.bind(this));
         }
+    }
+
+    busy(show = true) {
+        if (show) {
+            this.spinner.style.display = 'block';
+            this.element.disabled = true;
+        }
+        else {
+            this.spinner.style.display = 'none';
+            this.element.disabled = false;
+        }
+
+    }
+
+    set(text) {
+        this.text.innerHTML = text;
+    }
+
+    get() {
+        return this.text.innerHTML;
     }
 
 }

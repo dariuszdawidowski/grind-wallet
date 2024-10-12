@@ -29,7 +29,7 @@ export class SheetAccountReceive extends Component {
         this.append(new Button({
             app: args.app,
             id: 'receive-account-copy',
-            text: 'Copy adress to clipboard',
+            text: 'Copy address to clipboard',
             click: () => {
                 navigator.clipboard.writeText(this.wallet.account).then(() => {
                 }).catch(err => {

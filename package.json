@@ -1,6 +1,6 @@
 {
   "name": "grind-wallet",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/App.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "css-minimizer-webpack-plugin": "^7.0.0",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.1",
+    "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4"
   },

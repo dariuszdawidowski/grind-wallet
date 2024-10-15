@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -9,6 +10,7 @@ const { version } = require('./package.json');
 module.exports = {
     mode: 'production',
     entry: './src/App.js',
+    target: 'web',
 
     output: {
         path: path.resolve(__dirname, 'dist/chrome'),
@@ -84,8 +86,18 @@ module.exports = {
     optimization: {
         minimize: true,
         minimizer: [
-          `...`,
-          new CssMinimizerPlugin(),
+            new TerserPlugin({
+                terserOptions: {
+                    ecma: 2022,
+                    compress: true,
+                    mangle: true,
+                    output: {
+                        comments: false,
+                    },
+                },
+                parallel: true,
+            }),
+            new CssMinimizerPlugin(),
         ],
     },
 

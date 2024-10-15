@@ -11,8 +11,10 @@ Currently, it only works in Chrome and in browsers that support compatible exten
 
 ## Local build
 
+```bash
 npm install
 npm run build
+```
 
 
 ## Local installation
@@ -53,7 +55,7 @@ This package is released as free, open-source, and GPL friendly by
 the [Pictogrammers](https://pictogrammers.com/). You may use it
 for commercial projects, open-source projects, or anything really.
 
-# Icons: Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
+## Icons: Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
 Some of the icons are redistributed under the Apache 2.0 license. All other
 icons are either redistributed under their respective licenses or are
 distributed under the Apache 2.0 license.

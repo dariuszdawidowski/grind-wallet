@@ -3,7 +3,7 @@
     "name": "Grind Wallet",
     "description": "A Crypto Wallet for the Internet Computer (ICP) blockchain.",
     "version": "0.0.0",
-    "permissions": ["storage", "activeTab", "scripting"],
+    "permissions": ["storage"],
     "action": {
         "default_popup": "popup.html",
         "default_icon": {

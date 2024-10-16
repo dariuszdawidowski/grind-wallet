@@ -4,6 +4,7 @@ import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
 import { ICP2ICPt } from './Currency.js';
 
+
 /**
  * Check balance for given account
  * @param actor: ledger actor
@@ -71,4 +72,23 @@ export async function icpLedgerTransfer(actor, principal, account, icp) {
     // });
 
     return response;
+}
+
+
+/**
+ * Fee for transfer
+ * @param actor: ledger actor - actor with bound spender identity through agent
+ */
+
+export async function icpLedgerFee(actor) {
+
+    try {
+        const response = await actor.icrc1_fee();
+        return response;
+    }
+    catch (error) {
+        console.error(error);
+    }
+
+    return null;
 }

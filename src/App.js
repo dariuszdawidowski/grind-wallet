@@ -53,6 +53,11 @@ class GrindWalletPlugin extends App {
             wallets: {}
         };
 
+        // Global info
+        this.info = {
+            fee: null,
+        };
+
         // Check persistent data version
         const PERSISTENT_DATA_VERSION = 1;
         chrome.storage.local.get(['version'], (data) => {

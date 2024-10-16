@@ -1,10 +1,10 @@
-import { Component } from '../../Boost.js';
-import { formatCurrency } from '../../utils/Currency.js';
-import { Button } from '../../widgets/Button.js';
-import { InputCurrency, InputAccount } from '../../widgets/Input.js';
-import { icpLedgerTransfer } from '../../utils/Transactions.js';
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
+import { Component } from '../../Boost.js';
+import { formatCurrency, formatE8S } from '../../utils/Currency.js';
+import { Button, ButtonDescription } from '../../widgets/Button.js';
+import { InputCurrency, InputAccount } from '../../widgets/Input.js';
+import { icpLedgerTransfer, icpLedgerFee } from '../../utils/Transactions.js';
 
 export class SheetAccountSend extends Component {
 
@@ -52,6 +52,22 @@ export class SheetAccountSend extends Component {
             }
         });
         this.append(this.submit);
+
+        // Description
+        this.append(new ButtonDescription({
+            app: args.app,
+            text: `The network charges a commission of <span id="fee">${this.app.info.fee ? this.app.info.fee : 'unknown'}</span> ICP.<br>Sending to an unsupported address may result in loss of tokens.`
+        }));
+
+        // Cache fee
+        if (this.app.info.fee == null) {
+            icpLedgerFee(this.wallet.actor).then(fee => {
+                if (typeof(fee) == 'bigint') {
+                    this.app.info.fee = fee;
+                    document.querySelector('#fee').innerHTML = formatE8S(this.app.info.fee);
+                }
+            });
+        }
 
     }
 

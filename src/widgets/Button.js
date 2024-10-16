@@ -40,18 +40,18 @@ export class Button extends Component {
 
         // Enter key to submit
         this.enterCallback = null;
-        if ('enter' in args) {
+        if ('enter' in args && args.enter == true) {
             this.enterCallback = (event) => {
-                if (event.key == 'Enter') this.element.click();
+                if (event.key == 'Enter') args.click();
             };
-            document.body.addEventListener('keydown', this.enterCallback.bind(this));
+            document.body.addEventListener('keyup', this.enterCallback.bind(this));
         }
     }
 
     destructor() {
         super.destructor();
         if (this.enterCallback) {
-            document.body.removeEventListener('keydown', this.enterCallback.bind(this));
+            document.body.removeEventListener('keyup', this.enterCallback.bind(this));
         }
     }
 

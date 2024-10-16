@@ -22,6 +22,10 @@ export class InputPassword extends Component {
 
     }
 
+    set(value) {
+        this.input.value = value;
+    }
+
     get() {
         return this.input.value;
     }

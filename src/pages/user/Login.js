@@ -50,9 +50,10 @@ export class PageLogin extends Component {
             app: args.app,
             id: 'end-password-ok',
             text: 'Unlock',
-            enter: true,
+            enter: false,
             click: () => {
                 this.verify(password.get(), args.salt, args.hash);
+                password.set('');
             }
         });
         form.append(button);

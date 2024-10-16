@@ -17,8 +17,11 @@ export class PageLogin extends Component {
             <h1 style="text-align: center; margin-bottom: 0;">
                 Welcome to Grind Wallet <span>v${version}</span>
             </h1>
-            <p style="text-align: center; margin-bottom: 32px;">
+            <p style="text-align: center;">
                 for the Internet Computer blockchain (ICP)
+            </p>
+            <p style="text-align: center; margin-top:0; margin-bottom: 32px; color: #ffe36c;">
+                This is an alpha version. Use with caution.
             </p>
             <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 120px;"></div>
             <h2>

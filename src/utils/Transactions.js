@@ -2,7 +2,7 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
-import { ICP2ICPt } from './Currency.js';
+import { ICP2ICPt, formatE8S } from './Currency.js';
 
 
 /**
@@ -42,7 +42,7 @@ export async function icpLedgerTransfer(actor, principal, account, icp) {
     if (typeof(principal) == 'string') principal = Principal.fromText(principal);
 	if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
-    let response = await actor.icrc1_transfer({
+    const response = await actor.icrc1_transfer({
         to: {owner: principal, subaccount: []},
         fee: [],
         memo: [],
@@ -51,27 +51,26 @@ export async function icpLedgerTransfer(actor, principal, account, icp) {
         created_at_time: [],
     });
 
-    /*
-    let response = await actor.transfer({
-        to: account,
-        fee: { e8s: BigInt(10000) }, // 0.001 ICP
-        memo: BigInt(0),
-        amount: { e8s: BigInt(10000) }, // 0.001 ICP
-        from_subaccount: [],
-        created_at_time: [],
-    });
-    */
+    const result = {};
 
-    // let response = await actor.icrc2_transfer_from({
-    //     to: {owner: principal, subaccount: []},
-    //     fee: [],
-    //     memo: [],
-    //     amount: BigInt(10000), // 0.0001 ICP
-    //     from_subaccount: [],
-    //     created_at_time: [],
-    // });
+    if ('Ok' in response) {
+        result['OK'] = response.Ok;
+    }
+    else if ('Err' in response) {
+        if ('BadFee' in response.Err) result['ERROR'] = `Error: bad fee, expected: ${formatE8S(response.Err.BadFee.expected_fee)} ICP`;
+        else if ('BadBurn' in response.Err) result['ERROR'] = `Error: bad burn, min amount: ${formatE8S(response.Err.BadBurn.min_burn_amount)} ICP`;
+        else if ('InsufficientFunds' in response.Err) result['ERROR'] = `Error: insufficient funds: ${formatE8S(response.Err.InsufficientFunds.balance)} ICP`;
+        else if ('TooOld' in response.Err) result['ERROR'] = `Error: too old`;
+        else if ('CreatedInFuture' in response.Err) result['ERROR'] = `Error: created in future`;
+        else if ('Duplicate' in response.Err) result['ERROR'] = `Error: duplicate`;
+        else if ('TemporarilyUnavailable' in response.Err) result['ERROR'] = `Error: temporarily unavailable`;
+        else result['ERROR'] = 'Transfer error';
+    }
+    else {
+        result['ERROR'] = 'Transfer error';
+    }
 
-    return response;
+    return result;
 }
 
 

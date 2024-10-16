@@ -91,12 +91,15 @@ export class SheetAccountSend extends Component {
                 this.amount.get()
             ).then(result => {
                 this.submit.busy(false);
-                if ('Ok' in result) {
+                if ('OK' in result) {
                     this.submit.set('OK');
                     this.sent = true;
                 }
+                else if ('ERROR' in result) {
+                    alert(result.ERROR);
+                }
                 else {
-                    alert(result);
+                    alert('Transfer error');
                 }
             });
         }

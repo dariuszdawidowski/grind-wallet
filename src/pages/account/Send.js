@@ -56,7 +56,7 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: args.app,
-            text: `The network charges a commission of <span id="fee">${this.app.info.fee ? this.app.info.fee : 'unknown'}</span> ICP.<br>Sending to an unsupported address may result in loss of tokens.`
+            text: `The network charges a commission of <span id="fee">${this.app.info.fee ? formatE8S(this.app.info.fee) : 'unknown'}</span> ICP.<br>Sending to an unsupported address may result in loss of tokens.`
         }));
 
         // Cache fee

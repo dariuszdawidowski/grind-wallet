@@ -42,7 +42,8 @@ export class SheetAccountSend extends Component {
             click: () => {
                 // Not sent yet
                 if (!this.sent) {
-                    this.transfer();
+                    if (this.amount.valid()) this.transfer();
+                    else alert('Invalid amount');
                 }
                 // Succesful sent
                 else {
@@ -97,7 +98,6 @@ export class SheetAccountSend extends Component {
                 else {
                     alert(result);
                 }
-                console.log(result)
             });
         }
     }

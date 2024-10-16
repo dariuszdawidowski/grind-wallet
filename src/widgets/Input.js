@@ -1,4 +1,5 @@
 import { Component } from '../Boost.js';
+import { validCurrency } from '../utils/Currency.js';
 
 
 export class InputPassword extends Component {
@@ -51,6 +52,24 @@ export class InputCurrency extends Component {
 
     get() {
         return this.input.value;
+    }
+
+    valid() {
+
+        const amount = this.get();
+
+        if (!/^\d+(\.\d{1,8})?$/.test(amount)) {
+            return false;
+        }
+
+        const num = parseFloat(amount);
+
+        if (num <= 0) {
+            return false;
+        }
+
+        return true;
+
     }
 
 }

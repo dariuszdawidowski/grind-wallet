@@ -179,9 +179,7 @@ class GrindWalletPlugin extends App {
 
         // Wallets
         if (resource == 'wallets') {
-            // const wallet = this.user.wallets[Object.keys(this.user.wallets)[0]];
             for (const wallet of Object.values(this.user.wallets)) {
-            // Object.values(this.user.wallets).forEach(wallet => {
                 const deserialized = deserializeEncryptKey(wallet.secret);
                 const privateKey = await decryptKey(deserialized, this.user.password);
                 const info = identityFromPrivate(privateKey);
@@ -198,7 +196,6 @@ class GrindWalletPlugin extends App {
                     canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai'
                 });
             }
-            // });
         }
 
     }
@@ -228,7 +225,7 @@ class GrindWalletPlugin extends App {
  * Global interface
  */
 
-// window.grind = {
+// window.ic.grind = {
 // };
 
 

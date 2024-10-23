@@ -22,7 +22,7 @@ export class PageRegister extends Component {
             <p style="text-align: center; margin-top:0; margin-bottom: 32px; color: #ffe36c;">
                 This is an alpha version. Use with caution.
             </p>
-            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 35px;"></div>
+            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 20px;"></div>
             <h2>
                 Please create a password
             </h2>

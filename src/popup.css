@@ -1,6 +1,7 @@
 /* Variables */
 :root {
     --button-color: rgb(101, 37, 179);
+    --button-color-dimed: rgba(101, 37, 179, 0.5);
     --button-hilit: rgb(135, 80, 199);
 }
 
@@ -14,6 +15,7 @@ body {
     color: rgb(241, 230, 253);
     background-color: rgb(42, 26, 57);
     overflow: hidden;
+    user-select: none;
 }
 
 #app {
@@ -51,6 +53,16 @@ body {
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+/* Checkbox */
+input[type="checkbox"] {
+    margin: 10px;
+    scale: 120%;
+}
+
+input[type="checkbox"]:hover {
+    cursor: pointer;
+}
+
 /* Headers */
 
 h1 {
@@ -78,6 +90,12 @@ h2 {
     font-size: 14px;
     font-weight: 300;
     text-align: center;
+}
+
+/* Header Link */
+
+a, a:visited {
+    color: #ffe36c;
 }
 
 /* Form */
@@ -109,6 +127,10 @@ button {
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
+button:active {
+    transform: scale(0.97);
+}
+
 button:not(:disabled):hover {
     cursor: pointer;
     background-color: var(--button-hilit);
@@ -118,8 +140,16 @@ button:not(:disabled):hover {
     transform: scale(1.03);
 }
 
+button.dimed {
+    background-color: var(--button-color-dimed);
+}
+
 button .text {
     position: relative;
+}
+
+button.dimed .text {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 button .spinner {

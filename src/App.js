@@ -9,6 +9,7 @@ import { App } from './Boost.js';
 import { BottomSheet } from './widgets/BottomSheet.js';
 import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
+import { PageAcceptTerms } from './pages/user/Terms.js';
 import { PageRegister } from './pages/user/Register.js';
 import { PageLogin } from './pages/user/Login.js';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from './utils/Keys.js';
@@ -60,8 +61,8 @@ class GrindWalletPlugin extends App {
 
         // Check persistent data version
         const PERSISTENT_DATA_VERSION = 1;
-        chrome.storage.local.get(['version'], (data) => {
-            if (data.version && data.version < PERSISTENT_DATA_VERSION) {
+        chrome.storage.local.get(['version', 'terms'], (storage) => {
+            if (storage.version && storage.version < PERSISTENT_DATA_VERSION) {
                 // Migrate in the future
             }
             else {
@@ -103,9 +104,16 @@ class GrindWalletPlugin extends App {
                             this.page('login', {salt: credentials.salt, hash: credentials.password});
                         }
 
-                        // First time - create password
+                        // First time
                         else {
-                            this.page('register');
+                            // Accept terms of use
+                            if (!storage.hasOwnProperty('terms') || storage.terms == false) {
+                                this.page('terms');
+                            }
+                            // Create password (should be created but just in case)
+                            else {
+                                this.page('register');
+                            }
                         }
                     });
                 }
@@ -136,6 +144,10 @@ class GrindWalletPlugin extends App {
 
         // Create and attach new
         switch(name) {
+            case 'terms':
+                this.current = new PageAcceptTerms({app: this});
+                this.append(this.current);
+                break;
             case 'register':
                 this.current = new PageRegister({app: this});
                 this.append(this.current);

@@ -9,6 +9,7 @@ import { Component } from '../Boost.js';
  *   text: display
  *   click: callback
  *   enter: submit on enter (default false)
+ *   disabled: initially disabled (default false)
  */
 
 export class Button extends Component {
@@ -40,12 +41,15 @@ export class Button extends Component {
 
         // Enter key to submit
         this.enterCallback = null;
-        if ('enter' in args && args.enter == true) {
+        if (('enter' in args) && args.enter == true) {
             this.enterCallback = (event) => {
                 if (event.key == 'Enter') args.click();
             };
             document.body.addEventListener('keyup', this.enterCallback.bind(this));
         }
+
+        // Optionally disable
+        if (('disabled' in args) && args.disabled == true) this.disable();
     }
 
     destructor() {
@@ -75,6 +79,15 @@ export class Button extends Component {
         return this.text.innerHTML;
     }
 
+    enable() {
+        this.element.disabled = false;
+        this.element.classList.remove('dimed');
+    }
+
+    disable() {
+        this.element.disabled = true;
+        this.element.classList.add('dimed');
+    }
 }
 
 

@@ -89,7 +89,7 @@ module.exports = {
             new TerserPlugin({
                 terserOptions: {
                     ecma: 2022,
-                    compress: true,
+                    compress: false,
                     mangle: true,
                     output: {
                         comments: false,

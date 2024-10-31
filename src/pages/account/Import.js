@@ -46,20 +46,26 @@ export class SheetImportAccount extends Component {
     }
 
     importNewWallet() {
-        const wallet = keysRecoverFromPhraseSecp256k1(this.phrase.get().join(' '));
-        const crypto = 'ICP';
-        const style = 'ICP-01'
-        const name = genWalletName(this.app.user.wallets, crypto);
-        encryptKey(wallet.private, this.app.user.password).then(encrypted => {
-            const secret = serializeEncryptKey(encrypted);
-            this.app.user.wallets[wallet.public] = {name, public: wallet.public, secret, crypto, style};
-            this.app.save('wallets');
-            this.app.create('wallets').then(() => {
-                this.app.page('accounts');
-                this.app.sheet.clear();
-                this.app.sheet.hide();
+        if (this.phrase.valid()) {
+            const phrase = this.phrase.get();
+            const wallet = keysRecoverFromPhraseSecp256k1(phrase.join(' '));
+            const crypto = 'ICP';
+            const style = 'ICP-01'
+            const name = genWalletName(this.app.user.wallets, crypto);
+            encryptKey(wallet.private, this.app.user.password).then(encrypted => {
+                const secret = serializeEncryptKey(encrypted);
+                this.app.user.wallets[wallet.public] = {name, public: wallet.public, secret, crypto, style};
+                this.app.save('wallets');
+                this.app.create('wallets').then(() => {
+                    this.app.page('accounts');
+                    this.app.sheet.clear();
+                    this.app.sheet.hide();
+                });
             });
-        });
+        }
+        else {
+            alert('Invalid recovery phrase');
+        }
     }
 
 }

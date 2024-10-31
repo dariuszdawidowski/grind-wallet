@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-
+const bip39 = require('bip39');
 
 export class InputPassword extends Component {
 
@@ -183,6 +183,20 @@ export class RecoveryPhrase extends Component {
             phrase.push(input.get());
         });
         return phrase;
+    }
+
+    valid() {
+
+        const phrase = this.get();
+        const mnemonic = phrase.join(' ');
+
+        // 12 words
+        if (phrase.length !== 12) return false;
+
+        // BIP-39 built-in validator
+        if (!bip39.validateMnemonic(mnemonic)) return false;
+
+        return true;
     }
 
 }

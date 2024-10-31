@@ -62,7 +62,7 @@ class GrindWalletPlugin {
             password: null,
             /**
              * Persistent params: name: string, public: string, secret: { ciphertext, iv, salt }, crypto: 'ICP', style: 'ICP-01'
-             * Dynamic params: private: string, identity: Object, principal: string, account: string, balance: e8s (ICPt), agent: HttpAgent, actor: Actor
+             * Dynamic params: identity: Object, principal: string, account: string, balance: e8s (ICPt), agent: HttpAgent, actor: Actor
              */
             wallets: {}
         };

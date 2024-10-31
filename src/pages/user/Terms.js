@@ -1,4 +1,4 @@
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { Button } from '../../widgets/Button.js';
 import { Checkbox } from '../../widgets/Checkbox.js';
 const { version } = require('../../../package.json');
@@ -8,6 +8,7 @@ export class PageAcceptTerms extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Build
         this.element.classList.add('page');

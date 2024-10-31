@@ -1,4 +1,4 @@
-import { Component } from '../Boost.js';
+import { Component } from '/src/utils/Component.js';
 
 
 /**
@@ -15,7 +15,7 @@ import { Component } from '../Boost.js';
 export class Button extends Component {
 
     constructor(args) {
-        super({...args, create: 'button'});
+        super({...args, type: 'button'});
 
         // Build
         this.element.id = args.id;
@@ -33,11 +33,7 @@ export class Button extends Component {
         this.text.append(this.spinner);
 
         // Events
-        this.event.on({
-            id: `button:${this.element.id}`,
-            type: 'click',
-            callback: args.click
-        });
+        this.element.addEventListener('click', args.click);
 
         // Enter key to submit
         this.enterCallback = null;
@@ -50,13 +46,6 @@ export class Button extends Component {
 
         // Optionally disable
         if (('disabled' in args) && args.disabled == true) this.disable();
-    }
-
-    destructor() {
-        super.destructor();
-        if (this.enterCallback) {
-            document.body.removeEventListener('keyup', this.enterCallback.bind(this));
-        }
     }
 
     busy(show = true) {
@@ -104,7 +93,7 @@ export class Button extends Component {
 export class ButtIcon extends Button {
 
     constructor(args) {
-        super({...args, create: 'button'});
+        super({...args, type: 'button'});
 
         // Build
         this.element.classList.add('butticon');
@@ -134,11 +123,7 @@ export class ButtLink extends Component {
         this.element.innerHTML = args.text + ' →';
 
         // Events
-        this.event.on({
-            id: `button:${this.element.id}`,
-            type: 'click',
-            callback: args.click
-        });
+        this.element.addEventListener('click', args.click);
 
     }
 

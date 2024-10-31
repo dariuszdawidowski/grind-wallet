@@ -1,4 +1,4 @@
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { verifyPassword } from '../../utils/Password.js';
 import { Form } from '../../widgets/Form.js';
 import { Button } from '../../widgets/Button.js';
@@ -10,6 +10,7 @@ export class PageLogin extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Build
         this.element.classList.add('page');

@@ -5,7 +5,7 @@
  *   hidded: hide at start
  */
 
-import { Component } from '../Boost.js';
+import { Component } from '/src/utils/Component.js';
 
 
 export class BottomSheet extends Component {
@@ -42,9 +42,6 @@ export class BottomSheet extends Component {
         // Title
         this.title.innerText = args.title;
 
-        // Append to childred list
-        this.children.push(args.component);
-
         // Append
         this.content.append(args.component.element);
 
@@ -62,9 +59,6 @@ export class BottomSheet extends Component {
     clear() {
 
         // Destroy child components
-        this.children.forEach(child => {
-            child.destructor();
-        });
         this.children = [];
 
         // Clear DOM

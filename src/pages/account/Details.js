@@ -1,4 +1,4 @@
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { formatE8S } from '../../utils/Currency.js';
 import { Button, ButtIcon, ButtLink } from '../../widgets/Button.js';
 import { SheetAccountSend } from './Send.js';
@@ -9,6 +9,7 @@ export class SheetAccountDetails extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Wallet reference
         this.wallet = args.wallet;

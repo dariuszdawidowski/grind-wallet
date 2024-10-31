@@ -1,5 +1,5 @@
-import { Component } from '../../Boost.js';
-import { Button, ButtonDescription } from '../../widgets/Button.js';
+import { Component } from '/src/utils/Component.js';
+import { Button } from '../../widgets/Button.js';
 import { RecoveryPhrase } from '../../widgets/Input.js';
 import { genWalletName } from '../../utils/General.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '../../utils/Keys.js';
@@ -9,6 +9,7 @@ export class SheetNewAccount extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Build
         this.element.classList.add('form');

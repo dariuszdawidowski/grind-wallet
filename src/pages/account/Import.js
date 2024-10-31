@@ -1,4 +1,4 @@
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
 import { RecoveryPhrase } from '../../widgets/Input.js';
 import { genWalletName } from '../../utils/General.js';
@@ -9,6 +9,7 @@ export class SheetImportAccount extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Build
         this.element.classList.add('form');

@@ -1,4 +1,4 @@
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { isPasswordStrong, generateSalt, hashPassword } from '../../utils/Password.js';
 import { Button } from '../../widgets/Button.js';
 import { InputPassword } from '../../widgets/Input.js';
@@ -9,6 +9,7 @@ export class PageRegister extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Build
         this.element.classList.add('page');

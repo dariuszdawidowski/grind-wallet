@@ -1,4 +1,4 @@
-import { Component } from '../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { formatWithSpaces } from '../utils/Currency.js';
 import { icpLedgerBalance } from '../utils/Transactions.js';
 import { formatE8S } from '../utils/Currency.js';
@@ -8,6 +8,7 @@ export class Card extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Wallet reference
         this.wallet = args.wallet;
@@ -33,11 +34,7 @@ export class Card extends Component {
         `;
 
         // Events
-        this.event.on({
-            id: `card:${this.element.id}`,
-            type: 'click',
-            callback: args.click
-        });
+        this.element.addEventListener('click', args.click);
 
         // Fetch balance
         icpLedgerBalance(this.wallet.actor, this.wallet.account).then(balance => {

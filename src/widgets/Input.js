@@ -1,5 +1,4 @@
-import { Component } from '../Boost.js';
-import { validCurrency } from '../utils/Currency.js';
+import { Component } from '/src/utils/Component.js';
 
 
 export class InputPassword extends Component {
@@ -176,10 +175,6 @@ export class RecoveryPhrase extends Component {
 
         this.inputs[0].input.addEventListener('paste', this.paste.bind(this));
 
-    }
-
-    destructor() {
-        this.inputs[0].input.removeEventListener('paste', this.paste.bind(this));
     }
 
     get() {

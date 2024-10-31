@@ -5,7 +5,6 @@
 
 import './popup.css';
 import { Actor, HttpAgent } from '@dfinity/agent';
-import { App } from './Boost.js';
 import { BottomSheet } from './widgets/BottomSheet.js';
 import { PageEmpty } from './pages/account/Empty.js';
 import { PageListAccounts } from './pages/account/List.js';
@@ -29,7 +28,21 @@ import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
  * Main class
  */
 
-class GrindWalletPlugin extends App {
+class GrindWalletPlugin {
+
+    constructor(selector) {
+
+        // Main element
+        this.element = document.querySelector(selector);
+
+        // Launch
+        document.addEventListener('DOMContentLoaded', () => { this.init(); }, {once: true});
+
+    }
+
+    append(component) {
+        this.element.append(component.element);
+    }
 
     init() {
 
@@ -130,12 +143,8 @@ class GrindWalletPlugin extends App {
 
     page(name, args = {}) {
 
-        // Clear events
-        this.event.clear();
-
         // Remove DOM
         if (this.current) {
-            this.current.destructor();
             this.current.element.remove();
         }
 

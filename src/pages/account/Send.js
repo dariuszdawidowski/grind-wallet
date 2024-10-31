@@ -1,6 +1,6 @@
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
-import { Component } from '../../Boost.js';
+import { Component } from '/src/utils/Component.js';
 import { formatCurrency, formatE8S } from '../../utils/Currency.js';
 import { Button, ButtonDescription } from '../../widgets/Button.js';
 import { InputCurrency, InputAccount } from '../../widgets/Input.js';
@@ -10,6 +10,7 @@ export class SheetAccountSend extends Component {
 
     constructor(args) {
         super(args);
+        this.app = args.app;
 
         // Wallet reference
         this.wallet = args.wallet;

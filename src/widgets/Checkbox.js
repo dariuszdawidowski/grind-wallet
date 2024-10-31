@@ -1,4 +1,4 @@
-import { Component } from '../Boost.js';
+import { Component } from '/src/utils/Component.js';
 
 
 export class Checkbox extends Component {

@@ -2,7 +2,7 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
-import { ICP2ICPt, formatE8S } from './Currency.js';
+import { ICP2ICPt, formatE8S } from '/src/utils/Currency.js';
 
 
 /**

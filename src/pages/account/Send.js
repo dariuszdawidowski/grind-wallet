@@ -1,10 +1,10 @@
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/Component.js';
-import { formatCurrency, formatE8S } from '../../utils/Currency.js';
-import { Button, ButtonDescription } from '../../widgets/Button.js';
-import { InputCurrency, InputAccount } from '../../widgets/Input.js';
-import { icpLedgerTransfer, icpLedgerFee } from '../../utils/Transactions.js';
+import { formatCurrency, formatE8S } from '/src/utils/Currency.js';
+import { Button, ButtonDescription } from '/src/widgets/Button.js';
+import { InputCurrency, InputAccount } from '/src/widgets/Input.js';
+import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
 
 export class SheetAccountSend extends Component {
 

@@ -13,8 +13,8 @@ import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
-import { loginBiometric } from '/src/utils/Biometric.js';
-import { idlFactory as ledgerIdlFactory } from '/src/did/ledger_canister.did.js';
+// import { loginBiometric } from '/src/utils/Biometric.js';
+import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer/ledger_canister.did.js';
 
 /**
  * Persistent data map @ chrome.storage.local

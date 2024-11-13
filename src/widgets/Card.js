@@ -1,7 +1,7 @@
 import { Component } from '/src/utils/Component.js';
-import { formatWithSpaces } from '../utils/Currency.js';
-import { icpLedgerBalance } from '../utils/Transactions.js';
-import { formatE8S } from '../utils/Currency.js';
+import { formatWithSpaces } from '/src/utils/Currency.js';
+import { icpLedgerBalance } from '/src/blockchain/InternetComputer/Ledger.js';
+import { formatE8S } from '/src/utils/Currency.js';
 
 
 export class Card extends Component {

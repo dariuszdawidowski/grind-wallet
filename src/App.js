@@ -3,16 +3,18 @@
  * (c) 2024 by Dariusz Dawidowski
  */
 
-import './popup.css';
+import '/src/popup.css';
 import { Actor, HttpAgent } from '@dfinity/agent';
-import { BottomSheet } from './widgets/BottomSheet.js';
-import { PageEmpty } from './pages/account/Empty.js';
-import { PageListAccounts } from './pages/account/List.js';
-import { PageAcceptTerms } from './pages/user/Terms.js';
-import { PageRegister } from './pages/user/Register.js';
-import { PageLogin } from './pages/user/Login.js';
-import { decryptKey, deserializeEncryptKey, identityFromPrivate } from './utils/Keys.js';
-import { idlFactory as ledgerIdlFactory } from './did/ledger_canister.did.js';
+import { BottomSheet } from '/src/widgets/BottomSheet.js';
+import { PageEmpty } from '/src/pages/account/Empty.js';
+import { PageListAccounts } from '/src/pages/account/List.js';
+import { PageAcceptTerms } from '/src/pages/user/Terms.js';
+import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
+import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
+import { PageLogin } from '/src/pages/user/Login.js';
+import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
+import { loginBiometric } from '/src/utils/Biometric.js';
+import { idlFactory as ledgerIdlFactory } from '/src/did/ledger_canister.did.js';
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -74,13 +76,22 @@ class GrindWalletPlugin {
 
         // Check persistent data version
         const PERSISTENT_DATA_VERSION = 1;
-        chrome.storage.local.get(['version', 'terms'], (storage) => {
+        chrome.storage.local.get(['version', 'terms', 'webauthn'], (storage) => {
             if (storage.version && storage.version < PERSISTENT_DATA_VERSION) {
                 // Migrate in the future
             }
             else {
                 chrome.storage.local.set({ version: PERSISTENT_DATA_VERSION });
             }
+
+            // TEMP
+            // if (window.PublicKeyCredential) this.page('register-webauthn');
+            // else this.page('register-password');
+            // console.log('webauthn', JSON.parse(storage.webauthn))
+            // loginBiometric(JSON.parse(storage.webauthn)).then(() => {
+            //     console.log('WEBAUTHN OK');
+            // });
+            // return
 
             // Check session
             chrome.storage.session.get(['active', 'password'], (session) => {
@@ -157,8 +168,12 @@ class GrindWalletPlugin {
                 this.current = new PageAcceptTerms({app: this});
                 this.append(this.current);
                 break;
-            case 'register':
-                this.current = new PageRegister({app: this});
+            case 'register-webauthn':
+                this.current = new PageRegisterWebAuthn({app: this});
+                this.append(this.current);
+                break;
+            case 'register-password':
+                this.current = new PageRegisterPassword({app: this});
                 this.append(this.current);
                 break;
             case 'login':

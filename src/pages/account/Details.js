@@ -59,7 +59,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Swap',
                 click: () => {
-                    chrome.tabs.create({ url: 'https://app.icpswap.com' });
+                    chrome.tabs.create({ url: 'https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai' });
                 }
             }),
             fiat: new ButtIcon({

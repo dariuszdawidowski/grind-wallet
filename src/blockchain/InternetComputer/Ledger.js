@@ -13,7 +13,7 @@ import { ICP2ICPt, formatE8S } from '/src/utils/Currency.js';
 
 export async function icpLedgerBalance(actor, account) {
 
-	if (typeof(account) == 'string') account = hexStringToUint8Array(account);
+    if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
     try {
         const response = await actor.account_balance({ account });
@@ -40,7 +40,7 @@ export async function icpLedgerBalance(actor, account) {
 export async function icpLedgerTransfer(actor, principal, account, icp) {
 
     if (typeof(principal) == 'string') principal = Principal.fromText(principal);
-	if (typeof(account) == 'string') account = hexStringToUint8Array(account);
+    if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
     const response = await actor.icrc1_transfer({
         to: {owner: principal, subaccount: []},

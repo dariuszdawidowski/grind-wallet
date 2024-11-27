@@ -8,7 +8,6 @@ export class PageAcceptTerms extends Component {
 
     constructor(args) {
         super(args);
-        this.app = args.app;
 
         // Build
         this.element.classList.add('page');

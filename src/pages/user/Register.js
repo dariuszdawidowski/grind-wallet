@@ -9,7 +9,6 @@ export class PageRegister extends Component {
 
     constructor(args) {
         super(args);
-        this.app = args.app;
 
         // Build
         this.element.classList.add('page');

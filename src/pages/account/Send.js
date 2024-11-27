@@ -10,7 +10,6 @@ export class SheetAccountSend extends Component {
 
     constructor(args) {
         super(args);
-        this.app = args.app;
 
         // Wallet reference
         this.wallet = args.wallet;

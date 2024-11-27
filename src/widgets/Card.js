@@ -1,14 +1,12 @@
 import { Component } from '/src/utils/Component.js';
-import { formatWithSpaces } from '/src/utils/Currency.js';
+import { formatWithSpaces, formatE8S } from '/src/utils/Currency.js';
 import { icpLedgerBalance } from '/src/blockchain/InternetComputer/Ledger.js';
-import { formatE8S } from '/src/utils/Currency.js';
 
 
 export class Card extends Component {
 
     constructor(args) {
         super(args);
-        this.app = args.app;
 
         // Wallet reference
         this.wallet = args.wallet;

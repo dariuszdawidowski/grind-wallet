@@ -1,18 +1,17 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '../../widgets/Button.js';
-import { Card } from '../../widgets/Card.js';
+import { Button } from '/src/widgets/Button.js';
+import { Card } from '/src/widgets/Card.js';
+import { AddCoin, Coin } from '/src/widgets/Coin.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';
-import { identityFromPrivate } from '../../utils/Keys.js';
-const { version } = require('../../../package.json');
+const { version } = require('/package.json');
 
 
 export class PageListAccounts extends Component {
 
     constructor(args) {
         super(args);
-        this.app = args.app;
 
         // Build
         this.element.classList.add('page');
@@ -23,10 +22,10 @@ export class PageListAccounts extends Component {
             </h1>
         `;
 
-        // Accounts like credit cards
+        // Accounts
         Object.values(this.app.user.wallets).forEach(wallet => {
 
-            // Create card
+            // Native token as credit card
             this.append(new Card({
                 app: args.app,
                 id: `account-${wallet.account}`,
@@ -36,6 +35,18 @@ export class PageListAccounts extends Component {
                         title: wallet.name,
                         component: new SheetAccountDetails({app: args.app, wallet})
                     });
+                }
+            }));
+
+            // Custom tokens as coins
+            this.append(new AddCoin({
+                app: args.app,
+                wallet,
+                click: () => {
+                    // this.app.sheet.append({
+                    //     title: wallet.name,
+                    //     component: new SheetAddCustomToken({app: args.app, wallet})
+                    // });
                 }
             }));
             

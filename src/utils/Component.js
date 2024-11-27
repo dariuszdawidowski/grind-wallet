@@ -1,5 +1,5 @@
 /**
- * Component v 0.7.3
+ * Component v 0.7.4
  * Minimalistic DOM component for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -9,6 +9,7 @@ export class Component {
 
     /**
      * Constructor
+     * args.app: reference to the main app object (optional)
      * args.id: id for the DOM element (optional)
      * args.type: DOM element e.g. 'div' (default), 'button', 'input' (optional)
      * args.html: html string to render (optional)
@@ -16,6 +17,9 @@ export class Component {
      */
 
     constructor(args = {}) {
+
+        // App reference
+        this.app = ('app' in args) ? args.app : null;
 
         // Main DOM element
         this.element = null;

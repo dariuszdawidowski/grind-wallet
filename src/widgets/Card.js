@@ -35,8 +35,8 @@ export class Card extends Component {
         this.element.addEventListener('click', args.click);
 
         // Fetch balance
-        icpLedgerBalance(this.wallet.actor, this.wallet.account).then(balance => {
-            this.app.user.wallets[this.wallet.public].balance = balance;
+        icpLedgerBalance(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor, this.wallet.account).then(balance => {
+            this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance = balance;
             this.element.querySelector('.amount').innerHTML = formatE8S(balance);
         });
 

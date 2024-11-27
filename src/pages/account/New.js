@@ -33,13 +33,12 @@ export class SheetNewAccount extends Component {
 
     createNewWallet() {
         const wallet = keysRecoverFromPhraseSecp256k1();
-        const crypto = 'ICP';
-        const style = 'ICP-01'
+        const blockchain = 'Internet Computer';
         const name = genWalletName(this.app.user.wallets, crypto);
         encryptKey(wallet.private, this.app.user.password).then(encrypted => {
             const secret = serializeEncryptKey(encrypted);
-            this.app.user.wallets[wallet.public] = {name, public: wallet.public, secret, crypto, style};
-            this.app.save('wallets');
+            this.app.user.wallets[wallet.public] = {blockchain, name, public: wallet.public, secret};
+            this.app.save('wallets', this.app.user.wallets);
             this.app.create('wallets').then(() => {
                 this.app.sheet.clear();
                 this.app.sheet.append({

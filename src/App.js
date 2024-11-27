@@ -4,7 +4,6 @@
  */
 
 import '/src/popup.css';
-import { Actor, HttpAgent } from '@dfinity/agent';
 import { BottomSheet } from '/src/widgets/BottomSheet.js';
 import { PageEmpty } from '/src/pages/account/Empty.js';
 import { PageListAccounts } from '/src/pages/account/List.js';
@@ -12,18 +11,8 @@ import { PageAcceptTerms } from '/src/pages/user/Terms.js';
 import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
-import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
-import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer/ledger_canister.did.js';
-
-/**
- * Persistent data map @ chrome.storage.local
- * 
- * version: 1 migration version
- * salt: <string> generated salt for password
- * password: <string> hash of the main password to this extension
- * wallets: {public_key: {name: string, public: string, secret: { ciphertext, iv, salt }, crypto: 'ICP', style: string}, ...}
- */
+import { createWallet } from '/src/blockchain/InternetComputer/Wallet.js';
 
 
 /**
@@ -36,6 +25,19 @@ class GrindWalletPlugin {
 
         // Main element
         this.element = document.querySelector(selector);
+
+        /**
+         * Persistent data map @ chrome.storage.local
+         *
+         * version: 2 migration version
+         * salt: <string> generated salt for password
+         * password: <string> hash of the main password to this extension
+         * wallets: {public_key: {blockchain: 'Internet Computer', name: string, public: string, secret: { ciphertext, iv, salt }, style: string, tokens: {canisterId: {}, ...}}, ...}
+         */
+        this.PERSISTENT_DATA_VERSION = 2;
+
+        // ICP Ledger id
+        this.ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
         // Launch
         document.addEventListener('DOMContentLoaded', () => { this.init(); }, {once: true});
@@ -63,8 +65,8 @@ class GrindWalletPlugin {
         this.user = {
             password: null,
             /**
-             * Persistent params: name: string, public: string, secret: { ciphertext, iv, salt }, crypto: 'ICP', style: 'ICP-01'
-             * Dynamic params: identity: Object, principal: string, account: string, balance: e8s (ICPt), agent: HttpAgent, actor: Actor
+             * Persistent params: blockchain: 'Internet Computer', name: string, public: string, secret: { ciphertext, iv, salt }, tokens: {canisterId: {}}
+             * Dynamic params: identity: Object, principal: string, account: string, agent: HttpAgent, tokens: {canisterId: {actor: Actor, balance: ICPt/e8s}}
              */
             wallets: {}
         };
@@ -74,75 +76,69 @@ class GrindWalletPlugin {
             fee: null,
         };
 
-        // Check persistent data version
-        const PERSISTENT_DATA_VERSION = 1;
-        chrome.storage.local.get(['version', 'terms', 'webauthn'], (storage) => {
-            if (storage.version && storage.version < PERSISTENT_DATA_VERSION) {
-                // Migrate in the future
-            }
-            else {
-                chrome.storage.local.set({ version: PERSISTENT_DATA_VERSION });
+        // Get saved data
+        chrome.storage.local.get(['version', 'terms', 'webauthn', 'active', 'password'], (saved) => {
+
+            // Store data format version
+            if (!('version' in saved)) {
+                saved.version = this.PERSISTENT_DATA_VERSION;
+                chrome.storage.local.set({ version: this.PERSISTENT_DATA_VERSION });
             }
 
             // TEMP
             // if (window.PublicKeyCredential) this.page('register-webauthn');
             // else this.page('register-password');
-            // console.log('webauthn', JSON.parse(storage.webauthn))
-            // loginBiometric(JSON.parse(storage.webauthn)).then(() => {
+            // console.log('webauthn', JSON.parse(saved.webauthn))
+            // loginBiometric(JSON.parse(saved.webauthn)).then(() => {
             //     console.log('WEBAUTHN OK');
             // });
             // return
 
-            // Check session
-            chrome.storage.session.get(['active', 'password'], (session) => {
+            // Continue session
+            if (('active' in saved) && saved.active === true) {
+                this.user.password = saved.password;
+                // Load and decode wallets
+                chrome.storage.local.get(['wallets'], (store) => {
 
-                // Continue session
-                if (session.active === true) {
-                    this.user.password = session.password;
-                    // Load and decode wallets
-                    chrome.storage.local.get(['wallets'], (store) => {
-
-                        if (store.wallets && Object.keys(store.wallets).length) {
-                            this.load('wallets', store.wallets);
-                            this.create('wallets').then(() => {
-                                // Show accounts list
-                                this.page('accounts');
-                            });
-                        }
-
-                        // Empty accounts page
-                        else {
+                    if (store.wallets && Object.keys(store.wallets).length) {
+                        this.load('wallets', store.wallets, saved.version);
+                        this.create('wallets').then(() => {
+                            // Show accounts list
                             this.page('accounts');
+                        });
+                    }
+
+                    // Empty accounts page
+                    else {
+                        this.page('accounts');
+                    }
+
+                });
+            }
+
+            // No active session
+            else {
+                // Check that password exists
+                chrome.storage.local.get(['salt'], (credentials) => {
+
+                    // Login
+                    if (credentials.salt && saved.password) {
+                        this.page('login', {salt: credentials.salt, hash: saved.password});
+                    }
+
+                    // First time
+                    else {
+                        // Accept terms of use
+                        if (!saved.hasOwnProperty('terms') || saved.terms == false) {
+                            this.page('terms');
                         }
-
-                    });
-                }
-
-                // No active session
-                else {
-                    // Check that password exists
-                    chrome.storage.local.get(['salt', 'password'], (credentials) => {
-
-                        // Login
-                        if (credentials.salt && credentials.password) {
-                            this.page('login', {salt: credentials.salt, hash: credentials.password});
-                        }
-
-                        // First time
+                        // Create password (should be created but just in case)
                         else {
-                            // Accept terms of use
-                            if (!storage.hasOwnProperty('terms') || storage.terms == false) {
-                                this.page('terms');
-                            }
-                            // Create password (should be created but just in case)
-                            else {
-                                this.page('register');
-                            }
+                            this.page('register');
                         }
-                    });
-                }
-
-            });
+                    }
+                });
+            }
 
         });
 
@@ -194,60 +190,83 @@ class GrindWalletPlugin {
 
     }
 
-    load(resource, data) {
+    load(resource, data, version) {
 
         // Wallets
         if (resource == 'wallets') {
 
-            // Deserialize
-            try {
-                this.user.wallets = data;
+            // Migrate
+            if (version < this.PERSISTENT_DATA_VERSION) {
+
+                // Data
+                data = this.migrate(data);
+
+                // Save new version
+                this.save('wallets', data);
+                chrome.storage.local.set({ version: this.PERSISTENT_DATA_VERSION });
             }
-            catch (error) {
-                this.user.wallets = {};
-            }
+
+            // Assign
+            this.user.wallets = data;
 
         }
 
+    }
+
+    migrate(resource, data, version) {
+
+        // Wallets
+        if (resource == 'wallets') {
+
+            // v1 -> v2
+            if (version == 1) {
+
+                // Migrate wallets
+                for (const [id, wallet] of Object.entries(data)) {
+
+                    // crypto: 'ICP' -> blockchain: 'Internet Computer'
+                    delete data[id].crypto;
+                    data[id].blockchain = 'Internet Computer';
+
+                    // Get rid of style
+                    delete data[id].style;
+
+                    // ICP token
+                    data[id]['tokens'] = {};
+                    data[id]['tokens'][this.ICP_LEDGER_CANISTER_ID] = {};
+
+                }
+
+                return data;
+            }
+
+        }
     }
 
     async create(resource) {
 
         // Wallets
         if (resource == 'wallets') {
-            for (const wallet of Object.values(this.user.wallets)) {
-                const deserialized = deserializeEncryptKey(wallet.secret);
-                const privateKey = await decryptKey(deserialized, this.user.password);
-                const info = identityFromPrivate(privateKey);
-                if (!('identity' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].identity = info.identity;
-                if (!('principal' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].principal = info.principal;
-                if (!('account' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].account = info.account;
-                if (!('balance' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].balance = 0;
-                if (!('agent' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].agent = new HttpAgent({
-                    host: 'https://icp-api.io',
-                    identity: this.user.wallets[wallet.public].identity
-                });
-                if (!('actor' in this.user.wallets[wallet.public])) this.user.wallets[wallet.public].actor = Actor.createActor(ledgerIdlFactory, {
-                    agent: this.user.wallets[wallet.public].agent,
-                    canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai'
-                });
+            for (const walletData of Object.values(this.user.wallets)) {
+                const wallet = await createWallet(walletData, this.user.password);
+                Object.assign(this.user.wallets[walletData.public], wallet);
             }
         }
 
     }
 
-    save(resource) {
+    save(resource, data) {
 
         // Wallets
         if (resource == 'wallets') {
             const serializeWallets = {};
-            Object.values(this.user.wallets).forEach(wallet => {
+            Object.values(data).forEach(wallet => {
                 serializeWallets[wallet.public] = {
+                    blockchain: wallet.blockchain,
                     name: wallet.name,
                     public: wallet.public,
                     secret: wallet.secret,
-                    crypto: wallet.crypto,
-                    style: wallet.style
+                    tokens: Object.fromEntries(Object.keys(wallet.tokens).map(key => [key, {}]))
                 };
             });
             chrome.storage.local.set({ 'wallets': serializeWallets });

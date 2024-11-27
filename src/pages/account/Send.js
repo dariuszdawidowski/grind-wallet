@@ -56,7 +56,7 @@ export class SheetAccountSend extends Component {
 
         // Cache fee
         if (this.app.info.fee == null) {
-            icpLedgerFee(this.wallet.actor).then(fee => {
+            icpLedgerFee(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor).then(fee => {
                 if (typeof(fee) == 'bigint') {
                     this.app.info.fee = fee;
                     document.querySelector('#fee').innerHTML = formatE8S(this.app.info.fee);
@@ -79,7 +79,7 @@ export class SheetAccountSend extends Component {
         if (principal && account) {
             this.submit.busy(true);
             icpLedgerTransfer(
-                this.wallet.actor,
+                this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor,
                 this.address.get(),
                 account,
                 this.amount.get()

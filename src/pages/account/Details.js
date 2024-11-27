@@ -17,7 +17,7 @@ export class SheetAccountDetails extends Component {
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${this.wallet.balance !== null ? formatE8S(this.wallet.balance) + ' ICP' : 'Fetching...'}
+               ${this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance !== null ? formatE8S(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance) + ' ICP' : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');
@@ -93,7 +93,7 @@ export class SheetAccountDetails extends Component {
             click: () => {
                 if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
                     delete this.app.user.wallets[this.wallet.public]
-                    this.app.save('wallets');
+                    this.app.save('wallets', this.app.user.wallets);
                     this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();

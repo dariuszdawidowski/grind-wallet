@@ -68,10 +68,10 @@ export class PageLogin extends Component {
                 // Save session
                 chrome.storage.session.set({ active: true, password: this.app.user.password });
                 // Load and decode wallets
-                chrome.storage.local.get(['wallets'], (store) => {
+                chrome.storage.local.get(['wallets', 'version'], (store) => {
 
                     if (store.wallets && Object.keys(store.wallets).length) {
-                        this.app.load('wallets', store.wallets);
+                        this.app.load('wallets', store.wallets, store.version);
                         this.app.create('wallets').then(() => {
                             // Show accounts list
                             this.app.page('accounts');

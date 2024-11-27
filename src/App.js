@@ -77,7 +77,7 @@ class GrindWalletPlugin {
         };
 
         // Get saved data
-        chrome.storage.local.get(['version', 'terms', 'webauthn', 'active', 'password'], (saved) => {
+        chrome.storage.local.get(['version', 'terms', 'webauthn'], (saved) => {
 
             // Store data format version
             if (!('version' in saved)) {
@@ -95,50 +95,53 @@ class GrindWalletPlugin {
             // return
 
             // Continue session
-            if (('active' in saved) && saved.active === true) {
-                this.user.password = saved.password;
-                // Load and decode wallets
-                chrome.storage.local.get(['wallets'], (store) => {
+            chrome.storage.session.get(['active', 'password'], (session) => {
+                if (('active' in session) && session.active === true) {
+                    this.user.password = session.password;
+                    // Load and decode wallets
+                    chrome.storage.local.get(['wallets'], (store) => {
 
-                    if (store.wallets && Object.keys(store.wallets).length) {
-                        this.load('wallets', store.wallets, saved.version);
-                        this.create('wallets').then(() => {
-                            // Show accounts list
-                            this.page('accounts');
-                        });
-                    }
-
-                    // Empty accounts page
-                    else {
-                        this.page('accounts');
-                    }
-
-                });
-            }
-
-            // No active session
-            else {
-                // Check that password exists
-                chrome.storage.local.get(['salt'], (credentials) => {
-
-                    // Login
-                    if (credentials.salt && saved.password) {
-                        this.page('login', {salt: credentials.salt, hash: saved.password});
-                    }
-
-                    // First time
-                    else {
-                        // Accept terms of use
-                        if (!saved.hasOwnProperty('terms') || saved.terms == false) {
-                            this.page('terms');
+                        if (store.wallets && Object.keys(store.wallets).length) {
+                            this.load('wallets', store.wallets, saved.version);
+                            this.create('wallets').then(() => {
+                                // Show accounts list
+                                this.page('accounts');
+                            });
                         }
-                        // Create password (should be created but just in case)
+
+                        // Empty accounts page
                         else {
-                            this.page('register');
+                            this.page('accounts');
                         }
-                    }
-                });
-            }
+
+                    });
+                }
+
+                // No active session
+                else {
+                    // Check that password exists
+                    chrome.storage.local.get(['salt', 'password'], (credentials) => {
+
+                        // Login
+                        if (credentials.salt && credentials.password) {
+                            this.page('login', {salt: credentials.salt, hash: credentials.password});
+                        }
+
+                        // First time
+                        else {
+                            // Accept terms of use
+                            if (!saved.hasOwnProperty('terms') || saved.terms == false) {
+                                this.page('terms');
+                            }
+                            // Create password (should be created but just in case)
+                            else {
+                                this.page('register');
+                            }
+                        }
+                    });
+                }
+
+            });
 
         });
 

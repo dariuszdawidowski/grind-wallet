@@ -403,6 +403,7 @@ hr {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease-in-out;
 }
 
 .add-coin:hover {
@@ -410,7 +411,7 @@ hr {
 }
 
 .macos .add-coin:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
 }
 
 .add-coin .plus {
@@ -418,7 +419,7 @@ hr {
     height: 40px;
     border-radius: 50%;
     background-color: var(--button-color);
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;

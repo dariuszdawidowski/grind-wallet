@@ -7,7 +7,7 @@ export class InputPassword extends Component {
         super(args);
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-password');
 
         this.input = document.createElement('input');
@@ -26,7 +26,7 @@ export class InputPassword extends Component {
     }
 
     get() {
-        return this.input.value;
+        return this.input.value.trim();
     }
 
 }
@@ -38,7 +38,7 @@ export class InputCurrency extends Component {
         super(args);
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-currency');
 
         this.input = document.createElement('input');
@@ -54,7 +54,7 @@ export class InputCurrency extends Component {
     }
 
     get() {
-        return this.input.value;
+        return this.input.value.trim();
     }
 
     valid() {
@@ -78,13 +78,13 @@ export class InputCurrency extends Component {
 }
 
 
-export class InputAccount extends Component {
+export class InputAddress extends Component {
 
     constructor(args) {
         super(args);
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-account');
 
         this.input = document.createElement('input');
@@ -94,7 +94,7 @@ export class InputAccount extends Component {
     }
 
     get() {
-        return this.input.value;
+        return this.input.value.trim();
     }
 
 }
@@ -106,7 +106,7 @@ export class InputPhrase extends Component {
         super(args);
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-phrase');
 
         const number = document.createElement('div');
@@ -140,7 +140,7 @@ export class RecoveryPhrase extends Component {
         this.phrase = ('phrase' in args) ? args.phrase.split(' ') : [];
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-recovery');
 
         // Inputs

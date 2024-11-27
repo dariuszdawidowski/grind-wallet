@@ -3,7 +3,7 @@ import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/Component.js';
 import { formatCurrency, formatE8S } from '/src/utils/Currency.js';
 import { Button, ButtonDescription } from '/src/widgets/Button.js';
-import { InputCurrency, InputAccount } from '/src/widgets/Input.js';
+import { InputCurrency, InputAddress } from '/src/widgets/Input.js';
 import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
 
 export class SheetAccountSend extends Component {
@@ -21,23 +21,17 @@ export class SheetAccountSend extends Component {
         this.element.classList.add('form');
 
         this.amount = new InputCurrency({
-            app: args.app,
-            id: 'send-account-amount',
             placeholder: formatCurrency(0, 8),
             symbol: 'ICP'
         });
         this.append(this.amount);
 
-        this.address = new InputAccount({
-            app: args.app,
-            id: 'send-account-principal',
+        this.address = new InputAddress({
             placeholder: 'Principal ID'
         });
         this.append(this.address);
 
         this.submit = new Button({
-            app: args.app,
-            id: 'send-account-ok',
             text: 'Send',
             click: () => {
                 // Not sent yet

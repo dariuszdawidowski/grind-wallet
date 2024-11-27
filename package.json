@@ -32,6 +32,7 @@
     "@dfinity/agent": "^2.1.2",
     "@dfinity/identity-secp256k1": "^2.1.2",
     "@dfinity/ledger-icp": "^2.6.1",
+    "@dfinity/ledger-icrc": "^2.6.4",
     "@dfinity/principal": "^2.1.2",
     "@dfinity/utils": "^2.5.2",
     "assert": "^2.1.0",

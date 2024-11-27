@@ -4,8 +4,7 @@ import { Component } from '/src/utils/Component.js';
 /**
  * Default button
  * args:
- *   app: reference to the main app
- *   id: unique idientifier
+ *   id: unique idientifier (optional)
  *   text: display
  *   click: callback
  *   enter: submit on enter (default false)
@@ -18,7 +17,7 @@ export class Button extends Component {
         super({...args, type: 'button'});
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.setAttribute('type', 'submit');
 
         // Text

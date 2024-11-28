@@ -3,6 +3,7 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer/ledger_canister.did.js';
+import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 
 /**
  * Create or update ICP/ICRC wallet
@@ -12,7 +13,7 @@ import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer
  * { identity: Object, principal: string, account: string, agent: HttpAgent, tokens: {canisterId: {actor: Actor, balance: e8s (ICPt)}, ...} }
  */
 
-export async function createWallet(args, password) {
+export async function rebuildWallet(args, password) {
 
     // ICP Ledger id
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
@@ -49,7 +50,7 @@ export async function createWallet(args, password) {
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
                 wallet.tokens[id].actor = Actor.createActor(ledgerIdlFactory, {
                     agent: wallet.agent,
-                    canisterId: ICP_LEDGER_CANISTER_ID
+                    canisterId: id
                 });
             }
             if (!('balance' in wallet.tokens[id])) {
@@ -59,7 +60,15 @@ export async function createWallet(args, password) {
 
         // Token
         else {
-
+            if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
+                wallet.tokens[id].actor = IcrcLedgerCanister.create({
+                    agent: wallet.agent,
+                    canisterId: id,
+                });
+            }
+            if (!('balance' in wallet.tokens[id])) {
+                wallet.tokens[id].balance = null;
+            }
         }
 
     }

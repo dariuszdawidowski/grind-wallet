@@ -41,7 +41,7 @@ export class SheetAddCustomToken extends Component {
         this.element.append(info);
 
         // Token metadata fetched
-        this.fetched = false;
+        this.token = null;
 
         // Button
         const submit = new Button({
@@ -53,19 +53,21 @@ export class SheetAddCustomToken extends Component {
                 const canisterId = address.get();
 
                 // First pass (fetch)
-                if (!this.fetched) {
+                if (!this.token) {
                     submit.busy(true);
-                    this.fetchTokenMetadata(canisterId).then(metadata => {
+                    this.fetchToken(canisterId).then(() => {
                         submit.busy(false);
-                        if (validICRC1(metadata)) {
+                        if (validICRC1(this.token.metadata)) {
                             info.innerHTML = '';
-                            if (('icrc1:logo' in metadata) && ('Text' in metadata['icrc1:logo'])) info.innerHTML += `<img src="${metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
-                            info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${metadata['icrc1:name'].Text} (${metadata['icrc1:symbol'].Text})</div>`;
+                            if (('icrc1:logo' in this.token.metadata) && ('Text' in this.token.metadata['icrc1:logo'])) {
+                                info.innerHTML += `<img src="${this.token.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
+                            }
+                            info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.token.metadata['icrc1:name'].Text} (${this.token.metadata['icrc1:symbol'].Text})</div>`;
                             submit.set('Accept');
-                            this.fetched = true;
                         }
                         else {
                             address.enable();
+                            this.token = null;
                             alert('Unable to fetch token');
                         }
                     });
@@ -75,10 +77,14 @@ export class SheetAddCustomToken extends Component {
                 else {
                     // Add token to wallet
                     if (!(canisterId in this.wallet.tokens)) {
-                        console.log('ADD_', this.wallet.tokens)
+                        this.wallet.tokens[canisterId] = { actor: this.token.actor, balance: null };
+                        this.app.save('wallets', this.app.user.wallets);
+                        this.app.sheet.clear();
+                        this.app.sheet.hide();
                     }
                     else {
                         address.enable();
+                        this.token = null;
                         alert('Token already on the list');
                     }
                 }
@@ -88,7 +94,7 @@ export class SheetAddCustomToken extends Component {
 
     }
 
-    async fetchTokenMetadata(canisterId) {
+    async fetchToken(canisterId) {
         let actor = null
         try {
             actor = IcrcLedgerCanister.create({
@@ -97,10 +103,10 @@ export class SheetAddCustomToken extends Component {
             });
         }
         catch (error) {
-            return {};
+            this.token = { actor: null, metadata: {} };
         }
         const data = await actor.metadata({});
-        return Object.fromEntries(data);
+        this.token = { actor, metadata: Object.fromEntries(data) };
     }
 
 }

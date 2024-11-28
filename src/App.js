@@ -12,7 +12,7 @@ import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
-import { createWallet } from '/src/blockchain/InternetComputer/Wallet.js';
+import { rebuildWallet } from '/src/blockchain/InternetComputer/Wallet.js';
 
 
 /**
@@ -253,7 +253,7 @@ class GrindWalletPlugin {
         // Wallets
         if (resource == 'wallets') {
             for (const walletData of Object.values(this.user.wallets)) {
-                const wallet = await createWallet(walletData, this.user.password);
+                const wallet = await rebuildWallet(walletData, this.user.password);
                 Object.assign(this.user.wallets[walletData.public], wallet);
             }
         }

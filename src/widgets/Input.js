@@ -76,6 +76,9 @@ export class InputCurrency extends Component {
 
 }
 
+/**
+ * Input for principal id or account id
+ */
 
 export class InputAddress extends Component {
 
@@ -104,6 +107,11 @@ export class InputAddress extends Component {
     disable() {
         this.input.disabled = true;
         this.element.classList.add('dimed');
+    }
+
+    detect() {
+        if (this.get().search('-') != -1) return 'principal';
+        else return 'account';
     }
 
 }

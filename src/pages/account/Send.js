@@ -27,7 +27,7 @@ export class SheetAccountSend extends Component {
         this.append(this.amount);
 
         this.address = new InputAddress({
-            placeholder: 'Principal ID'
+            placeholder: 'Principal ID or Account ID'
         });
         this.append(this.address);
 
@@ -67,16 +67,32 @@ export class SheetAccountSend extends Component {
     }
 
     transfer() {
-        let principal = null;
+        // Account
         let account = null;
-        try {
-            principal = Principal.fromText(this.address.get());
-            account = AccountIdentifier.fromPrincipal({ principal });
+
+        // Autodetect Principal ID
+        if (this.address.detect() == 'principal') {
+            try {
+                const principal = Principal.fromText(this.address.get());
+                account = AccountIdentifier.fromPrincipal({ principal });
+            }
+            catch(error) {
+                alert('Invalid Principal ID');
+            }
         }
-        catch(error) {
-            alert('Invalid Principal ID');
+
+        // Autodetect Account ID
+        else {
+            try {
+                account = AccountIdentifier.fromHex(this.address.get());
+            }
+            catch(error) {
+                alert('Invalid Account ID');
+            }
         }
-        if (principal && account) {
+
+        // Ok to transfer
+        if (account) {
             this.submit.busy(true);
             icpLedgerTransfer(
                 this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor,

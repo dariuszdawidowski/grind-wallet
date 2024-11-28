@@ -202,7 +202,7 @@ class GrindWalletPlugin {
             if (version < this.PERSISTENT_DATA_VERSION) {
 
                 // Data
-                data = this.migrate(data);
+                data = this.migrate(resource, data, version);
 
                 // Save new version
                 this.save('wallets', data);
@@ -240,8 +240,10 @@ class GrindWalletPlugin {
 
                 }
 
-                return data;
             }
+
+            // Return data
+            return data;
 
         }
     }

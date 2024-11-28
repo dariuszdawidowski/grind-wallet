@@ -32,7 +32,7 @@ export class Card extends Component {
         `;
 
         // Events
-        this.element.addEventListener('click', args.click);
+        if ('click' in args) this.element.addEventListener('click', args.click);
 
         // Fetch balance
         icpLedgerBalance(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor, this.wallet.account).then(balance => {

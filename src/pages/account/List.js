@@ -30,7 +30,6 @@ export class PageListAccounts extends Component {
             // Native token as credit card
             this.append(new Card({
                 app: args.app,
-                id: `account-${wallet.account}`,
                 wallet,
                 click: () => {
                     this.app.sheet.append({
@@ -41,6 +40,18 @@ export class PageListAccounts extends Component {
             }));
 
             // Custom tokens as coins
+            Object.entries(wallet.tokens).forEach(([id, token]) => {
+                if (id != this.app.ICP_LEDGER_CANISTER_ID) {
+                    this.append(new Coin({
+                        canisterId: id,
+                        wallet,
+                        click: () => {
+                        }
+                    }));
+                }
+            });
+
+            // Add custom token
             this.append(new AddPlus({
                 text: 'Add custom token',
                 click: () => {
@@ -64,8 +75,6 @@ export class PageListAccounts extends Component {
 
         // Buttons
         this.append(new Button({
-            app: args.app,
-            id: 'create-account',
             text: 'Create account',
             click: () => {
                 this.app.sheet.append({
@@ -76,8 +85,6 @@ export class PageListAccounts extends Component {
         }));
 
         this.append(new Button({
-            app: args.app,
-            id: 'import-account',
             text: 'Import account',
             click: () => {
                 this.app.sheet.append({

@@ -47,11 +47,15 @@ export async function rebuildWallet(args, password) {
 
         // ICP
         if (id == ICP_LEDGER_CANISTER_ID) {
+
+            // Actor
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
                 wallet.tokens[id].actor = LedgerCanister.create({
                     agent: wallet.agent
                 });
             }
+
+            // Balance
             if (!('balance' in wallet.tokens[id])) {
                 wallet.tokens[id].balance = null;
             }
@@ -59,15 +63,31 @@ export async function rebuildWallet(args, password) {
 
         // Token
         else {
+
+            // Actor
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
                 wallet.tokens[id].actor = IcrcLedgerCanister.create({
                     agent: wallet.agent,
                     canisterId: id,
                 });
             }
+
+            // Balance
             if (!('balance' in wallet.tokens[id])) {
                 wallet.tokens[id].balance = null;
             }
+
+            // Fetch metadata
+
+            // Name
+
+            // Symbol
+
+            // Decimals
+
+            // Fee
+
+            // Cache logo into IndexedDB if not exist
         }
 
     }

@@ -439,12 +439,40 @@ hr {
     font-size: 12px;
 }
 
-.coin {
-    
+.coin-badge {
+    width: 140px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    margin: 0 8px 8px 8px;
 }
 
-.macos .coin:hover {
-    transform: scale(1.02);
+.coin-badge:hover {
+    cursor: pointer;
+}
+
+.macos .coin-badge:hover {
+    transform: scale(1.03);
+}
+
+.coin-badge .coin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: black;
+    font-weight: 500;
+    background-color: #e4990e;
+    font-size: 12px;
+}
+
+.coin-badge .label {
+    margin: 0 10px;
+    font-size: 12px;
 }
 
 /* QR code */

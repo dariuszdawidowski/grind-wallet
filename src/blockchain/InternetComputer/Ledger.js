@@ -2,21 +2,22 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
-import { ICP2ICPt, formatE8S } from '/src/utils/Currency.js';
+import { ICP2ICPt } from '/src/utils/Currency.js';
 
 
 /**
  * Check balance for given account
  * @param actor: ledger actor
- * @param account: string hex or Uint8Array
+ * @param address: string (Account ID for ICP, Principal ID for ICRC-1/2)
  */
 
-export async function icpLedgerBalance(actor, account) {
+export async function icpLedgerBalance(actor, address) {
 
     try {
-        const response = await actor.accountBalance({ accountIdentifier: account });
-        //const response = await actor.balance({ accountIdentifier: account }); // ICRC
-        return response;
+        // ICP
+        if ('accountBalance' in actor) return await actor.accountBalance({ accountIdentifier: address });
+        // ICRC-1/2
+        else if ('balance' in actor) return await actor.balance({ owner: Principal.fromText(address) });
     }
     catch (error) {
         console.error(error);

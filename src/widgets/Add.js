@@ -1,5 +1,4 @@
 import { Component } from '/src/utils/Component.js';
-//import { formatWithSpaces, formatE8S } from '/src/utils/Currency.js';
 
 
 export class AddPlus extends Component {

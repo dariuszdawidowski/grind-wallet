@@ -80,7 +80,6 @@ export class SheetAccountSend extends Component {
             this.submit.busy(true);
             icpLedgerTransfer(
                 this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor,
-                this.address.get(),
                 account,
                 this.amount.get()
             ).then(result => {

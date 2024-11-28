@@ -2,7 +2,7 @@
 
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
-import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer/ledger_canister.did.js';
+import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 
 /**
@@ -48,9 +48,8 @@ export async function rebuildWallet(args, password) {
         // ICP
         if (id == ICP_LEDGER_CANISTER_ID) {
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
-                wallet.tokens[id].actor = Actor.createActor(ledgerIdlFactory, {
-                    agent: wallet.agent,
-                    canisterId: id
+                wallet.tokens[id].actor = LedgerCanister.create({
+                    agent: wallet.agent
                 });
             }
             if (!('balance' in wallet.tokens[id])) {

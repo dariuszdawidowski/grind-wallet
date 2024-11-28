@@ -30,16 +30,11 @@ export class PageLogin extends Component {
         `;
 
         // Form
-        const form = new Form({
-            app: args.app,
-            id: 'login-form',
-        });
+        const form = new Form();
         this.append(form);
 
         // Inputs
         const password = new InputPassword({
-            app: args.app,
-            id: 'enter-password',
             placeholder: 'Password',
             focus: true
         });
@@ -47,8 +42,6 @@ export class PageLogin extends Component {
 
         // Buttons
         const button = new Button({
-            app: args.app,
-            id: 'end-password-ok',
             text: 'Unlock',
             enter: false,
             click: () => {

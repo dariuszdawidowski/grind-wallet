@@ -14,7 +14,6 @@ export class InputPassword extends Component {
         this.input.setAttribute('type', 'password');
         this.input.setAttribute('name', 'password');
         this.input.setAttribute('autocomplete', 'current-password');
-        this.input.setAttribute('required', '');
         if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
@@ -95,6 +94,16 @@ export class InputAddress extends Component {
 
     get() {
         return this.input.value.trim();
+    }
+
+    enable() {
+        this.input.disabled = false;
+        this.element.classList.remove('dimed');
+    }
+
+    disable() {
+        this.input.disabled = true;
+        this.element.classList.add('dimed');
     }
 
 }

@@ -47,10 +47,15 @@ export class SheetAddCustomToken extends Component {
         const submit = new Button({
             text: 'Proceed',
             click: () => {
+
+                // Token canister ID
+                address.disable();
+                const canisterId = address.get();
+
                 // First pass (fetch)
                 if (!this.fetched) {
                     submit.busy(true);
-                    this.fetchTokenMetadata(address.get()).then(metadata => {
+                    this.fetchTokenMetadata(canisterId).then(metadata => {
                         submit.busy(false);
                         if (validICRC1(metadata)) {
                             info.innerHTML = '';
@@ -60,13 +65,22 @@ export class SheetAddCustomToken extends Component {
                             this.fetched = true;
                         }
                         else {
+                            address.enable();
                             alert('Unable to fetch token');
                         }
                     });
                 }
+
                 // Second pass (accept)
                 else {
                     // Add token to wallet
+                    if (!(canisterId in this.wallet.tokens)) {
+                        console.log('ADD_', this.wallet.tokens)
+                    }
+                    else {
+                        address.enable();
+                        alert('Token already on the list');
+                    }
                 }
             }
         });

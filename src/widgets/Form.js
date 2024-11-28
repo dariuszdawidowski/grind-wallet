@@ -3,11 +3,11 @@ import { Component } from '/src/utils/Component.js';
 
 export class Form extends Component {
 
-    constructor(args) {
+    constructor(args = {}) {
         super({...args, type: 'form'});
 
         // Build
-        this.element.id = args.id;
+        if ('id' in args) this.element.id = args.id;
         this.element.setAttribute('action', '#');
         this.element.setAttribute('method', 'POST');
         this.element.setAttribute('autocomplete', 'on');

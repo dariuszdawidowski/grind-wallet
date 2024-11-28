@@ -5,7 +5,7 @@ import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/uti
 import { idlFactory as ledgerIdlFactory } from '/src/blockchain/InternetComputer/ledger_canister.did.js';
 
 /**
- * Create functional ICP/ICRC wallet
+ * Create or update ICP/ICRC wallet
  * @param args.public: string - public key
  * @param args.secret: { ciphertext, iv, salt } - encoded private key
  * @returns:
@@ -17,14 +17,12 @@ export async function createWallet(args, password) {
     // ICP Ledger id
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
-    // console.log('createWallet', args, password)
-
     const wallet = {
-        identity: null,
-        principal: null,
-        account: null,
-        agent: null,
-        tokens: {}
+        identity: ('identity' in args) ? args.identity : null,
+        principal: ('principal' in args) ? args.principal : null,
+        account: ('account' in args) ? args.account : null,
+        agent: ('agent' in args) ? args.agent : null,
+        tokens: ('tokens' in args) ? args.tokens : {}
     };
 
     // Decode keys
@@ -33,28 +31,30 @@ export async function createWallet(args, password) {
     const info = identityFromPrivate(privateKey);
 
     // Store data
-    wallet.identity = info.identity;
-    wallet.principal = info.principal;
-    wallet.account = info.account;
+    if (!wallet.identity) wallet.identity = info.identity;
+    if (!wallet.principal) wallet.principal = info.principal;
+    if (!wallet.account) wallet.account = info.account;
 
     // Agent
-    wallet.agent = new HttpAgent({
+    if (!wallet.agent) wallet.agent = await HttpAgent.create({
         host: 'https://icp-api.io',
         identity: wallet.identity
     });
 
     // Tokens with actors
-    for (const [id, token] of Object.entries(args.tokens)) {
+    for (const [id, token] of Object.entries(wallet.tokens)) {
 
         // ICP
         if (id == ICP_LEDGER_CANISTER_ID) {
-            wallet.tokens[id] = {
-                actor: Actor.createActor(ledgerIdlFactory, {
+            if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
+                wallet.tokens[id].actor = Actor.createActor(ledgerIdlFactory, {
                     agent: wallet.agent,
                     canisterId: ICP_LEDGER_CANISTER_ID
-                }),
-                balance: null
-            };
+                });
+            }
+            if (!('balance' in wallet.tokens[id])) {
+                wallet.tokens[id].balance = null;
+            }
         }
 
         // Token

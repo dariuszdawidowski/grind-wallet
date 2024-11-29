@@ -1,19 +1,24 @@
 import { Component } from '/src/utils/Component.js';
 const bip39 = require('bip39');
 
-export class InputPassword extends Component {
+
+/**
+ * Input for generic text
+ */
+
+export class InputText extends Component {
 
     constructor(args) {
         super(args);
 
         // Build
         if ('id' in args) this.element.id = args.id;
-        this.element.classList.add('input-password');
+        this.element.classList.add('input-text');
 
         this.input = document.createElement('input');
-        this.input.setAttribute('type', 'password');
-        this.input.setAttribute('name', 'password');
-        this.input.setAttribute('autocomplete', 'current-password');
+        if ('value' in args) {
+            this.input.value = args.value;
+        }
         if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
@@ -28,21 +33,45 @@ export class InputPassword extends Component {
         return this.input.value.trim();
     }
 
+    enable() {
+        this.input.disabled = false;
+        this.element.classList.remove('dimed');
+    }
+
+    disable() {
+        this.input.disabled = true;
+        this.element.classList.add('dimed');
+    }
+
 }
 
 
-export class InputCurrency extends Component {
+/**
+ * Input for password
+ */
+
+export class InputPassword extends InputText {
+
+    constructor(args) {
+        super(args);
+        this.input.setAttribute('type', 'password');
+        this.input.setAttribute('name', 'password');
+        this.input.setAttribute('autocomplete', 'current-password');
+    }
+
+}
+
+
+/**
+ * Input for currency
+ */
+
+export class InputCurrency extends InputText {
 
     constructor(args) {
         super(args);
 
-        // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-currency');
-
-        this.input = document.createElement('input');
-        if ('placeholder' in args) this.input.placeholder = args.placeholder;
-        this.element.append(this.input);
 
         if ('symbol' in args) {
             const symbol = document.createElement('div');
@@ -50,10 +79,6 @@ export class InputCurrency extends Component {
             this.element.append(symbol);
         }
 
-    }
-
-    get() {
-        return this.input.value.trim();
     }
 
     valid() {
@@ -77,36 +102,15 @@ export class InputCurrency extends Component {
 }
 
 /**
- * Input for principal id or account id
+ * Input for Principal ID or Account ID
  */
 
-export class InputAddress extends Component {
+export class InputAddress extends InputText {
 
     constructor(args) {
         super(args);
 
-        // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-account');
-
-        this.input = document.createElement('input');
-        if ('placeholder' in args) this.input.placeholder = args.placeholder;
-        this.element.append(this.input);
-
-    }
-
-    get() {
-        return this.input.value.trim();
-    }
-
-    enable() {
-        this.input.disabled = false;
-        this.element.classList.remove('dimed');
-    }
-
-    disable() {
-        this.input.disabled = true;
-        this.element.classList.add('dimed');
     }
 
     detect() {
@@ -116,6 +120,10 @@ export class InputAddress extends Component {
 
 }
 
+
+/**
+ * Input for pass phrase
+ */
 
 export class InputPhrase extends Component {
 
@@ -147,6 +155,10 @@ export class InputPhrase extends Component {
 
 }
 
+
+/**
+ * Block of multiple InputPhrases
+ */
 
 export class RecoveryPhrase extends Component {
 

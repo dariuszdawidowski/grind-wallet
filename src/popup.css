@@ -202,13 +202,13 @@ button.butticon img {
 
 /* Inputs */
 
-.input-password {
+.input-text {
     width: 100%;
     text-align: center;
     margin: 10px auto;
 }
 
-.input-password input {
+.input-text input {
     color: #fff;
     text-align: center;
     width: 200px;
@@ -219,6 +219,11 @@ button.butticon img {
     outline: none;
     background-color: transparent;
     padding: 4px;
+}
+
+.form .input-text input {
+    color: #222;
+    border-bottom-color: #222;
 }
 
 .input-recovery {

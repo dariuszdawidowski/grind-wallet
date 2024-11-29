@@ -13,11 +13,14 @@ export class SheetAccountDetails extends Component {
         // Wallet reference
         this.wallet = args.wallet;
 
+        // Canister ID
+        this.canisterId = args.canisterId;
+
         // Build
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance !== null ? formatE8S(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance) + ' ICP' : 'Fetching...'}
+               ${this.wallet.tokens[this.canisterId].balance !== null ? formatE8S(this.wallet.tokens[this.canisterId].balance) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');
@@ -58,7 +61,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Swap',
                 click: () => {
-                    chrome.tabs.create({ url: 'https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai' });
+                    chrome.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canisterId}` });
                 }
             }),
             fiat: new ButtIcon({
@@ -77,8 +80,6 @@ export class SheetAccountDetails extends Component {
         });
 
         this.append(new Button({
-            app: args.app,
-            id: 'use-account-dashboard',
             text: 'Show in ICP Dashboard',
             click: () => {
                 chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
@@ -87,8 +88,6 @@ export class SheetAccountDetails extends Component {
 
         // Remove
         this.append(new ButtLink({
-            app: args.app,
-            id: 'use-account-delete',
             text: 'Remove this account from the list',
             click: () => {
                 if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {

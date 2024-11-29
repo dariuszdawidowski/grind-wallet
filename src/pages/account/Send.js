@@ -14,6 +14,9 @@ export class SheetAccountSend extends Component {
         // Wallet reference
         this.wallet = args.wallet;
 
+        // Canister ID
+        this.canisterId = args.canisterId;
+
         // Sucessfuly sent
         this.sent = false;
 
@@ -21,13 +24,13 @@ export class SheetAccountSend extends Component {
         this.element.classList.add('form');
 
         this.amount = new InputCurrency({
-            placeholder: formatCurrency(0, 8),
-            symbol: 'ICP'
+            placeholder: formatCurrency(0, this.wallet.tokens[this.canisterId].decimals),
+            symbol: this.wallet.tokens[this.canisterId].symbol
         });
         this.append(this.amount);
 
         this.address = new InputAddress({
-            placeholder: 'Principal ID or Account ID'
+            placeholder: this.canisterId == this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
         });
         this.append(this.address);
 
@@ -55,25 +58,29 @@ export class SheetAccountSend extends Component {
         }));
 
         // Cache fee
-        if (this.app.info.fee == null) {
+        /*if (this.app.info.fee == null) {
             icpLedgerFee(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor).then(fee => {
                 if (typeof(fee) == 'bigint') {
                     this.app.info.fee = fee;
                     document.querySelector('#fee').innerHTML = formatE8S(this.app.info.fee);
                 }
             });
-        }
+        }*/
 
     }
 
     transfer() {
-        // Account
+
+        // Principal ID
+        let principal = null;
+
+        // Account ID
         let account = null;
 
         // Autodetect Principal ID
         if (this.address.detect() == 'principal') {
             try {
-                const principal = Principal.fromText(this.address.get());
+                principal = Principal.fromText(this.address.get());
                 account = AccountIdentifier.fromPrincipal({ principal });
             }
             catch(error) {
@@ -94,11 +101,11 @@ export class SheetAccountSend extends Component {
         // Ok to transfer
         if (account) {
             this.submit.busy(true);
-            icpLedgerTransfer(
-                this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor,
+            this.wallet.tokens[this.canisterId].request.transfer({
+                principal,
                 account,
-                this.amount.get()
-            ).then(result => {
+                amount: this.amount.get()
+            }).then(result => {
                 this.submit.busy(false);
                 if ('OK' in result) {
                     this.submit.set('OK');

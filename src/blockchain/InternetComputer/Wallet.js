@@ -1,9 +1,10 @@
 /*** ICP Wallet helpers ***/
 
 import { Actor, HttpAgent } from '@dfinity/agent';
-import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
+import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
 
 /**
  * Create or update ICP/ICRC wallet
@@ -13,9 +14,9 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
  * { identity: Object, principal: string, account: string, agent: HttpAgent, tokens: {canisterId: {actor: Actor, balance: e8s (ICPt)}, ...} }
  */
 
-export async function rebuildWallet(args, password) {
+export async function icpRebuildWallet(args, password) {
 
-    // ICP Ledger id
+    // ICP Ledger ID
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
     const wallet = {
@@ -48,6 +49,10 @@ export async function rebuildWallet(args, password) {
         // ICP
         if (id == ICP_LEDGER_CANISTER_ID) {
 
+            // Copy Prinncipal ID and Account ID
+            if (!('principal' in wallet.tokens[id])) wallet.tokens[id].principal = wallet.principal;
+            if (!('account' in wallet.tokens[id])) wallet.tokens[id].account = wallet.account;
+
             // Actor
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
                 wallet.tokens[id].actor = LedgerCanister.create({
@@ -59,10 +64,43 @@ export async function rebuildWallet(args, password) {
             if (!('balance' in wallet.tokens[id])) {
                 wallet.tokens[id].balance = null;
             }
+
+            // Name
+            if (!('name' in wallet.tokens[id])) {
+                wallet.tokens[id].name = 'ICP';
+            }
+
+            // Symbol
+            if (!('symbol' in wallet.tokens[id])) {
+                wallet.tokens[id].symbol = 'ICP';
+            }
+
+            // Decimals
+            if (!('decimals' in wallet.tokens[id])) {
+                wallet.tokens[id].decimals = 8;
+            }
+
+            // Fee
+            if (!('fee' in wallet.tokens[id])) {
+                wallet.tokens[id].fee = 10000;
+            }
+
+            // Request actions
+            if (!('request' in wallet.tokens[id])) {
+                wallet.tokens[id].request = {
+                    // metadata: icpLedgerMetadata.bind(wallet.tokens[id]),
+                    balance: icpLedgerBalance.bind(wallet.tokens[id]),
+                    transfer: icpLedgerTransfer.bind(wallet.tokens[id])
+                };
+            }
         }
 
         // Token
         else {
+
+            // Copy Prinncipal ID and Account ID
+            if (!('principal' in wallet.tokens[id])) wallet.tokens[id].principal = wallet.principal;
+            if (!('account' in wallet.tokens[id])) wallet.tokens[id].account = wallet.account;
 
             // Actor
             if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
@@ -77,17 +115,36 @@ export async function rebuildWallet(args, password) {
                 wallet.tokens[id].balance = null;
             }
 
-            // Fetch metadata
-
             // Name
+            if (!('name' in wallet.tokens[id])) {
+                wallet.tokens[id].name = 'Ratex';
+            }
 
             // Symbol
+            if (!('symbol' in wallet.tokens[id])) {
+                wallet.tokens[id].symbol = 'RTX';
+            }
 
             // Decimals
+            if (!('decimals' in wallet.tokens[id])) {
+                wallet.tokens[id].decimals = 8;
+            }
 
             // Fee
+            if (!('fee' in wallet.tokens[id])) {
+                wallet.tokens[id].fee = 10000;
+            }
 
             // Cache logo into IndexedDB if not exist
+
+            // Request actions
+            if (!('request' in wallet.tokens[id])) {
+                wallet.tokens[id].request = {
+                    // metadata: icpLedgerMetadata.bind(wallet.tokens[id]),
+                    balance: icrcLedgerBalance.bind(wallet.tokens[id]),
+                    transfer: icrcLedgerTransfer.bind(wallet.tokens[id])
+                };
+            }
         }
 
     }

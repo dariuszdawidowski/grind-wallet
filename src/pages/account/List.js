@@ -34,7 +34,7 @@ export class PageListAccounts extends Component {
                 click: () => {
                     this.app.sheet.append({
                         title: wallet.name,
-                        component: new SheetAccountDetails({app: args.app, wallet})
+                        component: new SheetAccountDetails({app: args.app, wallet, canisterId: this.app.ICP_LEDGER_CANISTER_ID})
                     });
                 }
             }));
@@ -46,6 +46,10 @@ export class PageListAccounts extends Component {
                         canisterId: id,
                         wallet,
                         click: () => {
+                            this.app.sheet.append({
+                                title: wallet.name,
+                                component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
+                            });
                         }
                     }));
                 }

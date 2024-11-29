@@ -77,7 +77,15 @@ export class SheetAddCustomToken extends Component {
                 else {
                     // Add token to wallet
                     if (!(canisterId in this.wallet.tokens)) {
-                        this.wallet.tokens[canisterId] = { actor: this.token.actor, balance: null };
+                        this.wallet.tokens[canisterId] = {
+                            actor: this.token.actor,
+                            balance: null,
+                            name: this.token.metadata['icrc1:name'].Text,
+                            symbol: this.token.metadata['icrc1:symbol'].Text,
+                            decimals: this.token.metadata['icrc1:decimals'].Nat,
+                            fee: this.token.metadata['icrc1:fee'].Nat
+                        };
+                        console.log('new token', this.app.user.wallets)
                         this.app.save('wallets', this.app.user.wallets);
                         this.app.sheet.clear();
                         this.app.sheet.hide();

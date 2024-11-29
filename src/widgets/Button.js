@@ -106,8 +106,6 @@ export class ButtIcon extends Button {
 /**
  * Link-like button
  * args:
- *   app: reference to the main app
- *   id: unique idientifier
  *   text: display
  *   click: callback
  */

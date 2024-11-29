@@ -1,23 +1,43 @@
-/*** Transaction functions ***/
+/*** ICP/ICRC-1/2 Transaction functions ***/
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
 import { ICP2ICPt } from '/src/utils/Currency.js';
 
-
 /**
- * Check balance for given account
- * @param actor: ledger actor
- * @param address: string (Account ID for ICP, Principal ID for ICRC-1/2)
+ * NOTE: NOT FOR DIRECT USE: should be binded to wallet.token[id]
  */
 
-export async function icpLedgerBalance(actor, address) {
+
+/**
+ * Check ICP balance
+ */
+
+export async function icpLedgerBalance() {
 
     try {
-        // ICP
-        if ('accountBalance' in actor) return await actor.accountBalance({ accountIdentifier: address });
-        // ICRC-1/2
-        else if ('balance' in actor) return await actor.balance({ owner: Principal.fromText(address) });
+
+        return await this.actor.accountBalance({ accountIdentifier: this.account });
+
+    }
+    catch (error) {
+        console.error(error);
+    }
+
+    return null;
+}
+
+
+/**
+ * Check ICRC-1/2 balance
+ */
+
+export async function icrcLedgerBalance() {
+
+    try {
+
+        return await this.actor.balance({ owner: Principal.fromText(this.principal) });
+
     }
     catch (error) {
         console.error(error);
@@ -29,20 +49,20 @@ export async function icpLedgerBalance(actor, address) {
 
 /**
  * Transfer ICP
- * @param actor: ledger actor - actor with bound spender identity through agent
- * @param account: string hex or Uint8Array - destination account
- * @param amount: Number - amount of tokens to send
+ * @param args.account: string | Uint8Array - destination (Account ID)
+ * @param args.amount: Number - amount of tokens to send
  */
 
-export async function icpLedgerTransfer(actor, account, amount) {
+export async function icpLedgerTransfer(args) {
 
-    if (typeof(account) == 'string') account = hexStringToUint8Array(account);
+    if (typeof(args.account) == 'string') args.account = hexStringToUint8Array(args.account);
 
     try {
-        const response = await actor.transfer({
-            to: account,
-            amount: ICP2ICPt(amount)
+        const response = await this.actor.transfer({
+            to: args.account,
+            amount: ICP2ICPt(args.amount)
         });
+
         return {'OK': response};
     }
     catch (error) {
@@ -52,19 +72,62 @@ export async function icpLedgerTransfer(actor, account, amount) {
 
 
 /**
- * Fee for transfer
- * @param actor: ledger actor - actor with bound spender identity through agent
+ * Transfer ICRC-1/2
+ * @param args.principal: string | Principal - destination (Principal ID)
+ * @param args.amount: Number - amount of tokens to send
  */
 
-export async function icpLedgerFee(actor) {
+export async function icrcLedgerTransfer(args) {
+
+    if (('principal' in args) && typeof(args.principal) == 'string') args.principal = Principal.fromText(args.principal);
 
     try {
-        const response = await actor.transactionFee();
-        return response;
+        const response = await this.actor.transfer({
+            to: {
+                owner: args.principal,
+                subaccount: []
+            },
+            amount: ICP2ICPt(args.amount)
+        });
+
+        return {'OK': response};
+    }
+    catch (error) {
+        return {'ERROR': error};
+    }
+}
+
+
+/**
+ * Fee for transfer both for ICP and ICRC-1/2
+ */
+
+/*export async function icpLedgerFee() {
+
+    try {
+        return await this.actor.transactionFee();
     }
     catch (error) {
         console.error(error);
     }
 
     return null;
-}
+}*/
+
+
+/**
+ * Token info both for ICP and ICRC-1/2
+ */
+
+/*export async function icpLedgerMetadata() {
+
+    try {
+        const data = await this.actor.metadata({});
+        return Object.fromEntries(data);
+    }
+    catch (error) {
+        console.error(error);
+    }
+
+    return null;
+}*/

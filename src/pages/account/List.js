@@ -39,10 +39,14 @@ export class PageListAccounts extends Component {
                     }
                 }));
 
+                const coins = document.createElement('div');
+                coins.classList.add('coins');
+                this.element.append(coins);
+
                 // Custom tokens as coins
                 Object.entries(wallet.tokens).forEach(([id, token]) => {
                     if (id != this.app.ICP_LEDGER_CANISTER_ID) {
-                        this.append(new Coin({
+                        const coin = new Coin({
                             canisterId: id,
                             wallet,
                             click: () => {
@@ -51,16 +55,17 @@ export class PageListAccounts extends Component {
                                     component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
                                 });
                             }
-                        }));
+                        });
+                        coins.append(coin.element);
                     }
                 });
+
+                // Separator
+                this.element.append(document.createElement('hr'));
 
             }
             
         });
-
-        // Separator
-        this.element.append(document.createElement('hr'));
 
         // Info
         const info = document.createElement('div');

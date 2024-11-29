@@ -309,7 +309,7 @@ hr {
     border: 0;
     height: 1px;
     background-image: linear-gradient(90deg, #6525b344, #6525b3, #6525b344);
-    margin: 20px auto;
+    margin: 20px auto 0 auto;
 }
 
 /* Credit card */
@@ -403,6 +403,23 @@ hr {
 
 /* Coin */
 
+.coins {
+    display: flex;
+    flex-direction: row;
+    overflow: auto clip;
+    white-space: nowrap;
+    scrollbar-width: none;
+    height: 42px;
+}
+
+.coins > :first-child {
+    margin-left: 10px;
+}
+
+.coins::-webkit-scrollbar {
+    display: none;
+}
+
 .add-coin {
     display: flex;
     flex-direction: row;
@@ -446,13 +463,12 @@ hr {
 }
 
 .coin-badge {
-    width: 140px;
+    flex: 0 0 100px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     transition: transform 0.3s ease-in-out;
-    margin: 0 8px 8px 8px;
 }
 
 .coin-badge:hover {

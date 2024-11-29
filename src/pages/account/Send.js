@@ -44,6 +44,7 @@ export class SheetAccountSend extends Component {
                 }
                 // Succesful sent
                 else {
+                    this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();
                 }

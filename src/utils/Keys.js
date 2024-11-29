@@ -39,7 +39,7 @@ export function keysRecoverFromPhraseSecp256k1(mnemonic = null) {
 
 export function identityFromPrivate(privateKey) {
 
-	if (typeof(privateKey) == 'string') privateKey = hexStringToUint8Array(privateKey);
+    if (typeof(privateKey) == 'string') privateKey = hexStringToUint8Array(privateKey);
     const identity = Secp256k1KeyIdentity.fromSecretKey(privateKey);
     const json = identity.toJSON();
     const principal = identity.getPrincipal();

@@ -1,8 +1,10 @@
 import { Component } from '/src/utils/Component.js';
-import { formatE8S } from '../../utils/Currency.js';
-import { Button, ButtIcon, ButtLink } from '../../widgets/Button.js';
+import { formatE8S } from '/src/utils/Currency.js';
+import { Button, ButtIcon, ButtLink } from '/src/widgets/Button.js';
+import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
+import { SheetAddCustomToken } from './Token.js';
 
 
 export class SheetAccountDetails extends Component {
@@ -30,8 +32,6 @@ export class SheetAccountDetails extends Component {
         // Buttons
         this.buttons = {
             send: new ButtIcon({
-                app: args.app,
-                id: 'use-account-send',
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
@@ -43,8 +43,6 @@ export class SheetAccountDetails extends Component {
                 }
             }),
             receive: new ButtIcon({
-                app: args.app,
-                id: 'use-account-receive',
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
@@ -56,8 +54,6 @@ export class SheetAccountDetails extends Component {
                 }
             }),
             swap: new ButtIcon({
-                app: args.app,
-                id: 'use-account-swap',
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Swap',
                 click: () => {
@@ -65,8 +61,6 @@ export class SheetAccountDetails extends Component {
                 }
             }),
             fiat: new ButtIcon({
-                app: args.app,
-                id: 'use-account-fiat',
                 icon: '<img src="assets/material-design-icons/currency-usd.svg">',
                 text: 'Fiat',
                 click: () => {
@@ -74,17 +68,31 @@ export class SheetAccountDetails extends Component {
                 }
             })
         };
-
         Object.values(this.buttons).forEach(button => {
             buttonbar.append(button.element);
         });
 
+        // Show in the dashboard
         this.append(new Button({
             text: 'Show in ICP Dashboard',
             click: () => {
                 chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
             }
         }));
+
+        // Add custom token
+        if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+            this.append(new AddPlus({
+                text: 'Add custom token',
+                click: () => {
+                    this.app.sheet.clear();
+                    this.app.sheet.append({
+                        title: 'Add custom token',
+                        component: new SheetAddCustomToken({app: args.app, wallet: this.wallet})
+                    });
+                }
+            }));
+        }
 
         // Remove
         this.append(new ButtLink({

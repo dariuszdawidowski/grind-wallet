@@ -409,6 +409,7 @@ hr {
     justify-content: center;
     align-items: center;
     transition: transform 0.3s ease-in-out;
+    margin: 10px;
 }
 
 .add-coin:hover {

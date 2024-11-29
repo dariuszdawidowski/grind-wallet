@@ -1,12 +1,10 @@
 import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/Button.js';
-import { AddPlus } from '/src/widgets/Add.js';
 import { Card } from '/src/widgets/Card.js';
 import { Coin } from '/src/widgets/Coin.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';
-import { SheetAddCustomToken } from './Token.js';
 const { version } = require('/package.json');
 
 
@@ -56,17 +54,6 @@ export class PageListAccounts extends Component {
                         }));
                     }
                 });
-
-                // Add custom token
-                this.append(new AddPlus({
-                    text: 'Add custom token',
-                    click: () => {
-                        this.app.sheet.append({
-                            title: 'Add custom token',
-                            component: new SheetAddCustomToken({app: args.app, wallet})
-                        });
-                    }
-                }));
 
             }
             

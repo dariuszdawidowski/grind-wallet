@@ -10,7 +10,7 @@ export class Coin extends Component {
         // Wallet reference
         this.wallet = args.wallet;
 
-        // Canister ID
+        // Token Canister ID
         this.canisterId = args.canisterId;
 
         // Class
@@ -25,7 +25,7 @@ export class Coin extends Component {
         // Label
         this.label = document.createElement('div');
         this.label.classList.add('label');
-        this.label.innerHTML = `...<br>${this.wallet.tokens[this.canisterId].symbol}`;
+        this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>...`;
         this.element.append(this.label);
 
         // Events
@@ -34,7 +34,7 @@ export class Coin extends Component {
         // Fetch balance
         this.wallet.tokens[this.canisterId].request.balance().then(balance => {
             this.wallet.tokens[this.canisterId].balance = balance;
-            this.label.innerHTML = `${formatE8S(balance)}<br>${this.wallet.tokens[this.canisterId].symbol}`;
+            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatE8S(balance)}`;
         });
     }
 

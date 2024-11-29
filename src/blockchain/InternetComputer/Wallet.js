@@ -8,8 +8,8 @@ import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTrans
 import { genWalletName } from '/src/utils/General.js';
 
 /**
- * Create or update ICP/ICRC wallet
- * @param args.name: string - custom wallet's name
+ * Create or update ICP wallet with ICRC tokens
+ * @param args.name: string - custom wallet's name [optional]
  * @param args.public: string - public key
  * @param args.secret: { ciphertext, iv, salt } - encoded private key
  * @returns:
@@ -59,103 +59,22 @@ export async function icpRebuildWallet(args, password) {
         // ICP
         if (id == ICP_LEDGER_CANISTER_ID) {
 
-            // Copy Prinncipal ID and Account ID
-            if (!('principal' in wallet.tokens[id])) wallet.tokens[id].principal = wallet.principal;
-            if (!('account' in wallet.tokens[id])) wallet.tokens[id].account = wallet.account;
+            // Fill in
+            icpRebuildToken(Object.assign(token, { name: 'ICP', symbol: 'ICP' }), id, wallet);
 
-            // Actor
-            if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
-                wallet.tokens[id].actor = LedgerCanister.create({
-                    agent: wallet.agent
-                });
-            }
+            // Bind request actions
+            icpBindTokenActions(wallet.tokens[id], id);
 
-            // Balance
-            if (!('balance' in wallet.tokens[id])) {
-                wallet.tokens[id].balance = null;
-            }
-
-            // Name
-            if (!('name' in wallet.tokens[id])) {
-                wallet.tokens[id].name = 'ICP';
-            }
-
-            // Symbol
-            if (!('symbol' in wallet.tokens[id])) {
-                wallet.tokens[id].symbol = 'ICP';
-            }
-
-            // Decimals
-            if (!('decimals' in wallet.tokens[id])) {
-                wallet.tokens[id].decimals = 8;
-            }
-
-            // Fee
-            if (!('fee' in wallet.tokens[id])) {
-                wallet.tokens[id].fee = 10000;
-            }
-
-            // Request actions
-            if (!('request' in wallet.tokens[id])) {
-                wallet.tokens[id].request = {
-                    // metadata: icpLedgerMetadata.bind(wallet.tokens[id]),
-                    balance: icpLedgerBalance.bind(wallet.tokens[id]),
-                    transfer: icpLedgerTransfer.bind(wallet.tokens[id])
-                };
-            }
         }
 
         // Token
         else {
 
-            // Copy Prinncipal ID and Account ID
-            if (!('principal' in wallet.tokens[id])) wallet.tokens[id].principal = wallet.principal;
-            if (!('account' in wallet.tokens[id])) wallet.tokens[id].account = wallet.account;
+            // Fill in
+            icpRebuildToken(token, id, wallet);
 
-            // Actor
-            if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
-                wallet.tokens[id].actor = IcrcLedgerCanister.create({
-                    agent: wallet.agent,
-                    canisterId: id,
-                });
-            }
-
-            // Balance
-            if (!('balance' in wallet.tokens[id])) {
-                wallet.tokens[id].balance = null;
-            }
-
-            // Name
-            if (!('name' in wallet.tokens[id])) {
-                wallet.tokens[id].name = 'Ratex';
-            }
-
-            // Symbol
-            if (!('symbol' in wallet.tokens[id])) {
-                wallet.tokens[id].symbol = 'RTX';
-            }
-
-            // Decimals
-            if (!('decimals' in wallet.tokens[id])) {
-                wallet.tokens[id].decimals = 8;
-            }
-
-            // Fee
-            if (!('fee' in wallet.tokens[id])) {
-                wallet.tokens[id].fee = 10000;
-            }
-
-            // Cache logo into IndexedDB if not exist
-
-            // Request actions
-            if (!('request' in wallet.tokens[id])) {
-                wallet.tokens[id].request = {
-                    // metadata: icpLedgerMetadata.bind(wallet.tokens[id]),
-                    balance: icrcLedgerBalance.bind(wallet.tokens[id]),
-                    transfer: icrcLedgerTransfer.bind(wallet.tokens[id])
-                };
-            }
-        }
+            // Bind request actions
+            icpBindTokenActions(wallet.tokens[id], id);
 
         // Tag as sucessfuly rebuilded
         wallet.rebuilded = Date.now();
@@ -163,4 +82,66 @@ export async function icpRebuildWallet(args, password) {
     }
 
     return wallet;
+}
+
+
+/**
+ * Create or update single ICRC token
+ */
+
+export function icpRebuildToken(args, id, wallet) {
+
+    // ICP Ledger ID
+    const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+
+    // Token
+    wallet.tokens[id] = {
+        principal: ('principal' in args) ? args.principal : wallet.principal,
+        account: ('account' in args) ? args.account : wallet.account,
+        name: ('name' in args) ? args.name : 'Unknown',
+        symbol: ('symbol' in args) ? args.symbol : 'Unknown',
+        decimals: ('decimals' in args) ? args.decimals : 8,
+        fee: ('fee' in args) ? args.fee : 10000,
+        balance: ('balance' in args) ? args.balance : null,
+        actor: ('actor' in args) ? args.actor : id == ICP_LEDGER_CANISTER_ID ? LedgerCanister.create({ agent: wallet.agent }) : IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id }),
+        request: ('request' in args) ? args.request : id == ICP_LEDGER_CANISTER_ID ?
+            {
+                balance: icpLedgerBalance.bind(wallet.tokens[id]),
+                transfer: icpLedgerTransfer.bind(wallet.tokens[id])
+            }
+            :
+            {
+                balance: icrcLedgerBalance.bind(wallet.tokens[id]),
+                transfer: icrcLedgerTransfer.bind(wallet.tokens[id])
+            }
+    };
+
+    // Actor
+    if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
+        wallet.tokens[id].actor = (id == ICP_LEDGER_CANISTER_ID) ?
+            LedgerCanister.create({ agent: wallet.agent })
+            :
+            IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id });
+    }
+
+    // Cache logo into IndexedDB if not exist
+    // ...
+
+}
+
+export function icpBindTokenActions(scope, id) {
+
+    // ICP Ledger ID
+    const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+
+    scope.request = (id == ICP_LEDGER_CANISTER_ID) ?
+        {
+            balance: icpLedgerBalance.bind(scope),
+            transfer: icpLedgerTransfer.bind(scope)
+        }
+        :
+        {
+            balance: icrcLedgerBalance.bind(scope),
+            transfer: icrcLedgerTransfer.bind(scope)
+        };
 }

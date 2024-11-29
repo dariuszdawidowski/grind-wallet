@@ -1,11 +1,9 @@
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { Component } from '/src/utils/Component.js';
-// import { formatE8S } from '/src/utils/Currency.js';
 import { Button } from '/src/widgets/Button.js';
 import { InputAddress } from '/src/widgets/Input.js';
-// import { SheetAccountSend } from './Send.js';
-// import { SheetAccountReceive } from './Receive.js';
 import { validICRC1 } from '/src/utils/Currency.js';
+import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/Wallet.js';
 
 
 export class SheetAddCustomToken extends Component {
@@ -77,15 +75,16 @@ export class SheetAddCustomToken extends Component {
                 else {
                     // Add token to wallet
                     if (!(canisterId in this.wallet.tokens)) {
-                        this.wallet.tokens[canisterId] = {
+                        icpRebuildToken({
                             actor: this.token.actor,
-                            balance: null,
                             name: this.token.metadata['icrc1:name'].Text,
                             symbol: this.token.metadata['icrc1:symbol'].Text,
                             decimals: this.token.metadata['icrc1:decimals'].Nat,
                             fee: this.token.metadata['icrc1:fee'].Nat
-                        };
+                        }, canisterId, this.wallet);
+                        icpBindTokenActions(this.wallet.tokens[canisterId], canisterId);
                         this.app.save('wallets', this.app.user.wallets);
+                        this.app.page('accounts');
                         this.app.sheet.clear();
                         this.app.sheet.hide();
                     }

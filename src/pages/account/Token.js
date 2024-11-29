@@ -85,7 +85,6 @@ export class SheetAddCustomToken extends Component {
                             decimals: this.token.metadata['icrc1:decimals'].Nat,
                             fee: this.token.metadata['icrc1:fee'].Nat
                         };
-                        console.log('new token', this.app.user.wallets)
                         this.app.save('wallets', this.app.user.wallets);
                         this.app.sheet.clear();
                         this.app.sheet.hide();

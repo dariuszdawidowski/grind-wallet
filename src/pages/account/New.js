@@ -1,8 +1,9 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '../../widgets/Button.js';
-import { RecoveryPhrase } from '../../widgets/Input.js';
-import { genWalletName } from '../../utils/General.js';
-import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '../../utils/Keys.js';
+import { Button } from '/src/widgets/Button.js';
+import { RecoveryPhrase } from '/src/widgets/Input.js';
+import { genWalletName } from '/src/utils/General.js';
+import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/Keys.js';
+import { icpRebuildWallet } from '/src/blockchain/InternetComputer/Wallet.js';
 
 
 export class SheetNewAccount extends Component {
@@ -21,8 +22,6 @@ export class SheetNewAccount extends Component {
 
         // Buttons
         this.append(new Button({
-            app: args.app,
-            id: 'create-account-proceed',
             text: 'Proceed',
             click: () => {
                 this.createNewWallet();
@@ -31,21 +30,18 @@ export class SheetNewAccount extends Component {
 
     }
 
-    createNewWallet() {
+    async createNewWallet() {
         const wallet = keysRecoverFromPhraseSecp256k1();
         const blockchain = 'Internet Computer';
-        const name = genWalletName(this.app.user.wallets, crypto);
-        encryptKey(wallet.private, this.app.user.password).then(encrypted => {
-            const secret = serializeEncryptKey(encrypted);
-            this.app.user.wallets[wallet.public] = {blockchain, name, public: wallet.public, secret};
-            this.app.save('wallets', this.app.user.wallets);
-            this.app.create('wallets').then(() => {
-                this.app.sheet.clear();
-                this.app.sheet.append({
-                    title: name,
-                    component: new SheetNewAccountPhrase({app: this.app, phrase: wallet.mnemonic})
-                });
-            });
+        const name = genWalletName(this.app.user.wallets, 'ICP');
+        const encrypted = await encryptKey(wallet.private, this.app.user.password);
+        const secret = serializeEncryptKey(encrypted);
+        this.app.user.wallets[wallet.public] = await icpRebuildWallet({blockchain, name, public: wallet.public, secret}, this.app.user.password);
+        this.app.save('wallets', this.app.user.wallets);
+        this.app.sheet.clear();
+        this.app.sheet.append({
+            title: name,
+            component: new SheetNewAccountPhrase({app: this.app, phrase: wallet.mnemonic})
         });
     }
 
@@ -73,8 +69,6 @@ class SheetNewAccountPhrase extends Component {
 
         // Recovery pharse
         this.phrase = new RecoveryPhrase({
-            app: args.app,
-            id: 'new-account-recovery',
             number: 12,
             phrase: args.phrase,
             readonly: true
@@ -83,8 +77,6 @@ class SheetNewAccountPhrase extends Component {
 
         // Button
         this.append(new Button({
-            app: args.app,
-            id: 'new-account-back',
             text: 'OK',
             click: () => {
                 this.app.page('accounts');

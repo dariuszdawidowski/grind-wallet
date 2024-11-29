@@ -27,44 +27,48 @@ export class PageListAccounts extends Component {
         // Accounts
         Object.values(this.app.user.wallets).forEach(wallet => {
 
-            // Native token as credit card
-            this.append(new Card({
-                app: args.app,
-                wallet,
-                click: () => {
-                    this.app.sheet.append({
-                        title: wallet.name,
-                        component: new SheetAccountDetails({app: args.app, wallet, canisterId: this.app.ICP_LEDGER_CANISTER_ID})
-                    });
-                }
-            }));
+            if ('rebuilded' in wallet) {
 
-            // Custom tokens as coins
-            Object.entries(wallet.tokens).forEach(([id, token]) => {
-                if (id != this.app.ICP_LEDGER_CANISTER_ID) {
-                    this.append(new Coin({
-                        canisterId: id,
-                        wallet,
-                        click: () => {
-                            this.app.sheet.append({
-                                title: wallet.name,
-                                component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
-                            });
-                        }
-                    }));
-                }
-            });
+                // Native token as credit card
+                this.append(new Card({
+                    app: args.app,
+                    wallet,
+                    click: () => {
+                        this.app.sheet.append({
+                            title: wallet.name,
+                            component: new SheetAccountDetails({app: args.app, wallet, canisterId: this.app.ICP_LEDGER_CANISTER_ID})
+                        });
+                    }
+                }));
 
-            // Add custom token
-            this.append(new AddPlus({
-                text: 'Add custom token',
-                click: () => {
-                    this.app.sheet.append({
-                        title: 'Add custom token',
-                        component: new SheetAddCustomToken({app: args.app, wallet})
-                    });
-                }
-            }));
+                // Custom tokens as coins
+                Object.entries(wallet.tokens).forEach(([id, token]) => {
+                    if (id != this.app.ICP_LEDGER_CANISTER_ID) {
+                        this.append(new Coin({
+                            canisterId: id,
+                            wallet,
+                            click: () => {
+                                this.app.sheet.append({
+                                    title: wallet.name,
+                                    component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
+                                });
+                            }
+                        }));
+                    }
+                });
+
+                // Add custom token
+                this.append(new AddPlus({
+                    text: 'Add custom token',
+                    click: () => {
+                        this.app.sheet.append({
+                            title: 'Add custom token',
+                            component: new SheetAddCustomToken({app: args.app, wallet})
+                        });
+                    }
+                }));
+
+            }
             
         });
 

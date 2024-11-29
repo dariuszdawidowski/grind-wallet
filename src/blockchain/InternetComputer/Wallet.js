@@ -1,13 +1,15 @@
 /*** ICP Wallet helpers ***/
 
-import { Actor, HttpAgent } from '@dfinity/agent';
+import { HttpAgent } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
+import { genWalletName } from '/src/utils/General.js';
 
 /**
  * Create or update ICP/ICRC wallet
+ * @param args.name: string - custom wallet's name
  * @param args.public: string - public key
  * @param args.secret: { ciphertext, iv, salt } - encoded private key
  * @returns:
@@ -16,15 +18,23 @@ import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTrans
 
 export async function icpRebuildWallet(args, password) {
 
+    // Validate
+    if (!('public' in args) || !('secret' in args)) return null;
+    if (!('ciphertext' in args.secret) || !('iv' in args.secret) || !('salt' in args.secret)) return null;
+
     // ICP Ledger ID
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
     const wallet = {
+        name: ('name' in args) ? args.name : genWalletName(this.app.user.wallets, 'ICP'),
+        blockchain: ('blockchain' in args) ? args.blockchain : 'Internet Computer',
+        public: args.public,
+        secret: args.secret,
         identity: ('identity' in args) ? args.identity : null,
         principal: ('principal' in args) ? args.principal : null,
         account: ('account' in args) ? args.account : null,
         agent: ('agent' in args) ? args.agent : null,
-        tokens: ('tokens' in args) ? args.tokens : {}
+        tokens: ('tokens' in args) ? args.tokens : {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}}
     };
 
     // Decode keys
@@ -146,6 +156,9 @@ export async function icpRebuildWallet(args, password) {
                 };
             }
         }
+
+        // Tag as sucessfuly rebuilded
+        wallet.rebuilded = Date.now();
 
     }
 

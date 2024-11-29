@@ -165,7 +165,6 @@ export class RecoveryPhrase extends Component {
         this.inputs = [];
         for (let nr = 1; nr < this.number + 1; nr ++) {
             const input = new InputPhrase({
-                app: args.app,
                 id: `phrase-${nr}`,
                 nr,
                 readonly: ('readonly' in args) ? args.readonly : false,

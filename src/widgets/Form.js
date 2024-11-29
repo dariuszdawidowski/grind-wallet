@@ -7,7 +7,6 @@ export class Form extends Component {
         super({...args, type: 'form'});
 
         // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.setAttribute('action', '#');
         this.element.setAttribute('method', 'POST');
         this.element.setAttribute('autocomplete', 'on');

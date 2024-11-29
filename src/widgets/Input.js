@@ -12,7 +12,6 @@ export class InputText extends Component {
         super(args);
 
         // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-text');
 
         this.input = document.createElement('input');
@@ -131,7 +130,6 @@ export class InputPhrase extends Component {
         super(args);
 
         // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-phrase');
 
         const number = document.createElement('div');
@@ -169,7 +167,6 @@ export class RecoveryPhrase extends Component {
         this.phrase = ('phrase' in args) ? args.phrase.split(' ') : [];
 
         // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.classList.add('input-recovery');
 
         // Inputs

@@ -17,7 +17,6 @@ export class Button extends Component {
         super({...args, type: 'button'});
 
         // Build
-        if ('id' in args) this.element.id = args.id;
         this.element.setAttribute('type', 'submit');
 
         // Text

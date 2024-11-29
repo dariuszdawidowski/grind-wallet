@@ -6,9 +6,6 @@ export class Checkbox extends Component {
     constructor(args) {
         super(args);
 
-        // Build
-        this.element.id = args.id;
-
         // Checkbox
         this.checkbox = document.createElement('input');
         this.checkbox.setAttribute('type', 'checkbox');

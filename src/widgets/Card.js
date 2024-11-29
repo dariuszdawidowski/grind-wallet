@@ -11,7 +11,6 @@ export class Card extends Component {
         this.wallet = args.wallet;
 
         // Build
-        this.element.id = args.id;
         this.element.classList.add('card');
         this.element.innerHTML = `
             <div class="name">${this.wallet.name}</div>

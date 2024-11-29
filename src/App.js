@@ -204,9 +204,6 @@ class GrindWalletPlugin {
                 // Data
                 data = this.migrate(resource, data, version);
 
-                // Save new version
-                this.save('wallets', data);
-                chrome.storage.local.set({ version: this.PERSISTENT_DATA_VERSION });
             }
 
             // Assign
@@ -240,6 +237,10 @@ class GrindWalletPlugin {
 
                 }
 
+                // Save new version
+                this.save('wallets', data);
+                chrome.storage.local.set({ version: 2 });
+
             }
 
             // Return data
@@ -271,7 +272,12 @@ class GrindWalletPlugin {
                     name: wallet.name,
                     public: wallet.public,
                     secret: wallet.secret,
-                    tokens: Object.fromEntries(Object.keys(wallet.tokens).map(key => [key, {}]))
+                    tokens: Object.fromEntries(
+                        Object.entries(wallet.tokens).map(([key, value]) => [
+                            key,
+                            { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee }
+                        ])
+                    )
                 };
             });
             chrome.storage.local.set({ 'wallets': serializeWallets });

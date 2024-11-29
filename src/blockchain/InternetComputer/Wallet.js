@@ -75,6 +75,7 @@ export async function icpRebuildWallet(args, password) {
 
             // Bind request actions
             icpBindTokenActions(wallet.tokens[id], id);
+        }
 
         // Tag as sucessfuly rebuilded
         wallet.rebuilded = Date.now();

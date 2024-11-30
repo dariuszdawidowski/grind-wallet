@@ -96,14 +96,29 @@ export class SheetAccountDetails extends Component {
 
         // Remove
         this.append(new ButtLink({
-            text: 'Remove this account from the list',
+            text: `Remove this ${(this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) ? 'account' : 'token'} from the list`,
             click: () => {
-                if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
-                    delete this.app.user.wallets[this.wallet.public]
-                    this.app.save('wallets', this.app.user.wallets);
-                    this.app.page('accounts');
-                    this.app.sheet.clear();
-                    this.app.sheet.hide();
+
+                // ICP
+                if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+                    if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
+                        delete this.app.user.wallets[this.wallet.public]
+                        this.app.save('wallets', this.app.user.wallets);
+                        this.app.page('accounts');
+                        this.app.sheet.clear();
+                        this.app.sheet.hide();
+                    }
+                }
+
+                // Token
+                else {
+                    if (confirm('Delete this token?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
+                        delete this.app.user.wallets[this.wallet.public].tokens[this.canisterId];
+                        this.app.save('wallets', this.app.user.wallets);
+                        this.app.page('accounts');
+                        this.app.sheet.clear();
+                        this.app.sheet.hide();
+                    }
                 }
             }
         }));

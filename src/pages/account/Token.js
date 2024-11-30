@@ -3,6 +3,7 @@ import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/Button.js';
 import { InputAddress } from '/src/widgets/Input.js';
 import { validICRC1 } from '/src/utils/Currency.js';
+import { saveImage } from '/src/utils/ImageCache.js';
 import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/Wallet.js';
 
 
@@ -61,7 +62,7 @@ export class SheetAddCustomToken extends Component {
                                 info.innerHTML += `<img src="${this.token.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                             }
                             info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.token.metadata['icrc1:name'].Text} (${this.token.metadata['icrc1:symbol'].Text})</div>`;
-                            submit.set('Accept');
+                            submit.set('Add to my wallet');
                         }
                         else {
                             address.enable();
@@ -83,6 +84,9 @@ export class SheetAddCustomToken extends Component {
                             fee: this.token.metadata['icrc1:fee'].Nat
                         }, canisterId, this.wallet);
                         icpBindTokenActions(this.wallet.tokens[canisterId], canisterId);
+                        if (('icrc1:logo' in this.token.metadata) && ('Text' in this.token.metadata['icrc1:logo'])) {
+                            saveImage(`token:${canisterId}`, this.token.metadata['icrc1:logo'].Text);
+                        }
                         this.app.save('wallets', this.app.user.wallets);
                         this.app.page('accounts');
                         this.app.sheet.clear();

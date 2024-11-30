@@ -1,5 +1,6 @@
 import { Component } from '/src/utils/Component.js';
 import { formatCurrency, formatE8S } from '/src/utils/Currency.js';
+import { loadImage } from '/src/utils/ImageCache.js';
 
 
 export class Coin extends Component {
@@ -19,7 +20,6 @@ export class Coin extends Component {
         // Coin shape
         this.coin = document.createElement('div');
         this.coin.classList.add('coin');
-        this.coin.innerText = this.wallet.tokens[this.canisterId].name;
         this.element.append(this.coin);
 
         // Label
@@ -36,6 +36,21 @@ export class Coin extends Component {
             this.wallet.tokens[this.canisterId].balance = balance;
             this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(formatE8S(balance))}`;
         });
+
+        // Load cached image
+        (async () => {
+            try {
+                const image = await loadImage(`token:${this.canisterId}`);
+                this.coin.style.backgroundColor = 'transparent';
+                this.coin.style.backgroundImage = `url('${image}')`;
+            }
+
+            // Fallback text
+            catch(error) {
+                this.coin.innerText = this.wallet.tokens[this.canisterId].symbol;
+            }
+        })();
+
     }
 
 }

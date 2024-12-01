@@ -309,7 +309,7 @@ hr {
     border: 0;
     height: 1px;
     background-image: linear-gradient(90deg, #6525b344, #6525b3, #6525b344);
-    margin: 20px auto 0 auto;
+/*    margin: 20px auto 0 auto;*/
 }
 
 /* Credit card */
@@ -410,6 +410,7 @@ hr {
     white-space: nowrap;
     scrollbar-width: none;
     height: 42px;
+    margin-bottom: 20px;
 }
 
 .coins > :first-child {
@@ -418,6 +419,11 @@ hr {
 
 .coins::-webkit-scrollbar {
     display: none;
+}
+
+.coins:empty {
+    height: 0;
+    margin-bottom: 0;
 }
 
 .add-coin {

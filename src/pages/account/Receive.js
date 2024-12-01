@@ -12,13 +12,19 @@ export class SheetAccountReceive extends Component {
 
         // Build
         this.element.classList.add('form');
+        this.element.innerHTML = `
+            <h3>
+                Principal ID
+            </h3>
+        `;
 
-        const qr = document.createElement('div');
-        qr.classList.add('qrcode');
-        this.element.append(qr);
+        // QR Code for Principal ID
+        const qrPrincipal = document.createElement('div');
+        qrPrincipal.classList.add('qrcode');
+        this.element.append(qrPrincipal);
 
-        const qrcode = new QRCode(qr, {
-            text: this.wallet.account,
+        const qrcodePrincipal = new QRCode(qrPrincipal, {
+            text: this.wallet.principal,
             width: 200,
             height: 200,
             colorDark : '#000',
@@ -31,7 +37,7 @@ export class SheetAccountReceive extends Component {
             id: 'receive-account-copy',
             text: 'Copy address to clipboard',
             click: () => {
-                navigator.clipboard.writeText(this.wallet.account).then(() => {
+                navigator.clipboard.writeText(this.wallet.principal).then(() => {
                 }).catch(err => {
                 });
             }

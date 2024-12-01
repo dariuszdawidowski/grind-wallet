@@ -34,12 +34,18 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
  * Display number as currency
  */
 
-export function formatCurrency(value, fixed = 2) {
-    const s = value.toFixed(fixed).toString()
-    const [whole, fractional] = s.split('.');
-    return formatWithSpaces(whole, 3, false) + '.' + fractional;
-}
+// export function formatCurrency(value, fixed = 2) {
+//     const s = value.toFixed(fixed).toString()
+//     const [whole, fractional] = s.split('.');
+//     return formatWithSpaces(whole, 3, false) + '.' + fractional;
+// }
 
+export function formatCurrency(value, fixed = 2) {
+    const [whole, fractional = ''] = value.toString().split('.');
+    const displayedFraction = fractional.slice(0, fixed);
+    const hasRemainder = fractional.length > fixed;
+    return formatWithSpaces(whole, 3, false) + '.' + displayedFraction + (hasRemainder ? '+' : '');
+}
 
 /**
  * ICP -> icpt

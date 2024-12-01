@@ -17,6 +17,7 @@ export class SheetAccountDetails extends Component {
 
         // Canister ID
         this.canisterId = args.canisterId;
+console.log('TI', this.wallet.tokens[this.canisterId])
 
         // Build
         this.element.classList.add('form');

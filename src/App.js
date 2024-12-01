@@ -71,11 +71,6 @@ class GrindWalletPlugin {
             wallets: {}
         };
 
-        // Global info
-        this.info = {
-            fee: null,
-        };
-
         // Get saved data
         chrome.storage.local.get(['version', 'terms', 'webauthn'], (saved) => {
 

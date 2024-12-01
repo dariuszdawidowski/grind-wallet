@@ -55,18 +55,8 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: args.app,
-            text: `The network charges a commission of <span id="fee">${this.app.info.fee ? formatE8S(this.app.info.fee) : 'unknown'}</span> ICP.<br>Sending to an unsupported address may result in loss of tokens.`
+            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? formatE8S(this.wallet.tokens[this.canisterId].fee) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.<br>Sending to an unsupported address may result in loss of tokens.`
         }));
-
-        // Cache fee
-        /*if (this.app.info.fee == null) {
-            icpLedgerFee(this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].actor).then(fee => {
-                if (typeof(fee) == 'bigint') {
-                    this.app.info.fee = fee;
-                    document.querySelector('#fee').innerHTML = formatE8S(this.app.info.fee);
-                }
-            });
-        }*/
 
     }
 

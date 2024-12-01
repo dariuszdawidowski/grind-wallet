@@ -101,8 +101,8 @@ export function icpRebuildToken(args, id, wallet) {
         account: ('account' in args) ? args.account : wallet.account,
         name: ('name' in args) ? args.name : 'Unknown',
         symbol: ('symbol' in args) ? args.symbol : 'Unknown',
-        decimals: ('decimals' in args) ? args.decimals : 8,
-        fee: ('fee' in args) ? args.fee : 10000,
+        decimals: ('decimals' in args) ? Number(args.decimals) : 8,
+        fee: ('fee' in args) ? Number(args.fee) : 10000,
         balance: ('balance' in args) ? args.balance : null,
         actor: ('actor' in args) ? args.actor : id == ICP_LEDGER_CANISTER_ID ? LedgerCanister.create({ agent: wallet.agent }) : IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id }),
         request: ('request' in args) ? args.request : id == ICP_LEDGER_CANISTER_ID ?

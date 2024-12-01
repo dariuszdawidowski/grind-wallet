@@ -60,7 +60,7 @@ export async function icpLedgerTransfer(args) {
     try {
         const response = await this.actor.transfer({
             to: args.account,
-            amount: ICP2icpt(args.amount)
+            amount: ICP2icpt(args.amount, this.decimals)
         });
 
         return {'OK': response};
@@ -87,7 +87,7 @@ export async function icrcLedgerTransfer(args) {
                 owner: args.principal,
                 subaccount: []
             },
-            amount: ICP2icpt(args.amount)
+            amount: ICP2icpt(args.amount, this.decimals)
         });
 
         return {'OK': response};

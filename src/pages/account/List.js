@@ -74,7 +74,7 @@ export class PageListAccounts extends Component {
         this.element.append(info);
 
         // Buttons
-        this.append(new Button({
+        const createButton = new Button({
             text: 'Create account',
             click: () => {
                 this.app.sheet.append({
@@ -82,9 +82,10 @@ export class PageListAccounts extends Component {
                     component: new SheetNewAccount(args)
                 });
             }
-        }));
+        });
+        this.append(createButton);
 
-        this.append(new Button({
+        const importButton = new Button({
             text: 'Import account',
             click: () => {
                 this.app.sheet.append({
@@ -92,7 +93,9 @@ export class PageListAccounts extends Component {
                     component: new SheetImportAccount(args)
                 });
             }
-        }));
+        });
+        importButton.element.style.marginBottom = '30px';
+        this.append(importButton);
 
     }
 

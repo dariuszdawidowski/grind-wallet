@@ -478,7 +478,6 @@ hr {
 
 .coin-badge:hover {
     cursor: pointer;
-    box-shadow: 0 0 6px rgb(135, 80, 199);
 }
 
 .macos .coin-badge:hover {
@@ -502,6 +501,11 @@ hr {
 .coin-badge .label {
     margin: 0 10px;
     font-size: 12px;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.coin-badge:hover .label {
+    text-shadow: 0 0 6px rgb(135, 80, 199);
 }
 
 /* QR code */

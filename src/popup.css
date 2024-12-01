@@ -513,7 +513,7 @@ hr {
 .qrcode {
     width: 200px;
     height: 200px;
-    margin: 20px auto;
+    margin: 0 auto 40px auto;
 }
 
 /* Bottom sheet */

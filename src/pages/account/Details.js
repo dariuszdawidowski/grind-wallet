@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { icpt2ICP } from '/src/utils/Currency.js';
+import { icpt2ICP, formatCurrency } from '/src/utils/Currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/Button.js';
 import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
@@ -17,13 +17,12 @@ export class SheetAccountDetails extends Component {
 
         // Canister ID
         this.canisterId = args.canisterId;
-console.log('TI', this.wallet.tokens[this.canisterId])
 
         // Build
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${this.wallet.tokens[this.canisterId].balance !== null ? icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
+               ${this.wallet.tokens[this.canisterId].balance !== null ? formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');

@@ -55,7 +55,7 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: args.app,
-            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? icpt2ICP(this.wallet.tokens[this.canisterId].fee) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.<br>Sending to an unsupported address may result in loss of tokens.`
+            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? icpt2ICP(this.wallet.tokens[this.canisterId].fee, this.wallet.tokens[this.canisterId].decimals) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.<br>Sending to an unsupported address may result in loss of tokens.`
         }));
 
     }

@@ -34,7 +34,7 @@ export class Coin extends Component {
         // Fetch balance
         this.wallet.tokens[this.canisterId].request.balance().then(balance => {
             this.wallet.tokens[this.canisterId].balance = balance;
-            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance))}`;
+            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance, this.wallet.tokens[this.canisterId].decimals))}`;
         });
 
         // Load cached image

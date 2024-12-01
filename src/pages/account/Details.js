@@ -22,7 +22,7 @@ export class SheetAccountDetails extends Component {
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${this.wallet.tokens[this.canisterId].balance !== null ? icpt2ICP(this.wallet.tokens[this.canisterId].balance) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
+               ${this.wallet.tokens[this.canisterId].balance !== null ? icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');

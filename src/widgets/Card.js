@@ -35,7 +35,7 @@ export class Card extends Component {
         // Fetch balance
         this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].request.balance().then(balance => {
             this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance = balance;
-            this.element.querySelector('.amount').innerHTML = icpt2ICP(balance);
+            this.element.querySelector('.amount').innerHTML = icpt2ICP(balance, this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].decimals);
         });
 
     }

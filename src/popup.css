@@ -478,6 +478,7 @@ hr {
 
 .coin-badge:hover {
     cursor: pointer;
+    box-shadow: 0 0 6px rgb(135, 80, 199);
 }
 
 .macos .coin-badge:hover {

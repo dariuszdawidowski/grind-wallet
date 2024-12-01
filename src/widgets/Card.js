@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { formatWithSpaces, formatE8S } from '/src/utils/Currency.js';
+import { formatWithSpaces, icpt2ICP } from '/src/utils/Currency.js';
 
 
 export class Card extends Component {
@@ -35,7 +35,7 @@ export class Card extends Component {
         // Fetch balance
         this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].request.balance().then(balance => {
             this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance = balance;
-            this.element.querySelector('.amount').innerHTML = formatE8S(balance);
+            this.element.querySelector('.amount').innerHTML = icpt2ICP(balance);
         });
 
     }

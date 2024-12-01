@@ -42,33 +42,30 @@ export function formatCurrency(value, fixed = 2) {
 
 
 /**
- * Format 8-precision int as float
+ * ICP -> icpt
  */
 
-export function formatE8S(e8s) {
-    return Number(e8s) / 1e8;
-}
-
-
-/**
- * Convert Number ICP to BigInt ICPt
- */
-
-const E8S_PER_ICP = BigInt(100000000);
-
-export const ICP2ICPt = (amount) => {
+export function ICP2icpt(amount, decimals = 8) {
     const [integral, fractional] = `${amount}`.split('.');
 
-    if ((fractional ?? '0').length > 8) {
-        throw new Error('More than 8 decimals not supported.');
+    if ((fractional ?? '0').length > decimals) {
+        throw new Error(`More than ${decimals} decimals not supported.`);
     }
 
     return (
-        BigInt(integral ?? 0) * E8S_PER_ICP +
-        BigInt((fractional ?? '0').padEnd(8, '0'))
+        BigInt(integral ?? 0) * BigInt(10 ** decimals) +
+        BigInt((fractional ?? '0').padEnd(decimals, '0'))
     );
 };
 
+
+/**
+ * icpt -> ICP
+ */
+
+export function icpt2ICP(amount, decimals = 8) {
+    return Number(amount) / (10 ** decimals);
+}
 
 /**
  * Validata ICRC-1 metadata

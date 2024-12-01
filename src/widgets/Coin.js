@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { formatCurrency, formatE8S } from '/src/utils/Currency.js';
+import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
 
@@ -34,7 +34,7 @@ export class Coin extends Component {
         // Fetch balance
         this.wallet.tokens[this.canisterId].request.balance().then(balance => {
             this.wallet.tokens[this.canisterId].balance = balance;
-            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(formatE8S(balance))}`;
+            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance))}`;
         });
 
         // Load cached image

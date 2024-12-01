@@ -1,7 +1,7 @@
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/Component.js';
-import { formatCurrency, formatE8S } from '/src/utils/Currency.js';
+import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { Button, ButtonDescription } from '/src/widgets/Button.js';
 import { InputCurrency, InputAddress } from '/src/widgets/Input.js';
 import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
@@ -55,7 +55,7 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: args.app,
-            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? formatE8S(this.wallet.tokens[this.canisterId].fee) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.<br>Sending to an unsupported address may result in loss of tokens.`
+            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? icpt2ICP(this.wallet.tokens[this.canisterId].fee) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.<br>Sending to an unsupported address may result in loss of tokens.`
         }));
 
     }

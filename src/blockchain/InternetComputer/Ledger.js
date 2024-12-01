@@ -2,7 +2,7 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
-import { ICP2ICPt } from '/src/utils/Currency.js';
+import { ICP2icpt } from '/src/utils/Currency.js';
 
 /**
  * NOTE: NOT FOR DIRECT USE: should be binded to wallet.token[id]
@@ -60,7 +60,7 @@ export async function icpLedgerTransfer(args) {
     try {
         const response = await this.actor.transfer({
             to: args.account,
-            amount: ICP2ICPt(args.amount)
+            amount: ICP2icpt(args.amount)
         });
 
         return {'OK': response};
@@ -87,7 +87,7 @@ export async function icrcLedgerTransfer(args) {
                 owner: args.principal,
                 subaccount: []
             },
-            amount: ICP2ICPt(args.amount)
+            amount: ICP2icpt(args.amount)
         });
 
         return {'OK': response};

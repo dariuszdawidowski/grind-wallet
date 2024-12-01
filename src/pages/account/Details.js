@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { formatE8S } from '/src/utils/Currency.js';
+import { icpt2ICP } from '/src/utils/Currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/Button.js';
 import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
@@ -22,7 +22,7 @@ export class SheetAccountDetails extends Component {
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h1 style="margin-top: 0;">
-               ${this.wallet.tokens[this.canisterId].balance !== null ? formatE8S(this.wallet.tokens[this.canisterId].balance) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
+               ${this.wallet.tokens[this.canisterId].balance !== null ? icpt2ICP(this.wallet.tokens[this.canisterId].balance) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
             </h1>
         `;
         const buttonbar = document.createElement('div');

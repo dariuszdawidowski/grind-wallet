@@ -20,11 +20,14 @@ export class SheetAccountDetails extends Component {
 
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = `
-            <h1 style="margin-top: 0;">
-               ${this.wallet.tokens[this.canisterId].balance !== null ? formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals) + ' ' + this.wallet.tokens[this.canisterId].symbol : 'Fetching...'}
-            </h1>
-        `;
+
+        // Balance amount
+        this.balance = document.createElement('h1');
+        this.balance.style.marginTop = '0';
+        this.balance.innerHTML = 'Fetching...';
+        this.element.append(this.balance);
+        this.updateBalance();
+
         const buttonbar = document.createElement('div');
         buttonbar.classList.add('buttonbar');
         this.element.append(buttonbar);
@@ -123,6 +126,18 @@ export class SheetAccountDetails extends Component {
             }
         }));
 
+        // Listen for balance update
+        document.body.addEventListener('update.balance', () => {
+            this.updateBalance();
+        });
+
+    }
+
+    updateBalance() {
+        if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
+            const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
+            this.balance.innerHTML = amount;
+        }
     }
 
 }

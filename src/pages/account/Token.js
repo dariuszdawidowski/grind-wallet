@@ -106,16 +106,18 @@ export class SheetAddCustomToken extends Component {
 
     async fetchToken(canisterId) {
         let actor = null
+        let data = null;
         try {
             actor = IcrcLedgerCanister.create({
                 agent: this.wallet.agent,
                 canisterId,
             });
+            data = await actor.metadata({});
         }
         catch (error) {
             this.token = { actor: null, metadata: {} };
+            return;
         }
-        const data = await actor.metadata({});
         this.token = { actor, metadata: Object.fromEntries(data) };
     }
 

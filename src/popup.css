@@ -316,7 +316,6 @@ hr {
 .card {
     width: 343px;
     height: 216px;
-    background-image: url('assets/card-ICP-01.png');
     background-size: cover;
     border-radius: 20px;
     margin: 20px auto;

@@ -130,7 +130,7 @@ class GrindWalletPlugin {
                             }
                             // Create password (should be created but just in case)
                             else {
-                                this.page('register');
+                                this.page('register-password');
                             }
                         }
                     });

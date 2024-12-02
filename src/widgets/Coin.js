@@ -28,8 +28,25 @@ export class Coin extends Component {
         this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>...`;
         this.element.append(this.label);
 
-        // Events
-        if ('click' in args) this.element.addEventListener('click', args.click);
+        // Click (with distance preventing scroll)
+        this.click = {
+            x: 0,
+            y: 0,
+            distance: function(x2, y2) {
+                const dx = x2 - this.x;
+                const dy = y2 - this.y;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+        };
+        if ('click' in args) {
+            this.element.addEventListener('mousedown', (event) => {
+                this.click.x = event.x;
+                this.click.y = event.y;
+            });
+            this.element.addEventListener('mouseup', (event) => {
+                if (this.click.distance(event.x, event.y) <= 10) args.click();
+            });
+        }
 
         // Fetch balance
         this.wallet.tokens[this.canisterId].request.balance().then(balance => {

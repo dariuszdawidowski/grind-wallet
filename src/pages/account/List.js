@@ -67,13 +67,43 @@ export class PageListAccounts extends Component {
             
         });
 
+        // Horizontal drag of coins
+        this.element.querySelectorAll('.coins').forEach(container => {
+
+            let isDragging = false;
+            let startX;
+            let scrollLeft;
+
+            container.addEventListener('mousedown', (event) => {
+                isDragging = true;
+                startX = event.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('mousemove', (event) => {
+                if (!isDragging) return;
+                event.preventDefault();
+                const x = event.pageX - container.offsetLeft;
+                const walk = (x - startX) * 1;
+                container.scrollLeft = scrollLeft - walk;
+            });
+
+            container.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+        });
+
         // Info
         const info = document.createElement('div');
         info.style.margin = '17px auto 7px auto';
         info.innerHTML = 'Create next one or import an existing one';
         this.element.append(info);
 
-        // Buttons
+        // Button: Create account
         const createButton = new Button({
             text: 'Create account',
             click: () => {
@@ -85,6 +115,7 @@ export class PageListAccounts extends Component {
         });
         this.append(createButton);
 
+        // Button: Import account
         const importButton = new Button({
             text: 'Import account',
             click: () => {

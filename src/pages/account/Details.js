@@ -5,6 +5,7 @@ import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
 import { SheetAddCustomToken } from './Token.js';
+import { loadImage } from '/src/utils/ImageCache.js';
 
 
 export class SheetAccountDetails extends Component {
@@ -24,6 +25,8 @@ export class SheetAccountDetails extends Component {
         // Balance amount
         this.balance = document.createElement('h1');
         this.balance.style.marginTop = '0';
+        this.balance.style.display = 'flex';
+        this.balance.style.alignItems = 'center';
         this.balance.innerHTML = 'Fetching...';
         this.element.append(this.balance);
         this.updateBalance();
@@ -126,17 +129,31 @@ export class SheetAccountDetails extends Component {
             }
         }));
 
+        // Load cached coin image
+        this.coin = null;
+        (async () => {
+            try {
+                this.coin = await loadImage(`token:${this.canisterId}`);
+                this.element.dispatchEvent(new Event('update.image'));
+            }
+            catch(error) {}
+        })();
+
         // Listen for balance update
         document.body.addEventListener('update.balance', () => {
             this.updateBalance();
         });
 
+        // Listen for coin image load
+        this.element.addEventListener('update.image', () => {
+            this.updateBalance();
+        });
     }
 
     updateBalance() {
         if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
-            this.balance.innerHTML = amount;
+            this.balance.innerHTML = (this.coin ? `<img src="${this.coin}" style="width: 40px; margin-right: 10px;">` : '') + amount + ' ' + this.wallet.tokens[this.canisterId].symbol;
         }
     }
 

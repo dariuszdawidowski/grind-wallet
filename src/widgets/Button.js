@@ -16,6 +16,9 @@ export class Button extends Component {
     constructor(args) {
         super({...args, type: 'button'});
 
+        // State machine (used to advance next stage)
+        this.state = 0;
+
         // Build
         this.element.setAttribute('type', 'submit');
 

@@ -1,13 +1,13 @@
 /*** ICP/ICRC-1/2 Transaction functions ***/
 
-import { hexStringToUint8Array } from '@dfinity/utils';
-import { Principal } from '@dfinity/principal';
-import { ICP2icpt } from '/src/utils/Currency.js';
-
 /**
  * NOTE: NOT FOR DIRECT USE: should be binded to wallet.token[id]
  */
 
+import { hexStringToUint8Array } from '@dfinity/utils';
+import { Principal } from '@dfinity/principal';
+import { ICP2icpt } from '/src/utils/Currency.js';
+import { memo2Binary } from '/src/utils/General.js';
 
 /**
  * Check ICP balance
@@ -27,7 +27,6 @@ export async function icpLedgerBalance() {
     return null;
 }
 
-
 /**
  * Check ICRC-1/2 balance
  */
@@ -46,12 +45,13 @@ export async function icrcLedgerBalance() {
     return null;
 }
 
-
 /**
  * Transfer ICP
  * @param args.account: string | Uint8Array - destination (Account ID)
  * @param args.amount: Number - amount of tokens to send
  */
+
+let icpTransfer_memo = 0;
 
 export async function icpLedgerTransfer(args) {
 
@@ -60,7 +60,8 @@ export async function icpLedgerTransfer(args) {
     try {
         const response = await this.actor.transfer({
             to: args.account,
-            amount: ICP2icpt(args.amount, this.decimals)
+            amount: ICP2icpt(args.amount, this.decimals),
+            memo: icpTransfer_memo++
         });
 
         return {'OK': response};
@@ -69,7 +70,6 @@ export async function icpLedgerTransfer(args) {
         return {'ERROR': error};
     }
 }
-
 
 /**
  * Transfer ICRC-1/2
@@ -84,10 +84,11 @@ export async function icrcLedgerTransfer(args) {
     try {
         const response = await this.actor.transfer({
             to: {
-                owner: args.principal,
-                subaccount: []
+            owner: args.principal,
+            subaccount: []
             },
-            amount: ICP2icpt(args.amount, this.decimals)
+            amount: ICP2icpt(args.amount, this.decimals),
+            memo: memo2Binary(icpTransfer_memo++)
         });
 
         return {'OK': response};
@@ -96,7 +97,6 @@ export async function icrcLedgerTransfer(args) {
         return {'ERROR': error};
     }
 }
-
 
 /**
  * Fee for transfer both for ICP and ICRC-1/2
@@ -113,7 +113,6 @@ export async function icrcLedgerTransfer(args) {
 
     return null;
 }*/
-
 
 /**
  * Token info both for ICP and ICRC-1/2

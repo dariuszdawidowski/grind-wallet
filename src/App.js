@@ -4,7 +4,7 @@
  */
 
 import '/src/popup.css';
-import { BottomSheet } from '/src/widgets/BottomSheet.js';
+import { Sheet } from '/src/widgets/Sheet.js';
 import { PageEmpty } from '/src/pages/account/Empty.js';
 import { PageListAccounts } from '/src/pages/account/List.js';
 import { PageAcceptTerms } from '/src/pages/user/Terms.js';
@@ -56,7 +56,7 @@ class GrindWalletPlugin {
         }
 
         // Bottom Sheet
-        this.sheet = new BottomSheet({app: this, selector: '#bottom-sheet', hidden: true});
+        this.sheet = new Sheet({app: this, selector: '#sheet', hidden: true});
 
         // Active page
         this.current = null;

@@ -8,10 +8,13 @@
 import { Component } from '/src/utils/Component.js';
 
 
-export class BottomSheet extends Component {
+export class Sheet extends Component {
 
     constructor(args) {
         super(args);
+
+        // State open/close
+        this.open = false;
 
         // X close button
         this.x = this.element.querySelector('.x');
@@ -38,6 +41,9 @@ export class BottomSheet extends Component {
      */
 
     append(args) {
+
+        // Change state
+        this.open = true;
 
         // Title
         this.title.innerText = args.title;
@@ -66,7 +72,6 @@ export class BottomSheet extends Component {
 
     }
 
-
     /**
      * Hide sheet
      */
@@ -76,6 +81,17 @@ export class BottomSheet extends Component {
         this.element.classList.remove('visible');
         setTimeout(() => {
             this.element.style.display = 'none';
+            // Change state
+            this.open = false;
         }, 500);
     }
+
+    /**
+     * Is open?
+     */
+
+    isOpen() {
+        return this.open;
+    }
+
 }

@@ -517,7 +517,7 @@ hr {
 
 /* Bottom sheet */
 
-#bottom-sheet {
+#sheet {
     position: fixed;
     bottom: -100%;
     left: 0;
@@ -529,11 +529,11 @@ hr {
     transition: bottom 0.5s ease;
 }
 
-#bottom-sheet.visible {
+#sheet.visible {
     bottom: -25%;
 }
 
-#bottom-sheet .handler {
+#sheet .handler {
     width: 10%;
     height: 4px;
     background-color: #555;
@@ -543,18 +543,18 @@ hr {
     transition: background-color 0.3s ease-in-out;
 }
 
-#bottom-sheet .handler:hover {
+#sheet .handler:hover {
     background-color: #888;
     cursor: grab;
 }
 
-#bottom-sheet h1 {
+#sheet h1 {
     color: #222;
     text-align: center;
     margin: 20px auto;
 }
 
-#bottom-sheet .x {
+#sheet .x {
     position: absolute;
     right: 8px;
     top: 8px;
@@ -570,28 +570,28 @@ hr {
     transition: background-color 0.3s ease-in-out;
 }
 
-#bottom-sheet .x:hover {
+#sheet .x:hover {
     background-color: #888;
     cursor: pointer;
 }
 
-#bottom-sheet .content {
+#sheet .content {
     font-size: 12px;
     padding: 0px 25px;
 }
 
-#bottom-sheet .content .form {
+#sheet .content .form {
     display: flex;
     flex-direction: column;
 }
 
-#bottom-sheet .content .form h3 {
+#sheet .content .form h3 {
     font-size: 12px;
     font-weight: normal;
     text-align: center;
 }
 
-#bottom-sheet .content .form .button-description {
+#sheet .content .form .button-description {
     font-size: 10px;
     text-align: center;
     color: rgb(136, 136, 136);

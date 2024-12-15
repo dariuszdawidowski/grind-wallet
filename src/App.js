@@ -14,12 +14,17 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { icpRebuildWallet } from '/src/blockchain/InternetComputer/Wallet.js';
 
-
 /**
- * Main class
+ * Main class handles the initialization and management of the Grind Wallet plugin.
+ * It interacts with the Chrome storage API to persist user data and manages the user interface
+ * for different states such as login, registration, and account management.
  */
-
 class GrindWalletPlugin {
+
+    /**
+     * Constructor
+     * @param {string} selector - The CSS selector for the main element of the plugin.
+     */
 
     constructor(selector) {
 
@@ -44,9 +49,18 @@ class GrindWalletPlugin {
 
     }
 
+    /**
+     * Appends a component to the main element.
+     * @param {Object} component - The component to append.
+     */
+
     append(component) {
         this.element.append(component.element);
     }
+
+    /**
+     * Initializes the plugin, sets up event listeners, and loads user data from storage.
+     */
 
     init() {
 
@@ -143,7 +157,9 @@ class GrindWalletPlugin {
     }
 
     /**
-     * Clear and switch to a new page
+     * Clears the current page and switches to a new page.
+     * @param {string} name - The name of the page to switch to.
+     * @param {Object} [args={}] - Additional arguments for the page.
      */
 
     page(name, args = {}) {
@@ -188,6 +204,13 @@ class GrindWalletPlugin {
 
     }
 
+    /**
+     * Loads a resource and assigns it to the user object.
+     * @param {string} resource - The name of the resource to load.
+     * @param {Object} data - The data to load.
+     * @param {number} version - The version of the data.
+     */
+
     load(resource, data, version) {
 
         // Wallets
@@ -207,6 +230,14 @@ class GrindWalletPlugin {
         }
 
     }
+
+    /**
+     * Migrates data to the latest version.
+     * @param {string} resource - The name of the resource to migrate.
+     * @param {Object} data - The data to migrate.
+     * @param {number} version - The current version of the data.
+     * @returns {Object} - The migrated data.
+     */
 
     migrate(resource, data, version) {
 
@@ -244,6 +275,12 @@ class GrindWalletPlugin {
         }
     }
 
+    /**
+     * Creates resources based on the user data.
+     * @param {string} resource - The name of the resource to create.
+     * @returns {Promise<void>}
+     */
+
     async create(resource) {
 
         // Wallets
@@ -255,6 +292,12 @@ class GrindWalletPlugin {
         }
 
     }
+
+    /**
+     * Saves a resource to Chrome storage.
+     * @param {string} resource - The name of the resource to save.
+     * @param {Object} data - The data to save.
+     */
 
     save(resource, data) {
 
@@ -281,14 +324,12 @@ class GrindWalletPlugin {
 
 }
 
-
 /**
  * Global interface
  */
 
 // window.ic.grind = {
 // };
-
 
 /**
  * Start

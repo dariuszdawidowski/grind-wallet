@@ -5,6 +5,7 @@ import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
 import { SheetAddCustomToken } from './Token.js';
+import { SheetAddCustomNFT } from './NFT.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
 
@@ -86,18 +87,38 @@ export class SheetAccountDetails extends Component {
             }
         }));
 
-        // Add custom token
+        // Main currency card
         if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
-            this.append(new AddPlus({
-                text: 'Add custom token',
+
+            const horiz = document.createElement('div');
+            horiz.style.display = 'flex';
+            horiz.style.justifyContent = 'space-evenly';
+            this.element.append(horiz);
+
+            // Add custom token
+            horiz.append(new AddPlus({
+                text: 'Register token',
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: 'Add custom token',
+                        title: 'Register custom token',
                         component: new SheetAddCustomToken({app: args.app, wallet: this.wallet})
                     });
                 }
-            }));
+            }).element);
+
+            // Add NFT
+            horiz.append(new AddPlus({
+                text: 'Add NFT',
+                click: () => {
+                    this.app.sheet.clear();
+                    this.app.sheet.append({
+                        title: 'Add NFT',
+                        component: new SheetAddCustomNFT({app: args.app, wallet: this.wallet})
+                    });
+                }
+            }).element);
+
         }
 
         // Remove

@@ -6,7 +6,6 @@ import { validICRC1 } from '/src/utils/Currency.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/Wallet.js';
 
-
 export class SheetAddCustomToken extends Component {
 
     constructor(args) {
@@ -19,9 +18,10 @@ export class SheetAddCustomToken extends Component {
         this.element.classList.add('form');
         this.element.innerHTML = `
             <h3>
-                Enter the canister id of the Internet Computer<br>
-                blockchain custom token.
+                Enter the <b>Canister ID</b><br>
+                of the Internet Computer blockchain custom token.
             </h3>
+            <h3>Accepted standards: <b>ICRC-1</b>/<b>2</b></h3>
         `;
 
         // Address field
@@ -44,7 +44,7 @@ export class SheetAddCustomToken extends Component {
 
         // Button
         const submit = new Button({
-            text: 'Proceed',
+            text: 'Verify',
             click: () => {
 
                 // Token canister ID

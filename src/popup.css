@@ -424,7 +424,7 @@ hr {
     margin-bottom: 0;
 }
 
-.add-coin {
+.add-circle {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -433,15 +433,15 @@ hr {
     margin: 10px;
 }
 
-.add-coin:hover {
+.add-circle:hover {
     cursor: pointer;
 }
 
-.macos .add-coin:hover {
+.macos .add-circle:hover {
     transform: scale(1.03);
 }
 
-.add-coin .plus {
+.add-circle .plus {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -452,16 +452,16 @@ hr {
     align-items: center;
 }
 
-.add-coin .plus img {
+.add-circle .plus img {
     width: 30px;
     height: 30px;
 }
 
-.add-coin:hover .plus {
+.add-circle:hover .plus {
     background-color: var(--button-hilit);
 }
 
-.add-coin .label {
+.add-circle .label {
     margin: 0 10px;
     font-size: 12px;
 }

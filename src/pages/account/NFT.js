@@ -3,7 +3,6 @@ import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/Button.js';
 import { InputAddress } from '/src/widgets/Input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
-import { idlFactory as idlFactoryDIP721 } from '/src/blockchain/InternetComputer/candid/NFT_DIP721_v1.did.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 
 export class SheetAddCustomNFT extends Component {

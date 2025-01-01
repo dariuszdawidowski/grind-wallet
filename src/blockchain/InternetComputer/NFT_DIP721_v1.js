@@ -4,16 +4,16 @@
  * Doc: https://internetcomputer.org/docs/current/references/samples/rust/dip721-nft-container/
  */
 
-import { idlFactory } from './NFT_DIP721_v1.did.js';
 import { Actor } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
+import { idlFactory } from '/src/blockchain/InternetComputer/candid/NFT_DIP721_v1.did.js';
 
 export class NFT_DIP721 {
 
     /**
      * Constructor
-     * @param args.agent: HttpAgent - agent
-     * @param args.collection: NFT collection canister id
+     * @param agent: HttpAgent - agent
+     * @param collection: NFT collection canister id
      */
 
     constructor({ agent, collection }) {

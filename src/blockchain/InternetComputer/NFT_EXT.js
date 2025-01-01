@@ -5,7 +5,7 @@
 
 import { Actor } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
-import { idlFactory } from './NFT_EXT.did.js';
+import { idlFactory } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 
 export class NFT_EXT {
 

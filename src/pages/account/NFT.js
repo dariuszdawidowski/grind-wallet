@@ -1,7 +1,10 @@
+import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/Button.js';
 import { InputAddress } from '/src/widgets/Input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
+import { idlFactory as idlFactoryDIP721 } from '/src/blockchain/InternetComputer/candid/NFT_DIP721_v1.did.js';
+import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 
 export class SheetAddCustomNFT extends Component {
 
@@ -10,6 +13,9 @@ export class SheetAddCustomNFT extends Component {
 
         // Wallet reference
         this.wallet = args.wallet;
+
+        // UI controls widgets
+        this.widget = {};
 
         // Build
         this.element.classList.add('form');
@@ -22,52 +28,90 @@ export class SheetAddCustomNFT extends Component {
         `;
 
         // Address field
-        const address = new InputAddress({
+        this.widget.address = new InputAddress({
             placeholder: 'Canister ID'
         });
-        this.append(address);
+        this.append(this.widget.address);
 
         // NFT id field
-        const token = new InputAddress({
+        this.widget.token = new InputAddress({
             placeholder: 'NFT ID'
         });
-        token.element.style.marginTop = '0';
-        this.append(token);
+        this.widget.token.element.style.marginTop = '0';
+        this.append(this.widget.token);
 
         // NFT info pocket
-        const info = document.createElement('div');
-        info.style.display = 'flex';
-        info.style.flexDirection = 'column';
-        info.style.justifyContent = 'center';
-        info.style.alignItems = 'center';
-        info.style.margin = '0 0 20px 0';
-        this.element.append(info);
+        this.widget.info = document.createElement('div');
+        this.widget.info.style.display = 'flex';
+        this.widget.info.style.flexDirection = 'column';
+        this.widget.info.style.justifyContent = 'center';
+        this.widget.info.style.alignItems = 'center';
+        this.widget.info.style.margin = '0 0 20px 0';
+        this.element.append(this.widget.info);
 
-        // NFT metadata fetched
-        this.metadata = null;
 
         // Button
-        const submit = new Button({
+        this.widget.submit = new Button({
             text: 'Verify',
-            click: () => {
-
-                // Token canister ID
-                address.disable();
-                const canisterId = address.get();
-                const tokenId = token.get();
-
-                // First pass (fetch)
-                if (!this.metadata) {
-                    submit.busy(true);
-                }
-
-                // Second pass (accept)
-                else {
-                }
-            }
+            click: this.verifyAndAccept.bind(this)
         });
-        this.append(submit);
+        this.append(this.widget.submit);
 
+    }
+
+    async verifyAndAccept() {
+
+        // NFT actor and metadata fetched from canister
+        const actor = null;
+        const metadata = null;
+
+        // NFT canister ID and token ID
+        this.widget.address.disable();
+        const canisterId = this.widget.address.get();
+        const tokenId = this.widget.token.get();
+
+        // First pass (fetch actor+metadata & verify)
+        if (!actor && !metadata) {
+            this.widget.submit.busy(true);
+            this.connectCanister(canisterId).then((info) => {
+                this.widget.submit.busy(false);
+                if (info.valid) {
+                }
+                else {
+                    this.widget.address.enable();
+                    actor = null;
+                    metadata = null;
+                    alert('Unable to fetch or reckognize NFT');
+                }
+            });
+        }
+
+    }
+
+    async connectCanister(canisterId) {
+        let actor = null
+        let metadata = null;
+
+        console.log('Connecting to canister:', canisterId);
+
+        // Try EXT standard
+        // try {
+            actor = Actor.createActor(idlFactoryEXT, {
+                agent: this.wallet.agent,
+                canisterId,
+            });
+            console.log(actor);
+            // metadata = await actor.metadata({});
+        // }
+        // catch () {}
+
+        // OK
+        return {
+            valid: true,
+            standard: 'EXT',
+            actor,
+            // metadata: Object.fromEntries(metadata)
+        };
     }
 
 }

@@ -73,7 +73,7 @@ export class SheetAddCustomToken extends Component {
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                     this.widget.info.innerHTML += `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                 }
-                this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text})</div>`;
+                this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text}) [${info.standard}]</div>`;
                 this.widget.submit.set('Add to my wallet');
             }
             else {
@@ -129,11 +129,11 @@ export class SheetAddCustomToken extends Component {
         catch (error) {
             return { valid: false, error: 'Unable to connect canister' };
         }
-
+        console.log(actor);
         // Validate
         if (validICRC1(metadata)) return {
             valid: true,
-            standard: 'ICRC-1',
+            standard: ('icrc2_approve' in actor.service) ? 'ICRC-2' : 'ICRC-1',
             actor,
             metadata
         };

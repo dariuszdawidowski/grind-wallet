@@ -61,8 +61,8 @@ export class SheetAddCustomNFT extends Component {
     async verifyAndAccept() {
 
         // NFT actor and metadata fetched from canister
-        const actor = null;
-        const metadata = null;
+        let actor = null;
+        let metadata = null;
 
         // NFT canister ID and token ID
         this.widget.address.disable();

@@ -46,7 +46,7 @@ export class SheetAddCustomNFT extends Component {
 
         // NFT info pocket
         this.widget.info = document.createElement('div');
-        this.widget.info.classList.add('preview');
+        this.widget.info.classList.add('preview-nft');
         this.element.append(this.widget.info);
 
         // Button

@@ -39,7 +39,7 @@ export class SheetAddCustomToken extends Component {
 
         // Token info pocket
         this.widget.info = document.createElement('div');
-        this.widget.info.classList.add('preview');
+        this.widget.info.classList.add('preview-token');
         this.element.append(this.widget.info);
 
         // Button
@@ -70,7 +70,7 @@ export class SheetAddCustomToken extends Component {
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                     this.widget.info.innerHTML += `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                 }
-                this.widget.info.style.height = '80px';
+                // this.widget.info.style.height = '80px';
                 this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text}) [${info.standard}]</div>`;
                 this.widget.submit.set('Add to my wallet');
             }

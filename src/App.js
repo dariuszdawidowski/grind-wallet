@@ -289,8 +289,15 @@ class GrindWalletPlugin {
         // Wallets
         if (resource == 'wallets') {
             for (const walletData of Object.values(this.user.wallets)) {
-                const wallet = await icpRebuildWallet(walletData, this.user.password);
-                Object.assign(this.user.wallets[walletData.public], wallet);
+                let wallet = null;
+                try {
+                    wallet = await icpRebuildWallet(walletData, this.user.password);
+                }
+                catch (error) {
+                    console.error(error);
+                    alert(error);
+                }
+                if (wallet) Object.assign(this.user.wallets[walletData.public], wallet);
             }
         }
 

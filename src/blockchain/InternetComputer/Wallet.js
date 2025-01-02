@@ -48,10 +48,23 @@ export async function icpRebuildWallet(args, password) {
     if (!wallet.account) wallet.account = info.account;
 
     // Agent
-    if (!wallet.agent) wallet.agent = await HttpAgent.create({
-        host: 'https://icp-api.io',
-        identity: wallet.identity
-    });
+    if (!wallet.agent) {
+        try {
+            const timeout = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Connection timeout')), 10000) // 10 seconds
+            );
+            wallet.agent = await Promise.race([
+                HttpAgent.create({
+                    host: 'https://icp-api.io',
+                    identity: wallet.identity
+                }),
+                timeout
+            ]);
+        }
+        catch (error) {
+            throw new Error('Failed to connect to IC network');
+        }
+    }
 
     // Tokens with actors
     for (const [id, token] of Object.entries(wallet.tokens)) {

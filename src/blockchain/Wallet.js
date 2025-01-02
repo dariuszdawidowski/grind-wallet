@@ -54,6 +54,7 @@ export class Wallet {
                 ])
             )
         };
-    }        
+    }
+
 }
 

@@ -7,104 +7,86 @@ import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/uti
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
 import { genWalletName } from '/src/utils/General.js';
 import { Wallet } from '/src/blockchain/Wallet.js';
+import { ICPToken } from '/src/blockchain/InternetComputer/ICPToken.js';
+import { ICRCToken } from '/src/blockchain/InternetComputer/ICRCToken.js';
 
 export class ICPWallet extends Wallet {
 
-    // Move ICP functionality here in a future
+    /**
+     * Create or update ICP wallet with ICP/ICRC tokens
+     */
 
-}
+    async rebuild(password) {
 
-/**
- * Create or update ICP wallet with ICRC tokens
- * @param args.name: string - custom wallet's name [optional]
- * @param args.public: string - public key
- * @param args.secret: { ciphertext, iv, salt } - encoded private key
- * @returns:
- * { identity: Object, principal: string, account: string, agent: HttpAgent, tokens: {canisterId: {actor: Actor, balance: e8s (ICPt)}, ...} }
- */
+        // ICP Ledger ID
+        const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
-export async function icpRebuildWallet(args, password) {
+        // Defaults
+        if (!this.name) this.name = genWalletName(this.app.user.wallets, 'ICP');
+        if (!this.blockchain) this.blockchain = 'Internet Computer';
+        if (!this.tokens) this.tokens = {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}};
 
-    // Validate
-    if (!('public' in args) || !('secret' in args)) return null;
-    if (!('ciphertext' in args.secret) || !('iv' in args.secret) || !('salt' in args.secret)) return null;
+        // Decode keys
+        const deserialized = deserializeEncryptKey(this.secret);
+        const privateKey = await decryptKey(deserialized, password);
+        const info = identityFromPrivate(privateKey);
 
-    // ICP Ledger ID
-    const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+        // Store data
+        if (!this.identity) this.identity = info.identity;
+        if (!this.principal) this.principal = info.principal;
+        if (!this.account) this.account = info.account;
 
-    const wallet = {
-        name: ('name' in args) ? args.name : genWalletName(this.app.user.wallets, 'ICP'),
-        blockchain: ('blockchain' in args) ? args.blockchain : 'Internet Computer',
-        public: args.public,
-        secret: args.secret,
-        identity: ('identity' in args) ? args.identity : null,
-        principal: ('principal' in args) ? args.principal : null,
-        account: ('account' in args) ? args.account : null,
-        agent: ('agent' in args) ? args.agent : null,
-        tokens: ('tokens' in args) ? args.tokens : {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}}
-    };
-
-    // Decode keys
-    const deserialized = deserializeEncryptKey(args.secret);
-    const privateKey = await decryptKey(deserialized, password);
-    const info = identityFromPrivate(privateKey);
-
-    // Store data
-    if (!wallet.identity) wallet.identity = info.identity;
-    if (!wallet.principal) wallet.principal = info.principal;
-    if (!wallet.account) wallet.account = info.account;
-
-    // Agent
-    if (!wallet.agent) {
-        try {
-            const timeout = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Connection timeout')), 10000) // 10 seconds
-            );
-            wallet.agent = await Promise.race([
-                HttpAgent.create({
-                    host: 'https://icp-api.io',
-                    identity: wallet.identity
-                }),
-                timeout
-            ]);
+        // Agent
+        if (!this.agent) {
+            try {
+                const timeout = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Connection timeout')), 10000) // 10 seconds
+                );
+                this.agent = await Promise.race([
+                    HttpAgent.create({
+                        host: 'https://icp-api.io',
+                        identity: this.identity
+                    }),
+                    timeout
+                ]);
+            }
+            catch (error) {
+                throw new Error('Failed to connect to IC network');
+            }
         }
-        catch (error) {
-            throw new Error('Failed to connect to IC network');
+
+        // Tokens with actors
+        for (const [id, token] of Object.entries(this.tokens)) {
+
+            // ICP
+            if (id == ICP_LEDGER_CANISTER_ID) {
+
+                // Fill in
+                icpRebuildToken(Object.assign(token, { name: 'ICP', symbol: 'ICP' }), id, this);
+
+                // Bind request actions
+                icpBindTokenActions(this.tokens[id], id);
+
+            }
+
+            // Token
+            else {
+
+                // Fill in
+                icpRebuildToken(token, id, this);
+
+                // Bind request actions
+                icpBindTokenActions(this.tokens[id], id);
+            }
+
+            // Tag as sucessfuly rebuilded
+            this.rebuilded = Date.now();
+
         }
+        
     }
 
-    // Tokens with actors
-    for (const [id, token] of Object.entries(wallet.tokens)) {
-
-        // ICP
-        if (id == ICP_LEDGER_CANISTER_ID) {
-
-            // Fill in
-            icpRebuildToken(Object.assign(token, { name: 'ICP', symbol: 'ICP' }), id, wallet);
-
-            // Bind request actions
-            icpBindTokenActions(wallet.tokens[id], id);
-
-        }
-
-        // Token
-        else {
-
-            // Fill in
-            icpRebuildToken(token, id, wallet);
-
-            // Bind request actions
-            icpBindTokenActions(wallet.tokens[id], id);
-        }
-
-        // Tag as sucessfuly rebuilded
-        wallet.rebuilded = Date.now();
-
-    }
-
-    return wallet;
 }
-
 
 /**
  * Create or update single ICRC token

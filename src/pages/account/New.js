@@ -3,8 +3,7 @@ import { Button } from '/src/widgets/Button.js';
 import { InputText, RecoveryPhrase } from '/src/widgets/Input.js';
 import { genWalletName } from '/src/utils/General.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/Keys.js';
-import { icpRebuildWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
-
+import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 
 export class SheetNewAccount extends Component {
 
@@ -82,12 +81,13 @@ class SheetNewAccountPhrase extends Component {
         this.append(new Button({
             text: 'Add to my wallets',
             click: async () => {
-                this.app.user.wallets[args.wallet.public] = await icpRebuildWallet({
+                this.app.user.wallets[args.wallet.public] = new ICPWallet({
                     blockchain: 'Internet Computer',
                     name: name.get(),
-                    public: args.wallet.public,
+                    publicKey: args.wallet.public,
                     secret: args.secret
-                }, this.app.user.password);
+                });
+                await this.app.user.wallets[args.wallet.public].rebuild(this.app.user.password);
                 this.app.save('wallets', this.app.user.wallets);
                 this.app.page('accounts');
                 this.app.sheet.clear();

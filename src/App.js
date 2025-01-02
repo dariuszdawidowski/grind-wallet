@@ -12,7 +12,7 @@ import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
-import { ICPWallet, icpRebuildWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
+import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 
 /**
  * Main class handles the initialization and management of the Grind Wallet plugin.
@@ -225,14 +225,17 @@ class GrindWalletPlugin {
             }
 
             // Assign
-            for (const [id, wallet] of Object.entries(data)) {
-                this.user.wallets[id] = new ICPWallet({
+            for (const [walletId, wallet] of Object.entries(data)) {
+
+                // Create wallet
+                this.user.wallets[walletId] = new ICPWallet({
                     blockchain: wallet.blockchain,
                     name: wallet.name,
                     publicKey: wallet.public, // Migrate
                     secret: wallet.secret,
                     tokens: wallet.tokens
                 });
+
             }
 
         }
@@ -293,16 +296,14 @@ class GrindWalletPlugin {
 
         // Wallets
         if (resource == 'wallets') {
-            for (const walletData of Object.values(this.user.wallets)) {
-                let wallet = null;
+            for (const wallet of Object.values(this.user.wallets)) {
                 try {
-                    wallet = await icpRebuildWallet(walletData, this.user.password);
+                    await wallet.rebuild(this.user.password);
                 }
                 catch (error) {
                     console.error(error);
                     alert(error);
                 }
-                if (wallet) Object.assign(this.user.wallets[walletData.public], wallet);
             }
         }
 
@@ -320,19 +321,7 @@ class GrindWalletPlugin {
         if (resource == 'wallets') {
             const serializeWallets = {};
             Object.values(data).forEach(wallet => {
-                // serializeWallets[wallet.public] = wallet.serialize();
-                serializeWallets[wallet.public] = {
-                    blockchain: wallet.blockchain,
-                    name: wallet.name,
-                    public: wallet.public,
-                    secret: wallet.secret,
-                    tokens: Object.fromEntries(
-                        Object.entries(wallet.tokens).map(([key, value]) => [
-                            key,
-                            { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee }
-                        ])
-                    )
-                };
+                serializeWallets[wallet.public] = wallet.serialize();
             });
             chrome.storage.local.set({ 'wallets': serializeWallets });
         }

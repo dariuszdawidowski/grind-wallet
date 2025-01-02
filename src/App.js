@@ -1,6 +1,6 @@
 /**
  * Grind Wallet extension
- * (c) 2024 by Dariusz Dawidowski
+ * (c) 2024-2025 by Dariusz Dawidowski
  */
 
 import '/src/popup.css';
@@ -12,7 +12,7 @@ import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
-import { icpRebuildWallet } from '/src/blockchain/InternetComputer/Wallet.js';
+import { ICPWallet, icpRebuildWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 
 /**
  * Main class handles the initialization and management of the Grind Wallet plugin.
@@ -81,10 +81,7 @@ class GrindWalletPlugin {
         // User credentials
         this.user = {
             password: null,
-            /**
-             * Persistent params: blockchain: 'Internet Computer', name: string, public: string, secret: { ciphertext, iv, salt }, tokens: {canisterId: {}}
-             * Dynamic params: identity: Object, principal: string, account: string, agent: HttpAgent, tokens: {canisterId: {actor: Actor, balance: ICPt/e8s}}
-             */
+            // Wallets list { ICPWallet, ... }
             wallets: {}
         };
 
@@ -228,7 +225,15 @@ class GrindWalletPlugin {
             }
 
             // Assign
-            this.user.wallets = data;
+            for (const [id, wallet] of Object.entries(data)) {
+                this.user.wallets[id] = new ICPWallet({
+                    blockchain: wallet.blockchain,
+                    name: wallet.name,
+                    publicKey: wallet.public, // Migrate
+                    secret: wallet.secret,
+                    tokens: wallet.tokens
+                });
+            }
 
         }
 
@@ -315,6 +320,7 @@ class GrindWalletPlugin {
         if (resource == 'wallets') {
             const serializeWallets = {};
             Object.values(data).forEach(wallet => {
+                // serializeWallets[wallet.public] = wallet.serialize();
                 serializeWallets[wallet.public] = {
                     blockchain: wallet.blockchain,
                     name: wallet.name,

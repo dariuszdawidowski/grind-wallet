@@ -1,7 +1,7 @@
 # Grind Wallet
 
 Internet Computer cryptocurrency wallet as a browser plugin.
-Copyright (C) 2024 Dariusz Dawidowski
+Copyright (C) 2024-2025 Dariusz Dawidowski
 
 
 ## Compatibility

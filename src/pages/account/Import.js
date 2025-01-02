@@ -3,7 +3,7 @@ import { Button, ButtonDescription } from '/src/widgets/Button.js';
 import { InputText, RecoveryPhrase } from '/src/widgets/Input.js';
 import { genWalletName } from '/src/utils/General.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/Keys.js';
-import { icpRebuildWallet } from '/src/blockchain/InternetComputer/Wallet.js';
+import { icpRebuildWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 
 
 export class SheetImportAccount extends Component {

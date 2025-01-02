@@ -4,8 +4,8 @@ import { Button, ButtIcon, ButtLink } from '/src/widgets/Button.js';
 import { AddPlus } from '/src/widgets/Add.js';
 import { SheetAccountSend } from './Send.js';
 import { SheetAccountReceive } from './Receive.js';
-import { SheetAddCustomToken } from './Token.js';
-import { SheetAddCustomNFT } from './NFT.js';
+import { SheetAddCustomToken } from './AddToken.js';
+import { SheetAddCustomNFT } from './AddNFT.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
 
@@ -88,7 +88,9 @@ export class SheetAccountDetails extends Component {
         }));
 
         // Separator
-        this.element.append(document.createElement('hr'));
+        const sep = document.createElement('hr');
+        sep.style.marginTop = '20px';
+        this.element.append(sep);
 
         // Main currency card
         if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {

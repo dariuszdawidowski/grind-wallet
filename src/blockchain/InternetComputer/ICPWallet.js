@@ -6,6 +6,13 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
 import { genWalletName } from '/src/utils/General.js';
+import { Wallet } from '/src/blockchain/Wallet.js';
+
+export class ICPWallet extends Wallet {
+
+    // Move ICP functionality here in a future
+
+}
 
 /**
  * Create or update ICP wallet with ICRC tokens

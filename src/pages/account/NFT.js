@@ -4,6 +4,7 @@ import { Button } from '/src/widgets/Button.js';
 import { InputAddress } from '/src/widgets/Input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
+import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
 
 export class SheetAddCustomNFT extends Component {
 
@@ -15,6 +16,10 @@ export class SheetAddCustomNFT extends Component {
 
         // UI controls widgets
         this.widget = {};
+
+        // Token actor and metadata fetched from canister
+        this.actor = null;
+        this.metadata = null;
 
         // Build
         this.element.classList.add('form');
@@ -41,13 +46,8 @@ export class SheetAddCustomNFT extends Component {
 
         // NFT info pocket
         this.widget.info = document.createElement('div');
-        this.widget.info.style.display = 'flex';
-        this.widget.info.style.flexDirection = 'column';
-        this.widget.info.style.justifyContent = 'center';
-        this.widget.info.style.alignItems = 'center';
-        this.widget.info.style.margin = '0 0 20px 0';
+        this.widget.info.classList.add('preview');
         this.element.append(this.widget.info);
-
 
         // Button
         this.widget.submit = new Button({
@@ -60,29 +60,44 @@ export class SheetAddCustomNFT extends Component {
 
     async verifyAndAccept() {
 
-        // NFT actor and metadata fetched from canister
-        let actor = null;
-        let metadata = null;
+        this.widget.address.disable();
+        this.widget.token.disable();
 
         // NFT canister ID and token ID
-        this.widget.address.disable();
         const canisterId = this.widget.address.get();
         const tokenId = this.widget.token.get();
 
         // First pass (fetch actor+metadata & verify)
-        if (!actor && !metadata) {
+        if (!this.actor && !this.metadata) {
             this.widget.submit.busy(true);
-            this.connectCanister(canisterId).then((info) => {
-                this.widget.submit.busy(false);
-                if (info.valid) {
+            const info = await this.connectCanister(canisterId);
+            if (info.valid) {
+                this.actor = info.actor;
+                this.metadata = info.metadata;
+                const nftEXT = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
+                const ownEXT = await nftEXT.isOwner({ token: tokenId });
+                if (ownEXT) {
+                    const imgEXT = await nftEXT.getImage({ token: tokenId });
+                    this.widget.info.innerHTML = imgEXT;
+                    this.widget.info.style.height = '80px';
+                    this.widget.submit.set('Add to my wallet');
                 }
-                else {
+                else  {
                     this.widget.address.enable();
-                    actor = null;
-                    metadata = null;
-                    alert('Unable to fetch or reckognize NFT');
+                    this.widget.token.enable();
+                    this.actor = null;
+                    this.metadata = null;
+                    alert('You do not own this NFT');
                 }
-            });
+            }
+            else {
+                this.widget.address.enable();
+                this.widget.token.enable();
+                this.actor = null;
+                this.metadata = null;
+                alert('Unable to fetch or recognize NFT');
+            }
+            this.widget.submit.busy(false);
         }
 
     }
@@ -99,7 +114,6 @@ export class SheetAddCustomNFT extends Component {
                 agent: this.wallet.agent,
                 canisterId,
             });
-            console.log(actor);
             // metadata = await actor.metadata({});
         // }
         // catch () {}
@@ -109,7 +123,7 @@ export class SheetAddCustomNFT extends Component {
             valid: true,
             standard: 'EXT',
             actor,
-            // metadata: Object.fromEntries(metadata)
+            metadata
         };
     }
 

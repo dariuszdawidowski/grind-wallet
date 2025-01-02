@@ -597,6 +597,23 @@ hr {
     color: rgb(136, 136, 136);
 }
 
+#sheet .content .form .preview {
+    width: 80px;
+    height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px auto;
+}
+
+#sheet .content .form .preview svg, #sheet .content .form .preview image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* Effects */
 
 .backlight::after {

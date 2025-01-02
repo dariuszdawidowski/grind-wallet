@@ -12,16 +12,17 @@ export class NFT_EXT {
     /**
      * Constructor
      * @param agent: HttpAgent - agent
+     * @param actor: Actor - actor [optiona]
      * @param collection: string - NFT collection canister id
      */
 
-    constructor({ agent, collection }) {
+    constructor({ agent, actor = null, collection }) {
 
         // Agent
         this.agent = agent;
 
         // Actor
-        this.actor = Actor.createActor(idlFactory, { agent, canisterId: collection });
+        this.actor = actor ? actor : Actor.createActor(idlFactory, { agent, canisterId: collection });
 
         // Collection id
         this.collection = collection;
@@ -66,11 +67,12 @@ export class NFT_EXT {
     }
 
     /**
-     * Get data (image or text) of the NFT
+     * Get metadata (image or text) of the NFT
      * @param token: string - token id
+     * @param type: string - type of data to get: text | image | none for all
      */
 
-    async getData({ token }) {
+    async getMetadata({ token, type }) {
 
         const response = await fetch(`https://${this.collection}.raw.icp0.io/?tokenid=${token}`);
 
@@ -79,20 +81,37 @@ export class NFT_EXT {
         // Detect image format
         const contentType = response.headers.get('content-type');
 
-        // SVG
-        if (contentType.includes('image/svg+xml')) {
-            const text = await response.text();
-            return text;
+        // Image
+        if (type === 'image') {
+
+            // SVG
+            if (contentType.includes('image/svg+xml')) {
+                return await response.text();
+            }
+
+            // PNG, JPG, WEBP, GIF, TIFF
+            else if (['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/tiff'].some(type => contentType.includes(type))) {
+                const imageBlob = await response.blob();
+                return URL.createObjectURL(imageBlob);
+            }
+
         }
 
-        // PNG, JPG, WEBP, GIF, TIFF
-        else if (['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/tiff'].some(type => contentType.includes(type))) {
-            const imageBlob = await response.blob();
-            const img = URL.createObjectURL(imageBlob);
-            return img;
+        // Text
+        else if (type === 'text') {
+            return await response.text();
         }
 
         return null;
+    }
+
+    /**
+     * Get image of the NFT
+     * @param token: string - token id
+     */
+
+    async getImage(args) {
+        return await this.getMetadata({ ...args, type: 'image' });
     }
 
     /**
@@ -103,5 +122,13 @@ export class NFT_EXT {
     async getThumbnail(args) {
         return await this.getImage(args);
     }
-        
+
+    /**
+     * Verify if the NFT follows the EXT standard
+     */
+
+    isValid() {
+        return true;
+    }
+    
 }

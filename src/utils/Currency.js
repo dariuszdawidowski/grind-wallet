@@ -46,7 +46,7 @@ export function formatCurrency(value, fixed = 2) {
 
 
 /**
- * ICP -> icpt
+ * ICP -> ICPt
  */
 
 export function ICP2icpt(amount, decimals = 8) {
@@ -64,7 +64,7 @@ export function ICP2icpt(amount, decimals = 8) {
 
 
 /**
- * icpt -> ICP
+ * ICPt -> ICP
  */
 
 export function icpt2ICP(amount, decimals = 8) {
@@ -72,7 +72,7 @@ export function icpt2ICP(amount, decimals = 8) {
 }
 
 /**
- * Validata ICRC-1 metadata
+ * Validate ICRC-1 metadata
  * metadata: dictionary
  */
 

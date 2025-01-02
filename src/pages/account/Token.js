@@ -39,11 +39,7 @@ export class SheetAddCustomToken extends Component {
 
         // Token info pocket
         this.widget.info = document.createElement('div');
-        this.widget.info.style.display = 'flex';
-        this.widget.info.style.flexDirection = 'column';
-        this.widget.info.style.justifyContent = 'center';
-        this.widget.info.style.alignItems = 'center';
-        this.widget.info.style.margin = '0 0 20px 0';
+        this.widget.info.classList.add('preview');
         this.element.append(this.widget.info);
 
         // Button
@@ -57,8 +53,9 @@ export class SheetAddCustomToken extends Component {
 
     async verifyAndAccept() {
 
-        // Token canister ID
         this.widget.address.disable();
+
+        // Token canister ID
         const canisterId = this.widget.address.get();
 
         // First pass (fetch actor+metadata & verify)
@@ -73,6 +70,7 @@ export class SheetAddCustomToken extends Component {
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                     this.widget.info.innerHTML += `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                 }
+                this.widget.info.style.height = '80px';
                 this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text}) [${info.standard}]</div>`;
                 this.widget.submit.set('Add to my wallet');
             }
@@ -80,7 +78,7 @@ export class SheetAddCustomToken extends Component {
                 this.widget.address.enable();
                 this.actor = null;
                 this.metadata = null;
-                alert('Unable to fetch or reckognize token');
+                alert('Unable to fetch or recognize token');
             }
         }
 
@@ -129,11 +127,16 @@ export class SheetAddCustomToken extends Component {
         catch (error) {
             return { valid: false, error: 'Unable to connect canister' };
         }
-        console.log(actor);
+
+        // Supported standards
+        const standards = await actor.service.icrc10_supported_standards();
+        const hasICRC1 = standards.some(item => item.name === 'ICRC-1');
+        const hasICRC2 = standards.some(item => item.name === 'ICRC-2');
+
         // Validate
-        if (validICRC1(metadata)) return {
+        if (hasICRC1 && validICRC1(metadata)) return {
             valid: true,
-            standard: ('icrc2_approve' in actor.service) ? 'ICRC-2' : 'ICRC-1',
+            standard: hasICRC2 ? 'ICRC-2' : 'ICRC-1',
             actor,
             metadata
         };

@@ -31,6 +31,9 @@ class GrindWalletPlugin {
         // Main element
         this.element = document.querySelector(selector);
 
+        // Prevent double click in the whole app
+        this.element.addEventListener('dblclick', (e) => e.preventDefault());
+
         /**
          * Persistent data map @ chrome.storage.local
          *

@@ -11,6 +11,9 @@ export class PageLogin extends Component {
     constructor(args) {
         super(args);
 
+        // UI controls widgets
+        this.widget = {};
+
         // Build
         this.element.classList.add('page');
         this.element.innerHTML = `
@@ -34,28 +37,31 @@ export class PageLogin extends Component {
         this.append(form);
 
         // Inputs
-        const password = new InputPassword({
+        this.widget.password = new InputPassword({
             placeholder: 'Password',
             focus: true
         });
-        form.append(password);
+        form.append(this.widget.password);
 
         // Buttons
-        const button = new Button({
+        this.widget.button = new Button({
             text: 'Unlock',
             enter: false,
             click: () => {
-                this.verify(password.get(), args.salt, args.hash);
-                password.set('');
+                this.verify(this.widget.password.get(), args.salt, args.hash);
+                this.widget.password.set('');
+                this.widget.password.input.placeholder = 'Password sent';
+                this.widget.button.disable();
             }
         });
-        form.append(button);
+        form.append(this.widget.button);
 
     }
 
     verify(password, salt, hash) {
         verifyPassword(password, salt, hash).then((valid) => {
             if (valid) {
+                this.widget.button.set('Logging in...');
                 // Store password
                 this.app.user.password = password;
                 // Save session
@@ -79,6 +85,9 @@ export class PageLogin extends Component {
                 });
             }
             else {
+                this.widget.password.set('');
+                this.widget.password.input.placeholder = 'Password';
+                this.widget.button.enable();
                 alert('Incorrect password. Please try again.');
             }
         });

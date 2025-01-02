@@ -18,6 +18,7 @@ export class InputText extends Component {
         if ('value' in args) {
             this.input.value = args.value;
         }
+        this.input.setAttribute('spellcheck', 'false');
         if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);

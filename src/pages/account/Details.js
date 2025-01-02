@@ -87,6 +87,9 @@ export class SheetAccountDetails extends Component {
             }
         }));
 
+        // Separator
+        this.element.append(document.createElement('hr'));
+
         // Main currency card
         if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
 

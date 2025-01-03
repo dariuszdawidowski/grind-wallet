@@ -22,7 +22,24 @@ npm run build
 Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
 
 
-## License GNU GPL-3
+## Software License
+
+Except as noted below this software is distributed under the terms of the GNU General Public License version 3 (GPL-3.0), which allows free copying, modification, and distribution of the source code, provided the requirements of the license are met.
+
+Restrictions regarding the logo and name:
+
+The name and logo of this software are protected by copyright and/or trademark rights owned by the project owner. Their use for commercial, promotional, or any other purposes is strictly prohibited, except in cases where they are used explicitly to state support for or compatibility with the technology provided by this software.
+
+Prohibited actions:
+
+- Using the logo and/or name of the project in a way that may mislead users about the origin or authenticity of the software.
+
+- Creating or distributing versions of the software under a modified name or using the project’s logo to deceive or harm users.
+
+Violation of these terms will be treated as a breach of the law and may result in appropriate legal action.
+
+
+## License for the source code GNU GPL-3
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,7 +72,9 @@ This package is released as free, open-source, and GPL friendly by
 the [Pictogrammers](https://pictogrammers.com/). You may use it
 for commercial projects, open-source projects, or anything really.
 
+
 ### Icons: Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
+
 Some of the icons are redistributed under the Apache 2.0 license. All other
 icons are either redistributed under their respective licenses or are
 distributed under the Apache 2.0 license.
@@ -70,4 +89,4 @@ MIT License
 
 ## Additional licenes
 
-Additional licenes are generated into popup.X.js.LICENSE.txt file during NodeJS compilation.
+Additional licenses are generated in the popup.X.js.LICENSE.txt file during NodeJS compilation.

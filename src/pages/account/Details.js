@@ -31,11 +31,10 @@ export class SheetAccountDetails extends Component {
         this.element.append(this.balance);
         this.updateBalance();
 
+        // Buttons
         const buttonbar = document.createElement('div');
         buttonbar.classList.add('buttonbar');
         this.element.append(buttonbar);
-
-        // Buttons
         this.buttons = {
             send: new ButtIcon({
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
@@ -91,7 +90,7 @@ export class SheetAccountDetails extends Component {
         sep.style.marginTop = '20px';
         this.element.append(sep);
 
-        // Main currency card
+        // On the main details sheet
         if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
 
             const horiz = document.createElement('div');

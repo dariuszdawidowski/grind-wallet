@@ -36,13 +36,11 @@ export class Cover extends Component {
         }
 
         // Load cached image
-        console.log('load image...');
         (async () => {
             try {
                 const image = await loadImage(`nft:${this.nft.collection}:${this.nft.id}`);
-                console.log(image);
                 this.element.style.backgroundColor = 'transparent';
-                this.element.style.backgroundImage = `url('${image}')`;
+                this.element.innerHTML = `${image}`;
             }
 
             // Fallback box

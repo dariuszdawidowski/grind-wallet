@@ -11,11 +11,9 @@
     try {
         // Save
         const saveResult = await saveImage(imageId, base64Image);
-        console.log(saveResult);
 
         // Load
         const loadedImage = await loadImage(imageId);
-        console.log("Loaded image Base64:", loadedImage);
 
         // Display
         const imgElement = document.createElement("img");
@@ -57,7 +55,19 @@ function openDatabase() {
  * Save image
  */
 
-export async function saveImage(id, base64String) {
+export async function saveImage(id, data) {
+    if (data.startsWith('data:image/') && data.includes('base64,')) {
+        return await saveImageBase64(id, data);
+    }
+    else if (data.includes('<svg')) {
+        return await saveImageSVG(id, data);
+    }
+    else {
+        throw new Error('Invalid image data format.');
+    }
+}
+
+async function saveImageBase64(id, base64String) {
     const db = await openDatabase();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(STORE_NAME, 'readwrite');
@@ -86,6 +96,22 @@ export async function saveImage(id, base64String) {
     });
 }
 
+async function saveImageSVG(id, svgString) {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+
+        // String -> Blob
+        const blob = new Blob([svgString], { type: 'image/svg+xml' });
+
+        // Save to IndexedDB
+        const request = store.put({ id, blob, mimeType: 'image/svg+xml' });
+
+        request.onsuccess = () => resolve(`Image with ID "${id}" saved.`);
+        request.onerror = (event) => reject(event.target.error);
+    });
+}
 
 /**
  * Load image
@@ -102,11 +128,26 @@ export async function loadImage(id) {
             const result = event.target.result;
             if (result) {
 
-                // Blob -> Base64
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = () => reject('Failed to read blob as Base64.');
-                reader.readAsDataURL(result.blob);
+                // SVG
+                if (result.mimeType.startsWith('image/svg')) {
+                    result.blob.arrayBuffer().then(buffer => {
+                        const text = new TextDecoder().decode(buffer);
+                        resolve(text);
+                    });                    
+                }
+
+                // Raster Base64
+                else if (result.mimeType.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject('Failed to read blob as Base64.');
+                    reader.readAsDataURL(result.blob);
+                }
+
+                // Unknown
+                else {
+                    reject(`Invalid image MIME type: "${result.mimeType}".`);
+                }
 
             } else {
                 reject(`No image found with ID "${id}".`);
@@ -116,3 +157,4 @@ export async function loadImage(id) {
         request.onerror = (event) => reject(event.target.error);
     });
 }
+

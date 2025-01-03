@@ -2,11 +2,12 @@ import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/Button.js';
 import { Card } from '/src/widgets/Card.js';
 import { Coin } from '/src/widgets/Coin.js';
+import { Cover } from '/src/widgets/Cover.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';
+import { SheetNFTDetails } from './DetailsNFT.js';
 const { version } = require('/package.json');
-
 
 export class PageListAccounts extends Component {
 
@@ -41,6 +42,7 @@ export class PageListAccounts extends Component {
                     }
                 }));
 
+                // Coins container
                 const coins = document.createElement('div');
                 coins.classList.add('coins');
                 this.element.append(coins);
@@ -62,6 +64,28 @@ export class PageListAccounts extends Component {
                         });
                         coins.append(coin.element);
                     }
+                });
+
+                // NFTs container
+                const nfts = document.createElement('div');
+                nfts.classList.add('nfts');
+                this.element.append(nfts);
+
+                // NFTS as covers
+                Object.entries(wallet.nfts).forEach(([id, nft]) => {
+                    const cover = new Cover({
+                        wallet,
+                        nft,
+                        click: () => {
+                            if (!this.app.sheet.isOpen()) {
+                                this.app.sheet.append({
+                                    title: 'NFT Details',
+                                    component: new SheetNFTDetails({app: args.app, wallet, nft})
+                                });
+                            }
+                        }
+                    });
+                    nfts.append(cover.element);
                 });
 
                 // Separator

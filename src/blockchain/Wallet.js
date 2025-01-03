@@ -56,12 +56,12 @@ export class Wallet {
                     { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee }
                 ])
             ),
-            nfts: Object.fromEntries(
+            nfts: this.nfts ? Object.fromEntries(
                 Object.entries(this.nfts).map(([key, value]) => [
                     key,
                     value.serialize()
                 ])
-            )
+            ) : {}
         };
     }
 

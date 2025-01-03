@@ -1,7 +1,7 @@
 
 export class NFT {
 
-    constructor({ collection, id, thumbnail }) {
+    constructor({ collection, id, thumbnail, standard }) {
         
         // Collection ID
         this.collection = collection;
@@ -11,6 +11,9 @@ export class NFT {
 
         // Thumbnail
         this.thumbnail = thumbnail;
+
+        // NFT format
+        this.standard = standard;
 
     }
 
@@ -23,7 +26,8 @@ export class NFT {
         return {
             collection: this.collection,
             id: this.id,
-            thumbnail: this.thumbnail
+            thumbnail: this.thumbnail,
+            standard: this.standard
         };
     }
 

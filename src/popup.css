@@ -507,6 +507,28 @@ hr {
     text-shadow: 0 0 6px rgb(135, 80, 199);
 }
 
+/* Cover (NFT) */
+
+.nfts {
+    display: flex;
+    flex-direction: row;
+    overflow: auto clip;
+    white-space: nowrap;
+    scrollbar-width: none;
+    height: 84px;
+    margin-bottom: 10px;
+}
+
+.nfts > :first-child {
+    margin-left: 10px;
+}
+
+.cover {
+    width: 80px;
+    height: 80px;
+    background-color: #4f4f67;
+}
+
 /* QR code */
 
 .qrcode {

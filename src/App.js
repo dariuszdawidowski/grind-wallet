@@ -224,6 +224,8 @@ class GrindWalletPlugin {
 
             }
 
+            console.log('data', data);
+
             // Assign
             for (const [walletId, wallet] of Object.entries(data)) {
 

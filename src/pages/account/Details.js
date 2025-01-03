@@ -8,7 +8,6 @@ import { SheetAddCustomToken } from './AddToken.js';
 import { SheetAddCustomNFT } from './AddNFT.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
-
 export class SheetAccountDetails extends Component {
 
     constructor(args) {

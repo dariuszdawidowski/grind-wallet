@@ -123,11 +123,12 @@ export class SheetAddCustomNFT extends Component {
             const nftId = `${canisterId}:${tokenId}`;
             if (!(nftId in this.wallet.nfts)) {
                 const imgEXT = await this.nftEXT.getMetadata({ token: tokenId, type: 'image' })
-                saveImage(`nft:${nftId}`, imgEXT);
+                await saveImage(`nft:${nftId}`, imgEXT);
                 this.wallet.nfts[nftId] = new NFT({
                     collection: canisterId,
                     id: tokenId,
-                    thumbnail: `nft:${nftId}`
+                    thumbnail: `nft:${nftId}`,
+                    standard: 'EXT'
                 });
                 this.app.save('wallets', this.app.user.wallets);
                 this.app.page('accounts');

@@ -2,7 +2,6 @@ import { Component } from '/src/utils/Component.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
-
 export class Coin extends Component {
 
     constructor(args) {

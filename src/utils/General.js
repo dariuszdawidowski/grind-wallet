@@ -30,3 +30,15 @@ export function memo2Binary(memo) {
     view.setUint32(0, memo, true);
     return new Uint8Array(buffer);
 }
+
+/**
+ * Check if a given string is a valid Canister ID.
+ *
+ * @param {string} canisterId - The string to be checked.
+ * @returns {boolean} True if the string is valid, false otherwise.
+ */
+
+export function isValidCanisterId(canisterId) {
+    const canisterIdRegex = /^[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{3}$/;
+    return canisterIdRegex.test(canisterId);
+}

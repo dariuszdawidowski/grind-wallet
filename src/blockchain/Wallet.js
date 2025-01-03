@@ -1,6 +1,6 @@
 export class Wallet {
 
-    constructor({ blockchain, name, publicKey, secret, tokens }) {
+    constructor({ blockchain, name, publicKey, secret, tokens, nfts }) {
 
         /*** Persistent attributes ***/
 
@@ -18,9 +18,12 @@ export class Wallet {
 
         /*** Partially persistent attributes ***/
 
-        // ICP+ICRC tokens list: object {canisterId: Token}
+        // ICP+ICRC tokens list: object { canisterId: Token object }
         // Token: { name: 'string', symbol: 'string', principal: 'string', account: 'string', balance: BingInt, decimals: int, fee: int, request: { functions }, actor: Actor object }
         this.tokens = tokens;
+
+        // NFTs list: { 'collectionId:nftId': NFT object, ... }
+        this.nfts = nfts;
 
         /*** Dynamic attributes ***/
 
@@ -51,6 +54,12 @@ export class Wallet {
                 Object.entries(this.tokens).map(([key, value]) => [
                     key,
                     { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee }
+                ])
+            ),
+            nfts: Object.fromEntries(
+                Object.entries(this.nfts).map(([key, value]) => [
+                    key,
+                    value.serialize()
                 ])
             )
         };

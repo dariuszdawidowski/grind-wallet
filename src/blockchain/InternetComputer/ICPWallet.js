@@ -127,9 +127,6 @@ export function icpRebuildToken(args, id, wallet) {
             IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id });
     }
 
-    // Cache logo into IndexedDB if not exist
-    // ...
-
 }
 
 export function icpBindTokenActions(scope, id) {

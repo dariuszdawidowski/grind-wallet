@@ -5,6 +5,8 @@ import { InputAddress } from '/src/widgets/Input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
+import { NFT } from '/src/blockchain/NFT.js';
+import { isValidCanisterId } from '/src/utils/General.js';
 
 export class SheetAddCustomNFT extends Component {
 
@@ -20,6 +22,7 @@ export class SheetAddCustomNFT extends Component {
         // Token actor and metadata fetched from canister
         this.actor = null;
         this.metadata = null;
+        this.nftEXT = null;
 
         // Build
         this.element.classList.add('form');
@@ -67,6 +70,20 @@ export class SheetAddCustomNFT extends Component {
         const canisterId = this.widget.address.get();
         const tokenId = this.widget.token.get();
 
+        // Validate inputs
+        if (!isValidCanisterId(canisterId)) {
+            alert('Invalid canister ID');
+            this.widget.address.enable();
+            this.widget.token.enable();
+            return;
+        }
+        if (tokenId == '') {
+            alert('Invalid token ID');
+            this.widget.address.enable();
+            this.widget.token.enable();
+            return;
+        }
+
         // First pass (fetch actor+metadata & verify)
         if (!this.actor && !this.metadata) {
             this.widget.submit.busy(true);
@@ -74,11 +91,11 @@ export class SheetAddCustomNFT extends Component {
             if (info.valid) {
                 this.actor = info.actor;
                 this.metadata = info.metadata;
-                const nftEXT = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
-                const ownEXT = await nftEXT.isOwner({ token: tokenId });
+                this.nftEXT = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
+                const ownEXT = await this.nftEXT.isOwner({ token: tokenId });
                 if (ownEXT) {
-                    const imgEXT = await nftEXT.getImage({ token: tokenId });
-                    this.widget.info.innerHTML = imgEXT;
+                    const thumbEXT = await this.nftEXT.getThumbnail({ token: tokenId });
+                    this.widget.info.innerHTML = thumbEXT;
                     this.widget.info.style.height = '80px';
                     this.widget.submit.set('Add to my wallet');
                 }
@@ -100,13 +117,37 @@ export class SheetAddCustomNFT extends Component {
             this.widget.submit.busy(false);
         }
 
+        // Second pass (accept)
+        else {
+            // Add NFT to the wallet
+            const nftId = `${canisterId}:${tokenId}`;
+            if (!(nftId in this.wallet.nfts)) {
+                const imgEXT = await this.nftEXT.getMetadata({ token: tokenId, type: 'image' })
+                saveImage(`nft:${nftId}`, imgEXT);
+                this.wallet.nfts[nftId] = new NFT({
+                    collection: canisterId,
+                    id: tokenId,
+                    thumbnail: `nft:${nftId}`
+                });
+                this.app.save('wallets', this.app.user.wallets);
+                this.app.page('accounts');
+                this.app.sheet.clear();
+                this.app.sheet.hide();
+            }
+            else {
+                this.widget.address.enable();
+                this.widget.token.enable();
+                this.actor = null;
+                this.metadata = null;
+                alert('NFT already on the list');
+            }
+        }
+
     }
 
     async connectCanister(canisterId) {
         let actor = null
         let metadata = null;
-
-        console.log('Connecting to canister:', canisterId);
 
         // Try EXT standard
         // try {

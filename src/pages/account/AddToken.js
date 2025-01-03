@@ -5,6 +5,7 @@ import { InputAddress } from '/src/widgets/Input.js';
 import { validICRC1 } from '/src/utils/Currency.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/ICPWallet.js';
+import { isValidCanisterId } from '/src/utils/General.js';
 
 export class SheetAddCustomToken extends Component {
 
@@ -57,6 +58,12 @@ export class SheetAddCustomToken extends Component {
 
         // Token canister ID
         const canisterId = this.widget.address.get();
+
+        if (!isValidCanisterId(canisterId)) {
+            alert('Invalid token canister ID');
+            this.widget.address.enable();
+            return;
+        }
 
         // First pass (fetch actor+metadata & verify)
         if (!this.actor && !this.metadata) {

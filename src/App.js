@@ -231,9 +231,10 @@ class GrindWalletPlugin {
                 this.user.wallets[walletId] = new ICPWallet({
                     blockchain: wallet.blockchain,
                     name: wallet.name,
-                    publicKey: wallet.public, // Migrate
+                    publicKey: wallet.public,
                     secret: wallet.secret,
-                    tokens: wallet.tokens
+                    tokens: wallet.tokens,
+                    nfts: 'nfts' in wallet ? wallet.nfts : {},
                 });
 
             }

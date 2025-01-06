@@ -54,6 +54,7 @@ export class SheetNFTDetails extends Component {
                 }
             }),
             buy: new ButtIcon({
+                id: 'button-bar-buy-icon',
                 icon: '<img src="assets/material-design-icons/cart.svg">',
                 text: 'Buy',
                 click: () => {

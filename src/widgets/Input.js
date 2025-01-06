@@ -1,6 +1,7 @@
 import { Component } from '/src/utils/Component.js';
+import { Principal } from "@dfinity/principal";
+import { AccountIdentifier } from "@dfinity/ledger-icp";
 const bip39 = require('bip39');
-
 
 /**
  * Input for generic text
@@ -116,6 +117,29 @@ export class InputAddress extends InputText {
     detect() {
         if (this.get().search('-') != -1) return 'principal';
         else return 'account';
+    }
+
+    valid() {
+        const type = this.detect();
+        if (type == 'principal') {
+            try {
+                Principal.fromText(this.get());
+            }
+            catch {
+                return false;
+            }
+            return true;
+        }
+        else if (type == 'account') {
+            try {
+                AccountIdentifier.fromHex(this.get());
+            }
+            catch (error) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
 }

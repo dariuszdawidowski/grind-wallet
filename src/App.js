@@ -285,6 +285,7 @@ class GrindWalletPlugin {
             return data;
 
         }
+
     }
 
     /**
@@ -326,6 +327,7 @@ class GrindWalletPlugin {
             });
             chrome.storage.local.set({ 'wallets': serializeWallets });
         }
+
     }
 
 }

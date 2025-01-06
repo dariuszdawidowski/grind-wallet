@@ -692,3 +692,9 @@ hr {
 #import-account {
     margin-bottom: 29px;
 }
+
+#button-bar-buy-icon img {
+    width: 35px;
+    height: 35px;
+    padding: 2px;
+}

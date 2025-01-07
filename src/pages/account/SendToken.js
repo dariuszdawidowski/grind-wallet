@@ -112,11 +112,8 @@ export class SheetAccountSend extends Component {
                     this.submit.set('OK');
                     this.sent = true;
                 }
-                else if ('ERROR' in result) {
-                    alert(result.ERROR);
-                }
                 else {
-                    alert('Transfer error');
+                    alert('ERROR' in result ? result.ERROR : 'Transfer error');
                 }
             });
         }

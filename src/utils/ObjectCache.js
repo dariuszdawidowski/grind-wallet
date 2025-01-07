@@ -4,16 +4,21 @@ export class ObjectCache {
 
     constructor() {
 
-        // Cached actors { 'token|nft:canisterId': Actor }
+        // Cached objects { 'principal:type:canister': Object }
         this.cache = {};
     }
 
     // Return or create a new actor
-    get(objId) {
+    get({ id, create = null }) {
+
         // Object cached
-        if (objId in this.cache) return this.cache[objId];
+        if (id in this.cache) return this.cache[id];
 
         // Create new object
+        if (create) {
+            this.cache[id] = create();
+            return this.cache[id];
+        }
         
         return null;
     }

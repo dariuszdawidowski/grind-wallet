@@ -1,8 +1,18 @@
+import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
 
 export class NFT {
 
-    constructor({ collection, id, thumbnail, standard }) {
+    constructor({ app, principal, agent, collection, id, thumbnail, standard }) {
         
+        // App
+        this.app = app;
+
+        // Principal
+        this.principal = principal;
+
+        // Agent
+        this.agent = agent;
+
         // Collection ID
         this.collection = collection;
 
@@ -15,6 +25,25 @@ export class NFT {
         // NFT format
         this.standard = standard;
 
+        // Service handler
+        this.service = null;
+
+    }
+
+    /**
+     * Force to cache lazy service
+     */
+
+    async cache() {
+        if (!this.service) this.service = await this.app.cache.get({
+            id: `${this.principal}:nft:${this.collection}`,
+            create: () => {
+                if (this.standard == 'EXT') {
+                    return new NFT_EXT({ agent: this.agent, collection: this.collection });
+                }
+                return null;
+            }
+        });
     }
 
     /**

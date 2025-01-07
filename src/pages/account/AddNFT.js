@@ -31,7 +31,7 @@ export class SheetAddCustomNFT extends Component {
                 Enter the <b>Canister ID</b> and <b>Token ID</b><br>
                 of the Internet Computer blockchain NFT.
             </h3>
-            <h3>Accepted standards: <b>ICRC-7</b>/<b>37</b>, <b>DIP-721</b>, <b>EXT</b></h3>
+            <h3>Accepted standard: <b>EXT</b></h3>
         `;
 
         // Address field
@@ -125,6 +125,8 @@ export class SheetAddCustomNFT extends Component {
                 const imgEXT = await this.nftEXT.getMetadata({ token: tokenId, type: 'image' })
                 await saveImage(`nft:${nftId}`, imgEXT);
                 this.wallet.nfts[nftId] = new NFT({
+                    principal: this.wallet.principal,
+                    agent: this.wallet.agent,
                     collection: canisterId,
                     id: tokenId,
                     thumbnail: `nft:${nftId}`,

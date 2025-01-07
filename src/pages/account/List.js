@@ -7,6 +7,7 @@ import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';
 import { SheetNFTDetails } from './DetailsNFT.js';
+import { NFT } from '/src/blockchain/NFT.js';
 const { version } = require('/package.json');
 
 export class PageListAccounts extends Component {
@@ -73,12 +74,13 @@ export class PageListAccounts extends Component {
 
                 // NFTS as covers
                 Object.entries(wallet.nfts).forEach(([id, nft]) => {
+                    const fullNFT = new NFT({ app: args.app, principal: wallet.principal, agent: wallet.agent, ...nft });
                     const cover = new Cover({
                         wallet,
-                        nft,
+                        nft: fullNFT,
                         click: () => {
                             if (!this.app.sheet.isOpen()) {
-                                const sheetNFTDetails = new SheetNFTDetails({app: args.app, wallet, nft});
+                                const sheetNFTDetails = new SheetNFTDetails({app: args.app, wallet, nft: fullNFT});
                                 this.app.sheet.append({
                                     title: 'NFT Details',
                                     component: sheetNFTDetails

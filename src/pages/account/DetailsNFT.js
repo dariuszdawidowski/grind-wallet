@@ -15,9 +15,6 @@ export class SheetNFTDetails extends Component {
         // Wallet reference
         this.wallet = args.wallet;
 
-        // NFT service handler reference
-        this.handler = null;
-
         // NFT info {collection, id, standard, thumbnail} 
         this.nft = args.nft;
 
@@ -101,8 +98,7 @@ export class SheetNFTDetails extends Component {
     }
 
     async update() {
-        if (!this.handler) this.handler = await this.app.cache.get(`nft:${this.nft.collection}`);
+        await this.nft.cache();
     }
 
 }
-

@@ -1,4 +1,4 @@
-/*** Cache iamges in the IndexedDB ***/
+/*** Cache images in the IndexedDB ***/
 
 /*
 

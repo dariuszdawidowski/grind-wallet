@@ -13,12 +13,14 @@ import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
+import { ActorCache } from '/src/utils/ActorCache.js';
 
 /**
  * Main class handles the initialization and management of the Grind Wallet plugin.
  * It interacts with the Chrome storage API to persist user data and manages the user interface
  * for different states such as login, registration, and account management.
  */
+
 class GrindWalletPlugin {
 
     /**
@@ -84,6 +86,9 @@ class GrindWalletPlugin {
             // Wallets list { ICPWallet, ... }
             wallets: {}
         };
+
+        // Actor cache
+        this.cache = new ActorCache();
 
         // Get saved data
         chrome.storage.local.get(['version', 'terms', 'webauthn'], (saved) => {

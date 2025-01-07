@@ -78,10 +78,12 @@ export class PageListAccounts extends Component {
                         nft,
                         click: () => {
                             if (!this.app.sheet.isOpen()) {
+                                const sheetNFTDetails = new SheetNFTDetails({app: args.app, wallet, nft});
                                 this.app.sheet.append({
                                     title: 'NFT Details',
-                                    component: new SheetNFTDetails({app: args.app, wallet, nft})
+                                    component: sheetNFTDetails
                                 });
+                                sheetNFTDetails.update();
                             }
                         }
                     });

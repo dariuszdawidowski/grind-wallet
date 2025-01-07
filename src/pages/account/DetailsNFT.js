@@ -9,6 +9,9 @@ export class SheetNFTDetails extends Component {
     constructor(args) {
         super(args);
 
+        // NFT canister actor reference
+        this.actor = null;
+
         // UI controls widgets
         this.widget = {};
 
@@ -97,7 +100,8 @@ export class SheetNFTDetails extends Component {
 
     }
 
-    update() {
+    async update() {
+        this.actor = await this.app.cache.get(`nft:${this.nft.collection}`);
     }
 
 }

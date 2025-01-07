@@ -13,7 +13,7 @@ import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
-import { ActorCache } from '/src/utils/ActorCache.js';
+import { ObjectCache } from '/src/utils/ObjectCache.js';
 
 /**
  * Main class handles the initialization and management of the Grind Wallet plugin.
@@ -88,7 +88,7 @@ class GrindWalletPlugin {
         };
 
         // Actor cache
-        this.cache = new ActorCache();
+        this.cache = new ObjectCache();
 
         // Get saved data
         chrome.storage.local.get(['version', 'terms', 'webauthn'], (saved) => {

@@ -13,7 +13,6 @@ export class Card extends Component {
         // Build
         this.element.classList.add('card');
         this.element.style.backgroundImage = `url('assets/card-ICP-01.png')`;
-        console.log('👛', this.wallet);
         this.element.innerHTML = `
             <div class="name">${this.wallet.name}</div>
             <div class="subname">CRYPTOCURRENCY WALLET</div>

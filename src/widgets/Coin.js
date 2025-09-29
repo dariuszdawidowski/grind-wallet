@@ -58,7 +58,14 @@ export class Coin extends Component {
             try {
                 const image = await loadImage(`token:${this.canisterId}`);
                 this.coin.style.backgroundColor = 'transparent';
-                this.coin.style.backgroundImage = `url('${image}')`;
+                // SVG
+                if (image.startsWith('<svg')) {
+                    this.coin.style.backgroundImage = `url('data:image/svg+xml;utf8,${encodeURIComponent(image)}')`;
+                }
+                // Raster
+                else {
+                    this.coin.style.backgroundImage = `url('${image}')`;
+                }
             }
 
             // Fallback text

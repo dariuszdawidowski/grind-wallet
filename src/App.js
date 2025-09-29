@@ -14,6 +14,8 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
+// E2E tests
+if (process.env.TEST_MODE) import('/tests/test.js');
 
 /**
  * Main class handles the initialization and management of the Grind Wallet plugin.

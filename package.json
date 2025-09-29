@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx webpack",
     "build:dev": "npx webpack --mode development",
+    "build:test": "TEST_MODE=1 npx webpack --mode development",
     "deploy": "npm run build && node deploy.js"
   },
   "repository": {

@@ -78,6 +78,10 @@ module.exports = (env = {}, argv = {}) => {
                 ],
             }),
 
+            new webpack.DefinePlugin({
+                'process.env.TEST_MODE': JSON.stringify(process.env.TEST_MODE || '')
+            })
+
         ],
 
         module: {

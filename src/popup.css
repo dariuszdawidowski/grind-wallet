@@ -9,12 +9,11 @@
 
 body {
     width: 360px;
-    height: 583px;
+    min-height: 583px;
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     color: rgb(241, 230, 253);
     background-color: rgb(42, 26, 57);
-    overflow: hidden;
     user-select: none;
 }
 

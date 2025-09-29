@@ -7,98 +7,105 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { version } = require('./package.json');
 
-module.exports = {
-    mode: 'production',
-    entry: './src/App.js',
-    target: 'web',
+module.exports = (env = {}, argv = {}) => {
+    const mode = argv.mode || 'production';
+    const isDev = mode === 'development';
 
-    output: {
-        path: path.resolve(__dirname, 'dist/chrome'),
-        filename: 'popup.[contenthash].js',
-        clean: true
-    },
-  
-    resolve: {
-        fallback: {
-            'assert': require.resolve('assert/'),
-            'buffer': require.resolve('buffer/'),
-            'crypto': require.resolve('crypto-browserify'),
-            'process': require.resolve('process/browser'),
-            'stream': require.resolve('stream-browserify'),
-            'vm': require.resolve('vm-browserify'),
+    return {
+        mode,
+        entry: './src/App.js',
+        target: 'web',
+
+        output: {
+            path: path.resolve(__dirname, 'dist/chrome'),
+            filename: isDev ? 'popup.js' : 'popup.[contenthash].js',
+            clean: true
         },
-    },
+    
+        resolve: {
+            fallback: {
+                'assert': require.resolve('assert/'),
+                'buffer': require.resolve('buffer/'),
+                'crypto': require.resolve('crypto-browserify'),
+                'process': require.resolve('process/browser'),
+                'stream': require.resolve('stream-browserify'),
+                'vm': require.resolve('vm-browserify'),
+            },
+        },
 
-    plugins: [
+        devtool: isDev ? 'source-map' : false,
 
-        new webpack.ProvidePlugin({
-            Buffer: ['buffer', 'Buffer'],
-            process: 'process/browser',
-        }),
+        plugins: [
 
-        new HtmlWebpackPlugin({
-            template: './src/popup.html',
-            filename: 'popup.html',
-            inject: 'body'
-        }),
+            new webpack.ProvidePlugin({
+                Buffer: ['buffer', 'Buffer'],
+                process: 'process/browser',
+            }),
 
-        new MiniCssExtractPlugin({
-            filename: 'popup.[contenthash].css',
-        }),
+            new HtmlWebpackPlugin({
+                template: './src/popup.html',
+                filename: 'popup.html',
+                inject: 'body'
+            }),
 
-        new CopyWebpackPlugin({
-            patterns: [
+            new MiniCssExtractPlugin({
+                filename: isDev ? 'popup.css' : 'popup.[contenthash].css',
+            }),
+
+            new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: 'src/manifest.json',
+                        to: 'manifest.json', transform: (content) => {
+                            const manifest = JSON.parse(content);
+                            manifest.version = version;
+                            return JSON.stringify(manifest, null, 2);
+                        }
+                    },
+                    {
+                        from: 'src/assets',
+                        to: 'assets',
+                        globOptions: {
+                            ignore: [
+                                '**/card-ICP-01.svg',
+                            ]
+                        }
+                    },
+                    {
+                        from: 'src/libs',
+                        to: 'libs',
+                    },
+                ],
+            }),
+
+        ],
+
+        module: {
+            rules: [
                 {
-                    from: 'src/manifest.json',
-                    to: 'manifest.json', transform: (content) => {
-                        const manifest = JSON.parse(content);
-                        manifest.version = version;
-                        return JSON.stringify(manifest, null, 2);
-                    }
-                },
-                {
-                    from: 'src/assets',
-                    to: 'assets',
-                    globOptions: {
-                        ignore: [
-                            '**/card-ICP-01.svg',
-                        ]
-                    }
-                },
-                {
-                    from: 'src/libs',
-                    to: 'libs',
+                    test: /\.css$/,
+                    use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
             ],
-        }),
+        },
 
-    ],
-
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
-            },
-        ],
-    },
-
-    optimization: {
-        minimize: true,
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    ecma: 2022,
-                    compress: false,
-                    mangle: true,
-                    output: {
-                        comments: false,
+        optimization: {
+            minimize: !isDev,
+            minimizer: isDev ? [] : [
+                new TerserPlugin({
+                    terserOptions: {
+                        ecma: 2022,
+                        compress: false,
+                        mangle: true,
+                        output: {
+                            comments: false,
+                        },
                     },
-                },
-                parallel: true,
-            }),
-            new CssMinimizerPlugin(),
-        ],
-    },
+                    parallel: true,
+                }),
+                new CssMinimizerPlugin(),
+            ],
+        },
 
+    };
 };

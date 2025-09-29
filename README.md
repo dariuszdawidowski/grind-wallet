@@ -9,7 +9,20 @@ Copyright (C) 2024-2025 Dariusz Dawidowski
 Currently, it only works in Chrome and in browsers that support compatible extensions (like Opera).
 
 
-## Local build
+## Developemnt build
+
+```bash
+npm install
+npm run build:dev
+```
+
+
+## Developemnt installation
+
+Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
+
+
+## Production build
 
 ```bash
 npm install
@@ -17,9 +30,12 @@ npm run build
 ```
 
 
-## Local installation
+## Production installation
 
-Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
+```bash
+# Create .zip ready for Chrome Store
+npm run deploy
+```
 
 
 ## Software License

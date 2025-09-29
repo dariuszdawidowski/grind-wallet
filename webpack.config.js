@@ -63,7 +63,7 @@ module.exports = (env = {}, argv = {}) => {
                         }
                     },
                     {
-                        from: 'src/assets',
+                        from: 'assets',
                         to: 'assets',
                         globOptions: {
                             ignore: [

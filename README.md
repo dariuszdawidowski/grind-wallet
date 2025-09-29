@@ -9,28 +9,29 @@ Copyright (C) 2024-2025 Dariusz Dawidowski
 Currently, it only works in Chrome and in browsers that support compatible extensions (like Opera).
 
 
-## Developemnt build
+## Installation
+
+Manually copy all graphics to the assets/ directory as they are not part of the open source wallet source code.
 
 ```bash
+# Install dependencies
 npm install
+```
+
+
+## Development build
+
+```bash
 npm run build:dev
 ```
 
 
-## Developemnt installation
+## Development launch
 
 Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
 
 
 ## Production build
-
-```bash
-npm install
-npm run build
-```
-
-
-## Production installation
 
 ```bash
 # Create .zip ready for Chrome Store
@@ -71,34 +72,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-## License for the Internet Computer logo
-
-The file in assets/IC_logo_horizontal.svg has a separate license. Please see https://dfinity.org.
-
-
-## License for icons
-
-Pictogrammers Free License
-
-Files in the assets/material-design-icons/* have a separate license. Please see https://pictogrammers.com/docs/general/license/.
-
-Last Updated: February 1st, 2023
-
-This package is released as free, open-source, and GPL friendly by
-the [Pictogrammers](https://pictogrammers.com/). You may use it
-for commercial projects, open-source projects, or anything really.
-
-
-### Icons: Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
-
-Some of the icons are redistributed under the Apache 2.0 license. All other
-icons are either redistributed under their respective licenses or are
-distributed under the Apache 2.0 license.
-
-
 ## License for the QR code library
 
-The file in libs/qrcode.min.js has a separate license. Please see https://davidshimjs.github.io/qrcodejs/.
+The file in libs/qrcode.min.js has a separate license. Please see <https://davidshimjs.github.io/qrcodejs/>.
 
 MIT License
 

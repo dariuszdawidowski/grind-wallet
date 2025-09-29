@@ -49,7 +49,7 @@ export class PageListAccounts extends Component {
                 this.element.append(coins);
 
                 // Custom tokens as coins
-                Object.entries(wallet.tokens).forEach(([id, token]) => {
+                if (wallet.tokens) Object.entries(wallet.tokens).forEach(([id, token]) => {
                     if (id != this.app.ICP_LEDGER_CANISTER_ID) {
                         const coin = new Coin({
                             canisterId: id,
@@ -73,7 +73,7 @@ export class PageListAccounts extends Component {
                 this.element.append(nfts);
 
                 // NFTS as covers
-                Object.entries(wallet.nfts).forEach(([id, nft]) => {
+                if (wallet.nfts) Object.entries(wallet.nfts).forEach(([id, nft]) => {
                     const fullNFT = new NFT({ app: args.app, principal: wallet.principal, agent: wallet.agent, ...nft });
                     const cover = new Cover({
                         wallet,

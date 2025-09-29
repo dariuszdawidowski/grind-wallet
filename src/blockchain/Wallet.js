@@ -59,11 +59,10 @@ export class Wallet {
             nfts: this.nfts ? Object.fromEntries(
                 Object.entries(this.nfts).map(([key, value]) => [
                     key,
-                    value.serialize()
+                    { id: value.id, standard: value.standard, collection: value.collection, thumbnail: value.thumbnail }
                 ])
             ) : {}
         };
     }
 
 }
-

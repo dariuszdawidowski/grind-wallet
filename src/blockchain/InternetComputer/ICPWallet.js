@@ -26,6 +26,9 @@ export class ICPWallet extends Wallet {
         if (!this.blockchain) this.blockchain = 'Internet Computer';
         if (!this.tokens) this.tokens = {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}};
 
+        // Wallet crypto symbol (for future)
+        if (!this.crypto) this.crypto = 'ICP';
+
         // Decode keys
         const deserialized = deserializeEncryptKey(this.secret);
         const privateKey = await decryptKey(deserialized, password);

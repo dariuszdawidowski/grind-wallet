@@ -2,10 +2,10 @@
  * Login test - filling password from secrets json.
  */
 
-import { test, expect } from './start.js';
+import { test, expect, wait } from './start.js';
 import secrets from '../secrets.local.json';
 
-test('Login', () => {
+test('2. Login', async () => {
     const loginInput = document.querySelector('#app input[name="password"]');
     expect(loginInput, 'Missing password field');
     loginInput.value = secrets.password;

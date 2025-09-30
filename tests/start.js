@@ -27,6 +27,20 @@ try {
 
 console.info(`🚀 E2E (in-app) tests started`);
 
+async function resetSession() {
+    try {
+        const items = await chrome.storage.session.get(['active', 'password']);
+        if (items.hasOwnProperty('active') && items.hasOwnProperty('password')) {
+            await chrome.storage.session.remove(['active', 'password']);
+            console.info('♻️ Session reset');
+            await wait(1000);
+            window.location.reload();
+        }
+    } catch (err) {
+        console.error('Error accessing session storage:', err);
+    }
+}
+
 const tests = [];
 
 export function test(name, fn) {
@@ -37,30 +51,41 @@ export function expect(condition, message) {
     if (!condition) throw new Error(message);
 }
 
-async function loadTestSuites() {
-    await Promise.all([
-        import('./reset.js'),
-        import('./launch.js'),
-        import('./login.js'),
-    ]);
+export function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function executeTests() {
+const specs = [
+    () => import(/* webpackMode: "eager" */ './launch.js'),
+    () => import(/* webpackMode: "eager" */ './login.js')
+];
+
+async function loadTestSpecs() {
+    for (const loadSpec of specs) {
+        await loadSpec();
+    }
+}
+
+async function executeTests() {
     let failed = 0;
-    tests.forEach(({ name, fn }) => {
+    for (const { name, fn } of tests) {
         try {
-            fn();
+            await fn();
             console.info(`✅ ${name}`);
         } catch (err) {
             failed++;
             console.error(`❌ ${name}`, err);
         }
-    });
+    }
     console.info(`🏁 E2E (in-app) finished. Errors: ${failed}`);
 }
 
-loadTestSuites()
-    .then(executeTests)
-    .catch((err) => {
-        console.error('😟 Test suite load error', err);
-    });
+async function main() {
+    await resetSession();
+    await loadTestSpecs();
+    await executeTests();
+}
+
+main().catch((err) => {
+    console.error('😟 Test suite load error', err);
+});

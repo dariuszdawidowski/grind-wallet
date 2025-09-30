@@ -39,6 +39,7 @@ export function expect(condition, message) {
 
 async function loadTestSuites() {
     await Promise.all([
+        import('./reset.js'),
         import('./launch.js'),
         import('./login.js'),
     ]);

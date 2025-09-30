@@ -18,6 +18,14 @@ Object.assign(testBanner.style, {
 });
 document.body.insertBefore(testBanner, document.body.firstChild);
 
+let secrets = {};
+try {
+    secrets = await import('../secrets.local.json', { assert: { type: 'json' } });
+} catch (_) {
+    console.warn('Could not find secrets.local.json');
+    return;
+}
+
 console.info(`🚀 E2E (in-app) tests started`);
 
 const tests = [];

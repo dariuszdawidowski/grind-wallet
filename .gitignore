@@ -17,3 +17,6 @@ dist/
 
 # Assets
 assets/
+
+# Local secrets for tests
+secrets.local.json

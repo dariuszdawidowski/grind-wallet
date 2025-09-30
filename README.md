@@ -28,7 +28,19 @@ npm run build:dev
 
 ## Development launch
 
-Open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
+To install open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
+You can launch from extension bar or better in the fulscreen mode [chrome-extension://fbalmoobdnjmfbhbgaiimcbolcpnmcjf/popup.html].
+
+
+## E2E test build
+Configure file in the root dir secrets.local.json:
+{
+    "password": "..."
+}
+
+```bash
+npm run build:test
+```
 
 
 ## Production build

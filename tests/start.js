@@ -22,8 +22,7 @@ let secrets = {};
 try {
     secrets = await import('../secrets.local.json', { assert: { type: 'json' } });
 } catch (_) {
-    console.warn('Could not find secrets.local.json');
-    return;
+    console.error('Could not find secrets.local.json');
 }
 
 console.info(`🚀 E2E (in-app) tests started`);
@@ -40,8 +39,8 @@ export function expect(condition, message) {
 
 async function loadTestSuites() {
     await Promise.all([
-        import('./launch.js')
-        // import('./nav.js'),
+        import('./launch.js'),
+        import('./login.js'),
     ]);
 }
 

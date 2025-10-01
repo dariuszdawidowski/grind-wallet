@@ -164,14 +164,17 @@ export class SheetAccountDetails extends Component {
         })();
 
         // Listen for balance update
-        document.body.addEventListener('update.balance', () => {
-            this.updateBalance();
-        });
+        this.handleBalanceUpdate = () => this.updateBalance();
+        document.body.addEventListener('update.balance', this.handleBalanceUpdate);
 
         // Listen for coin image load
         this.element.addEventListener('update.image', () => {
             this.updateBalance();
         });
+    }
+
+    destructor() {
+        document.body.removeEventListener('update.balance', this.handleBalanceUpdate);
     }
 
     updateBalance() {

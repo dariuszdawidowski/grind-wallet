@@ -26,6 +26,9 @@ export class Sheet extends Component {
         // Title
         this.title = this.element.querySelector('h1.title');
 
+        // Children components
+        this.children = [];
+
         // Content
         this.content = this.element.querySelector('.content');
 
@@ -49,6 +52,7 @@ export class Sheet extends Component {
         this.title.innerText = args.title;
 
         // Append
+        this.children.push(args.component);
         this.content.append(args.component.element);
 
         // Show animation
@@ -63,13 +67,12 @@ export class Sheet extends Component {
      */
 
     clear() {
-
         // Destroy child components
+        this.children.forEach(child => child.destructor?.());
         this.children = [];
 
         // Clear DOM
         this.content.innerHTML = '';
-
     }
 
     /**

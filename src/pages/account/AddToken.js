@@ -77,8 +77,7 @@ export class SheetAddCustomToken extends Component {
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                     this.widget.info.innerHTML += `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                 }
-                // this.widget.info.style.height = '80px';
-                this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text}) [${info.standard}]</div>`;
+                this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text})${info.standard ? ` [${info.standard}]` : ''}</div>`;
                 this.widget.submit.set('Add to my wallet');
             }
             else {
@@ -136,14 +135,19 @@ export class SheetAddCustomToken extends Component {
         }
 
         // Supported standards
-        const standards = await actor.service.icrc10_supported_standards();
-        const hasICRC1 = standards.some(item => item.name === 'ICRC-1');
-        const hasICRC2 = standards.some(item => item.name === 'ICRC-2');
+        let standard = null;
+        try {
+            const standards = await actor.service.icrc10_supported_standards();
+            const hasICRC1 = standards.some(item => item.name === 'ICRC-1');
+            const hasICRC2 = standards.some(item => item.name === 'ICRC-2');
+            standard = hasICRC2 ? 'ICRC-2' : hasICRC1 ? 'ICRC-1' : null;
+        }
+        catch (_) {}
 
         // Validate
-        if (hasICRC1 && validICRC1(metadata)) return {
+        if (validICRC1(metadata)) return {
             valid: true,
-            standard: hasICRC2 ? 'ICRC-2' : 'ICRC-1',
+            standard,
             actor,
             metadata
         };

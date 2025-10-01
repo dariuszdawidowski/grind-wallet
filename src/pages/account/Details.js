@@ -177,7 +177,17 @@ export class SheetAccountDetails extends Component {
     updateBalance() {
         if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
-            this.balance.innerHTML = (this.coin ? `<img src="${this.coin}" style="width: 40px; margin-right: 10px;">` : '') + amount + ' ' + this.wallet.tokens[this.canisterId].symbol;
+            let html = '';
+            if (this.coin) {
+                if (this.coin.startsWith('<svg')) {
+                    html += `<img src="data:image/svg+xml;utf8,${encodeURIComponent(this.coin)}" style="width: 40px; margin-right: 10px;">`;
+                }
+                else {
+                    html += `<img src="${this.coin}" style="width: 40px; margin-right: 10px;">`;
+                }
+            }
+            html += amount + ' ' + this.wallet.tokens[this.canisterId].symbol;
+            this.balance.innerHTML = html;
         }
     }
 

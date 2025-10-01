@@ -46,7 +46,7 @@ npm run build:test
 ## Production build
 
 ```bash
-# Create .zip ready for Chrome Store
+# Create .zip ready for Chrome Store -> dist/grind-wallet.zip
 npm run deploy
 ```
 

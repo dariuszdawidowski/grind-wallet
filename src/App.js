@@ -14,6 +14,7 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
+import { API } from '/src/api/API.js';
 // E2E tests
 if (process.env.TEST_MODE) import('/tests/start.js');
 
@@ -340,11 +341,13 @@ class GrindWalletPlugin {
 }
 
 /**
- * Global interface
+ * API interface
  */
 
-// window.ic.grind = {
-// };
+if (!window.ic) window.ic = {};
+window.ic.grind = new API();
+// Act as Plug Wallet if doesn't exist (for testing purposes)
+if (!window.ic.plug) window.ic.plug = window.ic.grind;
 
 /**
  * Start

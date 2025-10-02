@@ -13,12 +13,21 @@ module.exports = (env = {}, argv = {}) => {
 
     return {
         mode,
-        entry: './src/App.js',
+        entry: {
+            popup: './src/App.js',
+            content: './src/content/content.js',
+            inject: './src/api/inject.js',
+        },
         target: 'web',
 
         output: {
             path: path.resolve(__dirname, 'dist/chrome'),
-            filename: isDev ? 'popup.js' : 'popup.[contenthash].js',
+            filename: (pathData) => {
+                if (!isDev && pathData.chunk.name === 'popup') {
+                    return 'popup.[contenthash].js';
+                }
+                return `${pathData.chunk.name}.js`;
+            },
             clean: true
         },
     
@@ -45,7 +54,8 @@ module.exports = (env = {}, argv = {}) => {
             new HtmlWebpackPlugin({
                 template: './src/popup.html',
                 filename: 'popup.html',
-                inject: 'body'
+                inject: 'body',
+                chunks: ['popup'],
             }),
 
             new MiniCssExtractPlugin({
@@ -95,6 +105,8 @@ module.exports = (env = {}, argv = {}) => {
 
         optimization: {
             minimize: !isDev,
+            splitChunks: false,
+            runtimeChunk: false,
             minimizer: isDev ? [] : [
                 new TerserPlugin({
                     terserOptions: {

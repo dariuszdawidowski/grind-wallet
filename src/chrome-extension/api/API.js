@@ -5,12 +5,11 @@
 export class API {
 
     constructor() {
-
+        console.log('Grind Wallet API initialized');
         this.agent = null; // ICP's HttpAgent reference
         this.isWalletLocked = true; // Wallet lock status
         this.principalId = null; // User principal ID
         this.accountId = null; // User account ID for ICP Ledger
-
     }
 
     /**
@@ -22,8 +21,15 @@ export class API {
      */
 
     async requestConnect(args) {
-        console.log('API.requestConnect', args);
-
+        console.log('Requesting connection to Grind Wallet');
+        const wallet = await this._openPopupAndGetWallet();
+        if (wallet) {
+            console.log('Connected to Grind Wallet', wallet);
+            this.agent = wallet.agent;
+            this.isWalletLocked = false;
+            this.principalId = wallet.principal;
+            this.accountId = wallet.account;
+        }
     }
 
     /**
@@ -39,7 +45,6 @@ export class API {
      * Disconnect from Grind Wallet plugin
      */
     async disconnect() {
-        console.log('API.disconnect');
     }
 
     /**
@@ -49,7 +54,6 @@ export class API {
      * @return actor - Actor for canister
      */
     async createActor(args) {
-        console.log('API.createActor', args);
     }
 
     /**
@@ -57,8 +61,10 @@ export class API {
      * @return principal - Principal of the user
      */
     async getPrincipal() {
-        console.log('API.getPrincipal');
-        return null;
+        console.log('Getting principal from Grind Wallet');
+        if (!this.agent) throw new Error('Wallet not connected');
+        const principal = await this.agent.getPrincipal();
+        return principal;
     }
 
     /**
@@ -67,7 +73,6 @@ export class API {
      * @return balance - Balance in e8s (1 ICP = 100,000,000 e8s)
      */
     async getBalance(args) {
-        console.log('API.getBalance', args);
         return 0;
     }
 
@@ -81,8 +86,29 @@ export class API {
      * @return blockHeight - Block height of the transaction
      */
     async requestTransfer(args) {
-        console.log('API.requestTransfer', args);
         return null;
+    }
+
+    /**
+     * Send message to background worker to open Grind Wallet popup
+     */
+
+    async _openPopupAndGetWallet() {
+        return new Promise((resolve, reject) => {
+            const handler = (event) => {
+                console.log('Event received', event);
+                if (event.source !== window) return;
+                if (event.data?.type === 'GW_WALLET') {
+                    window.removeEventListener('message', handler);
+                    resolve(event.data.payload);
+                } else if (event.data?.type === 'GW_WALLET_ERROR') {
+                    window.removeEventListener('message', handler);
+                    reject(new Error(event.data.reason));
+                }
+            };
+            window.addEventListener('message', handler);
+            window.postMessage({ type: 'GW_OPEN_POPUP' }, '*');
+        });
     }
 
 }

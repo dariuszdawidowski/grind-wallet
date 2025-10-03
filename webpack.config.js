@@ -15,8 +15,9 @@ module.exports = (env = {}, argv = {}) => {
         mode,
         entry: {
             popup: './src/App.js',
-            content: './src/content/content.js',
-            inject: './src/api/inject.js',
+            content: './src/chrome-extension/content/Content.js',
+            inject: './src/chrome-extension/api/Inject.js',
+            background: './src/chrome-extension/background/Background.js',
         },
         target: 'web',
 

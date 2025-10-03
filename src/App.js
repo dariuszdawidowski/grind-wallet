@@ -14,7 +14,7 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
-import { API } from '/src/api/API.js';
+
 // E2E tests
 if (process.env.TEST_MODE) import('/tests/start.js');
 
@@ -86,9 +86,10 @@ class GrindWalletPlugin {
         // User credentials
         this.user = {
             password: null,
-            // Wallets list { ICPWallet, ... }
             wallets: {}
         };
+
+        this._walletWaiters = [];
 
         // Actor cache
         this.cache = new ObjectCache();
@@ -315,30 +316,53 @@ class GrindWalletPlugin {
                     alert(error);
                 }
             }
+            this._resolveWalletWaiters();
         }
 
     }
 
-    /**
-     * Saves a resource to Chrome storage.
-     * @param {string} resource - The name of the resource to save.
-     * @param {Object} data - The data to save.
-     */
+    _getPrimaryWallet() {
+        const [wallet] = Object.values(this.user.wallets);
+        return wallet ?? null;
+    }
 
-    save(resource, data) {
-
-        // Wallets
-        if (resource == 'wallets') {
-            const serializeWallets = {};
-            Object.values(data).forEach(wallet => {
-                serializeWallets[wallet.public] = wallet.serialize();
-            });
-            chrome.storage.local.set({ 'wallets': serializeWallets });
+    _resolveWalletWaiters() {
+        const wallet = this._getPrimaryWallet();
+        if (!wallet) return;
+        while (this._walletWaiters.length) {
+            const resolve = this._walletWaiters.shift();
+            resolve(wallet);
         }
+    }
 
+    async connect() {
+        const wallet = this._getPrimaryWallet();
+        if (wallet) return wallet;
+        return new Promise((resolve) => {
+            this._walletWaiters.push(resolve);
+        });
     }
 
 }
+
+// Connector from a website
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message?.type === 'REQUEST_WALLET') {
+        app.connect().then((wallet) => {
+            if (wallet) {
+                console.log('Wallet', wallet);
+                sendResponse(wallet);
+            }
+            else {
+                sendResponse({ error: 'WALLET_NOT_FOUND' });
+            }
+        })
+        .catch((error) => {
+            sendResponse({ error: error.message });
+        });
+        return true;
+    }
+});
 
 /**
  * Start

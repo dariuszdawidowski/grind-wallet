@@ -2,10 +2,12 @@
  * API for developers
  */
 
+import { Principal } from '@dfinity/principal';
+
 export class API {
 
     constructor() {
-        console.log('Grind Wallet API initialized');
+        this.wallet = null; // Wallet reference
         this.agent = null; // ICP's HttpAgent reference
         this.isWalletLocked = true; // Wallet lock status
         this.principalId = null; // User principal ID
@@ -21,15 +23,16 @@ export class API {
      */
 
     async requestConnect(args) {
-        console.log('Requesting connection to Grind Wallet');
         const wallet = await this._openPopupAndGetWallet();
         if (wallet) {
-            console.log('Connected to Grind Wallet', wallet);
+            this.wallet = wallet;
             this.agent = wallet.agent;
             this.isWalletLocked = false;
             this.principalId = wallet.principal;
             this.accountId = wallet.account;
+            return wallet.publicKey;
         }
+        return null;
     }
 
     /**
@@ -44,6 +47,7 @@ export class API {
     /**
      * Disconnect from Grind Wallet plugin
      */
+
     async disconnect() {
     }
 
@@ -53,6 +57,7 @@ export class API {
      * @param canisterId: string - Canister ID
      * @return actor - Actor for canister
      */
+
     async createActor(args) {
     }
 
@@ -60,11 +65,10 @@ export class API {
      * Get principal of the user
      * @return principal - Principal of the user
      */
-    async getPrincipal() {
-        console.log('Getting principal from Grind Wallet');
-        if (!this.agent) throw new Error('Wallet not connected');
-        const principal = await this.agent.getPrincipal();
-        return principal;
+
+    getPrincipal() {
+        if (!this.wallet) throw new Error('Wallet not connected');
+        return Principal.fromText(this.wallet.principal);
     }
 
     /**
@@ -72,6 +76,7 @@ export class API {
      * @param canisterId: string - Canister ID of ICP Ledger (default: 'ryjl3-tyaaa-aaaaa-aaaba-cai')
      * @return balance - Balance in e8s (1 ICP = 100,000,000 e8s)
      */
+
     async getBalance(args) {
         return 0;
     }
@@ -85,6 +90,7 @@ export class API {
      * @param canisterId: string - Canister ID of ICP Ledger (default: 'ryjl3-tyaaa-aaaaa-aaaba-cai')
      * @return blockHeight - Block height of the transaction
      */
+
     async requestTransfer(args) {
         return null;
     }
@@ -96,7 +102,6 @@ export class API {
     async _openPopupAndGetWallet() {
         return new Promise((resolve, reject) => {
             const handler = (event) => {
-                console.log('Event received', event);
                 if (event.source !== window) return;
                 if (event.data?.type === 'GW_WALLET') {
                     window.removeEventListener('message', handler);

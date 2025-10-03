@@ -350,7 +350,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message?.type === 'REQUEST_WALLET') {
         app.connect().then((wallet) => {
             if (wallet) {
-                console.log('Wallet', wallet);
                 sendResponse(wallet);
             }
             else {

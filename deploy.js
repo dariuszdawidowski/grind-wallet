@@ -12,7 +12,7 @@ function createZip() {
     const archive = archiver('zip', { zlib: { level: 9 } });
 
     output.on('close', () => {
-        console.log(`Created file: ${outputFilePath} (${archive.pointer()} bytes)`);
+        console.info(`Created file: ${outputFilePath} (${archive.pointer()} bytes)`);
     });
 
     archive.on('error', (err) => {

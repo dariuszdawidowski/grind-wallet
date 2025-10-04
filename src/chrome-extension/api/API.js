@@ -7,7 +7,6 @@ import { Principal } from '@dfinity/principal';
 export class API {
 
     constructor() {
-        this.wallet = null; // Wallet reference
         this.agent = null; // ICP's HttpAgent reference
         this.isWalletLocked = true; // Wallet lock status
         this.principalId = null; // User principal ID
@@ -23,14 +22,13 @@ export class API {
      */
 
     async requestConnect(args) {
-        const wallet = await this._openPopupAndGetWallet();
-        if (wallet) {
-            this.wallet = wallet;
-            this.agent = wallet.agent;
+        const safeWallet = await this._openPopupAndGetWallet();
+        if (safeWallet) {
+            this.agent = safeWallet.agent;
             this.isWalletLocked = false;
-            this.principalId = wallet.principal;
-            this.accountId = wallet.account;
-            return wallet.publicKey;
+            this.principalId = safeWallet.principal;
+            this.accountId = safeWallet.account;
+            return safeWallet.publicKey;
         }
         return null;
     }
@@ -67,8 +65,8 @@ export class API {
      */
 
     getPrincipal() {
-        if (!this.wallet) throw new Error('Wallet not connected');
-        return Principal.fromText(this.wallet.principal);
+        if (!this.principalId) throw new Error('Wallet not connected');
+        return Principal.fromText(this.principalId);
     }
 
     /**

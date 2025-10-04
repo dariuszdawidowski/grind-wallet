@@ -321,17 +321,25 @@ class GrindWalletPlugin {
 
     }
 
-    _getPrimaryWallet() {
+    _getPrimarySafeWallet() {
         const [wallet] = Object.values(this.user.wallets);
-        return wallet ?? null;
+        if (wallet) {
+            const safeWallet = {
+                principal: wallet.principal,
+                account: wallet.account,
+                publicKey: wallet.publicKey
+            };
+            return safeWallet;
+        }
+        return null;
     }
 
     _resolveWalletWaiters() {
-        const wallet = this._getPrimaryWallet();
-        if (!wallet) return;
+        const safeWallet = this._getPrimarySafeWallet();
+        if (!safeWallet) return;
         while (this._walletWaiters.length) {
             const resolve = this._walletWaiters.shift();
-            resolve(wallet);
+            resolve(safeWallet);
         }
     }
 
@@ -348,9 +356,9 @@ class GrindWalletPlugin {
 // Connector from a website
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message?.type === 'REQUEST_WALLET') {
-        app.connect().then((wallet) => {
-            if (wallet) {
-                sendResponse(wallet);
+        app.connect().then((safeWallet) => {
+            if (safeWallet) {
+                sendResponse(safeWallet);
             }
             else {
                 sendResponse({ error: 'WALLET_NOT_FOUND' });

@@ -60,6 +60,51 @@ export class API {
      */
 
     async createActor(args) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({
+                type: 'CREATE_ACTOR',
+                canisterId: args.canisterId,
+                interfaceFactory: args.interfaceFactory
+            }, response => {
+                if (response.error) {
+                    reject(new Error(response.error));
+                } else {
+                    const actorProxy = new Proxy({}, {
+                        get: (target, prop) => {
+                            if (typeof prop === 'string' && prop !== 'then') {
+                                return (...args) => {
+                                    return this._callActorMethod(response.actorId, prop, args);
+                                };
+                            }
+                            return undefined;
+                        }
+                    });
+                    resolve(actorProxy);
+                }
+            });
+        });
+    }
+
+    /**
+     * Adapter to call actor methods
+     */
+
+    async _callActorMethod(actorId, method, args) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({
+                type: 'CALL_ACTOR_METHOD',
+                actorId,
+                method,
+                args,
+                isUpdate: !method.startsWith('query_') // Read-only methods
+            }, response => {
+                if (response.error) {
+                    reject(new Error(response.error));
+                } else {
+                    resolve(response.result);
+                }
+            });
+        });
     }
 
     /**

@@ -354,7 +354,12 @@ class GrindWalletPlugin {
 
 // Connector from a website
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message?.type === 'REQUEST_WALLET') {
+    if (sender.id !== chrome.runtime.id) {
+        console.warn('Unauthorized attempt to communicate with the extension', sender);
+        sendResponse({ error: "UNAUTHORIZED_SENDER" });
+        return true;
+    }
+    else if (message?.type === 'REQUEST_WALLET') {
         app.connect().then((safeWallet) => {
             if (safeWallet) {
                 sendResponse(safeWallet);

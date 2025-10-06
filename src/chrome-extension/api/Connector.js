@@ -1,5 +1,5 @@
 /**
- * Safe communication through API.js <-> Background.js <-> Connector.js <-> App.js
+ * Messages API.js <-> Content.js <-> Background.js <-> Connector.js <-> App.js
  */
 
 export class APIConnector {

@@ -17,10 +17,15 @@ const requestWalletFromPopup = (retries = 5) => new Promise((resolve, reject) =>
 });
 
 /**
- * Listener
+ * Background message proxy
  */
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+
+    // TODO: sender.origin - ask user to accept this url only
+    // sender.tab.favIconUrl - display icon
+
+    console.log(message?.type);
 
     // Check sender
     if (sender.id !== chrome.runtime.id) {
@@ -29,7 +34,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     // Open Popup & Connect
-    if (message?.type === 'OPEN_POPUP') {
+    else if (message?.type === 'GRND_OPEN_POPUP') {
         chrome.action.openPopup()
             .then(() => requestWalletFromPopup())
             .then((wallet) => sendResponse(wallet))

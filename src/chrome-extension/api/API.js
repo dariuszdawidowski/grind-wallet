@@ -13,6 +13,10 @@ export class API {
         this._connected = false; // Connection status
     }
 
+    async init() {
+        // TEMP: Plug compatibility
+    }
+
     /**
      * Request connection to Grind Wallet plugin and create agent
      * @param whitelist: ['Canister ID', ...] - Will ask user for permission to connect to these canisters
@@ -22,7 +26,7 @@ export class API {
      */
 
     async requestConnect(args) {
-        const safeWallet = await this._openPopupAndGetWallet();
+        const safeWallet = await this._sendMsgToWallet('GRND_OPEN_POPUP');
         if (safeWallet) {
             this.isWalletLocked = false;
             this.principalId = safeWallet.principalId;
@@ -60,6 +64,13 @@ export class API {
      */
 
     async createActor(args) {
+        const actorProxy = await this._sendMsgToWallet('GRND_CREATE_ACTOR', {
+            canisterId: args.canisterId,
+            // interfaceFactory: args.interfaceFactory
+        });
+        if (actorProxy) return actorProxy;
+        return null;
+/*        
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
                 type: 'CREATE_ACTOR',
@@ -83,6 +94,7 @@ export class API {
                 }
             });
         });
+*/
     }
 
     /**
@@ -145,20 +157,20 @@ export class API {
      * Send message to background worker to open Grind Wallet popup
      */
 
-    async _openPopupAndGetWallet() {
+    async _sendMsgToWallet(type, payload = null) {
         return new Promise((resolve, reject) => {
             const handler = (event) => {
                 if (event.source !== window) return;
-                if (event.data?.type === 'GW_WALLET') {
+                if (event.data?.type === 'GRND_RETURN') {
                     window.removeEventListener('message', handler);
                     resolve(event.data.payload);
-                } else if (event.data?.type === 'GW_WALLET_ERROR') {
+                } else if (event.data?.type === 'GRND_ERROR') {
                     window.removeEventListener('message', handler);
                     reject(new Error(event.data.reason));
                 }
             };
             window.addEventListener('message', handler);
-            window.postMessage({ type: 'GW_OPEN_POPUP' }, '*');
+            window.postMessage({ type, payload }, '*');
         });
     }
 

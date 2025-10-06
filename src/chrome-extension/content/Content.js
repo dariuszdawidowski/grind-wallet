@@ -7,16 +7,26 @@
     script.remove();
 })();
 
+/**
+ * Content message proxy
+ */
+
 window.addEventListener('message', async (event) => {
-    if (event.source !== window || event.data?.type !== 'GW_OPEN_POPUP') return;
-    try {
-        const wallet = await chrome.runtime.sendMessage({ type: 'OPEN_POPUP' });
-        if (wallet?.error) {
-            window.postMessage({ type: 'GW_WALLET_ERROR', reason: wallet.error }, '*');
-        } else {
-            window.postMessage({ type: 'GW_WALLET', payload: wallet }, '*');
+
+    // Check origin
+    if (event.source !== window) return;
+
+    // Send message to Background.js and return response
+    if (['GRND_OPEN_POPUP', 'GRND_CREATE_ACTOR', 'GRND_CALL_ACTOR'].includes(event.data?.type)) {
+        try {
+            const response = await chrome.runtime.sendMessage({ type: event.data.type });
+            if (response?.error) {
+                window.postMessage({ type: 'GRND_ERROR', reason: response.error }, '*');
+            } else {
+                window.postMessage({ type: 'GRND_RETURN', payload: response }, '*');
+            }
+        } catch (error) {
+            window.postMessage({ type: 'GRND_ERROR', reason: error.message }, '*');
         }
-    } catch (error) {
-        window.postMessage({ type: 'GW_WALLET_ERROR', reason: error.message }, '*');
     }
 });

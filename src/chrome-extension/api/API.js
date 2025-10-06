@@ -7,10 +7,10 @@ import { Principal } from '@dfinity/principal';
 export class API {
 
     constructor() {
-        this.agent = null; // ICP's HttpAgent reference
         this.isWalletLocked = true; // Wallet lock status
         this.principalId = null; // User principal ID
         this.accountId = null; // User account ID for ICP Ledger
+        this._connected = false; // Connection status
     }
 
     /**
@@ -24,10 +24,10 @@ export class API {
     async requestConnect(args) {
         const safeWallet = await this._openPopupAndGetWallet();
         if (safeWallet) {
-            this.agent = safeWallet.agent;
             this.isWalletLocked = false;
             this.principalId = safeWallet.principalId;
             this.accountId = safeWallet.accountId;
+            this._connected = true;
             //return safeWallet.publicKey;
         }
         return null;
@@ -39,7 +39,7 @@ export class API {
      */
 
     async isConnected() {
-        return false;
+        return this._connected;
     }
 
     /**
@@ -47,6 +47,9 @@ export class API {
      */
 
     async disconnect() {
+        this.principalId = null;
+        this.accountId = null;
+        this._connected = false;
     }
 
     /**

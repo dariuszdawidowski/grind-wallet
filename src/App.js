@@ -14,6 +14,7 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
+import { APIConnector } from '/src/chrome-extension/api/Connector.js';
 
 // E2E tests
 if (process.env.TEST_MODE) import('/tests/start.js');
@@ -93,6 +94,9 @@ class GrindWalletPlugin {
 
         // Actor cache
         this.cache = new ObjectCache();
+
+        // API connector
+        this.connector = new APIConnector(this);
 
         // Get saved data
         chrome.storage.local.get(['version', 'terms', 'webauthn'], (saved) => {
@@ -351,34 +355,6 @@ class GrindWalletPlugin {
     }
 
 }
-
-// Connector from a website
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
-    // Check sender
-    if (sender.id !== chrome.runtime.id) {
-        console.warn('Unauthorized attempt to communicate with the extension', sender);
-        sendResponse({ error: "UNAUTHORIZED_SENDER" });
-        return true;
-    }
-
-    // Request connect
-    else if (message?.type === 'REQUEST_WALLET') {
-        app.connect().then((safeWallet) => {
-            if (safeWallet) {
-                sendResponse(safeWallet);
-            }
-            else {
-                sendResponse({ error: 'WALLET_NOT_FOUND' });
-            }
-        })
-        .catch((error) => {
-            sendResponse({ error: error.message });
-        });
-        return true;
-    }
-
-});
 
 /**
  * Start

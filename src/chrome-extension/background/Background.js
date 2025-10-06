@@ -1,6 +1,10 @@
+/**
+ * Connect to wallet
+ */
+
 const requestWalletFromPopup = (retries = 5) => new Promise((resolve, reject) => {
     const attempt = () => {
-        chrome.runtime.sendMessage({ type: 'REQUEST_WALLET' }, (response) => {
+        chrome.runtime.sendMessage({ type: 'REQUEST_CONNECT' }, (response) => {
             if (chrome.runtime.lastError) {
                 if (--retries > 0) return setTimeout(attempt, 100);
                 return reject(new Error(chrome.runtime.lastError.message));
@@ -12,7 +16,19 @@ const requestWalletFromPopup = (retries = 5) => new Promise((resolve, reject) =>
     attempt();
 });
 
+/**
+ * Listener
+ */
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+
+    // Check sender
+    if (sender.id !== chrome.runtime.id) {
+        console.warn('Unauthorized attempt to communicate with the extension', sender);
+        return true;
+    }
+
+    // Open Popup & Connect
     if (message?.type === 'OPEN_POPUP') {
         chrome.action.openPopup()
             .then(() => requestWalletFromPopup())

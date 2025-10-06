@@ -26,9 +26,9 @@ export class API {
         if (safeWallet) {
             this.agent = safeWallet.agent;
             this.isWalletLocked = false;
-            this.principalId = safeWallet.principal;
-            this.accountId = safeWallet.account;
-            return safeWallet.publicKey;
+            this.principalId = safeWallet.principalId;
+            this.accountId = safeWallet.accountId;
+            //return safeWallet.publicKey;
         }
         return null;
     }

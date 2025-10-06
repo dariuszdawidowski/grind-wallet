@@ -321,13 +321,12 @@ class GrindWalletPlugin {
 
     }
 
-    _getPrimarySafeWallet() {
+    _getSafeWallet() {
         const [wallet] = Object.values(this.user.wallets);
         if (wallet) {
             const safeWallet = {
-                principal: wallet.principal,
-                account: wallet.account,
-                publicKey: wallet.publicKey
+                principalId: wallet.principal,
+                accountId: wallet.account
             };
             return safeWallet;
         }
@@ -335,7 +334,7 @@ class GrindWalletPlugin {
     }
 
     _resolveWalletWaiters() {
-        const safeWallet = this._getPrimarySafeWallet();
+        const safeWallet = this._getSafeWallet();
         if (!safeWallet) return;
         while (this._walletWaiters.length) {
             const resolve = this._walletWaiters.shift();
@@ -344,7 +343,7 @@ class GrindWalletPlugin {
     }
 
     async connect() {
-        const wallet = this._getPrimaryWallet();
+        const wallet = this._getSafeWallet();
         if (wallet) return wallet;
         return new Promise((resolve) => {
             this._walletWaiters.push(resolve);

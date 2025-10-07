@@ -4,6 +4,11 @@
 
 import { Principal } from '@dfinity/principal';
 import { Actor } from '@dfinity/agent';
+const bip39 = require('bip39');
+const hdkey = require('hdkey');
+import { Secp256k1KeyIdentity } from '@dfinity/identity-secp256k1';
+import { HttpAgent } from '@dfinity/agent';
+import { LedgerCanister, AccountIdentifier } from '@dfinity/ledger-icp';
 
 export class API {
 
@@ -13,6 +18,20 @@ export class API {
         this.principalId = null; // User principal ID
         this.accountId = null; // User account ID for ICP Ledger
         this._connected = false; // Connection status
+    }
+
+    walletImportFromPhraseSecp256k1(mnemonic = null) {
+        if (!mnemonic) mnemonic = bip39.generateMnemonic();
+        const valid = bip39.validateMnemonic(mnemonic);
+        const seed = bip39.mnemonicToSeedSync(mnemonic);
+        const root = hdkey.fromMasterSeed(seed);
+        const addrnode = root.derive("m/44'/223'/0'/0/0");
+        const identity = Secp256k1KeyIdentity.fromSecretKey(addrnode.privateKey);
+        const json = identity.toJSON();
+        const principal = identity.getPrincipal();
+        const account = AccountIdentifier.fromPrincipal({ principal });
+        console.log(`Public key: ${json[0]}\nPrivate key: ${json[1]}\nPrincipal ID: ${principal.toString()}\nAccount ID: ${account.toHex()}`);
+        return identity;
     }
 
     async init() {
@@ -28,6 +47,22 @@ export class API {
      */
 
     async requestConnect(args) {
+        // Temporary full agent is created here
+        const dev1 = {
+            principal: '...',
+            account: '...',
+            mnemonic: '...'
+        };
+        const identity_dev1 = this.walletImportFromPhraseSecp256k1(dev1.mnemonic);
+        this.agent = HttpAgent.createSync({ host: args?.host || 'https://icp0.io', identity: identity_dev1 });
+        if (('host' in args) && args.host.startsWith('http://127.0.0.1')) await this.agent.fetchRootKey();
+        this.isWalletLocked = false;
+        this.principalId = dev1.principal;
+        this.accountId = dev1.account;
+        this._connected = true;
+        return identity_dev1.getPublicKey().toDer();
+
+        /*
         const safeWallet = await this._sendMsgToWallet('GRND_CONNECT');
         if (safeWallet) {
             this.agent = safeWallet.agent; // Temp
@@ -37,7 +72,7 @@ export class API {
             this._connected = true;
             //return safeWallet.publicKey;
         }
-        return null;
+        return null;*/
     }
 
     /**

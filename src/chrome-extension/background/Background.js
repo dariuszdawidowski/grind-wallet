@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     // Open Popup & Connect
-    else if (message?.type === 'GRND_OPEN_POPUP') {
+    else if (message?.type === 'GRND_CONNECT') {
         chrome.action.openPopup()
             .then(() => requestWalletFromPopup())
             .then((wallet) => sendResponse(wallet))

@@ -3,10 +3,12 @@
  */
 
 import { Principal } from '@dfinity/principal';
+import { Actor } from '@dfinity/agent';
 
 export class API {
 
     constructor() {
+        this.agent = null; // Safe HttpAgent adapter
         this.isWalletLocked = true; // Wallet lock status
         this.principalId = null; // User principal ID
         this.accountId = null; // User account ID for ICP Ledger
@@ -26,8 +28,9 @@ export class API {
      */
 
     async requestConnect(args) {
-        const safeWallet = await this._sendMsgToWallet('GRND_OPEN_POPUP');
+        const safeWallet = await this._sendMsgToWallet('GRND_CONNECT');
         if (safeWallet) {
+            this.agent = safeWallet.agent; // Temp
             this.isWalletLocked = false;
             this.principalId = safeWallet.principalId;
             this.accountId = safeWallet.accountId;
@@ -58,18 +61,26 @@ export class API {
 
     /**
      * Create actor for canister
-     * @param interfaceFactory: IDL - Interface factory from canister .did file
-     * @param canisterId: string - Canister ID
+     * @param args.interfaceFactory: IDL - Interface factory from canister .did file
+     * @param args.canisterId: string - Canister ID
      * @return actor - Actor for canister
      */
 
     async createActor(args) {
+        // if (!this.agent) throw new Error('Wallet not connected');
+        // if (!args.interfaceFactory) throw new Error('interfaceFactory is required');
+        // if (!args.canisterId) throw new Error('canisterId is required');
+        // Temp
+        const actor = Actor.createActor(args.interfaceFactory, { agent: this.agent, canisterId: args.canisterId });
+        return actor;
+        
+        /*
         const actorProxy = await this._sendMsgToWallet('GRND_CREATE_ACTOR', {
             canisterId: args.canisterId,
             // interfaceFactory: args.interfaceFactory
         });
         if (actorProxy) return actorProxy;
-        return null;
+        return null;*/
 /*        
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({

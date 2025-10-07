@@ -17,7 +17,7 @@ window.addEventListener('message', async (event) => {
     if (event.source !== window) return;
 
     // Send message to Background.js and return response
-    if (['GRND_OPEN_POPUP', 'GRND_CREATE_ACTOR', 'GRND_CALL_ACTOR'].includes(event.data?.type)) {
+    if (['GRND_CONNECT', 'GRND_CREATE_ACTOR', 'GRND_CALL_ACTOR'].includes(event.data?.type)) {
         try {
             const response = await chrome.runtime.sendMessage({ type: event.data.type });
             if (response?.error) {

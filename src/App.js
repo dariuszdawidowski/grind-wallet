@@ -325,13 +325,34 @@ class GrindWalletPlugin {
 
     }
 
+    /**
+     * Saves a resource to Chrome storage.
+     * @param {string} resource - The name of the resource to save.
+     * @param {Object} data - The data to save.
+     */
+
+    save(resource, data) {
+
+        // Wallets
+        if (resource == 'wallets') {
+            const serializeWallets = {};
+            Object.values(data).forEach(wallet => {
+                serializeWallets[wallet.public] = wallet.serialize();
+            });
+            chrome.storage.local.set({ 'wallets': serializeWallets });
+        }
+
+    }    
+
     _getSafeWallet() {
         const [wallet] = Object.values(this.user.wallets);
         if (wallet) {
             const safeWallet = {
+                agent: wallet.agent,
                 principalId: wallet.principal,
                 accountId: wallet.account
             };
+            console.log('Safe wallet:', safeWallet);
             return safeWallet;
         }
         return null;

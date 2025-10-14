@@ -1,6 +1,6 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '../../widgets/Button.js';
-import { Checkbox } from '../../widgets/Checkbox.js';
+import { Button } from '/src/widgets/button.js';
+import { Checkbox } from '/src/widgets/checkbox.js';
 const { version } = require('../../../package.json');
 
 

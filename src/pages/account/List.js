@@ -1,8 +1,8 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '/src/widgets/Button.js';
-import { Card } from '/src/widgets/Card.js';
-import { Coin } from '/src/widgets/Coin.js';
-import { Cover } from '/src/widgets/Cover.js';
+import { Button } from '/src/widgets/button.js';
+import { Card } from '/src/widgets/card.js';
+import { Coin } from '/src/widgets/coin.js';
+import { Cover } from '/src/widgets/cover.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';

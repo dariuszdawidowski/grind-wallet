@@ -1,7 +1,7 @@
 import { Principal } from '@dfinity/principal';
 import { Component } from '/src/utils/Component.js';
-import { Button, ButtonDescription } from '/src/widgets/Button.js';
-import { InputAddress } from '/src/widgets/Input.js';
+import { Button, ButtonDescription } from '/src/widgets/button.js';
+import { InputAddress } from '/src/widgets/input.js';
 
 export class SheetAccountSendNFT extends Component {
 

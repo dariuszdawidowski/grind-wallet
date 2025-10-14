@@ -1,7 +1,7 @@
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { Component } from '/src/utils/Component.js';
-import { Button } from '/src/widgets/Button.js';
-import { InputAddress } from '/src/widgets/Input.js';
+import { Button } from '/src/widgets/button.js';
+import { InputAddress } from '/src/widgets/input.js';
 import { validICRC1 } from '/src/utils/Currency.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/ICPWallet.js';

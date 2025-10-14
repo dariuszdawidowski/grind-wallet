@@ -1,8 +1,8 @@
 import { Component } from '/src/utils/Component.js';
 import { verifyPassword } from '../../utils/Password.js';
-import { Form } from '../../widgets/Form.js';
-import { Button } from '../../widgets/Button.js';
-import { InputPassword } from '../../widgets/Input.js';
+import { Form } from '/src/widgets/form.js';
+import { Button } from '/src/widgets/button.js';
+import { InputPassword } from '../../widgets/input.js';
 const { version } = require('../../../package.json');
 
 

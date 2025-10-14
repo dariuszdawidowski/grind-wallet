@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '../../widgets/Button.js';
+import { Button } from '/src/widgets/button.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 const { version } = require('../../../package.json');

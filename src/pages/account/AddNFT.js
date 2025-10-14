@@ -1,7 +1,7 @@
 import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/Component.js';
-import { Button } from '/src/widgets/Button.js';
-import { InputAddress } from '/src/widgets/Input.js';
+import { Button } from '/src/widgets/button.js';
+import { InputAddress } from '/src/widgets/input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';

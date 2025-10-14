@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '../../widgets/Button.js';
+import { Button } from '/src/widgets/button.js';
 
 export class SheetAccountReceiveNFT extends Component {
 

@@ -1,6 +1,6 @@
 import { Component } from '/src/utils/Component.js';
-import { Button } from '/src/widgets/Button.js';
-import { InputText, RecoveryPhrase } from '/src/widgets/Input.js';
+import { Button } from '/src/widgets/button.js';
+import { InputText, RecoveryPhrase } from '/src/widgets/input.js';
 import { genWalletName } from '/src/utils/General.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/Keys.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';

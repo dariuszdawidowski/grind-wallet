@@ -13,7 +13,7 @@ Object.assign(testBanner.style, {
     color: '#ffffff',
     fontWeight: 'bold',
     textAlign: 'center',
-    padding: '8px 0',
+    padding: '4px 0',
     zIndex: '9999'
 });
 document.body.insertBefore(testBanner, document.body.firstChild);

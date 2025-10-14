@@ -4,6 +4,11 @@ Internet Computer cryptocurrency wallet as a browser plugin.
 Copyright (C) 2024-2025 Dariusz Dawidowski
 
 
+## About
+
+This is a source code repository, if you are looking for a ready-made plugin, install only from Google Chrome Webstore [https://chromewebstore.google.com/detail/grind-wallet/homnkdmbblppiocmjpilekoeppjdhmmn].
+
+
 ## Compatibility
 
 Currently, it only works in Chrome and in browsers that support compatible extensions (like Opera).
@@ -11,7 +16,7 @@ Currently, it only works in Chrome and in browsers that support compatible exten
 
 ## Installation
 
-Manually copy all graphics to the assets/ directory as they are not part of the open source wallet source code.
+Manually copy all graphics to the assets/ directory as they are not part of the open source wallet code.
 
 ```bash
 # Install dependencies
@@ -93,4 +98,4 @@ MIT License
 
 ## Additional licenes
 
-Additional licenses are generated in the popup.X.js.LICENSE.txt file during NodeJS compilation.
+Additional licenses are generated in the *.js.LICENSE.txt file(s) during NodeJS compilation.

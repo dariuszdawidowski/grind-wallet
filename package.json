@@ -1,11 +1,11 @@
 {
   "name": "grind-wallet",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/App.js",
   "scripts": {
     "build": "npx webpack",
-    "build:dev": "npx webpack --mode development",
+    "build:dev": "DEV_MODE=1 npx webpack --mode development",
     "build:test": "TEST_MODE=1 npx webpack --mode development",
     "deploy": "npm run build && node deploy.js"
   },

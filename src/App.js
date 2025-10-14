@@ -54,7 +54,7 @@ class GrindWalletPlugin {
         this.ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
         // Launch
-        document.addEventListener('DOMContentLoaded', () => { this.init(); }, {once: true});
+        document.addEventListener('DOMContentLoaded', () => { this.init(); }, { once: true });
 
     }
 

@@ -53,12 +53,21 @@ body {
 }
 
 /* Checkbox */
+
 input[type="checkbox"] {
     margin: 10px;
     scale: 120%;
 }
 
 input[type="checkbox"]:hover {
+    cursor: pointer;
+}
+
+/* Copy icon */
+
+.copy {
+    width: 16px;
+    margin-left: 10px;
     cursor: pointer;
 }
 
@@ -632,6 +641,12 @@ hr {
     text-align: center;
 }
 
+#sheet .content .form .line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #sheet .content .form .button-description {
     font-size: 10px;
     text-align: center;
@@ -658,10 +673,18 @@ hr {
     margin: 0 auto 12px auto;
 }
 
-#sheet .content .form .preview-nft svg, #sheet .content .form .preview-nft image {
+#sheet .content .form .preview-nft svg,
+#sheet .content .form .preview-nft image,
+#sheet .content .form .nft svg,
+#sheet .content .form .nft image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#sheet .content .form .nft {
+    width: 80%;
+    margin: 0 auto;
 }
 
 /* Effects */

@@ -3,6 +3,7 @@ import { Button, ButtIcon, ButtLink } from '/src/widgets/Button.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 import { SheetAccountSendNFT } from '/src/pages/account/SendNFT.js';
 import { SheetAccountReceiveNFT } from '/src/pages/account/ReceiveNFT.js';
+import { Copy } from '../../widgets/copy.js';
 
 export class SheetNFTDetails extends Component {
 
@@ -17,12 +18,55 @@ export class SheetNFTDetails extends Component {
 
         // NFT info {collection, id, standard, thumbnail} 
         this.nft = args.nft;
+        console.log(this.nft);
 
         // Build
         this.element.classList.add('form');
 
+        // Image
+        this.image = document.createElement('div');
+        this.image.classList.add('nft');
+        this.element.append(this.image);
+        (async () => {
+            try {
+                const thumbnail = await loadImage(this.nft.thumbnail);
+                this.image.innerHTML = thumbnail;
+            }
+            catch(error) {}
+        })();
+
+        // Canister ID
+        const canisterTitle = document.createElement('h2');
+        canisterTitle.style.marginTop = '1.5em';
+        canisterTitle.style.marginBottom = '0.5em';
+        canisterTitle.innerText = 'Collection canister ID';
+        this.element.append(canisterTitle);
+        const canisterElement = document.createElement('div');
+        canisterElement.classList.add('line');
+        canisterElement.innerText = this.nft.collection;
+        this.element.append(canisterElement);
+
+        // Canister ID copy
+        const canisterCopy = new Copy({ text: this.nft.collection });
+        canisterElement.append(canisterCopy.element);
+
+        // Token ID
+        const tokenTitle = document.createElement('h2');
+        tokenTitle.style.marginBottom = '0.5em';
+        tokenTitle.innerText = 'NFT token ID';
+        this.element.append(tokenTitle);
+        const tokenElement = document.createElement('div');
+        tokenElement.classList.add('line');
+        tokenElement.innerText = this.nft.id;
+        this.element.append(tokenElement);
+
+        // Token ID copy
+        const tokenCopy = new Copy({ text: this.nft.id });
+        tokenElement.append(tokenCopy.element);
+
         // Buttons
         const buttonbar = document.createElement('div');
+        buttonbar.style.marginTop = '20px';
         buttonbar.classList.add('buttonbar');
         this.element.append(buttonbar);
         this.widget.button = {

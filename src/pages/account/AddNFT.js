@@ -5,6 +5,10 @@ import { InputAddress } from '/src/widgets/input.js';
 import { saveImage } from '/src/utils/ImageCache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/NFT_EXT.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
+import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/NFT_ICRC37.did.js';
+import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/NFT_ICRC7.js';
+import { idlFactory as idlFactoryDIP721 } from '/src/blockchain/InternetComputer/candid/NFT_DIP721_v1.did.js';
+import { NFT_DIP721 } from '/src/blockchain/InternetComputer/NFT_DIP721_v1.js';
 import { NFT } from '/src/blockchain/NFT.js';
 import { isValidCanisterId } from '/src/utils/General.js';
 
@@ -21,8 +25,7 @@ export class SheetAddCustomNFT extends Component {
 
         // Token actor and metadata fetched from canister
         this.actor = null;
-        this.metadata = null;
-        this.nftEXT = null;
+        this.nft = null;
 
         // Build
         this.element.classList.add('form');
@@ -31,7 +34,7 @@ export class SheetAddCustomNFT extends Component {
                 Enter the <b>Canister ID</b> and <b>Token ID</b><br>
                 of the Internet Computer blockchain NFT.
             </h3>
-            <h3>Accepted standard: <b>EXT</b></h3>
+            <h3>Accepted standards: <b>ICRC-7</b>/<b>37</b>, <b>EXT</b></h3>
         `;
 
         // Address field
@@ -85,17 +88,19 @@ export class SheetAddCustomNFT extends Component {
         }
 
         // First pass (fetch actor+metadata & verify)
-        if (!this.actor && !this.metadata) {
+        if (!this.actor) {
             this.widget.submit.busy(true);
             const info = await this.connectCanister(canisterId);
             if (info.valid) {
                 this.actor = info.actor;
-                this.metadata = info.metadata;
-                this.nftEXT = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
-                const ownEXT = await this.nftEXT.isOwner({ token: tokenId });
-                if (ownEXT) {
-                    const thumbEXT = await this.nftEXT.getThumbnail({ token: tokenId });
-                    this.widget.info.innerHTML = thumbEXT;
+                this.standard = info.standard;
+                if (this.standard == 'EXT') this.nft = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
+                else if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ agent: this.wallet.agent, collection: canisterId });
+                else if (this.standard == 'DIP-721') this.nft = new NFT_DIP721({ agent: this.wallet.agent, collection: canisterId });
+                const own = await this.nft.isOwner({ token: tokenId });
+                if (own) {
+                    const thumb = await this.nft.getThumbnail({ token: tokenId });
+                    this.widget.info.innerHTML = thumb;
                     this.widget.info.style.height = '80px';
                     this.widget.submit.set('Add to my wallet');
                 }
@@ -103,7 +108,6 @@ export class SheetAddCustomNFT extends Component {
                     this.widget.address.enable();
                     this.widget.token.enable();
                     this.actor = null;
-                    this.metadata = null;
                     alert('You do not own this NFT');
                 }
             }
@@ -111,7 +115,6 @@ export class SheetAddCustomNFT extends Component {
                 this.widget.address.enable();
                 this.widget.token.enable();
                 this.actor = null;
-                this.metadata = null;
                 alert('Unable to fetch or recognize NFT');
             }
             this.widget.submit.busy(false);
@@ -122,15 +125,15 @@ export class SheetAddCustomNFT extends Component {
             // Add NFT to the wallet
             const nftId = `${canisterId}:${tokenId}`;
             if (!(nftId in this.wallet.nfts)) {
-                const imgEXT = await this.nftEXT.getMetadata({ token: tokenId, type: 'image' })
-                await saveImage(`nft:${nftId}`, imgEXT);
+                const img = await this.nft.getImage({ token: tokenId });
+                await saveImage(`nft:${nftId}`, img);
                 this.wallet.nfts[nftId] = new NFT({
                     principal: this.wallet.principal,
                     agent: this.wallet.agent,
                     collection: canisterId,
                     id: tokenId,
                     thumbnail: `nft:${nftId}`,
-                    standard: 'EXT'
+                    standard: this.standard
                 });
                 this.app.save('wallets', this.app.user.wallets);
                 this.app.page('accounts');
@@ -141,34 +144,55 @@ export class SheetAddCustomNFT extends Component {
                 this.widget.address.enable();
                 this.widget.token.enable();
                 this.actor = null;
-                this.metadata = null;
                 alert('NFT already on the list');
             }
         }
 
     }
 
+    /**
+     * Connect to canister and detect standard
+     * @param {string} canisterId 
+     * @returns { valid: bool, standard: string, actor: Actor, metadata: object }
+     */
+
     async connectCanister(canisterId) {
         let actor = null
-        let metadata = null;
+        let standard = null;
+        let valid = false;
+
+        // Try ICRC-7 standard
+        try {
+            actor = Actor.createActor(idlFactoryICRC37, {
+                agent: this.wallet.agent,
+                canisterId,
+            });
+            const standards = await actor.icrc10_supported_standards();
+            if (Array.isArray(standards) && standards.some(std => std.name === 'ICRC-7')) {
+                return { valid: true, standard: 'ICRC-7', actor };
+            }
+        }
+        catch (_) {
+            actor = null;
+        }
 
         // Try EXT standard
-        // try {
+        try {
             actor = Actor.createActor(idlFactoryEXT, {
                 agent: this.wallet.agent,
                 canisterId,
             });
-            // metadata = await actor.metadata({});
-        // }
-        // catch () {}
+            const standards = await actor.extensions();
+            if (Array.isArray(standards) && standards.includes('@ext/nonfungible')) {
+                return { valid: true, standard: 'EXT', actor };
+            }
+        }
+        catch (_) {
+            actor = null;
+        }
 
         // OK
-        return {
-            valid: true,
-            standard: 'EXT',
-            actor,
-            metadata
-        };
+        return { valid, standard, actor };
     }
 
 }

@@ -32,7 +32,7 @@ export class NFT_ICRC7 {
 
     async isOwner({ token }) {
         const principal = await this.agent.getPrincipal();
-        const result = await this.actor.icrc7_owner_of([token]);
+        const result = await this.actor.icrc7_owner_of([BigInt(token)]);
 
         if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0) {
             if (result[0][0].owner.toString() === principal.toString()) return true;
@@ -72,7 +72,7 @@ export class NFT_ICRC7 {
 
     async getMetadata({ token, type }) {
 
-        const result = await this.actor.icrc7_token_metadata([token]);
+        const result = await this.actor.icrc7_token_metadata([BigInt(token)]);
 
         if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0) {
             const metadata = Object.fromEntries(result[0][0]);

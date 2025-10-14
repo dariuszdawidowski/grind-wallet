@@ -18,7 +18,6 @@ export class SheetNFTDetails extends Component {
 
         // NFT info {collection, id, standard, thumbnail} 
         this.nft = args.nft;
-        console.log(this.nft);
 
         // Build
         this.element.classList.add('form');

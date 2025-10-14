@@ -16,9 +16,7 @@ import { memo2Binary } from '/src/utils/General.js';
 export async function icpLedgerBalance() {
 
     try {
-
         return await this.actor.accountBalance({ accountIdentifier: this.account });
-
     }
     catch (error) {
         console.error(error);
@@ -34,9 +32,7 @@ export async function icpLedgerBalance() {
 export async function icrcLedgerBalance() {
 
     try {
-
         return await this.actor.balance({ owner: Principal.fromText(this.principal) });
-
     }
     catch (error) {
         console.error(error);

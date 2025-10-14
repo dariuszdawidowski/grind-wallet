@@ -181,7 +181,12 @@ export class SheetAccountDetails extends Component {
         if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
             let html = '';
-            if (this.coin) {
+            // ICP logo
+            if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+                html += `<img src="assets/icp-logo.svg" style="width: 40px; margin-right: 10px;">`;
+            }
+            // Custom token logo
+            else if (this.coin) {
                 if (this.coin.startsWith('<svg')) {
                     html += `<img src="data:image/svg+xml;utf8,${encodeURIComponent(this.coin)}" style="width: 40px; margin-right: 10px;">`;
                 }
@@ -195,4 +200,3 @@ export class SheetAccountDetails extends Component {
     }
 
 }
-

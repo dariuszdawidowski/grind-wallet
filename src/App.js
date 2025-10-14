@@ -342,13 +342,6 @@ class GrindWalletPlugin {
 }
 
 /**
- * Global interface
- */
-
-// window.ic.grind = {
-// };
-
-/**
  * Start
  */
 

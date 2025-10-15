@@ -39,8 +39,11 @@ export class SheetAddCustomToken extends Component {
         this.append(this.widget.address);
 
         // Token info pocket
+        this.widget.preview = document.createElement('div');
+        this.widget.preview.classList.add('preview-token');
+        this.element.append(this.widget.preview);
         this.widget.info = document.createElement('div');
-        this.widget.info.classList.add('preview-token');
+        this.widget.info.classList.add('info-token');
         this.element.append(this.widget.info);
 
         // Button
@@ -73,11 +76,10 @@ export class SheetAddCustomToken extends Component {
             if (info.valid) {
                 this.actor = info.actor;
                 this.metadata = info.metadata;
-                this.widget.info.innerHTML = '';
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
-                    this.widget.info.innerHTML += `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
+                    this.widget.preview.innerHTML = `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
                 }
-                this.widget.info.innerHTML += `<div style="font-size: 14px; font-weight: 500;">${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text})${info.standard ? ` [${info.standard}]` : ''}</div>`;
+                this.widget.info.innerHTML = `${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text})${info.standard ? ` [${info.standard}]` : ''}`;
                 this.widget.submit.set('Add to my wallet');
             }
             else {
@@ -120,6 +122,7 @@ export class SheetAddCustomToken extends Component {
     async connectCanister(canisterId) {
         let actor = null
         let metadata = null;
+        let standard = null;
 
         // Try ICRC-1 ledger standard
         try {
@@ -129,13 +132,13 @@ export class SheetAddCustomToken extends Component {
             });
             const data = await actor.metadata({});
             if (data) metadata = Object.fromEntries(data);
+            standard = 'ICRC-1/2';
         }
         catch (error) {
             return { valid: false, error: 'Unable to connect canister' };
         }
 
         // Supported standards
-        let standard = null;
         try {
             const standards = await actor.service.icrc10_supported_standards();
             const hasICRC1 = standards.some(item => item.name === 'ICRC-1');

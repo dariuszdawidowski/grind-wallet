@@ -39,20 +39,23 @@ export class SheetAddCustomNFT extends Component {
 
         // Address field
         this.widget.address = new InputAddress({
-            placeholder: 'Canister ID'
+            placeholder: 'Canister ID (Collection)'
         });
         this.append(this.widget.address);
 
         // NFT id field
         this.widget.token = new InputAddress({
-            placeholder: 'NFT ID'
+            placeholder: 'NFT ID (Token)'
         });
         this.widget.token.element.style.marginTop = '0';
         this.append(this.widget.token);
 
         // NFT info pocket
+        this.widget.preview = document.createElement('div');
+        this.widget.preview.classList.add('preview-nft');
+        this.element.append(this.widget.preview);
         this.widget.info = document.createElement('div');
-        this.widget.info.classList.add('preview-nft');
+        this.widget.info.classList.add('info-nft');
         this.element.append(this.widget.info);
 
         // Button
@@ -100,8 +103,9 @@ export class SheetAddCustomNFT extends Component {
                 const own = await this.nft.isOwner({ token: tokenId });
                 if (own) {
                     const thumb = await this.nft.getThumbnail({ token: tokenId });
-                    this.widget.info.innerHTML = thumb;
-                    this.widget.info.style.height = '80px';
+                    this.widget.preview.innerHTML = thumb;
+                    this.widget.preview.style.height = '80px';
+                    this.widget.info.innerHTML = `${info.collection.name ? info.collection.name : ''}${info.collection.symbol ? ` (${info.collection.symbol})` : ''}${info.standard ? ` [${info.standard}]` : ''}`;
                     this.widget.submit.set('Add to my wallet');
                 }
                 else  {
@@ -160,6 +164,10 @@ export class SheetAddCustomNFT extends Component {
         let actor = null
         let standard = null;
         let valid = false;
+        let collection = {
+            name: null,
+            symbol: null
+        }
 
         // Try ICRC-7 standard
         try {
@@ -168,8 +176,11 @@ export class SheetAddCustomNFT extends Component {
                 canisterId,
             });
             const standards = await actor.icrc10_supported_standards();
+            const name = await actor.icrc7_name();
+            const symbol = await actor.icrc7_symbol();
             if (Array.isArray(standards) && standards.some(std => std.name === 'ICRC-7')) {
-                return { valid: true, standard: 'ICRC-7', actor };
+                collection = { name, symbol };
+                return { valid: true, standard: 'ICRC-7', actor, collection };
             }
         }
         catch (_) {
@@ -184,7 +195,7 @@ export class SheetAddCustomNFT extends Component {
             });
             const standards = await actor.extensions();
             if (Array.isArray(standards) && standards.includes('@ext/nonfungible')) {
-                return { valid: true, standard: 'EXT', actor };
+                return { valid: true, standard: 'EXT', actor, collection };
             }
         }
         catch (_) {
@@ -192,7 +203,7 @@ export class SheetAddCustomNFT extends Component {
         }
 
         // OK
-        return { valid, standard, actor };
+        return { valid, standard, actor, collection };
     }
 
 }

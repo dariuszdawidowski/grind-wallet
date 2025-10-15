@@ -675,6 +675,14 @@ hr {
     margin: 0 auto 12px auto;
 }
 
+#sheet .content .form .info-token,
+#sheet .content .form .info-nft {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 #sheet .content .form .preview-nft svg,
 #sheet .content .form .preview-nft image,
 #sheet .content .form .nft svg,

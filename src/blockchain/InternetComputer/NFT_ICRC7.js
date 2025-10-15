@@ -51,7 +51,7 @@ export class NFT_ICRC7 {
 
         const result = await this.actor.icrc7_transfer([{
             to: { owner: Principal.fromText(to), subaccount: [] },
-            token_id: token,
+            token_id: BigInt(token),
             memo: [],
             from_subaccount: [],
             created_at_time: []

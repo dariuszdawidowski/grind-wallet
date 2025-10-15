@@ -1,8 +1,6 @@
 /**
- * Component v 0.7.4
+ * Component v 0.9.0
  * Minimalistic DOM component for JavaScript
- * Copyright (C) 2024 Dariusz Dawidowski
- * Licence: MIT
  */
 
 export class Component {
@@ -40,6 +38,11 @@ export class Component {
         // Create DOM element
         else {
             this.element = document.createElement((args.type !== undefined) ? args.type : 'div');
+        }
+
+        // Optional classList
+        if ('classList' in args) {
+            this.element.classList.add(...args.classList);
         }
 
         // ID

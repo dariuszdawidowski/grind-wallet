@@ -49,7 +49,7 @@ export class PageAcceptTerms extends Component {
             click: () => {
                 if (agree.checked()) {
                     chrome.storage.local.set({ terms: true });
-                    this.app.page('register');
+                    this.app.page('register-password');
                 }
             }
         });

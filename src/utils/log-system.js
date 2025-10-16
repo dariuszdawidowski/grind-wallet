@@ -15,7 +15,7 @@ export class LogSystem {
         
         try {
             chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
-                console.log(`Storage usage: ${(bytesInUse / (1024 * 1024)).toFixed(2)}MB / 5MB`);
+                if (process.env.DEV_MODE) console.log(`Storage usage: ${(bytesInUse / (1024 * 1024)).toFixed(2)}MB / 5MB`);
                 // If approaching the limit, clean up old entries
                 if (bytesInUse > this.STORAGE_LIMIT_WARNING) {
                     console.warn('Storage is approaching its limit, cleaning up old logs');

@@ -109,6 +109,20 @@ export class SheetAccountSend extends Component {
             }).then(result => {
                 this.submit.busy(false);
                 if ('OK' in result) {
+                    // Log transaction
+                    this.app.log.add({
+                        type: 'send.token',
+                        from: this.wallet.principal,
+                        to: {
+                            principal: principal.toText(),
+                            account: account.toHex(),
+                        },
+                        token: {
+                            canister: this.canisterId,
+                            amount: this.widget.amount.get()
+                        }
+                    });
+                    // Show success
                     this.submit.set('OK');
                     this.sent = true;
                 }

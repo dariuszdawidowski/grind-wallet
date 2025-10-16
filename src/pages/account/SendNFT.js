@@ -74,13 +74,12 @@ export class SheetAccountSendNFT extends Component {
             if (result === true) {
                 // Log transaction
                 this.app.log.add({
-                    type: 'transfer.nft',
+                    type: 'send.nft',
                     from: this.wallet.principal,
                     to: to,
                     nft: {
-                        collection: this.nft.collection,
-                        id: this.nft.id,
-                        standard: this.nft.standard
+                        canister: this.nft.collection,
+                        id: this.nft.id
                     }
                 });
                 // Add to own wallet if exists

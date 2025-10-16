@@ -7,8 +7,6 @@ import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/ca
 import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
 import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/NFT_ICRC37.did.js';
 import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/NFT_ICRC7.js';
-import { idlFactory as idlFactoryDIP721 } from '/src/blockchain/InternetComputer/candid/NFT_DIP721_v1.did.js';
-import { NFT_DIP721 } from '/src/blockchain/InternetComputer/NFT_DIP721_v1.js';
 import { NFT } from '/src/blockchain/NFT.js';
 import { isValidCanisterId } from '/src/utils/General.js';
 
@@ -97,9 +95,8 @@ export class SheetAddCustomNFT extends Component {
             if (info.valid) {
                 this.actor = info.actor;
                 this.standard = info.standard;
-                if (this.standard == 'EXT') this.nft = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
-                else if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ agent: this.wallet.agent, collection: canisterId });
-                else if (this.standard == 'DIP-721') this.nft = new NFT_DIP721({ agent: this.wallet.agent, collection: canisterId });
+                if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ agent: this.wallet.agent, collection: canisterId });
+                else if (this.standard == 'EXT') this.nft = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
                 // Display preview
                 const thumb = await this.nft.getThumbnail({ token: tokenId });
                 this.widget.preview.innerHTML = thumb;

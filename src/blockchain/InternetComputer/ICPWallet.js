@@ -22,7 +22,7 @@ export class ICPWallet extends Wallet {
         const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
         // Defaults
-        if (!this.name) this.name = genWalletName(this.app.user.wallets, 'ICP');
+        if (!this.name) this.name = genWalletName(this.app.wallets, 'ICP');
         if (!this.blockchain) this.blockchain = 'Internet Computer';
         if (!this.tokens) this.tokens = {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}};
 

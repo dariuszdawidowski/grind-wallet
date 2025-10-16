@@ -87,9 +87,10 @@ class GrindWalletPlugin {
         // User credentials
         this.user = {
             password: null,
-            // Wallets list { ICPWallet, ... }
-            wallets: {}
         };
+
+        // Wallets list { ICPWallet, ... }
+        this.wallets = {};
 
         // Actor cache
         this.cache = new ObjectCache();
@@ -200,7 +201,7 @@ class GrindWalletPlugin {
                 this.append(this.current);
                 break;
             case 'accounts':
-                if (Object.keys(this.user.wallets).length === 0) {
+                if (Object.keys(this.wallets).length === 0) {
                     this.current = new PageEmpty({app: this});
                     this.append(this.current);
                 }
@@ -237,7 +238,7 @@ class GrindWalletPlugin {
             for (const [walletId, wallet] of Object.entries(data)) {
 
                 // Create wallet
-                this.user.wallets[walletId] = new ICPWallet({
+                this.wallets[walletId] = new ICPWallet({
                     blockchain: wallet.blockchain,
                     name: wallet.name,
                     publicKey: wallet.public,
@@ -307,7 +308,7 @@ class GrindWalletPlugin {
 
         // Wallets
         if (resource == 'wallets') {
-            for (const wallet of Object.values(this.user.wallets)) {
+            for (const wallet of Object.values(this.wallets)) {
                 try {
                     await wallet.rebuild(this.user.password);
                 }

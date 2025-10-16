@@ -105,7 +105,7 @@ export class SheetAddCustomToken extends Component {
                 if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                     saveImage(`token:${canisterId}`, this.metadata['icrc1:logo'].Text);
                 }
-                this.app.save('wallets', this.app.user.wallets);
+                this.app.save('wallets', this.app.wallets);
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

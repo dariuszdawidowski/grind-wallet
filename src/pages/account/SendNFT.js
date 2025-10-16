@@ -74,8 +74,8 @@ export class SheetAccountSendNFT extends Component {
             if (result === true) {
                 this.sent = true;
                 this.widget.submit.set('OK');
-                delete this.app.user.wallets[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
-                this.app.save('wallets', this.app.user.wallets);
+                delete this.app.wallets[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
+                this.app.save('wallets', this.app.wallets);
             }
             else {
                 alert('Transfer error');

@@ -132,8 +132,8 @@ export class SheetAccountDetails extends Component {
                 // ICP
                 if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
-                        delete this.app.user.wallets[this.wallet.public]
-                        this.app.save('wallets', this.app.user.wallets);
+                        delete this.app.wallets[this.wallet.public]
+                        this.app.save('wallets', this.app.wallets);
                         this.app.page('accounts');
                         this.app.sheet.clear();
                         this.app.sheet.hide();
@@ -143,8 +143,8 @@ export class SheetAccountDetails extends Component {
                 // Token
                 else {
                     if (confirm('Delete this token?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
-                        delete this.app.user.wallets[this.wallet.public].tokens[this.canisterId];
-                        this.app.save('wallets', this.app.user.wallets);
+                        delete this.app.wallets[this.wallet.public].tokens[this.canisterId];
+                        this.app.save('wallets', this.app.wallets);
                         this.app.page('accounts');
                         this.app.sheet.clear();
                         this.app.sheet.hide();

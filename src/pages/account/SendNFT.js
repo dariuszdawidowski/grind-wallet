@@ -91,7 +91,7 @@ export class SheetAccountSendNFT extends Component {
                         agent: toOwnWallet.agent,
                         collection: this.nft.collection,
                         id: this.nft.id,
-                        thumbnail: `nft:${this.nft.id}`,
+                        thumbnail: this.nft.thumbnail,
                         standard: this.nft.standard
                     });
                 }

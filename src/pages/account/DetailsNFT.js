@@ -130,29 +130,57 @@ export class SheetNFTDetails extends Component {
             classList: ['end'],
             click: () => {
                 if (confirm('Delete this NFT?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
-                    delete this.app.wallets.list[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
-                    // Log transaction
-                    this.app.log.add({
-                        type: 'del.nft',
-                        pid: this.wallet.principal,
-                        nft: {
-                            canister: this.nft.collection,
-                            id: this.nft.id
-                        }
-                    });
-                    // Save wallets
-                    this.app.saveWallets();
+                    this.delete();
                     this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();
+
                 }
             }
         }));
 
+        // Check ownership
+        this.nft.cache().then(() => {
+            this.nft.service.amIOwner({ token: this.nft.id }).then(own => {
+                if (!own) {
+                    if (confirm('You are not the owner of this NFT anymore. Do you want to remove it from the list?')) {
+                        this.delete();
+                        this.app.page('accounts');
+                        this.app.sheet.clear();
+                        this.app.sheet.hide();
+                    }
+                }
+            });
+        });
+
     }
+
+    /**
+     * Update data
+     */
 
     async update() {
         await this.nft.cache();
+    }
+
+    /**
+     * Delete NFT from the list
+     */
+
+    delete() {
+        // Remove from current wallet
+        delete this.app.wallets.list[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
+        // Log transaction
+        this.app.log.add({
+            type: 'del.nft',
+            pid: this.wallet.principal,
+            nft: {
+                canister: this.nft.collection,
+                id: this.nft.id
+            }
+        });
+        // Save wallets
+        this.app.saveWallets();
     }
 
 }

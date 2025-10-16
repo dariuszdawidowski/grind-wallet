@@ -103,7 +103,7 @@ export class SheetAddCustomNFT extends Component {
                 this.widget.preview.style.height = '80px';
                 this.widget.info.innerHTML = `${info.collection.name ? info.collection.name : ''}${info.collection.symbol ? ` (${info.collection.symbol})` : ''}${info.standard ? ` [${info.standard}]` : ''}`;
                 // Check ownership
-                const own = await this.nft.isOwner({ token: tokenId });
+                const own = await this.nft.amIOwner({ token: tokenId });
                 if (own) {
                     this.widget.submit.set('Add to my wallet');
                 }

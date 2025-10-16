@@ -26,11 +26,11 @@ export class NFT_ICRC7 {
     }
 
     /**
-     * Is agent owner of the given NFT
+     * Is agent identity owner of the given NFT
      * @param token: Number - token id
      */
 
-    async isOwner({ token }) {
+    async amIOwner({ token }) {
         const principal = await this.agent.getPrincipal();
         const result = await this.actor.icrc7_owner_of([BigInt(token)]);
 

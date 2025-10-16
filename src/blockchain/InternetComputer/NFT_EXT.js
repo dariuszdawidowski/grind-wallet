@@ -30,11 +30,11 @@ export class NFT_EXT {
     }
 
     /**
-     * Is agent owner of the given NFT
+     * Is agent identity owner of the given NFT
      * @param token: string - token id
      */
 
-    async isOwner({ token }) {
+    async amIOwner({ token }) {
         const principal = await this.agent.getPrincipal();
         const result = await this.actor.balance({ token: token, user: { principal } });
 

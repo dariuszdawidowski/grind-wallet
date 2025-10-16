@@ -125,8 +125,7 @@ export class SheetAddCustomNFT extends Component {
         // Second pass (accept)
         else {
             // Add NFT to the wallet
-            const nftId = `${canisterId}:${tokenId}`;
-            if (!(nftId in this.wallet.nfts)) {
+            if (!(`${canisterId}:${tokenId}` in this.wallet.nfts)) {
                 // Log transaction
                 this.app.log.add({
                     type: 'add.nft',
@@ -138,14 +137,14 @@ export class SheetAddCustomNFT extends Component {
                 });
                 // Cache image and save
                 const img = await this.nft.getImage({ token: tokenId });
-                await saveImage(`nft:${nftId}`, img);
+                await saveImage(`nft:${canisterId}:${tokenId}`, img);
                 // Add to wallet
-                this.wallet.nfts[nftId] = new NFT({
+                this.wallet.nfts[`${canisterId}:${tokenId}`] = new NFT({
                     principal: this.wallet.principal,
                     agent: this.wallet.agent,
                     collection: canisterId,
                     id: tokenId,
-                    thumbnail: `nft:${nftId}`,
+                    thumbnail: `nft:${canisterId}:${tokenId}`,
                     standard: this.standard
                 });
                 // Save wallets

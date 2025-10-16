@@ -134,7 +134,6 @@ export class SheetNFTDetails extends Component {
                     this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();
-
                 }
             }
         }));

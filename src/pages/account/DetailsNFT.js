@@ -131,7 +131,7 @@ export class SheetNFTDetails extends Component {
             click: () => {
                 if (confirm('Delete this NFT?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
                     delete this.app.wallets.list[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
-                    this.app.save('wallets', this.app.wallets.list);
+                    this.app.saveWallets();
                     this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();

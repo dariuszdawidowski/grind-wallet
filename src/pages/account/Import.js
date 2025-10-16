@@ -68,7 +68,7 @@ export class SheetImportAccount extends Component {
             secret: secret
         });
         await this.app.wallets.list[wallet.public].rebuild(this.app.user.password);
-        this.app.save('wallets', this.app.wallets.list);
+        this.app.saveWallets();
     }
 
 }

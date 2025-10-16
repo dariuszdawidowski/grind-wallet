@@ -88,7 +88,7 @@ class SheetNewAccountPhrase extends Component {
                     secret: args.secret
                 });
                 await this.app.wallets.list[args.wallet.public].rebuild(this.app.user.password);
-                this.app.save('wallets', this.app.wallets.list);
+                this.app.saveWallets();
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

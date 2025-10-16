@@ -100,19 +100,20 @@ export class SheetAddCustomNFT extends Component {
                 if (this.standard == 'EXT') this.nft = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
                 else if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ agent: this.wallet.agent, collection: canisterId });
                 else if (this.standard == 'DIP-721') this.nft = new NFT_DIP721({ agent: this.wallet.agent, collection: canisterId });
+                // Display preview
+                const thumb = await this.nft.getThumbnail({ token: tokenId });
+                this.widget.preview.innerHTML = thumb;
+                this.widget.preview.style.height = '80px';
+                this.widget.info.innerHTML = `${info.collection.name ? info.collection.name : ''}${info.collection.symbol ? ` (${info.collection.symbol})` : ''}${info.standard ? ` [${info.standard}]` : ''}`;
+                // Check ownership
                 const own = await this.nft.isOwner({ token: tokenId });
                 if (own) {
-                    const thumb = await this.nft.getThumbnail({ token: tokenId });
-                    this.widget.preview.innerHTML = thumb;
-                    this.widget.preview.style.height = '80px';
-                    this.widget.info.innerHTML = `${info.collection.name ? info.collection.name : ''}${info.collection.symbol ? ` (${info.collection.symbol})` : ''}${info.standard ? ` [${info.standard}]` : ''}`;
                     this.widget.submit.set('Add to my wallet');
                 }
                 else  {
-                    this.widget.address.enable();
-                    this.widget.token.enable();
                     this.actor = null;
-                    alert('You do not own this NFT');
+                    this.widget.submit.set('You do not own this NFT');
+                    this.widget.submit.disable();
                 }
             }
             else {
@@ -139,7 +140,7 @@ export class SheetAddCustomNFT extends Component {
                     thumbnail: `nft:${nftId}`,
                     standard: this.standard
                 });
-                this.app.save('wallets', this.app.wallets.list);
+                this.app.saveWallets();
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

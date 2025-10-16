@@ -56,6 +56,16 @@ export class Wallets {
     }
 
     /**
+     * Get wallet by principal ID
+     * @param {string} principal 
+     * @returns {Wallet | null}
+     */
+
+    getByPrincipal(principal) {
+        return Object.values(this.list).find(wallet => wallet.principal === principal) || null;
+    }
+
+    /**
      * Count of wallets
      * @returns {number}
      */

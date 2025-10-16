@@ -341,6 +341,14 @@ class GrindWalletPlugin {
 
     }
 
+    /**
+     * Shortcut to save wallets
+     */
+
+    saveWallets() {
+        this.save('wallets', this.wallets.list);
+    }
+
 }
 
 /**

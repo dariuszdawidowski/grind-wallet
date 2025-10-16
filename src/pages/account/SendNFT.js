@@ -72,10 +72,24 @@ export class SheetAccountSendNFT extends Component {
         }).then(result => {
             this.widget.submit.busy(false);
             if (result === true) {
+                // Add to own wallet if exists
+                const toOwnWallet = this.app.wallets.getByPrincipal(to);
+                if (toOwnWallet) {
+                    toOwnWallet.nfts[this.nft.id] = new NFT({
+                        principal: toOwnWallet.principal,
+                        agent: toOwnWallet.agent,
+                        collection: this.nft.collection,
+                        id: this.nft.id,
+                        thumbnail: `nft:${this.nft.id}`,
+                        standard: this.nft.standard
+                    });
+                }
+                // Remove from current wallet
+                delete this.app.wallets.get(this.wallet.public)?.nfts[`${this.nft.collection}:${this.nft.id}`];
+                // Save changes
+                this.app.saveWallets();
                 this.sent = true;
                 this.widget.submit.set('OK');
-                delete this.app.wallets.list[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
-                this.app.save('wallets', this.app.wallets.list);
             }
             else {
                 alert('Transfer error');

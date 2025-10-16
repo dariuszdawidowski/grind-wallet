@@ -53,12 +53,18 @@ export class PageRegisterPassword extends Component {
             id: 'new-password-ok',
             text: 'Confirm',
             click: () => {
-                if (password.get() === passwordConfirm.get()) {
-                    if (isPasswordStrong(password.get())) {
+                const newPassword = password.get();
+                if (newPassword === passwordConfirm.get()) {
+                    if (isPasswordStrong(newPassword)) {
                         generateSalt().then(salt => {
-                            hashPassword(password.get(), salt).then(hashed => {
+                            hashPassword(newPassword, salt).then(hashed => {
                                 chrome.storage.local.set({ salt: salt, password: hashed }, () => {
-                                    this.app.page('login', {salt: salt, hash: hashed});
+                                    // Store password
+                                    this.app.user.password = newPassword;
+                                    // Save session
+                                    chrome.storage.session.set({ active: true, password: newPassword });
+                                    // Activate main page
+                                    this.app.page('accounts');
                                 });
                             });
                         });

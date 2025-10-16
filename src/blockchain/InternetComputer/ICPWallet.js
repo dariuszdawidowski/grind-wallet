@@ -5,7 +5,6 @@ import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
-import { genWalletName } from '/src/utils/General.js';
 import { Wallet } from '/src/blockchain/Wallet.js';
 import { ICPToken } from '/src/blockchain/InternetComputer/ICPToken.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/ICRCToken.js';
@@ -22,7 +21,7 @@ export class ICPWallet extends Wallet {
         const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
 
         // Defaults
-        if (!this.name) this.name = genWalletName(this.app.wallets.list, 'ICP');
+        if (!this.name) this.name = this.app.wallets.genNextWalletName('ICP');
         if (!this.blockchain) this.blockchain = 'Internet Computer';
         if (!this.tokens) this.tokens = {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}};
 

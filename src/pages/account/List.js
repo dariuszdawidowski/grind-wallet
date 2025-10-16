@@ -25,7 +25,7 @@ export class PageListAccounts extends Component {
         `;
 
         // Accounts
-        Object.values(this.app.wallets.list).forEach(wallet => {
+        this.app.wallets.get().forEach(wallet => {
 
             if ('rebuilded' in wallet) {
 

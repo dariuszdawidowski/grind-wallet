@@ -4,6 +4,7 @@
  */
 
 import '/src/popup.css';
+import { LogSystem } from './utils/log-system';
 import { Sheet } from '/src/widgets/Sheet.js';
 import { PageEmpty } from '/src/pages/account/Empty.js';
 import { PageListAccounts } from '/src/pages/account/List.js';
@@ -73,6 +74,9 @@ class GrindWalletPlugin {
      */
 
     init() {
+
+        // Initialize history system
+        this.log = new LogSystem();
 
         // Detect macOS
         if (navigator.userAgent.includes('Mac')) {

@@ -1,7 +1,7 @@
-import { Principal } from '@dfinity/principal';
 import { Component } from '/src/utils/Component.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
+import { NFT } from '/src/blockchain/NFT.js';
 
 export class SheetAccountSendNFT extends Component {
 
@@ -72,10 +72,22 @@ export class SheetAccountSendNFT extends Component {
         }).then(result => {
             this.widget.submit.busy(false);
             if (result === true) {
+                // Log transaction
+                this.app.log.add({
+                    type: 'transfer.nft',
+                    from: this.wallet.principal,
+                    to: to,
+                    nft: {
+                        collection: this.nft.collection,
+                        id: this.nft.id,
+                        standard: this.nft.standard
+                    }
+                });
                 // Add to own wallet if exists
                 const toOwnWallet = this.app.wallets.getByPrincipal(to);
                 if (toOwnWallet) {
                     toOwnWallet.nfts[this.nft.id] = new NFT({
+                        app: this.app,
                         principal: toOwnWallet.principal,
                         agent: toOwnWallet.agent,
                         collection: this.nft.collection,

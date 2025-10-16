@@ -4,7 +4,7 @@
 
 export class LogSystem {
     constructor() {
-        this.logs = [];
+        this.logs = {};
         this.STORAGE_KEY = 'transactions';
         this.STORAGE_LIMIT_WARNING = 4 * 1024 * 1024; // 4MB (80% limitu 5MB)
         this.initialized = this.initialize();
@@ -51,8 +51,8 @@ export class LogSystem {
     async add(entry) {
         await this.initialized;
         const timestamp = new Date().toISOString();
-        this.logs.push({ timestamp, entry });
-        console.log(`[${timestamp}] ${entry}`);
+        this.logs[timestamp] = entry;
+        if (process.env.DEV_MODE) console.log(`[${timestamp}]`, entry);
         await this.save();
     }
 
@@ -63,7 +63,7 @@ export class LogSystem {
 
     async clear() {
         await this.initialized;
-        this.logs = [];
+        this.logs = {};
         await this.save();
     }
     
@@ -74,29 +74,34 @@ export class LogSystem {
      * @param {number} options.maxEntries - Maximum number of entries to keep
      * @returns {number} - Number of deleted entries
      */
-
     async purge(options = {}) {
         await this.initialized;
-        const oldLength = this.logs.length;
+        const oldLength = Object.keys(this.logs).length;        
+        const newLogs = {};
+        let timestamps = Object.keys(this.logs);
         
         // Remove entries older than X days
         if (options.daysToKeep) {
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - options.daysToKeep);
             const cutoffTimestamp = cutoffDate.toISOString();            
-            this.logs = this.logs.filter(log => log.timestamp >= cutoffTimestamp);
-        }
-
-        // Limit to maximum number of entries
-        if (options.maxEntries && this.logs.length > options.maxEntries) {
-            this.logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            this.logs = this.logs.slice(0, options.maxEntries);
+            timestamps = timestamps.filter(timestamp => timestamp >= cutoffTimestamp);
         }
         
+        // Limit to maximum number of entries (sortujemy od najnowszych)
+        if (options.maxEntries && timestamps.length > options.maxEntries) {
+            timestamps.sort((a, b) => b.localeCompare(a));
+            timestamps = timestamps.slice(0, options.maxEntries);
+        }
+                
         // Save changes
+        timestamps.forEach(timestamp => {
+            newLogs[timestamp] = this.logs[timestamp];
+        });
+        this.logs = newLogs;
         await this.save();
 
         // Return the number of deleted entries
-        return oldLength - this.logs.length;
+        return oldLength - Object.keys(this.logs).length;
     }
 }

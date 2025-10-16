@@ -23,7 +23,7 @@ export class SheetImportAccount extends Component {
 
         // Name
         this.name = new InputText({
-            value: genWalletName(this.app.wallets, 'ICP'),
+            value: genWalletName(this.app.wallets.list, 'ICP'),
             placeholder: 'Wallet name'
         });
         this.append(this.name);
@@ -61,14 +61,14 @@ export class SheetImportAccount extends Component {
         const wallet = keysRecoverFromPhraseSecp256k1(this.phrase.get().join(' '));
         const encrypted = await encryptKey(wallet.private, this.app.user.password);
         const secret = serializeEncryptKey(encrypted);
-        this.app.wallets[wallet.public] = new ICPWallet({
+        this.app.wallets.list[wallet.public] = new ICPWallet({
             blockchain: 'Internet Computer',
             name: this.name.get(),
             publicKey: wallet.public,
             secret: secret
         });
-        await this.app.wallets[wallet.public].rebuild(this.app.user.password);
-        this.app.save('wallets', this.app.wallets);
+        await this.app.wallets.list[wallet.public].rebuild(this.app.user.password);
+        this.app.save('wallets', this.app.wallets.list);
     }
 
 }

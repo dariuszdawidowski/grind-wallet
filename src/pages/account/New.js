@@ -53,7 +53,7 @@ class SheetNewAccountPhrase extends Component {
 
         // Name
         const name = new InputText({
-            value: genWalletName(this.app.wallets, 'ICP'),
+            value: genWalletName(this.app.wallets.list, 'ICP'),
             placeholder: 'Wallet name'
         });
         this.append(name);
@@ -81,14 +81,14 @@ class SheetNewAccountPhrase extends Component {
         this.append(new Button({
             text: 'Add to my wallets',
             click: async () => {
-                this.app.wallets[args.wallet.public] = new ICPWallet({
+                this.app.wallets.list[args.wallet.public] = new ICPWallet({
                     blockchain: 'Internet Computer',
                     name: name.get(),
                     publicKey: args.wallet.public,
                     secret: args.secret
                 });
-                await this.app.wallets[args.wallet.public].rebuild(this.app.user.password);
-                this.app.save('wallets', this.app.wallets);
+                await this.app.wallets.list[args.wallet.public].rebuild(this.app.user.password);
+                this.app.save('wallets', this.app.wallets.list);
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

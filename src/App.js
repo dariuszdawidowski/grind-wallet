@@ -14,6 +14,7 @@ import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
+import { Wallets } from '/src/blockchain/Wallets.js';
 // Development mode
 if (process.env.DEV_MODE) import('/src/dev-mode.js');
 // E2E tests
@@ -90,7 +91,7 @@ class GrindWalletPlugin {
         };
 
         // Wallets list { ICPWallet, ... }
-        this.wallets = {};
+        this.wallets = new Wallets();
 
         // Actor cache
         this.cache = new ObjectCache();
@@ -201,7 +202,7 @@ class GrindWalletPlugin {
                 this.append(this.current);
                 break;
             case 'accounts':
-                if (Object.keys(this.wallets).length === 0) {
+                if (this.wallets.count() === 0) {
                     this.current = new PageEmpty({app: this});
                     this.append(this.current);
                 }
@@ -238,14 +239,14 @@ class GrindWalletPlugin {
             for (const [walletId, wallet] of Object.entries(data)) {
 
                 // Create wallet
-                this.wallets[walletId] = new ICPWallet({
+                this.wallets.add(new ICPWallet({
                     blockchain: wallet.blockchain,
                     name: wallet.name,
                     publicKey: wallet.public,
                     secret: wallet.secret,
                     tokens: wallet.tokens,
                     nfts: 'nfts' in wallet ? wallet.nfts : {},
-                });
+                }));
 
             }
 
@@ -308,7 +309,7 @@ class GrindWalletPlugin {
 
         // Wallets
         if (resource == 'wallets') {
-            for (const wallet of Object.values(this.wallets)) {
+            for (const wallet of this.wallets.get()) {
                 try {
                     await wallet.rebuild(this.user.password);
                 }
@@ -346,4 +347,4 @@ class GrindWalletPlugin {
  * Start
  */
 
-const app = new GrindWalletPlugin('#app');
+new GrindWalletPlugin('#app');

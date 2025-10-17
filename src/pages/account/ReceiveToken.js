@@ -43,6 +43,7 @@ export class SheetAccountReceive extends Component {
 
         // Header
         const h3 = document.createElement('h3');
+        h3.style.fontWeight = 'bold';
         h3.innerText = name;
         this.element.append(h3);
 

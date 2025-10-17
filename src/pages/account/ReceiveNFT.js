@@ -14,17 +14,24 @@ export class SheetAccountReceiveNFT extends Component {
 
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = `
-            <h3>
-                Principal ID
-            </h3>
-        `;
+
+        // Header
+        const h3 = document.createElement('h3');
+        h3.style.fontWeight = 'bold';
+        h3.innerText = 'Principal ID';
+        this.element.append(h3);
+
+        // Show address
+        const addr = document.createElement('div');
+        addr.classList.add('address');
+        addr.classList.add('principal');
+        addr.innerText = address;
+        this.element.append(addr);
 
         // QR Code
         const qr = document.createElement('div');
         qr.classList.add('qrcode');
         this.element.append(qr);
-
         const qrcodePrincipal = new QRCode(qr, {
             text: address,
             width: 200,
@@ -43,6 +50,7 @@ export class SheetAccountReceiveNFT extends Component {
                 });
             }
         });
+        buttonCopy.element.style.margin = '18px auto';
         this.append(buttonCopy);
 
     }

@@ -59,7 +59,6 @@ export class SheetAccountReceive extends Component {
         const qr = document.createElement('div');
         qr.classList.add('qrcode');
         this.element.append(qr);
-
         const qrcodePrincipal = new QRCode(qr, {
             text: address,
             width: 200,

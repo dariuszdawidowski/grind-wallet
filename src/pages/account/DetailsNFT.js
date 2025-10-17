@@ -38,6 +38,7 @@ export class SheetNFTDetails extends Component {
         const canisterTitle = document.createElement('h2');
         canisterTitle.style.marginTop = '1.5em';
         canisterTitle.style.marginBottom = '0.5em';
+        canisterTitle.style.fontWeight = 'bold';
         canisterTitle.innerText = 'Collection canister ID';
         this.element.append(canisterTitle);
         const canisterElement = document.createElement('div');
@@ -52,6 +53,7 @@ export class SheetNFTDetails extends Component {
         // Token ID
         const tokenTitle = document.createElement('h2');
         tokenTitle.style.marginBottom = '0.5em';
+        tokenTitle.style.fontWeight = 'bold';
         tokenTitle.innerText = 'NFT token ID';
         this.element.append(tokenTitle);
         const tokenElement = document.createElement('div');
@@ -75,7 +77,7 @@ export class SheetNFTDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: this.wallet.name,
+                        title: `Send NFT from ${this.wallet.name}`,
                         component: new SheetAccountSendNFT(args)
                     });
                 }
@@ -86,7 +88,7 @@ export class SheetNFTDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: this.wallet.name,
+                        title: `Receive NFT to ${this.wallet.name}`,
                         component: new SheetAccountReceiveNFT(args)
                     });
                 }

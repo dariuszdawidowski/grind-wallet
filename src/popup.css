@@ -125,10 +125,9 @@ form {
 button {
     width: 300px;
     height: 40px;
-    padding: 9px 64px;
+    padding: 9px 16px;
     border-radius: 8px;
     margin: 10px auto;
-    width: 300px;
     color: white;
     background-color: var(--button-color);
     border: 0;
@@ -150,6 +149,7 @@ button:not(:disabled):hover {
 
 button.dimed {
     background-color: var(--button-color-dimed);
+    pointer-events: none;
 }
 
 button .text {
@@ -563,7 +563,7 @@ hr {
 .qrcode {
     width: 200px;
     height: 200px;
-    margin: 0 auto 40px auto;
+    margin: 0 auto;
 }
 
 /* Bottom sheet */
@@ -695,6 +695,23 @@ hr {
 #sheet .content .form .nft {
     width: 80%;
     margin: 0 auto;
+}
+
+#sheet .content .form .address {
+    text-align: center;
+    width: 80%;
+    margin: 0 auto 20px auto;
+}
+
+#sheet .content .form .address.account {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+#sheet .content .form .address.principal {
+    hyphens: manual;
+    -webkit-hyphens: manual;
 }
 
 #sheet .end {

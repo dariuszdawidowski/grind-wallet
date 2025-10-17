@@ -31,7 +31,7 @@ export class Button extends Component {
         // Spinner
         this.spinner = document.createElement('div');
         this.spinner.classList.add('spinner');
-        this.element.append(this.spinner);
+        this.text.append(this.spinner);
 
         // Events
         this.element.addEventListener('click', args.click);

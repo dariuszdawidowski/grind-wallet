@@ -10,15 +10,32 @@ export class SheetAccountReceive extends Component {
         // Wallet
         this.wallet = args.wallet;
 
-        const address = (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) ? this.wallet.account : this.wallet.principal;
-
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = `
-            <h3>
-                ${(args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) ? 'Account ID' : 'Principal ID'}
-            </h3>
-        `;
+
+        // Render both Principal ID and Account ID for mail "card"
+        if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+            this.render({ name: 'Principal ID', address: this.wallet.principal });
+            this.render({ name: 'Account ID', address: this.wallet.account });
+        }
+
+        // Render only principal for custom token
+        else {
+            this.render({ name: 'Principal ID', address: this.wallet.principal });
+        }
+
+    }
+
+    /**
+     * Render given string as header + QR code + subtitle
+     */
+
+    render({ name, address }) {
+
+        // Header
+        const h3 = document.createElement('h3');
+        h3.innerText = name;
+        this.element.append(h3);
 
         // QR Code
         const qr = document.createElement('div');
@@ -35,7 +52,7 @@ export class SheetAccountReceive extends Component {
         });
 
         const buttonCopy = new Button({
-            text: 'Copy address to clipboard',
+            text: `Copy ${name} to clipboard`,
             click: () => {
                 navigator.clipboard.writeText(address).then(() => {
                     buttonCopy.set('Copied!');
@@ -44,6 +61,12 @@ export class SheetAccountReceive extends Component {
             }
         });
         this.append(buttonCopy);
+
+        // Show address
+        const addr = document.createElement('div');
+        addr.style.textAlign = 'center';
+        addr.innerText = address;
+        this.element.append(addr);
 
     }
 

@@ -36,7 +36,7 @@ export class PageListAccounts extends Component {
                     click: () => {
                         if (!this.app.sheet.isOpen()) {
                             this.app.sheet.append({
-                                title: wallet.name,
+                                title: `ICP wallet ${wallet.name}`,
                                 component: new SheetAccountDetails({ app: args.app, wallet, canisterId: this.app.ICP_LEDGER_CANISTER_ID })
                             });
                         }
@@ -57,7 +57,7 @@ export class PageListAccounts extends Component {
                             click: () => {
                                 if (!this.app.sheet.isOpen()) {
                                     this.app.sheet.append({
-                                        title: wallet.name,
+                                        title: `${token.name} tokens @ ${wallet.name}`,
                                         component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
                                     });
                                 }
@@ -82,7 +82,7 @@ export class PageListAccounts extends Component {
                             if (!this.app.sheet.isOpen()) {
                                 const sheetNFTDetails = new SheetNFTDetails({app: args.app, wallet, nft: fullNFT});
                                 this.app.sheet.append({
-                                    title: 'NFT Details',
+                                    title: `NFT @ ${wallet.name}`,
                                     component: sheetNFTDetails
                                 });
                                 sheetNFTDetails.update();

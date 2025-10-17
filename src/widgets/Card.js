@@ -40,6 +40,11 @@ export class Card extends Component {
             document.body.dispatchEvent(new Event('update.balance'));
         });
 
+        // Listen name change
+        document.body.addEventListener('update.name', () => {
+            this.element.querySelector('.name').innerText = this.wallet.name;
+        });
+
     }
 
 }

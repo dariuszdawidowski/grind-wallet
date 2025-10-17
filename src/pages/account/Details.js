@@ -42,7 +42,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: this.wallet.name,
+                        title: `Send ${this.isICP() ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
                         component: new SheetAccountSend(args)
                     });
                 }
@@ -53,7 +53,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: this.wallet.name,
+                        title: `Receive ${this.isICP() ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
                         component: new SheetAccountReceive(args)
                     });
                 }
@@ -91,7 +91,7 @@ export class SheetAccountDetails extends Component {
         this.element.append(sep);
 
         // On the main details sheet
-        if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+        if (this.isICP()) {
 
             const horiz = document.createElement('div');
             horiz.style.display = 'flex';
@@ -124,13 +124,29 @@ export class SheetAccountDetails extends Component {
 
         }
 
+        // Edit name
+        if (this.isICP()) {
+            this.append(new ButtLink({
+                text: `Change wallet name`,
+                click: () => {
+                    const newName = prompt('Enter new wallet name:', this.wallet.name);
+                    if (newName !== null) {
+                        this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
+                        this.wallet.name = newName.trim();
+                        this.app.saveWallets();
+                        document.body.dispatchEvent(new Event('update.name'));
+                    }
+                }
+            }));
+        }
+
         // Remove
         this.append(new ButtLink({
-            text: `Remove this ${(this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) ? 'account' : 'token'} from the list`,
+            text: `Remove this ${(this.isICP()) ? 'account' : 'token'} from the list`,
             click: () => {
 
                 // ICP
-                if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+                if (this.isICP()) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
                         delete this.app.wallets.list[this.wallet.public]
                         this.app.saveWallets();
@@ -182,7 +198,7 @@ export class SheetAccountDetails extends Component {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
             let html = '';
             // ICP logo
-            if (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+            if (this.isICP()) {
                 html += `<img src="assets/icp-logo.svg" style="width: 40px; margin-right: 10px;">`;
             }
             // Custom token logo
@@ -197,6 +213,10 @@ export class SheetAccountDetails extends Component {
             html += amount + ' ' + this.wallet.tokens[this.canisterId].symbol;
             this.balance.innerHTML = html;
         }
+    }
+
+    isICP() {
+        return (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID);
     }
 
 }

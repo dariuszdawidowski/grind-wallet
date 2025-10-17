@@ -63,6 +63,15 @@ export class Sheet extends Component {
     }
 
     /**
+     * Update content
+     */
+
+    update({ title } = {}) {
+        // Title
+        if (title) this.title.innerText = title;
+    }
+
+    /**
      * Clear content
      */
 

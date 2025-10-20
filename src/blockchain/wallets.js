@@ -85,4 +85,22 @@ export class Wallets {
         return `${crypto} #${this.count() + 1}`;
     }
 
+    /**
+     * Check if there is a wallet in the collection.
+     * @returns {boolean}
+     */
+
+    hasWallet(principal) {
+        return Object.values(this.list).some(wallet => wallet.principal === principal);
+    }
+
+    /**
+     * Check if there is a similar wallet in the collection.
+     * @returns {boolean}
+     */
+
+    hasSimilarWallet(principal) {
+        return Object.values(this.list).some(wallet => wallet.principal.startsWith(principal.slice(0, 4)));
+    }
+
 }

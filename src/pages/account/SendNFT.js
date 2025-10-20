@@ -106,7 +106,7 @@ export class SheetAccountSendNFT extends Component {
                 const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
                 // Log error
                 this.app.log.add({
-                    type: 'error.send.nft',
+                    type: 'send.nft.error',
                     pid: this.wallet.principal,
                     to: to,
                     nft: {

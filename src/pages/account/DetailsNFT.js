@@ -117,18 +117,18 @@ export class SheetNFTDetails extends Component {
             buttonbar.append(button.element);
         });
 
-        // Show in the dashboard
-        this.append(new Button({
-            text: 'Show in ICP Dashboard',
-            click: () => {
-                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.nft.collection}` });
-            }
-        }));
-
         // Separator
         const sep = document.createElement('hr');
         sep.style.marginTop = '20px';
         this.element.append(sep);
+
+        // Show in the dashboard
+        this.append(new ButtLink({
+            text: 'Show NFT candid interface',
+            click: () => {
+                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.nft.collection}` });
+            }
+        }));
 
         // Remove
         this.append(new ButtLink({

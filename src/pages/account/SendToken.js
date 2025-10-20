@@ -141,7 +141,7 @@ export class SheetAccountSend extends Component {
                     const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
                     // Log error
                     this.app.log.add({
-                        type: 'error.send.token',
+                        type: 'send.token.error',
                         pid: this.wallet.principal,
                         to: {
                             principal: principal.toText(),

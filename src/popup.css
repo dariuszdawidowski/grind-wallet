@@ -455,6 +455,27 @@ hr {
     margin-bottom: 6px;
 }
 
+.history .own {
+    font-size: 10px;
+    font-weight: 500;
+    color: #a0a0a0;
+    margin-left: 6px;
+    border: 1px solid #a0a0a0;
+    padding: 1px 4px 2px 4px;
+    border-radius: 4px;
+}
+
+.history .own.suspicious {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
+.history .amount {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 .add-circle {
     display: flex;
     flex-direction: row;

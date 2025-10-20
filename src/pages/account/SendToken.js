@@ -78,11 +78,15 @@ export class SheetAccountSend extends Component {
         // Account ID
         let account = null;
 
+        // Allot transfer
+        let allow = false;
+
         // Autodetect Principal ID
         if (this.widget.address.detect() == 'principal') {
             try {
                 principal = Principal.fromText(this.widget.address.get());
                 account = AccountIdentifier.fromPrincipal({ principal });
+                allow = true;
             }
             catch(error) {
                 alert('Invalid Principal ID');
@@ -93,14 +97,21 @@ export class SheetAccountSend extends Component {
         else {
             try {
                 account = AccountIdentifier.fromHex(this.widget.address.get());
+                allow = true;
             }
             catch(error) {
                 alert('Invalid Account ID');
             }
         }
 
+        // Send to byself
+        if (principal == this.wallet.principal) {
+            alert('You want to send to yourself');
+            allow = false;
+        }
+
         // Ok to transfer
-        if (account) {
+        if (allow) {
             this.submit.busy(true);
             this.wallet.tokens[this.canisterId].request.transfer({
                 principal,
@@ -123,11 +134,26 @@ export class SheetAccountSend extends Component {
                         }
                     });
                     // Show success
-                    this.submit.set('OK');
+                    this.submit.set('OK - successfully sent!');
                     this.sent = true;
                 }
                 else {
-                    alert('ERROR' in result ? result.ERROR : 'Transfer error');
+                    const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
+                    // Log error
+                    this.app.log.add({
+                        type: 'error.send.token',
+                        from: this.wallet.principal,
+                        to: {
+                            principal: principal.toText(),
+                            account: account.toHex(),
+                        },
+                        token: {
+                            canister: this.canisterId,
+                            amount: this.widget.amount.get()
+                        },
+                        error: errorMsg
+                    });
+                    alert(errorMsg);
                 }
             });
         }

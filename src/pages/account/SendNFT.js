@@ -99,11 +99,23 @@ export class SheetAccountSendNFT extends Component {
                 delete this.app.wallets.get(this.wallet.public)?.nfts[`${this.nft.collection}:${this.nft.id}`];
                 // Save changes
                 this.app.saveWallets();
+                this.submit.set('OK - successfully sent!');
                 this.sent = true;
-                this.widget.submit.set('OK');
             }
             else {
-                alert('Transfer error');
+                const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
+                // Log error
+                this.app.log.add({
+                    type: 'error.send.nft',
+                    from: this.wallet.principal,
+                    to: to,
+                    nft: {
+                        canister: this.nft.collection,
+                        id: this.nft.id
+                    },
+                    error: errorMsg
+                });
+                alert(errorMsg);
             }        
         });
     }

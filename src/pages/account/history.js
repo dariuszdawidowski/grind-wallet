@@ -13,7 +13,7 @@ export class SheetTransactionHistory extends Component {
 
         this.lastDate = null;
 
-        this.app.log.get({ pid: this.wallet.principal }).then(logs => {
+        this.app.log.get({ pids: [this.wallet.principal], types: args.types, tokens: args.tokens }).then(logs => {
             const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
             if (Object.keys(sortedLogs).length > 0) {
                 for (const [datetime, entry] of sortedLogs) {
@@ -22,7 +22,7 @@ export class SheetTransactionHistory extends Component {
             }
             else {
                 const info = document.createElement('h2');
-                info.textContent = '- Seems there is no history for this wallet -';
+                info.textContent = `- No ${this.wallet.tokens[args.tokens[0]].symbol} history on this wallet yet -`;
                 this.element.append(info);
             }
         });
@@ -56,7 +56,7 @@ export class SheetTransactionHistory extends Component {
         row.classList.add('entry');
         this.element.append(row);
 
-        // Is is own wallet?
+        // Is it own wallet?
         const otherPrincipalId = entry.type.startsWith('send.') ? entry.to.principal : entry.type.startsWith('recv.') ? entry.from.principal : null;
         let otherType = otherPrincipalId ? this.app.wallets.hasWallet(otherPrincipalId) ? 'own' : null : null;
 
@@ -67,7 +67,7 @@ export class SheetTransactionHistory extends Component {
         if (entry.type === 'send.token') this.renderEntry({
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
-            title: 'Send Token',
+            title: 'Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
             type: otherType
@@ -76,7 +76,7 @@ export class SheetTransactionHistory extends Component {
         else if (entry.type === 'send.token.error') this.renderEntry({
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
-            title: 'Error Send Token',
+            title: 'Error Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
             type: otherType
@@ -89,7 +89,7 @@ export class SheetTransactionHistory extends Component {
             this.renderEntry({
                 parent: row,
                 icon: icon,
-                title: 'Receive Token',
+                title: 'Receive',
                 subtitle: `From: ${shortPrincipalId(entry.from.principal)}`,
                 amount: `+${entry.token.amount}`,
                 type: otherType
@@ -114,7 +114,7 @@ export class SheetTransactionHistory extends Component {
         else if (entry.type === 'send.nft') this.renderEntry({
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
-            title: 'Send NFT',
+            title: 'Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             type: otherType
         });
@@ -122,7 +122,7 @@ export class SheetTransactionHistory extends Component {
         else if (entry.type === 'send.nft.error') this.renderEntry({
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
-            title: 'Error Send NFT',
+            title: 'Error Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             type: otherType
         });

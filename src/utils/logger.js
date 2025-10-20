@@ -90,8 +90,12 @@ export class LogSystem {
         if (args !== null) {
             return Object.fromEntries(Object.entries(this.logs).filter(([_, entry]) => {
                 let result = true;
-                // Filter by principal ID
-                if ('pid' in args) result = result && entry.pid === args.pid;
+                // Filter by principal IDs
+                if ('pids' in args) result = result && args.pids.includes(entry.pid);
+                // Filter by types
+                if ('types' in args) result = result && args.types.includes(entry.type);
+                // Filter by tokens
+                if ('tokens' in args) result = result && args.tokens.includes(entry?.token?.canister);
                 return result;
             }));
         }

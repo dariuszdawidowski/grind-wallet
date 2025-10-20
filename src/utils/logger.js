@@ -3,16 +3,27 @@
  */
 
 export class LogSystem {
+
     constructor() {
+
+        // { { isodatetime: { pid: principalId, <other params> }, ... }
         this.logs = {};
+
         this.STORAGE_KEY = 'transactions';
         this.STORAGE_LIMIT_WARNING = 4 * 1024 * 1024; // 4MB (80% limitu 5MB)
         this.initialized = this.initialize();
     }
 
+    /**
+     * Initialize
+     */
+
     async initialize() {
+
+        // Load logs
         await this.load();
-        
+
+        // Purge storage when close to limits
         try {
             chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
                 if (process.env.DEV_MODE) console.log(`Storage usage: ${(bytesInUse / (1024 * 1024)).toFixed(2)}MB / 5MB`);
@@ -31,6 +42,10 @@ export class LogSystem {
         }
     }
 
+    /**
+     * Load all logs
+     */
+
     async load() {
         return new Promise((resolve) => {
             chrome.storage.local.get([this.STORAGE_KEY], (result) => {
@@ -42,11 +57,19 @@ export class LogSystem {
         });
     }
 
+    /**
+     * Save all logs
+     */
+
     async save() {
         return new Promise((resolve) => {
             chrome.storage.local.set({ [this.STORAGE_KEY]: this.logs }, resolve);
         });
     }
+
+    /**
+     * Add log entry
+     */
 
     async add(entry) {
         await this.initialized;
@@ -56,10 +79,18 @@ export class LogSystem {
         await this.save();
     }
 
+    /**
+     * Get all logs
+     */
+
     async get() {
         await this.initialized;
         return this.logs;
     }
+
+    /**
+     * Clear all logs
+     */
 
     async clear() {
         await this.initialized;

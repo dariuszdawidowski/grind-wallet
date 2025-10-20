@@ -6,6 +6,7 @@ import { SheetAccountSend } from './SendToken.js';
 import { SheetAccountReceive } from './ReceiveToken.js';
 import { SheetAddCustomToken } from './AddToken.js';
 import { SheetAddCustomNFT } from './AddNFT.js';
+import { SheetTransactionHistory } from './history.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
 export class SheetAccountDetails extends Component {
@@ -76,6 +77,18 @@ export class SheetAccountDetails extends Component {
         Object.values(this.buttons).forEach(button => {
             buttonbar.append(button.element);
         });
+
+        // Show transaction history
+        this.append(new Button({
+            text: 'Show transaction history',
+            click: () => {
+                this.app.sheet.clear();
+                this.app.sheet.append({
+                    title: `Transaction history of ${this.wallet.name}`,
+                    component: new SheetTransactionHistory(args)
+                });
+            }
+        }));
 
         // Show in the dashboard
         this.append(new Button({

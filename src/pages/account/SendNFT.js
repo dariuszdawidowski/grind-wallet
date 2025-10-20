@@ -75,7 +75,7 @@ export class SheetAccountSendNFT extends Component {
                 // Log transaction
                 this.app.log.add({
                     type: 'send.nft',
-                    from: this.wallet.principal,
+                    pid: this.wallet.principal,
                     to: to,
                     nft: {
                         canister: this.nft.collection,
@@ -107,7 +107,7 @@ export class SheetAccountSendNFT extends Component {
                 // Log error
                 this.app.log.add({
                     type: 'error.send.nft',
-                    from: this.wallet.principal,
+                    pid: this.wallet.principal,
                     to: to,
                     nft: {
                         canister: this.nft.collection,

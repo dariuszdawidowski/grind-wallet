@@ -123,7 +123,7 @@ export class SheetAccountSend extends Component {
                     // Log transaction
                     this.app.log.add({
                         type: 'send.token',
-                        from: this.wallet.principal,
+                        pid: this.wallet.principal,
                         to: {
                             principal: principal.toText(),
                             account: account.toHex(),
@@ -142,7 +142,7 @@ export class SheetAccountSend extends Component {
                     // Log error
                     this.app.log.add({
                         type: 'error.send.token',
-                        from: this.wallet.principal,
+                        pid: this.wallet.principal,
                         to: {
                             principal: principal.toText(),
                             account: account.toHex(),

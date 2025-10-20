@@ -16,6 +16,7 @@ export class Card extends Component {
         this.element.innerHTML = `
             <div class="name">${this.wallet.name}</div>
             <div class="subname">CRYPTOCURRENCY WALLET</div>
+            <div class="loader"></div>
             <div class="currency">ICP</div>
             <div class="amount">Fetching...</div>
             <div class="account1">${formatWithSpaces(this.wallet.account.substring(0, 24), 4)}</div>
@@ -38,6 +39,7 @@ export class Card extends Component {
             this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance = balance;
             this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].decimals), this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].decimals);
             document.body.dispatchEvent(new Event('update.balance'));
+            this.showLoader(false);
         });
 
         // Listen name change
@@ -45,6 +47,15 @@ export class Card extends Component {
             this.element.querySelector('.name').innerText = this.wallet.name;
         });
 
+    }
+
+    /**
+     * Show/hide loading spinner
+     * @param {boolean} show
+     */
+
+    showLoader(show = true) {
+        this.element.querySelector('.loader').style.display = show ? 'block' : 'none';
     }
 
 }

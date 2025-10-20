@@ -441,6 +441,16 @@ hr {
     margin-bottom: 0;
 }
 
+.history .entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    margin: 10px;
+}
+
+
 .add-circle {
     display: flex;
     flex-direction: row;
@@ -458,7 +468,8 @@ hr {
     transform: scale(1.03);
 }
 
-.add-circle .plus {
+.add-circle .plus,
+.history .entry .circle {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -469,7 +480,8 @@ hr {
     align-items: center;
 }
 
-.add-circle .plus img {
+.add-circle .plus img,
+.history .entry .plus img {
     width: 30px;
     height: 30px;
 }

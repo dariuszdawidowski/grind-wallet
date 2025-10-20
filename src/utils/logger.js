@@ -80,11 +80,18 @@ export class LogSystem {
     }
 
     /**
-     * Get all logs
+     * Get filtered or all logs
      */
 
-    async get() {
+    async get(args = {}) {
         await this.initialized;
+
+        // Filtered by Principal ID
+        if ('pid' in args) {
+            return Object.fromEntries(Object.entries(this.logs).filter(([_, entry]) => entry.pid === args.pid));
+        }
+
+        // All
         return this.logs;
     }
 

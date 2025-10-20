@@ -27,3 +27,21 @@ export function isValidCanisterId(canisterId) {
     const canisterIdRegex = /^[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{3}$/;
     return canisterIdRegex.test(canisterId);
 }
+
+/**
+ * Format Principal ID to a shorter version for display.
+ *
+ * @param {string} principalId - The Principal ID to be formatted.
+ * @returns {string} The formatted Principal ID.
+ */
+
+export function shortPrincipalId(principalId) {
+    // split the Principal ID into parts
+    const parts = principalId.split('-');
+    if (parts.length < 2) {
+        return principalId;
+    }
+    const first = parts[0];
+    const last = parts[parts.length - 1];
+    return `${first}...${last}`;
+}

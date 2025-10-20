@@ -90,14 +90,6 @@ export class SheetAccountDetails extends Component {
             }
         }));
 
-        // Show in the dashboard
-        this.append(new Button({
-            text: 'Show in ICP Dashboard',
-            click: () => {
-                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
-            }
-        }));
-
         // Separator
         const sep = document.createElement('hr');
         sep.style.marginTop = '20px';
@@ -135,22 +127,43 @@ export class SheetAccountDetails extends Component {
                 }
             }).element);
 
-        }
-
-        // Edit name
-        if (this.isICP()) {
+            // Show in the dashboard
             this.append(new ButtLink({
-                text: `Change wallet name`,
+                text: 'Show in ICP Dashboard',
                 click: () => {
-                    const newName = prompt('Enter new wallet name:', this.wallet.name);
-                    if (newName !== null) {
-                        this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
-                        this.wallet.name = newName.trim();
-                        this.app.saveWallets();
-                        document.body.dispatchEvent(new Event('update.name'));
-                    }
+                    chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
                 }
             }));
+
+            // Edit name
+            if (this.isICP()) {
+                this.append(new ButtLink({
+                    text: `Change wallet name`,
+                    click: () => {
+                        const newName = prompt('Enter new wallet name:', this.wallet.name);
+                        if (newName !== null) {
+                            this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
+                            this.wallet.name = newName.trim();
+                            this.app.saveWallets();
+                            document.body.dispatchEvent(new Event('update.name'));
+                        }
+                    }
+                }));
+            }
+
+        } // ICP only
+
+        // Token only
+        else {
+
+            // Show candid interface
+            this.append(new ButtLink({
+                text: `Show token's candid interface`,
+                click: () => {
+                    chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.canisterId}` });
+                }
+            }));
+
         }
 
         // Remove

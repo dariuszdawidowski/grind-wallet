@@ -34,7 +34,7 @@ export class SheetNFTDetails extends Component {
             catch(error) {}
         })();
         this.image.addEventListener('click', () => {
-            const page = `https://${this.nft.collection}/?tokenid=${this.nft.id}`;
+            const page = `https://${this.nft.collection}.raw.ic0.app/?tokenid=${this.nft.id}`;
             chrome.tabs.create({ url: page });
         });
 

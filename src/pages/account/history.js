@@ -1,10 +1,5 @@
-// import { Principal } from '@dfinity/principal';
-// import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/Component.js';
-// import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
-// import { Button, ButtonDescription } from '/src/widgets/button.js';
-// import { InputCurrency, InputAddress } from '/src/widgets/input.js';
-//import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
+import { shortPrincipalId } from '/src/utils/General.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -23,7 +18,7 @@ export class SheetTransactionHistory extends Component {
             console.log(sortedLogs)
             if (Object.keys(sortedLogs).length > 0) {
                 for (const [datetime, entry] of sortedLogs) {
-                    this.renderRow(datetime, entry);
+                    this.render(datetime, entry);
                 }
             }
             else {
@@ -50,7 +45,7 @@ export class SheetTransactionHistory extends Component {
      * Render one entry
      */
 
-    renderRow(datetime, entry) {
+    render(datetime, entry) {
         const date = datetime.slice(0, 10);
         if (date != this.lastDate) {
             this.renderDate(datetime);
@@ -63,18 +58,84 @@ export class SheetTransactionHistory extends Component {
         row.classList.add('entry');
         this.element.append(row);
 
-        // Icon circle container
-        const icon = document.createElement('div');
-        icon.classList.add('circle');
-        row.append(icon);
-
-        // Icon image
-        const image = document.createElement('img');
-        image.src = 'assets/material-design-icons/plus.svg';
-        icon.append(image);
+        // Add NFT
+        if (entry.type === 'add.nft') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/plus.svg',
+            title: 'Add NFT',
+            subtitle: `Collection: ${shortPrincipalId(entry.nft.canister)}`,
+        });
+        // Del NFT
+        else if (entry.type === 'del.nft') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/minus.svg',
+            title: 'Remove NFT'
+        });
+        // Send NFT
+        else if (entry.type === 'send.nft') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/arrow-up-bold.svg',
+            title: 'Send NFT',
+            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+        });
+        // Error send NFT
+        else if (entry.type === 'error.send.nft') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/bug.svg',
+            title: 'Error Send NFT',
+            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+        });
+        // Send Token
+        else if (entry.type === 'send.token') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/arrow-up-bold.svg',
+            title: 'Send Token',
+            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+        });
+        // Error send token
+        else if (entry.type === 'error.send.token') this.renderEntry({
+            parent: row,
+            icon: 'assets/material-design-icons/bug.svg',
+            title: 'Error Send Token',
+            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+        });
 
     }
 
+    /**
+     * Render one entry
+     */
+
+    renderEntry(args) {
+        // Icon circle container
+        const icon = document.createElement('div');
+        icon.classList.add('circle');
+        args.parent.append(icon);
+
+        // Icon image
+        const image = document.createElement('img');
+        image.src = args.icon;
+        icon.append(image);
+
+        // Description container
+        const desc = document.createElement('div');
+        desc.style.marginLeft = '10px';
+        args.parent.append(desc);
+
+        // Title
+        const title = document.createElement('div');
+        title.classList.add('title');
+        title.textContent = args.title;
+        desc.append(title);
+
+        // Subtitle
+        if ('subtitle' in args) {
+            const subtitle = document.createElement('div');
+            subtitle.classList.add('subtitle');
+            subtitle.textContent = args.subtitle;
+            desc.append(subtitle);
+        }
+    }
 
 }
 

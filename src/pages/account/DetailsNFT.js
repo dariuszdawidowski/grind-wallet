@@ -33,6 +33,10 @@ export class SheetNFTDetails extends Component {
             }
             catch(error) {}
         })();
+        this.image.addEventListener('click', () => {
+            const page = `https://${this.nft.collection}/?tokenid=${this.nft.id}`;
+            chrome.tabs.create({ url: page });
+        });
 
         // Canister ID
         const canisterTitle = document.createElement('h2');

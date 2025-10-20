@@ -14,12 +14,6 @@ export class SheetTransactionHistory extends Component {
         this.lastDate = null;
 
         this.app.log.get({ pid: this.wallet.principal }).then(logs => {
-            logs['2025-10-20T12:15:09.202Z'] = {
-                pid: 'qio7v-m7jbv-huagd-pd6l4-s7x2z-wg73b-ltj44-2h42x-23qfx-ryouz-hae',
-                type: 'recv.token',
-                from: { principal: 'udb3f-ghkk3-3csng-n56yz-bd5nx-v223k-4mas2-pumih-cpoed-ueshl-6qe' },
-                token: { amount: '0.0001' }
-            }; // Test entry
             const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
             if (Object.keys(sortedLogs).length > 0) {
                 for (const [datetime, entry] of sortedLogs) {

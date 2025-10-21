@@ -1,15 +1,27 @@
+import { Component } from '/src/utils/Component.js';
 import { TokenImage } from './token-image.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 
-export class TokenBalance extends TokenImage {
+export class TokenBalance extends Component {
 
     constructor(args) {
         super(args);
 
+        // Class
+        this.element.classList.add('token-balance');
+
+        // Token image
+        const coin = new TokenImage({
+            app: args.app,
+            canisterId: args.canisterId,
+            wallet: args.wallet,
+        });
+        this.append(coin);
+
         // Label
         this.label = document.createElement('div');
         this.label.classList.add('label');
-        this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>...`;
+        this.label.innerHTML = `${args.wallet.tokens[args.canisterId].symbol}<br>...`;
         this.element.append(this.label);
 
         // Click (with distance preventing scroll)
@@ -33,9 +45,9 @@ export class TokenBalance extends TokenImage {
         }
 
         // Fetch balance
-        this.wallet.tokens[this.canisterId].request.balance().then(balance => {
-            this.wallet.tokens[this.canisterId].balance = balance;
-            this.label.innerHTML = `${this.wallet.tokens[this.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance, this.wallet.tokens[this.canisterId].decimals), 4)}`;
+        args.wallet.tokens[args.canisterId].request.balance().then(balance => {
+            args.wallet.tokens[args.canisterId].balance = balance;
+            this.label.innerHTML = `${args.wallet.tokens[args.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance, args.wallet.tokens[args.canisterId].decimals), 4)}`;
         });
 
     }

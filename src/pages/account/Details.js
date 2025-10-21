@@ -24,14 +24,25 @@ export class SheetAccountDetails extends Component {
         // Build
         this.element.classList.add('form');
 
-        // Balance amount
+        // Balance widget
         this.balance = document.createElement('h1');
         this.balance.style.marginTop = '0';
         this.balance.style.display = 'flex';
         this.balance.style.alignItems = 'center';
-        this.balance.innerHTML = 'Fetching...';
         this.element.append(this.balance);
-        this.updateBalance();
+        // Balance token logo
+        const coin = new TokenImage({
+            app: args.app,
+            canisterId: args.canisterId,
+            wallet: args.wallet,
+        });
+        this.balance.append(coin.element);
+        // Balance amount and symbol
+        this.amount = document.createElement('span');
+        this.amount.innerHTML = 'Fetching...';
+        this.balance.append(this.amount);
+
+        // this.updateBalance();
 
         // Buttons
         const buttonbar = document.createElement('div');
@@ -199,7 +210,7 @@ export class SheetAccountDetails extends Component {
                 }
             }
         }));
-
+/*
         // Load cached coin image
         this.coin = null;
         (async () => {
@@ -209,15 +220,18 @@ export class SheetAccountDetails extends Component {
             }
             catch(error) {}
         })();
-
+*/
+/*
         // Listen for balance update
         this.handleBalanceUpdate = () => this.updateBalance();
         document.body.addEventListener('update.balance', this.handleBalanceUpdate);
-
+*/
+/*
         // Listen for coin image load
         this.element.addEventListener('update.image', () => {
             this.updateBalance();
         });
+*/        
     }
 
     destructor() {

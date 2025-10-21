@@ -1,7 +1,7 @@
 import { Component } from '/src/utils/Component.js';
 import { Button } from '/src/widgets/button.js';
 import { Card } from '/src/widgets/card.js';
-import { Coin } from '/src/widgets/coin.js';
+import { TokenBalance } from '/src/widgets/token-balance.js';
 import { Cover } from '/src/widgets/cover.js';
 import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
@@ -37,7 +37,10 @@ export class PageListAccounts extends Component {
                         if (!this.app.sheet.isOpen()) {
                             this.app.sheet.append({
                                 title: `ICP wallet ${wallet.name}`,
-                                component: new SheetAccountDetails({ app: args.app, wallet, canisterId: this.app.ICP_LEDGER_CANISTER_ID })
+                                component: new SheetAccountDetails({
+                                    app: args.app, wallet,
+                                    canisterId: this.app.ICP_LEDGER_CANISTER_ID
+                                })
                             });
                         }
                     }
@@ -51,14 +54,19 @@ export class PageListAccounts extends Component {
                 // Custom tokens as coins
                 if (wallet.tokens) Object.entries(wallet.tokens).forEach(([id, token]) => {
                     if (id != this.app.ICP_LEDGER_CANISTER_ID) {
-                        const coin = new Coin({
+                        const coin = new TokenBalance({
+                            app: this.app,
                             canisterId: id,
                             wallet,
                             click: () => {
                                 if (!this.app.sheet.isOpen()) {
                                     this.app.sheet.append({
                                         title: `${token.name} tokens @ ${wallet.name}`,
-                                        component: new SheetAccountDetails({app: args.app, wallet, canisterId: id})
+                                        component: new SheetAccountDetails({
+                                            app: args.app,
+                                            wallet,
+                                            canisterId: id
+                                        })
                                     });
                                 }
                             }
@@ -74,13 +82,22 @@ export class PageListAccounts extends Component {
 
                 // NFTS as covers
                 if (wallet.nfts) Object.entries(wallet.nfts).forEach(([id, nft]) => {
-                    const fullNFT = new NFT({ app: args.app, principal: wallet.principal, agent: wallet.agent, ...nft });
+                    const fullNFT = new NFT({
+                        app: args.app,
+                        principal: wallet.principal,
+                        agent: wallet.agent,
+                        ...nft
+                    });
                     const cover = new Cover({
                         wallet,
                         nft: fullNFT,
                         click: () => {
                             if (!this.app.sheet.isOpen()) {
-                                const sheetNFTDetails = new SheetNFTDetails({app: args.app, wallet, nft: fullNFT});
+                                const sheetNFTDetails = new SheetNFTDetails({
+                                    app: args.app,
+                                    wallet,
+                                    nft: fullNFT
+                                });
                                 this.app.sheet.append({
                                     title: `NFT @ ${wallet.name}`,
                                     component: sheetNFTDetails

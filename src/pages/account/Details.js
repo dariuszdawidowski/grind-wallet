@@ -2,6 +2,7 @@ import { Component } from '/src/utils/Component.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/Currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/button.js';
 import { AddPlus } from '/src/widgets/add.js';
+import { TokenImage } from '/src/widgets/token-image.js';
 import { SheetAccountSend } from './SendToken.js';
 import { SheetAccountReceive } from './ReceiveToken.js';
 import { SheetAddCustomToken } from './AddToken.js';

@@ -476,7 +476,7 @@ hr {
     margin-bottom: -4px;
 }
 
-/* Coin */
+/* Coins */
 
 .coins {
     display: flex;
@@ -580,7 +580,7 @@ hr {
     font-size: 12px;
 }
 
-.coin-badge {
+.token-balance {
     flex: 0 0 113px;
     display: flex;
     flex-direction: row;
@@ -589,15 +589,15 @@ hr {
     transition: transform 0.3s ease-in-out;
 }
 
-.coin-badge:hover {
+.token-balance:hover {
     cursor: pointer;
 }
 
-.macos .coin-badge:hover {
+.macos .token-balance:hover {
     transform: scale(1.11);
 }
 
-.coin-badge .coin {
+.token-balance .token-image {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -611,13 +611,13 @@ hr {
     background-size: contain;
 }
 
-.coin-badge .label {
+.token-balance .label {
     margin: 0 10px;
     font-size: 12px;
     transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.coin-badge:hover .label {
+.token-balance:hover .label {
     text-shadow: 0 0 6px rgb(135, 80, 199);
 }
 

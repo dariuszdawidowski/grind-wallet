@@ -1,88 +1,152 @@
 /**
- * Storing operation history in Chrome extension's persistent storage
+ * Storing operation history in IndexedDB database
  */
 
 export class LogSystem {
 
     constructor() {
-
-        // { { isodatetime: { pid: principalId, <other params> }, ... }
+        // Database connection
+        this.db = null;
+        this.STORE_NAME = 'Transactions';
+        this.DB_NAME = 'Logs';
+        this.DB_VERSION = 1;
         this.logs = {};
-
-        this.STORAGE_KEY = 'transactions';
-        this.STORAGE_LIMIT_WARNING = 4 * 1024 * 1024; // 4MB (80% limitu 5MB)
+        this.STORAGE_LIMIT_WARNING = 50 * 1024 * 1024; // 50MB of storage limit in IndexedDB
         this.initialized = this.initialize();
     }
 
     /**
-     * Initialize
+     * Initialize database
      */
-
     async initialize() {
-
-        // Load logs
-        await this.load();
-
-        // Purge storage when close to limits
-        try {
-            chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
-                if (process.env.DEV_MODE) console.log(`Storage usage: ${(bytesInUse / (1024 * 1024)).toFixed(2)}MB / 5MB`);
-                // If approaching the limit, clean up old entries
-                if (bytesInUse > this.STORAGE_LIMIT_WARNING) {
-                    console.warn('Storage is approaching its limit, cleaning up old logs');
-                    // Remove entries older than a year
-                    this.purge({ daysToKeep: 365 }).then(removed => {
-                        console.log(`Removed ${removed} old log entries`);
-                    });
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
+            
+            request.onerror = (event) => {
+                console.error('Database error:', event.target.error);
+                reject(event.target.error);
+            };
+            
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                // Create object store for logs if it doesn't exist
+                if (!db.objectStoreNames.contains(this.STORE_NAME)) {
+                    // Use timestamp as key
+                    db.createObjectStore(this.STORE_NAME);
                 }
-            });
-        }
-        catch (e) {
-            console.error('Error checking storage size:', e);
-        }
-    }
-
-    /**
-     * Load all logs
-     */
-
-    async load() {
-        return new Promise((resolve) => {
-            chrome.storage.local.get([this.STORAGE_KEY], (result) => {
-                if (result[this.STORAGE_KEY]) {
-                    this.logs = result[this.STORAGE_KEY];
+            };
+            
+            request.onsuccess = async (event) => {
+                this.db = event.target.result;
+                // Load existing logs
+                await this.load();
+                
+                // Check storage usage
+                try {
+                    await this.checkStorageSize();
+                } catch (e) {
+                    console.error('Error checking storage size:', e);
                 }
+                
                 resolve();
-            });
+            };
         });
     }
 
     /**
-     * Save all logs
+     * Check storage size and purge if approaching limit
      */
+    async checkStorageSize() {
+        try {
+            // Get approximate size by serializing to string
+            const serialized = JSON.stringify(this.logs);
+            const bytesInUse = new TextEncoder().encode(serialized).length;
+            
+            if (process.env.DEV_MODE) console.log(`Storage usage: ${(bytesInUse / (1024 * 1024)).toFixed(2)}MB`);
+            
+            // If approaching the limit, clean up old entries
+            if (bytesInUse > this.STORAGE_LIMIT_WARNING) {
+                console.warn('Storage is approaching its limit, cleaning up old logs');
+                // Remove entries older than a year
+                const removed = await this.purge({ daysToKeep: 365 });
+                console.log(`Removed ${removed} old log entries`);
+            }
+        } catch (e) {
+            console.error('Error estimating storage size:', e);
+        }
+    }
 
-    async save() {
-        return new Promise((resolve) => {
-            chrome.storage.local.set({ [this.STORAGE_KEY]: this.logs }, resolve);
+    /**
+     * Load all logs from IndexedDB
+     */
+    async load() {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.STORE_NAME], 'readonly');
+            const store = transaction.objectStore(this.STORE_NAME);
+            const request = store.getAll();
+            
+            request.onerror = (event) => {
+                console.error('Load error:', event.target.error);
+                reject(event.target.error);
+            };
+            
+            request.onsuccess = (event) => {
+                // Convert array of values with keys to object
+                this.logs = {};
+                const allRecords = store.getAllKeys();
+                
+                allRecords.onsuccess = (keysEvent) => {
+                    const keys = keysEvent.target.result;
+                    const values = event.target.result;
+                    
+                    for (let i = 0; i < keys.length; i++) {
+                        this.logs[keys[i]] = values[i];
+                    }
+                    resolve();
+                };
+                
+                allRecords.onerror = (event) => {
+                    console.error('Load keys error:', event.target.error);
+                    reject(event.target.error);
+                };
+            };
+        });
+    }
+
+    /**
+     * Save a specific log entry
+     */
+    async saveEntry(timestamp, entry) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(this.STORE_NAME);
+            const request = store.put(entry, timestamp);
+            
+            request.onerror = (event) => {
+                console.error('Save error:', event.target.error);
+                reject(event.target.error);
+            };
+            
+            request.onsuccess = () => {
+                resolve();
+            };
         });
     }
 
     /**
      * Add log entry
      */
-
     async add(entry) {
         await this.initialized;
         const timestamp = new Date().toISOString();
         this.logs[timestamp] = entry;
         if (process.env.DEV_MODE) console.log(`[${timestamp}]`, entry);
-        await this.save();
+        await this.saveEntry(timestamp, entry);
     }
 
     /**
      * Get filtered or all logs
      */
-
     async get(args = null) {
         await this.initialized;
 
@@ -107,11 +171,23 @@ export class LogSystem {
     /**
      * Clear all logs
      */
-
     async clear() {
         await this.initialized;
-        this.logs = {};
-        await this.save();
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(this.STORE_NAME);
+            const request = store.clear();
+            
+            request.onerror = (event) => {
+                console.error('Clear error:', event.target.error);
+                reject(event.target.error);
+            };
+            
+            request.onsuccess = () => {
+                this.logs = {};
+                resolve();
+            };
+        });
     }
     
     /**
@@ -123,7 +199,7 @@ export class LogSystem {
      */
     async purge(options = {}) {
         await this.initialized;
-        const oldLength = Object.keys(this.logs).length;        
+        const oldLength = Object.keys(this.logs).length;
         const newLogs = {};
         let timestamps = Object.keys(this.logs);
         
@@ -135,20 +211,52 @@ export class LogSystem {
             timestamps = timestamps.filter(timestamp => timestamp >= cutoffTimestamp);
         }
         
-        // Limit to maximum number of entries (sortujemy od najnowszych)
+        // Limit to maximum number of entries (sort from newest)
         if (options.maxEntries && timestamps.length > options.maxEntries) {
             timestamps.sort((a, b) => b.localeCompare(a));
             timestamps = timestamps.slice(0, options.maxEntries);
         }
                 
-        // Save changes
-        timestamps.forEach(timestamp => {
-            newLogs[timestamp] = this.logs[timestamp];
+        // Create a set of timestamps to keep for faster lookups
+        const timestampsToKeep = new Set(timestamps);
+        
+        // Delete entries not in the keep list
+        const transaction = this.db.transaction([this.STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(this.STORE_NAME);
+        const request = store.getAllKeys();
+        
+        return new Promise((resolve) => {
+            request.onsuccess = (event) => {
+                const allKeys = event.target.result;
+                let deleteCount = 0;
+                let completedOperations = 0;
+                
+                if (allKeys.length === 0) {
+                    resolve(0);
+                    return;
+                }
+                
+                // Delete keys not in our keep set and update in-memory logs
+                allKeys.forEach(key => {
+                    if (!timestampsToKeep.has(key)) {
+                        deleteCount++;
+                        store.delete(key);
+                    } else {
+                        newLogs[key] = this.logs[key];
+                    }
+                    
+                    completedOperations++;
+                    if (completedOperations === allKeys.length) {
+                        this.logs = newLogs;
+                        resolve(oldLength - Object.keys(this.logs).length);
+                    }
+                });
+            };
+            
+            request.onerror = () => {
+                console.error('Error during purge operation');
+                resolve(0);
+            };
         });
-        this.logs = newLogs;
-        await this.save();
-
-        // Return the number of deleted entries
-        return oldLength - Object.keys(this.logs).length;
     }
 }

@@ -14,6 +14,9 @@ export class SheetAccountDetails extends Component {
     constructor(args) {
         super(args);
 
+        // App reference
+        this.app = args.app;
+
         // Wallet reference
         this.wallet = args.wallet;
 
@@ -56,7 +59,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: `Send ${this.isICP() ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
+                        title: `Send ${this.app.isICPLedger(this.canisterId) ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
                         component: new SheetAccountSend(args)
                     });
                 }
@@ -67,7 +70,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: `Receive ${this.isICP() ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
+                        title: `Receive ${this.app.isICPLedger(this.canisterId) ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
                         component: new SheetAccountReceive(args)
                     });
                 }
@@ -101,7 +104,7 @@ export class SheetAccountDetails extends Component {
                     component: new SheetTransactionHistory({
                         ...args,
                         types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft', 'send.nft.error'],
-                        tokens: this.isICP() ? [this.canisterId, ...Object.keys(this.wallet.tokens)] : [this.canisterId]
+                        tokens: this.app.isICPLedger(this.canisterId) ? [this.canisterId, ...Object.keys(this.wallet.tokens)] : [this.canisterId]
                     })
                 });
             }
@@ -113,7 +116,7 @@ export class SheetAccountDetails extends Component {
         this.element.append(sep);
 
         // On the main details sheet
-        if (this.isICP()) {
+        if (this.app.isICPLedger(this.canisterId)) {
 
             const horiz = document.createElement('div');
             horiz.style.display = 'flex';
@@ -153,7 +156,7 @@ export class SheetAccountDetails extends Component {
             }));
 
             // Edit name
-            if (this.isICP()) {
+            if (this.app.isICPLedger(this.canisterId)) {
                 this.append(new ButtLink({
                     text: `Change wallet name`,
                     click: () => {
@@ -185,11 +188,11 @@ export class SheetAccountDetails extends Component {
 
         // Remove
         this.append(new ButtLink({
-            text: `Remove this ${(this.isICP()) ? 'account' : 'token'} from the list`,
+            text: `Remove this ${(this.app.isICPLedger(this.canisterId)) ? 'account' : 'token'} from the list`,
             click: () => {
 
                 // ICP
-                if (this.isICP()) {
+                if (this.app.isICPLedger(this.canisterId)) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
                         delete this.app.wallets.list[this.wallet.public]
                         this.app.saveWallets();
@@ -222,10 +225,6 @@ export class SheetAccountDetails extends Component {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
             this.amount.innerText = amount + ' ' + this.wallet.tokens[this.canisterId].symbol; 
         }
-    }
-
-    isICP() {
-        return (this.canisterId == this.app.ICP_LEDGER_CANISTER_ID);
     }
 
 }

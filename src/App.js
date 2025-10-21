@@ -353,6 +353,15 @@ class GrindWalletPlugin {
         this.save('wallets', this.wallets.list);
     }
 
+    /**
+     * Determines if a canister ID corresponds to the ICP Ledger.
+     * @param {string} canisterId - The canister ID to check.
+     * @returns {boolean} - True if the canister ID is the ICP Ledger, false otherwise.
+     */
+
+    isICPLedger(canisterId) {
+        return canisterId === this.ICP_LEDGER_CANISTER_ID;
+    }
 }
 
 /**

@@ -23,7 +23,10 @@ export class SheetTransactionHistory extends Component {
             }
             else {
                 const info = document.createElement('h2');
-                info.textContent = `- No ${this.wallet.tokens[args.tokens[0]].symbol} history on this wallet yet -`;
+                if (this.app.isICPLedger(args.tokens[0]))
+                    info.textContent = `- No history on this wallet yet -`;
+                else
+                    info.textContent = `- No ${this.wallet.tokens[args.tokens[0]].symbol} history on this wallet yet -`;
                 this.element.append(info);
             }
         });

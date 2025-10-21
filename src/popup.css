@@ -530,8 +530,18 @@ hr {
     color: #ff4d4d;
 }
 
-.history .amount {
+.history .token-image {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     margin-left: auto;
+}
+
+.history .amount {
     font-size: 14px;
     font-weight: 500;
 }

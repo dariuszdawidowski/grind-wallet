@@ -1,4 +1,5 @@
 import { Component } from '/src/utils/Component.js';
+import { TokenImage } from '/src/widgets/token-image.js';
 import { shortPrincipalId } from '/src/utils/General.js';
 
 export class SheetTransactionHistory extends Component {
@@ -45,6 +46,8 @@ export class SheetTransactionHistory extends Component {
      */
 
     render(datetime, entry) {
+
+        // New date header?
         const date = datetime.slice(0, 10);
         if (date != this.lastDate) {
             this.renderDate(datetime);
@@ -65,21 +68,25 @@ export class SheetTransactionHistory extends Component {
 
         // Send Token
         if (entry.type === 'send.token') this.renderEntry({
+            kind: 'token',
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
-            type: otherType
+            type: otherType,
+            canisterId: entry.token.canister
         });
         // Error send token
         else if (entry.type === 'send.token.error') this.renderEntry({
+            kind: 'token',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
-            type: otherType
+            type: otherType,
+            canisterId: entry.token.canister
         });
         // Receive Token
         else if (entry.type === 'recv.token') {
@@ -87,53 +94,64 @@ export class SheetTransactionHistory extends Component {
             let icon = 'assets/material-design-icons/arrow-down-bold.svg';
             if (otherType === 'suspicious' && amount <= 0.0001) icon = 'assets/material-design-icons/skull.svg';
             this.renderEntry({
+                kind: 'token',
                 parent: row,
                 icon: icon,
                 title: 'Receive',
                 subtitle: `From: ${shortPrincipalId(entry.from.principal)}`,
                 amount: `+${entry.token.amount}`,
-                type: otherType
+                type: otherType,
+                canisterId: entry.token.canister
             });
         }
         // Add NFT
         else if (entry.type === 'add.nft') this.renderEntry({
+            kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/plus.svg',
             title: 'Add NFT',
             subtitle: `Collection: ${shortPrincipalId(entry.nft.canister)}`,
-            type: otherType
+            type: otherType,
+            canisterId: entry.nft.canister
         });
         // Del NFT
         else if (entry.type === 'del.nft') this.renderEntry({
+            kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/minus.svg',
             title: 'Remove NFT',
-            type: otherType
+            type: otherType,
+            canisterId: entry.nft.canister
         });
         // Send NFT
         else if (entry.type === 'send.nft') this.renderEntry({
+            kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
-            type: otherType
+            type: otherType,
+            canisterId: entry.nft.canister
         });
         // Error send NFT
         else if (entry.type === 'send.nft.error') this.renderEntry({
+            kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
             subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
-            type: otherType
+            type: otherType,
+            canisterId: entry.nft.canister
         });
 
     }
 
     /**
-     * Render one entry
+     * Render entry template
      */
 
     renderEntry(args) {
+
         // Icon circle container
         const icon = document.createElement('div');
         icon.classList.add('circle');
@@ -166,13 +184,25 @@ export class SheetTransactionHistory extends Component {
             desc.append(subtitle);
         }
 
+        // Token image
+        if (args.kind === 'token') {
+            const coin = new TokenImage({
+                app: this.app,
+                canisterId: args.canisterId,
+                wallet: this.wallet,
+            });
+            coin.element.style.marginRight = '6px';
+            args.parent.append(coin.element);
+        }
+
         // Amount
         if ('amount' in args) {
             const amount = document.createElement('div');
             amount.classList.add('amount');
-            amount.textContent = args.amount;
+            amount.textContent = args.amount + ((args.kind === 'token') ? ` ${this.wallet.tokens[args.canisterId].symbol}` : '');
             args.parent.append(amount);
         }
+
     }
 
 }

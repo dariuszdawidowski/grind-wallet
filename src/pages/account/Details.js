@@ -101,8 +101,8 @@ export class SheetAccountDetails extends Component {
                     title: `Transaction history of ${this.wallet.name}`,
                     component: new SheetTransactionHistory({
                         ...args,
-                        types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft'],
-                        tokens: [this.canisterId]
+                        types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft', 'send.nft.error'],
+                        tokens: [this.canisterId, ...Object.keys(this.wallet.tokens)]
                     })
                 });
             }

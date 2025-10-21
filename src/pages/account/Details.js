@@ -41,8 +41,10 @@ export class SheetAccountDetails extends Component {
         this.amount = document.createElement('span');
         this.amount.innerHTML = 'Fetching...';
         this.balance.append(this.amount);
-
-        // this.updateBalance();
+        // Listener
+        this.handleBalanceUpdate = () => this.updateBalance();
+        document.body.addEventListener('update.balance', this.handleBalanceUpdate);
+        this.updateBalance();
 
         // Buttons
         const buttonbar = document.createElement('div');
@@ -210,28 +212,6 @@ export class SheetAccountDetails extends Component {
                 }
             }
         }));
-/*
-        // Load cached coin image
-        this.coin = null;
-        (async () => {
-            try {
-                this.coin = await loadImage(`token:${this.canisterId}`);
-                this.element.dispatchEvent(new Event('update.image'));
-            }
-            catch(error) {}
-        })();
-*/
-/*
-        // Listen for balance update
-        this.handleBalanceUpdate = () => this.updateBalance();
-        document.body.addEventListener('update.balance', this.handleBalanceUpdate);
-*/
-/*
-        // Listen for coin image load
-        this.element.addEventListener('update.image', () => {
-            this.updateBalance();
-        });
-*/        
     }
 
     destructor() {
@@ -241,22 +221,7 @@ export class SheetAccountDetails extends Component {
     updateBalance() {
         if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
-            let html = '';
-            // ICP logo
-            if (this.isICP()) {
-                html += `<img src="assets/icp-logo.svg" style="width: 40px; margin-right: 10px;">`;
-            }
-            // Custom token logo
-            else if (this.coin) {
-                if (this.coin.startsWith('<svg')) {
-                    html += `<img src="data:image/svg+xml;utf8,${encodeURIComponent(this.coin)}" style="width: 40px; margin-right: 10px;">`;
-                }
-                else {
-                    html += `<img src="${this.coin}" style="width: 40px; margin-right: 10px;">`;
-                }
-            }
-            html += amount + ' ' + this.wallet.tokens[this.canisterId].symbol;
-            this.balance.innerHTML = html;
+            this.amount.innerText = amount + ' ' + this.wallet.tokens[this.canisterId].symbol; 
         }
     }
 

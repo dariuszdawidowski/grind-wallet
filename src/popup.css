@@ -768,6 +768,7 @@ hr {
     margin-right: 10px;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
 }
 
 #sheet .content .form h1 span {

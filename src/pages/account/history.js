@@ -72,7 +72,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
             type: otherType,
             canisterId: entry.token.canister
@@ -83,7 +83,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
             amount: `-${entry.token.amount}`,
             type: otherType,
             canisterId: entry.token.canister
@@ -98,7 +98,7 @@ export class SheetTransactionHistory extends Component {
                 parent: row,
                 icon: icon,
                 title: 'Receive',
-                subtitle: `From: ${shortPrincipalId(entry.from.principal)}`,
+                subtitle: `From: ${this.renderOtherPrincipal(entry.from.principal)}`,
                 amount: `+${entry.token.amount}`,
                 type: otherType,
                 canisterId: entry.token.canister
@@ -110,7 +110,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/plus.svg',
             title: 'Add NFT',
-            subtitle: `Collection: ${shortPrincipalId(entry.nft.canister)}`,
+            subtitle: `Collection: ${this.renderOtherPrincipal(entry.nft.canister)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -129,7 +129,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -139,7 +139,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${shortPrincipalId(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -203,6 +203,21 @@ export class SheetTransactionHistory extends Component {
             args.parent.append(amount);
         }
 
+    }
+
+    /**
+     * Render other principal ID as short code or name from own wallets/address book
+     * 
+     * @param {string} principalId
+     * @returns {string|null}
+     */
+
+    renderOtherPrincipal(principalId) {
+        const wallet = this.app.wallets.getByPrincipal(principalId);
+        if (wallet) return wallet.name;
+        // const address = this.app.addressbook.get(principalId);
+        // if (address) return address.name;
+        return shortPrincipalId(principalId);
     }
 
 }

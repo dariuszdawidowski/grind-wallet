@@ -1,5 +1,6 @@
 import { Component } from '/src/utils/Component.js';
 import { TokenImage } from '/src/widgets/token-image.js';
+import { Principal } from '@dfinity/principal';
 import { shortPrincipalId } from '/src/utils/General.js';
 
 export class SheetTransactionHistory extends Component {
@@ -7,13 +8,18 @@ export class SheetTransactionHistory extends Component {
     constructor(args) {
         super(args);
 
+        // CSS class
         this.element.classList.add('history');
 
+        // References
         this.app = args.app;
         this.wallet = args.wallet;
+        this.canisterId = args.canisterId;
 
+        // Last rendered date
         this.lastDate = null;
 
+        // Fetch logs from IndexedDB
         this.app.log.get({ pids: [this.wallet.principal], types: args.types, tokens: args.tokens }).then(logs => {
             const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
             if (Object.keys(sortedLogs).length > 0) {
@@ -30,6 +36,9 @@ export class SheetTransactionHistory extends Component {
                 this.element.append(info);
             }
         });
+
+        // Fetch and cache from blockchain
+        this.fetchAndCache();
     }
 
     /**
@@ -221,6 +230,25 @@ export class SheetTransactionHistory extends Component {
         // const address = this.app.addressbook.get(principalId);
         // if (address) return address.name;
         return shortPrincipalId(principalId);
+    }
+
+    /**
+     * Fetch and cache any missing data for log entries from a ledger or NFT canister
+     */
+
+    async fetchAndCache() {
+
+        // Fetch transactions from ICP Index canister
+        if(this.wallet.tokens[this.canisterId].index) this.wallet.tokens[this.canisterId].index.get_account_transactions({
+            max_results: 100,
+            start: [],
+            account: {
+                owner: Principal.fromText(this.wallet.principal),
+                subaccount: [],
+            }
+        }).then(transactions => {
+            console.log(transactions);
+        });
     }
 
 }

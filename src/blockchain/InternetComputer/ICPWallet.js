@@ -1,11 +1,12 @@
 /*** ICP Wallet helpers ***/
 
-import { HttpAgent } from '@dfinity/agent';
+import { HttpAgent, Actor } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
 import { Wallet } from '/src/blockchain/Wallet.js';
+import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { ICPToken } from '/src/blockchain/InternetComputer/ICPToken.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/ICRCToken.js';
 
@@ -95,9 +96,9 @@ export class ICPWallet extends Wallet {
  */
 
 export function icpRebuildToken(args, id, wallet) {
-
     // ICP Ledger ID
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+    const ICP_INDEX_CANISTER_ID = 'qhbym-qaaaa-aaaaa-aaafq-cai';
 
     // Token
     wallet.tokens[id] = {
@@ -109,6 +110,7 @@ export function icpRebuildToken(args, id, wallet) {
         fee: ('fee' in args) ? Number(args.fee) : 10000,
         balance: ('balance' in args) ? args.balance : null,
         actor: ('actor' in args) ? args.actor : id == ICP_LEDGER_CANISTER_ID ? LedgerCanister.create({ agent: wallet.agent }) : IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id }),
+        index: ('index' in args) ? args.index : id == ICP_LEDGER_CANISTER_ID ? Actor.createActor(idlICPIndex, { agent: wallet.agent, canisterId: ICP_INDEX_CANISTER_ID }) : null,
         request: ('request' in args) ? args.request : id == ICP_LEDGER_CANISTER_ID ?
             {
                 balance: icpLedgerBalance.bind(wallet.tokens[id]),

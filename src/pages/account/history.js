@@ -16,30 +16,43 @@ export class SheetTransactionHistory extends Component {
         this.app = args.app;
         this.wallet = args.wallet;
         this.canisterId = args.canisterId;
+        this.types = args.types; // ['send.token', 'recv.token', 'send.nft', 'add.nft', 'del.nft']
+        this.tokens = args.tokens; // [canisterId1, canisterId2, ...]
 
         // Last rendered date
         this.lastDate = null;
 
         // Fetch logs from IndexedDB
-        this.app.log.get({ pids: [this.wallet.principal], types: args.types, tokens: args.tokens }).then(logs => {
-            const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
-            if (Object.keys(sortedLogs).length > 0) {
-                for (const [datetime, entry] of sortedLogs) {
-                    this.render(datetime, entry);
-                }
-            }
-            else {
-                const info = document.createElement('h2');
-                if (this.app.isICPLedger(args.tokens[0]))
-                    info.textContent = `- No history on this wallet yet -`;
-                else
-                    info.textContent = `- No ${this.wallet.tokens[args.tokens[0]].symbol} history on this wallet yet -`;
-                this.element.append(info);
-            }
-        });
+        this.render();
 
         // Fetch and cache from blockchain
         this.fetchAndCache();
+    }
+
+    /**
+     * Render transaction history
+     */
+
+    async render() {
+        // Clear
+        this.element.innerHTML = '';
+
+        // Read logs from IndexedDB
+        const logs = await this.app.log.get({ pids: [this.wallet.principal], types: this.types, tokens: this.tokens });
+        const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+        if (Object.keys(sortedLogs).length > 0) {
+            for (const [datetime, entry] of sortedLogs) {
+                this.renderRow(datetime, entry);
+            }
+        }
+        else {
+            const info = document.createElement('h2');
+            if (this.app.isICPLedger(this.tokens[0]))
+                info.textContent = `- No history on this wallet yet -`;
+            else
+                info.textContent = `- No ${this.wallet.tokens[this.tokens[0]].symbol} history on this wallet yet -`;
+            this.element.append(info);
+        }
     }
 
     /**
@@ -58,7 +71,7 @@ export class SheetTransactionHistory extends Component {
      * Render one entry
      */
 
-    render(datetime, entry) {
+    renderRow(datetime, entry) {
 
         // New date header
         const date = datetime.slice(0, 10);
@@ -299,6 +312,7 @@ export class SheetTransactionHistory extends Component {
                         // Get timestamp
                         if (('timestamp' in record.transaction) && record.transaction.timestamp.length) {
                             const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+
                             // Cache transfer transaction
                             if ('Transfer' in record.transaction.operation) {
                                 // Direction: 'send' | 'recv' | 'unknown'
@@ -320,9 +334,29 @@ export class SheetTransactionHistory extends Component {
                                     this.app.log.add(data);
                                 }
                             }
+
+                            // Cache approve transaction
+                            if ('Approve' in record.transaction.operation) {
+                                const entry = await this.app.log.get({ datetime }); // TODO: more params
+                                if (!Object.keys(entry).length) {
+                                    const data = {
+                                        datetime,
+                                        type: 'aprv.token',
+                                        pid: this.wallet.principal,
+                                        to: { account: record.transaction.operation.Approve.spender },
+                                        token: {
+                                            canister: this.canisterId,
+                                            amount: Number(record.transaction.operation.Approve.allowance.e8s),
+                                            fee: Number(record.transaction.operation.Approve.fee.e8s)
+                                        }
+                                    };
+                                    this.app.log.add(data);
+                                }
+                            }
                         }
                     }
                 }
+                this.render();
             }
             else {
                 console.error(response);

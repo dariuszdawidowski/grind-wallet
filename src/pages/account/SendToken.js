@@ -122,7 +122,7 @@ export class SheetAccountSend extends Component {
                 if ('OK' in result) {
                     // Log transaction
                     this.app.log.add({
-                        type: 'send.token',
+                        type: 'send.token.begin',
                         pid: this.wallet.principal,
                         to: {
                             principal: principal.toText(),

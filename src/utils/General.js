@@ -36,7 +36,6 @@ export function isValidCanisterId(canisterId) {
  */
 
 export function shortPrincipalId(principalId) {
-    // split the Principal ID into parts
     const parts = principalId.split('-');
     if (parts.length < 2) {
         return principalId;
@@ -44,4 +43,29 @@ export function shortPrincipalId(principalId) {
     const first = parts[0];
     const last = parts[parts.length - 1];
     return `${first}...${last}`;
+}
+
+/**
+ * Format Account ID to a shorter version for display.
+ *
+ * @param {string} accountId - The Account ID to be formatted.
+ * @returns {string} The formatted Account ID.
+ */
+
+export function shortAccountId(accountId) {
+    const first = accountId.slice(0, 4);
+    const last = accountId.slice(-4);
+    return `${first}...${last}`;
+}
+
+/**
+ * Detect PrincipalId or Account ID to a shorter version for display.
+ *
+ * @param {string} principalId/accountId - The Account ID to be formatted.
+ * @returns {string} The formatted Account ID.
+ */
+
+export function shortAddress(address) {
+    if (address.includes('-')) return shortPrincipalId(address);
+    return shortAccountId(address);
 }

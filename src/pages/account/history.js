@@ -1,7 +1,7 @@
 import { Component } from '/src/utils/Component.js';
 import { TokenImage } from '/src/widgets/token-image.js';
 import { Principal } from '@dfinity/principal';
-import { shortPrincipalId } from '/src/utils/General.js';
+import { shortAddress } from '/src/utils/General.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -72,7 +72,7 @@ export class SheetTransactionHistory extends Component {
         this.element.append(row);
 
         // Is it own wallet?
-        const otherPrincipalId = entry.type.startsWith('send.') ? entry.to.principal : entry.type.startsWith('recv.') ? entry.from.principal : null;
+        const otherPrincipalId = entry.type.startsWith('send.') ? entry.to?.principal : entry.type.startsWith('recv.') ? entry.from?.principal : null;
         let otherType = otherPrincipalId ? this.app.wallets.hasWallet(otherPrincipalId) ? 'own' : null : null;
 
         // Is it suspicious?
@@ -84,7 +84,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherAddress(entry.to?.principal || entry.to?.account)}`,
             amount: `-${entry.token.amount}`,
             type: otherType,
             canisterId: entry.token.canister
@@ -95,7 +95,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherAddress(entry.to?.principal || entry.to?.account)}`,
             amount: `-${entry.token.amount}`,
             type: otherType,
             canisterId: entry.token.canister
@@ -110,7 +110,7 @@ export class SheetTransactionHistory extends Component {
                 parent: row,
                 icon: icon,
                 title: 'Receive',
-                subtitle: `From: ${this.renderOtherPrincipal(entry.from.principal)}`,
+                subtitle: `From: ${this.renderOtherAddress(entry.from?.principal || entry.from?.address)}`,
                 amount: `+${entry.token.amount}`,
                 type: otherType,
                 canisterId: entry.token.canister
@@ -122,7 +122,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/plus.svg',
             title: 'Add NFT',
-            subtitle: `Collection: ${this.renderOtherPrincipal(entry.nft.canister)}`,
+            subtitle: `Collection: ${this.renderOtherAddress(entry.nft.canister)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -141,7 +141,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherAddress(entry.to.principal)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -151,7 +151,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${this.renderOtherPrincipal(entry.to.principal)}`,
+            subtitle: `To: ${this.renderOtherAddress(entry.to.principal)}`,
             type: otherType,
             canisterId: entry.nft.canister
         });
@@ -218,18 +218,18 @@ export class SheetTransactionHistory extends Component {
     }
 
     /**
-     * Render other principal ID as short code or name from own wallets/address book
+     * Render other principal ID / account ID as short code or name from own wallets/address book
      * 
-     * @param {string} principalId
+     * @param {string} principalId | accountId
      * @returns {string|null}
      */
 
-    renderOtherPrincipal(principalId) {
-        const wallet = this.app.wallets.getByPrincipal(principalId);
+    renderOtherAddress(address) {
+        const wallet = this.app.wallets.getByPrincipal(address) || this.app.wallets.getByAccount(address);
         if (wallet) return wallet.name;
-        // const address = this.app.addressbook.get(principalId);
-        // if (address) return address.name;
-        return shortPrincipalId(principalId);
+        // const addrbook = this.app.addressbook.get(address);
+        // if (addrbook) return addrbook.name;
+        return shortAddress(address);
     }
 
     /**
@@ -239,16 +239,56 @@ export class SheetTransactionHistory extends Component {
     async fetchAndCache() {
 
         // Fetch transactions from ICP Index canister
-        if(this.wallet.tokens[this.canisterId].index) this.wallet.tokens[this.canisterId].index.get_account_transactions({
-            max_results: 100,
-            start: [],
-            account: {
-                owner: Principal.fromText(this.wallet.principal),
-                subaccount: [],
+        if (this.wallet.tokens[this.canisterId].index) {
+
+            const response = await this.wallet.tokens[this.canisterId].index.get_account_transactions({
+                max_results: 2,
+                start: [],
+                account: {
+                    owner: Principal.fromText(this.wallet.principal),
+                    subaccount: [],
+                }
+            });
+
+            if (('Ok' in response) && ('transactions' in response.Ok)) {
+                for (const record of response.Ok.transactions) {
+                    // Get transaction
+                    if (('transaction' in record) && ('operation' in record.transaction)) {
+                        // Get timestamp
+                        if (('timestamp' in record.transaction) && record.transaction.timestamp.length) {
+                            const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+                            // Cache transfer transaction
+                            if ('Transfer' in record.transaction.operation) {
+                                // Direction: 'send' | 'recv' | 'unknown'
+                                const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+                                // console.log(record.transaction, datetime)
+                                const entry = await this.app.log.get({ datetime }); // TODO: more params
+                                if (!Object.keys(entry).length) {
+                                    this.app.log.add({
+                                        datetime,
+                                        type: `${direction}.token`,
+                                        pid: this.wallet.principal,
+                                        to: {
+                                            account: record.transaction.operation.Transfer.to,
+                                        },
+                                        token: {
+                                            canister: this.canisterId,
+                                            amount: Number(record.transaction.operation.Transfer.amount.e8s),
+                                            fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }).then(transactions => {
-            console.log(transactions);
-        });
+            else {
+                console.error(response);
+            }
+
+        }
+
     }
 
 }

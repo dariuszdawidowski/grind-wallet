@@ -74,7 +74,7 @@ export class SheetAccountSendNFT extends Component {
             if (result === true) {
                 // Log transaction
                 this.app.log.add({
-                    type: 'send.nft',
+                    type: 'send.nft.begin',
                     pid: this.wallet.principal,
                     to: to,
                     nft: {

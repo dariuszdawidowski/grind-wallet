@@ -18,6 +18,7 @@ export class LogSystem {
     /**
      * Initialize database
      */
+
     async initialize() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
@@ -56,6 +57,7 @@ export class LogSystem {
     /**
      * Check storage size and purge if approaching limit
      */
+
     async checkStorageSize() {
         try {
             // Get approximate size by serializing to string
@@ -79,6 +81,7 @@ export class LogSystem {
     /**
      * Load all logs from IndexedDB
      */
+
     async load() {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction([this.STORE_NAME], 'readonly');
@@ -116,6 +119,7 @@ export class LogSystem {
     /**
      * Save a specific log entry
      */
+
     async saveEntry(timestamp, entry) {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction([this.STORE_NAME], 'readwrite');
@@ -135,10 +139,13 @@ export class LogSystem {
 
     /**
      * Add log entry
+     * @param {ISO Date} datetime - optional timestamp when rebuilding entries)
+     * @param + any custom log content
      */
+
     async add(entry) {
         await this.initialized;
-        const timestamp = new Date().toISOString();
+        const timestamp = ('datetime' in entry) ? entry.datetime : new Date().toISOString();
         this.logs[timestamp] = entry;
         if (process.env.DEV_MODE) console.log(`[${timestamp}]`, entry);
         await this.saveEntry(timestamp, entry);
@@ -147,13 +154,16 @@ export class LogSystem {
     /**
      * Get filtered or all logs
      */
+
     async get(args = null) {
         await this.initialized;
 
         // Filtered by Principal ID
         if (args !== null) {
-            return Object.fromEntries(Object.entries(this.logs).filter(([_, entry]) => {
+            return Object.fromEntries(Object.entries(this.logs).filter(([datetime, entry]) => {
                 let result = true;
+                // Filter by ISO datetime key
+                if ('datetime' in args) result = result && (datetime == args.datetime);
                 // Filter by principal IDs
                 if ('pids' in args) result = result && args.pids.includes(entry.pid);
                 // Filter by types
@@ -171,6 +181,7 @@ export class LogSystem {
     /**
      * Clear all logs
      */
+
     async clear() {
         await this.initialized;
         return new Promise((resolve, reject) => {
@@ -197,6 +208,7 @@ export class LogSystem {
      * @param {number} options.maxEntries - Maximum number of entries to keep
      * @returns {number} - Number of deleted entries
      */
+
     async purge(options = {}) {
         await this.initialized;
         const oldLength = Object.keys(this.logs).length;

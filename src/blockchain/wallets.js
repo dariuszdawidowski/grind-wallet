@@ -66,6 +66,16 @@ export class Wallets {
     }
 
     /**
+     * Get wallet by account ID
+     * @param {string} account
+     * @returns {Wallet | null}
+     */
+
+    getByAccount(account) {
+        return Object.values(this.list).find(wallet => wallet.account === account) || null;
+    }
+
+    /**
      * Count of wallets
      * @returns {number}
      */

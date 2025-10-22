@@ -306,52 +306,51 @@ export class SheetTransactionHistory extends Component {
             });
 
             if (('Ok' in response) && ('transactions' in response.Ok)) {
+                // Traverse transactions
                 for (const record of response.Ok.transactions) {
                     // Get transaction
-                    if (('transaction' in record) && ('operation' in record.transaction)) {
+                    if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
                         // Get timestamp
-                        if (('timestamp' in record.transaction) && record.transaction.timestamp.length) {
-                            const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+                        const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
 
-                            // Cache transfer transaction
-                            if ('Transfer' in record.transaction.operation) {
-                                // Direction: 'send' | 'recv' | 'unknown'
-                                const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
-                                const entry = await this.app.log.get({ datetime }); // TODO: more params
-                                if (!Object.keys(entry).length) {
-                                    const data = {
-                                        datetime,
-                                        type: `${direction}.token`,
-                                        pid: this.wallet.principal,
-                                        token: {
-                                            canister: this.canisterId,
-                                            amount: Number(record.transaction.operation.Transfer.amount.e8s),
-                                            fee: Number(record.transaction.operation.Transfer.fee.e8s)
-                                        }
-                                    };
-                                    if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
-                                    else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
-                                    this.app.log.add(data);
-                                }
+                        // Cache transfer transaction
+                        if ('Transfer' in record.transaction.operation) {
+                            // Direction: 'send' | 'recv' | 'unknown'
+                            const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+                            const entry = await this.app.log.get({ datetime }); // TODO: more params
+                            if (!Object.keys(entry).length) {
+                                const data = {
+                                    datetime,
+                                    type: `${direction}.token`,
+                                    pid: this.wallet.principal,
+                                    token: {
+                                        canister: this.canisterId,
+                                        amount: Number(record.transaction.operation.Transfer.amount.e8s),
+                                        fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                                    }
+                                };
+                                if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
+                                else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+                                this.app.log.add(data);
                             }
+                        }
 
-                            // Cache approve transaction
-                            if ('Approve' in record.transaction.operation) {
-                                const entry = await this.app.log.get({ datetime }); // TODO: more params
-                                if (!Object.keys(entry).length) {
-                                    const data = {
-                                        datetime,
-                                        type: 'aprv.token',
-                                        pid: this.wallet.principal,
-                                        to: { account: record.transaction.operation.Approve.spender },
-                                        token: {
-                                            canister: this.canisterId,
-                                            amount: Number(record.transaction.operation.Approve.allowance.e8s),
-                                            fee: Number(record.transaction.operation.Approve.fee.e8s)
-                                        }
-                                    };
-                                    this.app.log.add(data);
-                                }
+                        // Cache approve transaction
+                        if ('Approve' in record.transaction.operation) {
+                            const entry = await this.app.log.get({ datetime }); // TODO: more params
+                            if (!Object.keys(entry).length) {
+                                const data = {
+                                    datetime,
+                                    type: 'aprv.token',
+                                    pid: this.wallet.principal,
+                                    to: { account: record.transaction.operation.Approve.spender },
+                                    token: {
+                                        canister: this.canisterId,
+                                        amount: Number(record.transaction.operation.Approve.allowance.e8s),
+                                        fee: Number(record.transaction.operation.Approve.fee.e8s)
+                                    }
+                                };
+                                this.app.log.add(data);
                             }
                         }
                     }

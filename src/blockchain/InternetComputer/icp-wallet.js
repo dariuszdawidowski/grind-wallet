@@ -5,7 +5,7 @@
 import { HttpAgent, Actor } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
-import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
+import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/keys.js';
 import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/ledger.js';
 import { Wallet } from '/src/blockchain/wallet.js';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';

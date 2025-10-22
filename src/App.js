@@ -14,7 +14,7 @@ import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
-import { ObjectCache } from '/src/utils/ObjectCache.js';
+import { ObjectCache } from '/src/utils/object-cache.js';
 import { Wallets } from '/src/blockchain/Wallets.js';
 // Development mode
 if (process.env.DEV_MODE) import('/src/dev-mode.js');

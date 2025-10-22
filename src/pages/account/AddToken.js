@@ -3,10 +3,10 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
-import { validICRC1 } from '/src/utils/Currency.js';
-import { isValidCanisterId } from '/src/utils/General.js';
+import { validICRC1 } from '/src/utils/currency.js';
+import { isValidCanisterId } from '/src/utils/general.js';
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
-import { saveImage } from '/src/utils/ImageCache.js';
+import { saveImage } from '/src/utils/image-cache.js';
 import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/icp-wallet.js';
 
 export class SheetAddCustomToken extends Component {

@@ -1,6 +1,6 @@
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from './token-image.js';
-import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
+import { formatCurrency, icpt2ICP } from '/src/utils/currency.js';
 
 export class TokenBalance extends Component {
 

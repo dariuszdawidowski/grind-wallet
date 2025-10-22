@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { verifyPassword } from '../../utils/Password.js';
+import { verifyPassword } from '/src/utils/password.js';
 import { Form } from '/src/widgets/form.js';
 import { Button } from '/src/widgets/button.js';
 import { InputPassword } from '../../widgets/input.js';

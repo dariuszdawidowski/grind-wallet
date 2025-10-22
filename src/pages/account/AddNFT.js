@@ -2,13 +2,13 @@ import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
-import { saveImage } from '/src/utils/ImageCache.js';
+import { saveImage } from '/src/utils/image-cache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/nft-ext.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';
 import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/nft-icrc7.js';
 import { NFT } from '/src/blockchain/nft.js';
-import { isValidCanisterId } from '/src/utils/General.js';
+import { isValidCanisterId } from '/src/utils/general.js';
 
 export class SheetAddCustomNFT extends Component {
 

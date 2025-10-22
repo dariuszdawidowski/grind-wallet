@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { isPasswordStrong, generateSalt, hashPassword } from '../../utils/Password.js';
+import { isPasswordStrong, generateSalt, hashPassword } from '/src/utils/password.js';
 import { Button } from '/src/widgets/button.js';
 import { InputPassword } from '/src/widgets/input.js';
 const { version } = require('../../../package.json');

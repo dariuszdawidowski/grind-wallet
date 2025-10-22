@@ -1,8 +1,8 @@
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/widgets/token-image.js';
 import { Principal } from '@dfinity/principal';
-import { shortAddress } from '/src/utils/General.js';
-import { icpt2ICP } from '/src/utils/Currency.js';
+import { shortAddress } from '/src/utils/general.js';
+import { icpt2ICP } from '/src/utils/currency.js';
 
 export class SheetTransactionHistory extends Component {
 

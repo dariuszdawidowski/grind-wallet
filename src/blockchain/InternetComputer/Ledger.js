@@ -6,8 +6,8 @@
 
 import { hexStringToUint8Array } from '@dfinity/utils';
 import { Principal } from '@dfinity/principal';
-import { ICP2icpt } from '/src/utils/Currency.js';
-import { memo2Binary } from '/src/utils/General.js';
+import { ICP2icpt } from '/src/utils/currency.js';
+import { memo2Binary } from '/src/utils/general.js';
 
 /**
  * Check ICP balance

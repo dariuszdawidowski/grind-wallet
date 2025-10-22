@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { loadImage } from '/src/utils/ImageCache.js';
+import { loadImage } from '/src/utils/image-cache.js';
 
 export class Cover extends Component {
 

@@ -4,6 +4,7 @@ import { Component } from '/src/utils/Component.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/widgets/input.js';
+import { ICP2icpt } from '/src/utils/Currency.js';
 //import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
 
 export class SheetAccountSend extends Component {
@@ -130,7 +131,7 @@ export class SheetAccountSend extends Component {
                         },
                         token: {
                             canister: this.canisterId,
-                            amount: this.widget.amount.get()
+                            amount: Number(ICP2icpt(this.widget.amount.get()))
                         }
                     });
                     // Show success
@@ -149,7 +150,7 @@ export class SheetAccountSend extends Component {
                         },
                         token: {
                             canister: this.canisterId,
-                            amount: this.widget.amount.get()
+                            amount: Number(ICP2icpt(this.widget.amount.get()))
                         },
                         error: errorMsg
                     });

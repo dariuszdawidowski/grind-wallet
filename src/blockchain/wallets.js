@@ -105,12 +105,21 @@ export class Wallets {
     }
 
     /**
-     * Check if there is a similar wallet in the collection.
+     * Check if there is a similar wallet by principal ID in the collection.
      * @returns {boolean}
      */
 
-    hasSimilarWallet(principal) {
+    hasSimilarPrincipal(principal) {
         return Object.values(this.list).some(wallet => wallet.principal.startsWith(principal.slice(0, 4)));
+    }
+
+    /**
+     * Check if there is a similar wallet by principal ID in the collection.
+     * @returns {boolean}
+     */
+
+    hasSimilarAccount(account) {
+        return Object.values(this.list).some(wallet => wallet.account.startsWith(account.slice(0, 4)));
     }
 
 }

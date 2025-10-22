@@ -2,6 +2,7 @@ import { Component } from '/src/utils/Component.js';
 import { TokenImage } from '/src/widgets/token-image.js';
 import { Principal } from '@dfinity/principal';
 import { shortAddress } from '/src/utils/General.js';
+import { icpt2ICP } from '/src/utils/Currency.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -59,7 +60,7 @@ export class SheetTransactionHistory extends Component {
 
     render(datetime, entry) {
 
-        // New date header?
+        // New date header
         const date = datetime.slice(0, 10);
         if (date != this.lastDate) {
             this.renderDate(datetime);
@@ -71,12 +72,8 @@ export class SheetTransactionHistory extends Component {
         row.classList.add('entry');
         this.element.append(row);
 
-        // Is it own wallet?
-        const otherPrincipalId = entry.type.startsWith('send.') ? entry.to?.principal : entry.type.startsWith('recv.') ? entry.from?.principal : null;
-        let otherType = otherPrincipalId ? this.app.wallets.hasWallet(otherPrincipalId) ? 'own' : null : null;
-
-        // Is it suspicious?
-        if (otherPrincipalId && otherType === null && this.app.wallets.hasSimilarWallet(otherPrincipalId)) otherType = 'suspicious';
+        // Determine recipient (is it own wallet? or suspicious?)
+        const recipient = this.getRecipient(entry);
 
         // Send Token
         if (entry.type === 'send.token') this.renderEntry({
@@ -84,9 +81,9 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${this.renderOtherAddress(entry.to?.principal || entry.to?.account)}`,
+            subtitle: `To: ${recipient.address}`,
             amount: `-${entry.token.amount}`,
-            type: otherType,
+            type: recipient.type,
             canisterId: entry.token.canister
         });
         // Error send token
@@ -95,24 +92,24 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${this.renderOtherAddress(entry.to?.principal || entry.to?.account)}`,
+            subtitle: `To: ${recipient.address}`,
             amount: `-${entry.token.amount}`,
-            type: otherType,
+            type: recipient.type,
             canisterId: entry.token.canister
         });
         // Receive Token
         else if (entry.type === 'recv.token') {
             const amount = parseFloat(entry.token.amount);
             let icon = 'assets/material-design-icons/arrow-down-bold.svg';
-            if (otherType === 'suspicious' && amount <= 0.0001) icon = 'assets/material-design-icons/skull.svg';
+            if (recipient.type === 'suspicious' && amount <= 0.0001) icon = 'assets/material-design-icons/skull.svg';
             this.renderEntry({
                 kind: 'token',
                 parent: row,
                 icon: icon,
                 title: 'Receive',
-                subtitle: `From: ${this.renderOtherAddress(entry.from?.principal || entry.from?.address)}`,
+                subtitle: `From: ${recipient.address}`,
                 amount: `+${entry.token.amount}`,
-                type: otherType,
+                type: recipient.type,
                 canisterId: entry.token.canister
             });
         }
@@ -122,8 +119,8 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/plus.svg',
             title: 'Add NFT',
-            subtitle: `Collection: ${this.renderOtherAddress(entry.nft.canister)}`,
-            type: otherType,
+            subtitle: `Collection: ${shortAddress(entry.nft.canister)}`,
+            type: recipient.type,
             canisterId: entry.nft.canister
         });
         // Del NFT
@@ -132,7 +129,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/minus.svg',
             title: 'Remove NFT',
-            type: otherType,
+            type: recipient.type,
             canisterId: entry.nft.canister
         });
         // Send NFT
@@ -141,8 +138,8 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${this.renderOtherAddress(entry.to.principal)}`,
-            type: otherType,
+            subtitle: `To: ${recipient.address}`,
+            type: recipient.type,
             canisterId: entry.nft.canister
         });
         // Error send NFT
@@ -151,8 +148,8 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
-            subtitle: `To: ${this.renderOtherAddress(entry.to.principal)}`,
-            type: otherType,
+            subtitle: `To: ${recipient.address}`,
+            type: recipient.type,
             canisterId: entry.nft.canister
         });
 
@@ -211,25 +208,70 @@ export class SheetTransactionHistory extends Component {
         if ('amount' in args) {
             const amount = document.createElement('div');
             amount.classList.add('amount');
-            amount.textContent = args.amount + ((args.kind === 'token') ? ` ${this.wallet.tokens[args.canisterId].symbol}` : '');
+            amount.textContent = icpt2ICP(args.amount, this.wallet.tokens[args.canisterId].decimals) + ((args.kind === 'token') ? ` ${this.wallet.tokens[args.canisterId].symbol}` : '');
             args.parent.append(amount);
         }
 
     }
 
     /**
-     * Render other principal ID / account ID as short code or name from own wallets/address book
-     * 
-     * @param {string} principalId | accountId
-     * @returns {string|null}
+     * Determine recipient type (based on principal ID / account ID)
+     * @param {object} entry log entry
+     * @returns {
+     *   type: 'own' | 'suspicious' | 'unknown', // recipient type
+     *   address: string // human readable address (shortened or name)
+     * }
      */
 
-    renderOtherAddress(address) {
-        const wallet = this.app.wallets.getByPrincipal(address) || this.app.wallets.getByAccount(address);
-        if (wallet) return wallet.name;
-        // const addrbook = this.app.addressbook.get(address);
-        // if (addrbook) return addrbook.name;
-        return shortAddress(address);
+    getRecipient(entry) {
+        const result = { type: 'unknown', address: null };
+        let principal = null;
+        let account = null;
+        // Determine which address to check
+        if (entry.type.startsWith('send.')) {
+            if ('principal' in entry.to) {
+                principal = entry.to.principal;
+            }
+            else if ('account' in entry.to) {
+                account = entry.to.account;
+            }
+        }
+        else if (entry.type.startsWith('recv.')) {
+            if ('principal' in entry.from) {
+                principal = entry.from.principal;
+            }
+            else if ('account' in entry.from) {
+                account = entry.from.account;
+            }
+            
+        }
+        if (principal) {
+            // My principal
+            const wallet = this.app.wallets.getByPrincipal(principal);
+            if (wallet) {
+                result.address = wallet.name;
+                result.type = 'own';
+            }
+            // Other principal
+            else {
+                result.address = shortAddress(principal);
+                if (this.app.wallets.hasSimilarPrincipal(principal)) result.type = 'suspicious';
+            }
+        }
+        else if (account) {
+            // My account
+            const wallet = this.app.wallets.getByAccount(account);
+            if (wallet) {
+                result.address = wallet.name;
+                result.type = 'own';
+            }
+            // Other account
+            else {
+                result.address = shortAddress(account);
+                if (this.app.wallets.hasSimilarAccount(account)) result.type = 'suspicious';
+            }
+        }
+        return result;
     }
 
     /**
@@ -242,7 +284,7 @@ export class SheetTransactionHistory extends Component {
         if (this.wallet.tokens[this.canisterId].index) {
 
             const response = await this.wallet.tokens[this.canisterId].index.get_account_transactions({
-                max_results: 2,
+                max_results: 100,
                 start: [],
                 account: {
                     owner: Principal.fromText(this.wallet.principal),
@@ -261,22 +303,21 @@ export class SheetTransactionHistory extends Component {
                             if ('Transfer' in record.transaction.operation) {
                                 // Direction: 'send' | 'recv' | 'unknown'
                                 const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
-                                // console.log(record.transaction, datetime)
                                 const entry = await this.app.log.get({ datetime }); // TODO: more params
                                 if (!Object.keys(entry).length) {
-                                    this.app.log.add({
+                                    const data = {
                                         datetime,
                                         type: `${direction}.token`,
                                         pid: this.wallet.principal,
-                                        to: {
-                                            account: record.transaction.operation.Transfer.to,
-                                        },
                                         token: {
                                             canister: this.canisterId,
                                             amount: Number(record.transaction.operation.Transfer.amount.e8s),
                                             fee: Number(record.transaction.operation.Transfer.fee.e8s)
                                         }
-                                    });
+                                    };
+                                    if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
+                                    else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+                                    this.app.log.add(data);
                                 }
                             }
                         }

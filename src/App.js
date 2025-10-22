@@ -248,8 +248,8 @@ class GrindWalletPlugin {
                     name: wallet.name,
                     publicKey: wallet.public,
                     secret: wallet.secret,
-                    tokens: wallet.tokens,
-                    nfts: 'nfts' in wallet ? wallet.nfts : {},
+                    tokens: ('tokens' in wallet) ? wallet.tokens : {},
+                    nfts: ('nfts' in wallet) ? wallet.nfts : {},
                 }));
 
             }

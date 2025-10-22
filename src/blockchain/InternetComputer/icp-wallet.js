@@ -1,4 +1,6 @@
-/*** ICP Wallet helpers ***/
+/**
+ * Wallet implementation for Internet Computer blockchain.
+ */
 
 import { HttpAgent, Actor } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';

@@ -23,7 +23,7 @@ export class Wallets {
                 }
                 return true;
             }
-        });        
+        });
     }
 
     /**

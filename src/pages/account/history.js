@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/widgets/token-image.js';
 import { Principal } from '@dfinity/principal';
 import { shortAddress } from '/src/utils/General.js';

@@ -1,6 +1,5 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { formatWithSpaces, formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
-
 
 export class Card extends Component {
 

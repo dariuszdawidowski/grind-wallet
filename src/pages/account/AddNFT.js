@@ -1,5 +1,5 @@
 import { Actor } from '@dfinity/agent';
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
 import { saveImage } from '/src/utils/ImageCache.js';

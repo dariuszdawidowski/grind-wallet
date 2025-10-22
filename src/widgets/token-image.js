@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 
 export class TokenImage extends Component {

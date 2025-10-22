@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { registerBiometric } from '/src/utils/Biometric.js';
 import { Button, ButtLink } from '/src/widgets/button.js';
 const { version } = require('/package.json');

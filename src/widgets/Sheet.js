@@ -5,8 +5,7 @@
  *   hidded: hide at start
  */
 
-import { Component } from '/src/utils/Component.js';
-
+import { Component } from '/src/utils/component.js';
 
 export class Sheet extends Component {
 

@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { Card } from '/src/widgets/card.js';
 import { TokenBalance } from '/src/widgets/token-balance.js';

@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/button.js';
 import { loadImage } from '/src/utils/ImageCache.js';
 import { SheetAccountSendNFT } from '/src/pages/account/SendNFT.js';

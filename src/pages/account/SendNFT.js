@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
 import { NFT } from '/src/blockchain/nft.js';

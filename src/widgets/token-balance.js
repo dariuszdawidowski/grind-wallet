@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { TokenImage } from './token-image.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 

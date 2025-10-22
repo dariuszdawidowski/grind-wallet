@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { InputText, RecoveryPhrase } from '/src/widgets/input.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/Keys.js';

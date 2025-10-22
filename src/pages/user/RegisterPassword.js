@@ -1,4 +1,4 @@
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { isPasswordStrong, generateSalt, hashPassword } from '../../utils/Password.js';
 import { Button } from '/src/widgets/button.js';
 import { InputPassword } from '/src/widgets/input.js';

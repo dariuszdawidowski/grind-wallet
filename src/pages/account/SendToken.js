@@ -1,6 +1,6 @@
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
-import { Component } from '/src/utils/Component.js';
+import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/widgets/input.js';

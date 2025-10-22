@@ -2,8 +2,8 @@
  * NFT adapter
  */
 
-import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/NFT_ICRC7.js';
-import { NFT_EXT } from '/src/blockchain/InternetComputer/NFT_EXT.js';
+import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/nft-icrc7.js';
+import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 
 export class NFT {
 

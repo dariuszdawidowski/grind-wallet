@@ -1,7 +1,7 @@
 import { Component } from '/src/utils/Component.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputAddress } from '/src/widgets/input.js';
-import { NFT } from '/src/blockchain/NFT.js';
+import { NFT } from '/src/blockchain/nft.js';
 
 export class SheetAccountSendNFT extends Component {
 

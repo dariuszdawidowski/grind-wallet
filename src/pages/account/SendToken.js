@@ -5,7 +5,6 @@ import { formatCurrency, icpt2ICP } from '/src/utils/Currency.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/widgets/input.js';
 import { ICP2icpt } from '/src/utils/Currency.js';
-//import { icpLedgerTransfer, icpLedgerFee } from '/src/blockchain/InternetComputer/Ledger.js';
 
 export class SheetAccountSend extends Component {
 

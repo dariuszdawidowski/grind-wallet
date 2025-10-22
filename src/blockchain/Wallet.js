@@ -19,7 +19,7 @@ export class Wallet {
         /*** Partially persistent attributes ***/
 
         // ICP+ICRC tokens list: object { canisterId: Token object }
-        // Token: { name: 'string', symbol: 'string', principal: 'string', account: 'string', balance: BingInt, decimals: int, fee: int, request: { functions }, actor: Actor object }
+        // Token: { name: 'string', symbol: 'string', principal: 'string', account: 'string', balance: BingInt, decimals: int, fee: int, request: { functions }, actor: Actor object, index: Actor object }
         this.tokens = tokens;
 
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
@@ -53,7 +53,7 @@ export class Wallet {
             tokens: Object.fromEntries(
                 Object.entries(this.tokens).map(([key, value]) => [
                     key,
-                    { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee }
+                    { name: value.name, symbol: value.symbol, decimals: value.decimals, fee: value.fee, index: value.indexId ? value.indexId : null }
                 ])
             ),
             nfts: this.nfts ? Object.fromEntries(

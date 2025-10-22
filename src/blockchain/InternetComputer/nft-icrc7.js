@@ -6,7 +6,7 @@
 
 import { Actor } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
-import { idlFactory as idlFactoryMinter } from '/src/blockchain/InternetComputer/candid/NFT_ICRC37.did.js';
+import { idlFactory as idlFactoryMinter } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';
 
 export class NFT_ICRC7 {
 

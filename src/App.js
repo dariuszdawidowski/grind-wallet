@@ -13,7 +13,7 @@ import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
 import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
 import { PageLogin } from '/src/pages/user/Login.js';
 // import { loginBiometric } from '/src/utils/Biometric.js';
-import { ICPWallet } from '/src/blockchain/InternetComputer/ICPWallet.js';
+import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
 import { ObjectCache } from '/src/utils/ObjectCache.js';
 import { Wallets } from '/src/blockchain/Wallets.js';
 // Development mode

@@ -4,11 +4,12 @@ import { HttpAgent, Actor } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/Keys.js';
-import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/Ledger.js';
-import { Wallet } from '/src/blockchain/Wallet.js';
+import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/ledger.js';
+import { Wallet } from '/src/blockchain/wallet.js';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
-import { ICPToken } from '/src/blockchain/InternetComputer/ICPToken.js';
-import { ICRCToken } from '/src/blockchain/InternetComputer/ICRCToken.js';
+import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
+import { ICPToken } from '/src/blockchain/InternetComputer/icp-token.js';
+import { ICRCToken } from '/src/blockchain/InternetComputer/icrc-token.js';
 
 export class ICPWallet extends Wallet {
 
@@ -24,7 +25,7 @@ export class ICPWallet extends Wallet {
         // Defaults
         if (!this.name) this.name = this.app.wallets.genNextWalletName('ICP');
         if (!this.blockchain) this.blockchain = 'Internet Computer';
-        if (!this.tokens) this.tokens = {'ryjl3-tyaaa-aaaaa-aaaba-cai': {}};
+        if (!this.tokens) this.tokens = { [ICP_LEDGER_CANISTER_ID]: {} };
 
         // Wallet crypto symbol (for future)
         if (!this.crypto) this.crypto = 'ICP';
@@ -96,10 +97,11 @@ export class ICPWallet extends Wallet {
  */
 
 export function icpRebuildToken(args, id, wallet) {
-    // ICP Ledger ID
+
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
     const ICP_INDEX_CANISTER_ID = 'qhbym-qaaaa-aaaaa-aaafq-cai';
 
+    console.log('Rebuilding token:', id, args);
     // Token
     wallet.tokens[id] = {
         principal: ('principal' in args) ? args.principal : wallet.principal,
@@ -109,8 +111,10 @@ export function icpRebuildToken(args, id, wallet) {
         decimals: ('decimals' in args) ? Number(args.decimals) : 8,
         fee: ('fee' in args) ? Number(args.fee) : 10000,
         balance: ('balance' in args) ? args.balance : null,
-        actor: ('actor' in args) ? args.actor : id == ICP_LEDGER_CANISTER_ID ? LedgerCanister.create({ agent: wallet.agent }) : IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id }),
-        index: ('index' in args) ? args.index : id == ICP_LEDGER_CANISTER_ID ? Actor.createActor(idlICPIndex, { agent: wallet.agent, canisterId: ICP_INDEX_CANISTER_ID }) : null,
+        actor: ('actor' in args) ? args.actor : null,
+        index: ('index' in args) ? args.index : null,
+        // actor: ('actor' in args) ? args.actor : id == ICP_LEDGER_CANISTER_ID ? LedgerCanister.create({ agent: wallet.agent }) : IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id }),
+        // index: ('index' in args) ? args.index : id == ICP_LEDGER_CANISTER_ID ? Actor.createActor(idlICPIndex, { agent: wallet.agent, canisterId: ICP_INDEX_CANISTER_ID }) : Actor.createActor(idlICRCIndex, { agent: wallet.agent, canisterId: args.index }),
         request: ('request' in args) ? args.request : id == ICP_LEDGER_CANISTER_ID ?
             {
                 balance: icpLedgerBalance.bind(wallet.tokens[id]),
@@ -123,12 +127,23 @@ export function icpRebuildToken(args, id, wallet) {
             }
     };
 
-    // Actor
+    // Ledger Actor
     if (!('actor' in wallet.tokens[id]) || wallet.tokens[id].actor == null) {
         wallet.tokens[id].actor = (id == ICP_LEDGER_CANISTER_ID) ?
             LedgerCanister.create({ agent: wallet.agent })
             :
             IcrcLedgerCanister.create({ agent: wallet.agent, canisterId: id });
+    }
+
+    // Index Actor
+    if (wallet.tokens[id].index != null) {
+        // Store string id for later use
+        wallet.tokens[id].indexId = wallet.tokens[id].index;
+        // Create actor object instead
+        wallet.tokens[id].index = (id == ICP_LEDGER_CANISTER_ID) ?
+            Actor.createActor(idlICPIndex, { agent: wallet.agent, canisterId: ICP_INDEX_CANISTER_ID })
+            :
+            Actor.createActor(idlICRCIndex, { agent: wallet.agent, canisterId: wallet.tokens[id].indexId });
     }
 
 }

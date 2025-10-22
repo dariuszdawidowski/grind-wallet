@@ -7,7 +7,7 @@ import { SheetNewAccount } from './New.js';
 import { SheetImportAccount } from './Import.js';
 import { SheetAccountDetails } from './Details.js';
 import { SheetNFTDetails } from './DetailsNFT.js';
-import { NFT } from '/src/blockchain/NFT.js';
+import { NFT } from '/src/blockchain/nft.js';
 const { version } = require('/package.json');
 
 export class PageListAccounts extends Component {

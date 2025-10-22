@@ -7,7 +7,7 @@ import { validICRC1 } from '/src/utils/Currency.js';
 import { isValidCanisterId } from '/src/utils/General.js';
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { saveImage } from '/src/utils/ImageCache.js';
-import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/ICPWallet.js';
+import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/icp-wallet.js';
 
 export class SheetAddCustomToken extends Component {
 
@@ -97,31 +97,7 @@ export class SheetAddCustomToken extends Component {
 
         // Second pass (accept)
         else {
-            // Add token to wallet
-            if (!(canisterId in this.wallet.tokens)) {
-                icpRebuildToken({
-                    actor: this.actor.ledger,
-                    name: this.metadata['icrc1:name'].Text,
-                    symbol: this.metadata['icrc1:symbol'].Text,
-                    decimals: this.metadata['icrc1:decimals'].Nat,
-                    fee: this.metadata['icrc1:fee'].Nat
-                }, canisterId, this.wallet);
-                icpBindTokenActions(this.wallet.tokens[canisterId], canisterId);
-                if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
-                    saveImage(`token:${canisterId}`, this.metadata['icrc1:logo'].Text);
-                }
-                this.app.saveWallets();
-                this.app.page('accounts');
-                this.app.sheet.clear();
-                this.app.sheet.hide();
-            }
-            else {
-                this.widget.address.enable();
-                this.actor.ledger = null;
-                this.actor.index = null;
-                this.metadata = null;
-                alert('Token already on the list');
-            }
+            this.addTokenToWallet(canisterId);
         }
     }
 
@@ -227,6 +203,36 @@ export class SheetAddCustomToken extends Component {
         }
 
         return { valid: false, error: 'Not an ICRC-INDEX standard' };
+    }
+
+    addTokenToWallet(canisterId) {
+        if (!(canisterId in this.wallet.tokens)) {
+            const data = {
+                actor: this.actor.ledger,
+                name: this.metadata['icrc1:name'].Text,
+                symbol: this.metadata['icrc1:symbol'].Text,
+                decimals: this.metadata['icrc1:decimals'].Nat,
+                fee: this.metadata['icrc1:fee'].Nat
+            };
+            if (this.actor.index) data.index = this.actor.index;
+            icpRebuildToken(data, canisterId, this.wallet);
+            icpBindTokenActions(this.wallet.tokens[canisterId], canisterId);
+            if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
+                saveImage(`token:${canisterId}`, this.metadata['icrc1:logo'].Text);
+            }
+            this.app.saveWallets();
+            this.app.page('accounts');
+            this.app.sheet.clear();
+            this.app.sheet.hide();
+        }
+        else {
+            this.widget.address.enable();
+            this.actor.ledger = null;
+            this.actor.index = null;
+            this.metadata = null;
+            alert('Token already on the list');
+        }
+
     }
 
 }

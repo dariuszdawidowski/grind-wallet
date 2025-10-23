@@ -1,6 +1,6 @@
 import { Component } from '/src/utils/component.js';
-import { Button, ButtonDescription } from '/src/widgets/button.js';
-import { InputAddress } from '/src/widgets/input.js';
+import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
+import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { NFT } from '/src/blockchain/nft.js';
 
 export class SheetAccountSendNFT extends Component {

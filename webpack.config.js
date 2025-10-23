@@ -13,7 +13,7 @@ module.exports = (env = {}, argv = {}) => {
 
     return {
         mode,
-        entry: './src/app.js',
+        entry: './src/chrome-extension/popup/popup.js',
         target: 'web',
 
         output: {
@@ -43,7 +43,7 @@ module.exports = (env = {}, argv = {}) => {
             }),
 
             new HtmlWebpackPlugin({
-                template: './src/popup.html',
+                template: './src/chrome-extension/popup/popup.html',
                 filename: 'popup.html',
                 inject: 'body'
             }),

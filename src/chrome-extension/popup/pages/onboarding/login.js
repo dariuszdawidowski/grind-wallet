@@ -1,9 +1,9 @@
 import { Component } from '/src/utils/component.js';
 import { verifyPassword } from '/src/utils/password.js';
-import { Form } from '/src/widgets/form.js';
-import { Button } from '/src/widgets/button.js';
-import { InputPassword } from '../../widgets/input.js';
-const { version } = require('../../../package.json');
+import { Form } from '/src/chrome-extension/popup/widgets/form.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { InputPassword } from '/src/chrome-extension/popup/widgets/input.js';
+const { version } = require('/package.json');
 
 
 export class PageLogin extends Component {

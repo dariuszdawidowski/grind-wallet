@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { TokenImage } from '/src/widgets/token-image.js';
+import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { Principal } from '@dfinity/principal';
 import { shortAddress } from '/src/utils/general.js';
 import { icpt2ICP } from '/src/utils/currency.js';

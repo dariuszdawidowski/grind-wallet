@@ -1,8 +1,7 @@
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/widgets/button.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 
-
-export class SheetAccountReceive extends Component {
+export class SheetAccountReceiveNFT extends Component {
 
     constructor(args) {
         super(args);
@@ -10,48 +9,22 @@ export class SheetAccountReceive extends Component {
         // Wallet
         this.wallet = args.wallet;
 
+        // Principal ID
+        const address = this.wallet.principal;
+
         // Build
         this.element.classList.add('form');
-
-        // Render both Principal ID and Account ID for mail "card"
-        if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
-            this.render({ name: 'Principal ID', address: this.wallet.principal });
-            // Separator
-            const sep = document.createElement('hr');
-            sep.style.marginTop = '18px';
-            this.element.append(sep);
-            this.render({ name: 'Account ID', address: this.wallet.account });
-        }
-
-        // Render only principal for custom token
-        else {
-            this.render({ name: 'Principal ID', address: this.wallet.principal });
-        }
-
-        // End separator
-        const end = document.createElement('div');
-        end.classList.add('end');
-        this.element.append(end);
-
-    }
-
-    /**
-     * Render given string as header + QR code + subtitle
-     */
-
-    render({ name, address }) {
 
         // Header
         const h3 = document.createElement('h3');
         h3.style.fontWeight = 'bold';
-        h3.innerText = name;
+        h3.innerText = 'Principal ID';
         this.element.append(h3);
 
         // Show address
         const addr = document.createElement('div');
         addr.classList.add('address');
-        if (name === 'Account ID') addr.classList.add('account');
-        else if (name === 'Principal ID') addr.classList.add('principal');
+        addr.classList.add('principal');
         addr.innerText = address;
         this.element.append(addr);
 
@@ -69,7 +42,7 @@ export class SheetAccountReceive extends Component {
         });
 
         const buttonCopy = new Button({
-            text: `Copy ${name} to clipboard`,
+            text: 'Copy address to clipboard',
             click: () => {
                 navigator.clipboard.writeText(address).then(() => {
                     buttonCopy.set('Copied!');

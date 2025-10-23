@@ -3,8 +3,8 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Button, ButtonDescription } from '/src/widgets/button.js';
-import { InputText, RecoveryPhrase } from '/src/widgets/input.js';
+import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
+import { InputText, RecoveryPhrase } from '/src/chrome-extension/popup/widgets/input.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/keys.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
 

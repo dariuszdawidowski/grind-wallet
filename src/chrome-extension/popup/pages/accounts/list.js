@@ -1,12 +1,12 @@
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/widgets/button.js';
-import { Card } from '/src/widgets/card.js';
-import { TokenBalance } from '/src/widgets/token-balance.js';
-import { Cover } from '/src/widgets/cover.js';
-import { SheetNewAccount } from '/src/pages/accounts/new.js';
-import { SheetImportAccount } from '/src/pages/accounts/import.js';
-import { SheetAccountDetails } from '/src/pages/accounts/details.js';
-import { SheetNFTDetails } from '/src/pages/accounts/details-nft.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { Card } from '/src/chrome-extension/popup/widgets/card.js';
+import { TokenBalance } from '/src/chrome-extension/popup/widgets/token-balance.js';
+import { Cover } from '/src/chrome-extension/popup/widgets/cover.js';
+import { SheetNewAccount } from '/src/chrome-extension/popup/pages/accounts/new.js';
+import { SheetImportAccount } from '/src/chrome-extension/popup/pages/accounts/import.js';
+import { SheetAccountDetails } from '/src/chrome-extension/popup/pages/accounts/details.js';
+import { SheetNFTDetails } from '/src/chrome-extension/popup/pages/accounts/details-nft.js';
 import { NFT } from '/src/blockchain/nft.js';
 const { version } = require('/package.json');
 

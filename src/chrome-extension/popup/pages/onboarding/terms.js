@@ -3,9 +3,9 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/widgets/button.js';
-import { Checkbox } from '/src/widgets/checkbox.js';
-const { version } = require('../../../package.json');
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { Checkbox } from '/src/chrome-extension/popup/widgets/checkbox.js';
+const { version } = require('/package.json');
 
 export class PageAcceptTerms extends Component {
 

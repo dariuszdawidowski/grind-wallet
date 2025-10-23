@@ -1,11 +1,14 @@
+/**
+ * Page: User Registration - Create Password
+ */
+
 import { Component } from '/src/utils/component.js';
 import { isPasswordStrong, generateSalt, hashPassword } from '/src/utils/password.js';
-import { Button } from '/src/widgets/button.js';
-import { InputPassword } from '/src/widgets/input.js';
-const { version } = require('../../../package.json');
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { InputPassword } from '/src/chrome-extension/popup/widgets/input.js';
+const { version } = require('/package.json');
 
-
-export class PageRegister extends Component {
+export class PageRegisterPassword extends Component {
 
     constructor(args) {
         super(args);
@@ -53,12 +56,18 @@ export class PageRegister extends Component {
             id: 'new-password-ok',
             text: 'Confirm',
             click: () => {
-                if (password.get() === passwordConfirm.get()) {
-                    if (isPasswordStrong(password.get())) {
+                const newPassword = password.get();
+                if (newPassword === passwordConfirm.get()) {
+                    if (isPasswordStrong(newPassword)) {
                         generateSalt().then(salt => {
-                            hashPassword(password.get(), salt).then(hashed => {
+                            hashPassword(newPassword, salt).then(hashed => {
                                 chrome.storage.local.set({ salt: salt, password: hashed }, () => {
-                                    this.app.page('login', {salt: salt, hash: hashed});
+                                    // Store password
+                                    this.app.user.password = newPassword;
+                                    // Save session
+                                    chrome.storage.session.set({ active: true, password: newPassword });
+                                    // Activate main page
+                                    this.app.page('accounts');
                                 });
                             });
                         });

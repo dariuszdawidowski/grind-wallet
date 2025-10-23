@@ -1,8 +1,8 @@
 import { Component } from '/src/utils/component.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
-import { Button, ButtIcon, ButtLink } from '/src/widgets/button.js';
-import { AddPlus } from '/src/widgets/add.js';
-import { TokenImage } from '/src/widgets/token-image.js';
+import { Button, ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
+import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
+import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { SheetAccountSend } from './send-token.js';
 import { SheetAccountReceive } from './receive-token.js';
 import { SheetAddCustomToken } from './add-token.js';

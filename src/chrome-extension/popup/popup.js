@@ -3,17 +3,17 @@
  * (c) 2024-2025 by Dariusz Dawidowski
  */
 
-import '/src/popup.css';
-import { LogSystem } from './utils/logger.js';
-import { Sheet } from '/src/widgets/sheet.js';
-import { PageAccounts } from '/src/pages/accounts/index.js';
-import { PageAcceptTerms } from '/src/pages/onboarding/terms.js';
-import { PageRegisterPassword } from '/src/pages/onboarding/register-password.js';
-import { PageLogin } from '/src/pages/onboarding/login.js';
+import '/src/chrome-extension/popup/popup.css';
+import { LogSystem } from '/src/utils/logger.js';
+import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
+import { PageAccounts } from '/src/chrome-extension/popup/pages/accounts/index.js';
+import { PageAcceptTerms } from '/src/chrome-extension/popup/pages/onboarding/terms.js';
+import { PageRegisterPassword } from '/src/chrome-extension/popup/pages/onboarding/register-password.js';
+import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { Wallets } from '/src/blockchain/Wallets.js';
 // Development mode
-if (process.env.DEV_MODE) import('/src/dev-mode.js');
+if (process.env.DEV_MODE) import('/src/chrome-extension/popup/dev-mode.js');
 // E2E tests
 if (process.env.TEST_MODE) import('/tests/start.js');
 

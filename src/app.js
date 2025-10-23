@@ -6,12 +6,12 @@
 import '/src/popup.css';
 import { LogSystem } from './utils/logger.js';
 import { Sheet } from '/src/widgets/sheet.js';
-import { PageEmpty } from '/src/pages/account/Empty.js';
-import { PageListAccounts } from '/src/pages/account/List.js';
-import { PageAcceptTerms } from '/src/pages/user/Terms.js';
-import { PageRegisterWebAuthn } from '/src/pages/user/RegisterWebAuthn.js';
-import { PageRegisterPassword } from '/src/pages/user/RegisterPassword.js';
-import { PageLogin } from '/src/pages/user/Login.js';
+import { PageEmpty } from '/src/pages/account/empty.js';
+import { PageListAccounts } from '/src/pages/account/list.js';
+import { PageAcceptTerms } from '/src/pages/user/terms.js';
+import { PageRegisterWebAuthn } from '/src/pages/user/register-webauthn.js';
+import { PageRegisterPassword } from '/src/pages/user/register-password.js';
+import { PageLogin } from '/src/pages/user/login.js';
 // import { loginBiometric } from '/src/utils/biometric.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
 import { ObjectCache } from '/src/utils/object-cache.js';

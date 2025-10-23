@@ -1,9 +1,9 @@
 import { Component } from '/src/utils/component.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/button.js';
 import { loadImage } from '/src/utils/image-cache.js';
-import { SheetAccountSendNFT } from '/src/pages/account/SendNFT.js';
-import { SheetAccountReceiveNFT } from '/src/pages/account/ReceiveNFT.js';
-import { Copy } from '../../widgets/copy.js';
+import { SheetAccountSendNFT } from '/src/pages/account/send-nft.js';
+import { SheetAccountReceiveNFT } from '/src/pages/account/receive-nft.js';
+import { Copy } from '/src/widgets/copy.js';
 
 export class SheetNFTDetails extends Component {
 

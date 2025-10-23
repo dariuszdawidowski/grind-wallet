@@ -13,7 +13,7 @@ module.exports = (env = {}, argv = {}) => {
 
     return {
         mode,
-        entry: './src/App.js',
+        entry: './src/app.js',
         target: 'web',
 
         output: {

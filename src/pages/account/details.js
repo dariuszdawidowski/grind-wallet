@@ -3,10 +3,10 @@ import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/widgets/button.js';
 import { AddPlus } from '/src/widgets/add.js';
 import { TokenImage } from '/src/widgets/token-image.js';
-import { SheetAccountSend } from './SendToken.js';
-import { SheetAccountReceive } from './ReceiveToken.js';
-import { SheetAddCustomToken } from './AddToken.js';
-import { SheetAddCustomNFT } from './AddNFT.js';
+import { SheetAccountSend } from './send-token.js';
+import { SheetAccountReceive } from './receive-token.js';
+import { SheetAddCustomToken } from './add-token.js';
+import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';
 
 export class SheetAccountDetails extends Component {

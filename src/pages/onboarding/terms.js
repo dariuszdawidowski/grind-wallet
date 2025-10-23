@@ -1,8 +1,11 @@
+/**
+ * First page: Accept terms of use
+ */
+
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/widgets/button.js';
 import { Checkbox } from '/src/widgets/checkbox.js';
 const { version } = require('../../../package.json');
-
 
 export class PageAcceptTerms extends Component {
 
@@ -48,8 +51,9 @@ export class PageAcceptTerms extends Component {
             disabled: true,
             click: () => {
                 if (agree.checked()) {
-                    chrome.storage.local.set({ terms: true });
-                    this.app.page('register-password');
+                    chrome.storage.local.set({ terms: true }, () => {
+                        this.app.page('register-password');
+                    });
                 }
             }
         });

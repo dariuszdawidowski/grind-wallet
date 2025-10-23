@@ -80,13 +80,12 @@ class SheetNewAccountPhrase extends Component {
         this.append(new Button({
             text: 'Add to my wallets',
             click: async () => {
-                this.app.wallets.add(new ICPWallet({
+                await this.app.wallets.add(new ICPWallet({
                     blockchain: 'Internet Computer',
                     name: name.get(),
                     publicKey: args.wallet.public,
                     secret: args.secret
-                }));
-                await this.app.wallets.get(args.wallet.public).rebuild(this.app.user.password);
+                }), this.app.user.password);
                 this.app.saveWallets();
                 this.app.page('accounts');
                 this.app.sheet.clear();

@@ -37,7 +37,7 @@ export class Tokens {
                     symbol: value.symbol,
                     decimals: value.decimals,
                     fee: value.fee,
-                    index: value.indexId ? value.indexId : null
+                    index: value.index
                 }
             ])
         );

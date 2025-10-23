@@ -3,10 +3,10 @@ import { Button } from '/src/widgets/button.js';
 import { Card } from '/src/widgets/card.js';
 import { TokenBalance } from '/src/widgets/token-balance.js';
 import { Cover } from '/src/widgets/cover.js';
-import { SheetNewAccount } from '/src/pages/account/new.js';
-import { SheetImportAccount } from '/src/pages/account/import.js';
-import { SheetAccountDetails } from '/src/pages/account/details.js';
-import { SheetNFTDetails } from '/src/pages/account/details-nft.js';
+import { SheetNewAccount } from '/src/pages/accounts/new.js';
+import { SheetImportAccount } from '/src/pages/accounts/import.js';
+import { SheetAccountDetails } from '/src/pages/accounts/details.js';
+import { SheetNFTDetails } from '/src/pages/accounts/details-nft.js';
 import { NFT } from '/src/blockchain/nft.js';
 const { version } = require('/package.json');
 

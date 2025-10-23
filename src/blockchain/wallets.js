@@ -2,9 +2,14 @@
  * Manages a collection of wallets.
  */
 
+import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
+
 export class Wallets {
 
-    constructor() {
+    constructor(args) {
+
+        // References
+        this.app = args.app;
 
         // Wallets list: { publicKey: Wallet object, ... }
         this.list = {};
@@ -27,7 +32,7 @@ export class Wallets {
     }
 
     /**
-     * Add wallet to the collection
+     * Add wallet to the collection and rebuild it
      * @param {Wallet} wallet - The wallet object to add.
      */
 
@@ -120,6 +125,58 @@ export class Wallets {
 
     hasSimilarAccount(account) {
         return Object.values(this.list).some(wallet => wallet.account.startsWith(account.slice(0, 4)));
+    }
+
+    /**
+     * Load wallets from persistent storage
+     */
+
+    async load() {
+        const storageLocal = await chrome.storage.local.get(['wallets']);
+        if (storageLocal.wallets) {
+            for (const [publicKey, wallet] of Object.entries(storageLocal.wallets)) {
+                wallet = this.migrate(wallet);
+                const params = {
+                    blockchain: wallet.blockchain,
+                    name: wallet.name,
+                    publicKey: wallet.public,
+                    secret: wallet.secret,
+                    tokens: ('tokens' in wallet) ? wallet.tokens : {},
+                    nfts: ('nfts' in wallet) ? wallet.nfts : {},
+                };
+                const newWallet = new ICPWallet(params);
+                await newWallet.build(this.app.user.password);
+                this.add(newWallet);
+            }
+        }
+    }
+
+    /**
+     * Migrate wallet data to the latest version
+     * @param {Object} wallet 
+     * @returns {Object} migrated wallet
+     */
+
+    migrate(wallet) {
+
+        // blockchain: 'Internet Computer'
+        if (!('blockchain' in wallet)) {
+            wallet.blockchain = 'Internet Computer';
+        }
+
+        return wallet;
+    }
+
+    /**
+     * Save wallets to persistent storage
+     */
+
+    save() {
+        const serializedWallets = {};
+        Object.values(this.list).forEach(wallet => {
+            serializedWallets[wallet.public] = wallet.serialize();
+        });
+        chrome.storage.local.set({ 'wallets': serializedWallets });
     }
 
 }

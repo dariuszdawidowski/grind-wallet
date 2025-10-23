@@ -1,3 +1,7 @@
+/**
+ * Page: Import existing account
+ */
+
 import { Component } from '/src/utils/component.js';
 import { Button, ButtonDescription } from '/src/widgets/button.js';
 import { InputText, RecoveryPhrase } from '/src/widgets/input.js';
@@ -60,13 +64,12 @@ export class SheetImportAccount extends Component {
         const wallet = keysRecoverFromPhraseSecp256k1(this.phrase.get().join(' '));
         const encrypted = await encryptKey(wallet.private, this.app.user.password);
         const secret = serializeEncryptKey(encrypted);
-        this.app.wallets.add(new ICPWallet({
+        await this.app.wallets.add(new ICPWallet({
             blockchain: 'Internet Computer',
             name: this.name.get(),
             publicKey: wallet.public,
             secret: secret
-        }));
-        await this.app.wallets.get(wallet.public).rebuild(this.app.user.password);
+        }), this.app.user.password);
         this.app.saveWallets();
     }
 

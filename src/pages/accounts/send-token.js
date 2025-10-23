@@ -112,7 +112,7 @@ export class SheetAccountSend extends Component {
         // Ok to transfer
         if (allow) {
             this.submit.busy(true);
-            this.wallet.tokens[this.canisterId].request.transfer({
+            this.wallet.tokens[this.canisterId].transfer({
                 principal,
                 account,
                 amount: this.widget.amount.get()

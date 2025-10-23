@@ -45,7 +45,7 @@ export class TokenBalance extends Component {
         }
 
         // Fetch balance
-        args.wallet.tokens[args.canisterId].request.balance().then(balance => {
+        args.wallet.tokens[args.canisterId].balance().then(balance => {
             args.wallet.tokens[args.canisterId].balance = balance;
             this.label.innerHTML = `${args.wallet.tokens[args.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance, args.wallet.tokens[args.canisterId].decimals), 4)}`;
         });

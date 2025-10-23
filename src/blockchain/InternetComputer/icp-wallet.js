@@ -2,14 +2,10 @@
  * Wallet implementation for Internet Computer blockchain.
  */
 
-import { HttpAgent, Actor } from '@dfinity/agent';
-import { LedgerCanister } from '@dfinity/ledger-icp';
-import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { HttpAgent } from '@dfinity/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/keys.js';
-import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/ledger.js';
+// import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/ledger.js';
 import { Wallet } from '/src/blockchain/wallet.js';
-import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
-import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { ICPToken } from '/src/blockchain/InternetComputer/icp-token.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/icrc-token.js';
 
@@ -19,15 +15,12 @@ export class ICPWallet extends Wallet {
      * Create or update ICP wallet with ICP/ICRC tokens
      */
 
-    async rebuild(password) {
-
-        // ICP Ledger ID
-        const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+    async build(password) {
 
         // Defaults
         if (!this.name) this.name = this.app.wallets.genNextWalletName('ICP');
         if (!this.blockchain) this.blockchain = 'Internet Computer';
-        if (!this.tokens) this.tokens = { [ICP_LEDGER_CANISTER_ID]: {} };
+        if (!this.tokens) this.tokens = { [this.app.ICP_LEDGER_CANISTER_ID]: {} };
 
         // Wallet crypto symbol (for future)
         if (!this.crypto) this.crypto = 'ICP';
@@ -65,24 +58,17 @@ export class ICPWallet extends Wallet {
         for (const [id, token] of Object.entries(this.tokens)) {
 
             // ICP
-            if (id == ICP_LEDGER_CANISTER_ID) {
-
-                // Fill in
-                icpRebuildToken(Object.assign(token, { name: 'ICP', symbol: 'ICP' }), id, this);
-
-                // Bind request actions
-                icpBindTokenActions(this.tokens[id], id);
-
+            if (id == this.app.ICP_LEDGER_CANISTER_ID) {
+                const newToken = new ICPToken(token);
+                await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: this.app.ICP_INDEX_CANISTER_ID });
+                this.tokens.add(id, newToken);
             }
 
             // Token
             else {
-
-                // Fill in
-                icpRebuildToken(token, id, this);
-
-                // Bind request actions
-                icpBindTokenActions(this.tokens[id], id);
+                const newToken = new ICRCToken(token);
+                await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: token.index });
+                this.tokens.add(id, newToken);
             }
 
             // Tag as sucessfuly rebuilded
@@ -97,7 +83,7 @@ export class ICPWallet extends Wallet {
 /**
  * Create or update single ICRC token
  */
-
+/*
 export function icpRebuildToken(args, id, wallet) {
 
     const ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
@@ -166,3 +152,4 @@ export function icpBindTokenActions(scope, id) {
             transfer: icrcLedgerTransfer.bind(scope)
         };
 }
+*/

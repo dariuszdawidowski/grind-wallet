@@ -31,7 +31,16 @@ export class InputText extends Component {
     }
 
     get() {
-        return this.input.value.trim();
+        const normalized = this.input.value.normalize('NFC');
+        const sanitized = Array.from(normalized).filter((char) => {
+            const codePoint = char.codePointAt(0);
+            if (codePoint === undefined) return false;
+            if (codePoint <= 31) return false;
+            if (codePoint >= 127 && codePoint <= 159) return false;
+            if (codePoint >= 0xD800 && codePoint <= 0xDFFF) return false;
+            return true;
+        }).join('');
+        return sanitized.trim();
     }
 
     enable() {

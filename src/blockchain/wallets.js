@@ -171,12 +171,12 @@ export class Wallets {
      * Save wallets to persistent storage
      */
 
-    save() {
+    async save() {
         const serializedWallets = {};
         Object.values(this.list).forEach(wallet => {
             serializedWallets[wallet.public] = wallet.serialize();
         });
-        chrome.storage.local.set({ 'wallets': serializedWallets });
+        await chrome.storage.local.set({ 'wallets': serializedWallets });
     }
 
 }

@@ -4,7 +4,6 @@
 
 import { HttpAgent } from '@dfinity/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/keys.js';
-// import { icpLedgerBalance, icrcLedgerBalance, icpLedgerTransfer, icrcLedgerTransfer } from '/src/blockchain/InternetComputer/ledger.js';
 import { Wallet } from '/src/blockchain/wallet.js';
 import { ICPToken } from '/src/blockchain/InternetComputer/icp-token.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/icrc-token.js';
@@ -17,10 +16,13 @@ export class ICPWallet extends Wallet {
 
     async build(password) {
 
+        // Canister ids
+        this.ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
+        this.ICP_INDEX_CANISTER_ID = 'qhbym-qaaaa-aaaaa-aaafq-cai';
+
         // Defaults
-        if (!this.name) this.name = this.app.wallets.genNextWalletName('ICP');
         if (!this.blockchain) this.blockchain = 'Internet Computer';
-        if (!this.tokens) this.tokens = { [this.app.ICP_LEDGER_CANISTER_ID]: {} };
+        if (!this.tokens) this.tokens = { [this.ICP_LEDGER_CANISTER_ID]: {} };
 
         // Wallet crypto symbol (for future)
         if (!this.crypto) this.crypto = 'ICP';
@@ -58,9 +60,9 @@ export class ICPWallet extends Wallet {
         for (const [id, token] of Object.entries(this.tokens)) {
 
             // ICP
-            if (id == this.app.ICP_LEDGER_CANISTER_ID) {
+            if (id == this.ICP_LEDGER_CANISTER_ID) {
                 const newToken = new ICPToken(token);
-                await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: this.app.ICP_INDEX_CANISTER_ID });
+                await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: this.ICP_INDEX_CANISTER_ID });
                 this.tokens.add(id, newToken);
             }
 

@@ -63,14 +63,14 @@ export class ICPWallet extends Wallet {
             if (id == this.ICP_LEDGER_CANISTER_ID) {
                 const newToken = new ICPToken(token);
                 await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: this.ICP_INDEX_CANISTER_ID });
-                this.tokens.add(id, newToken);
+                this.tokens.add(newToken);
             }
 
             // Token
             else {
                 const newToken = new ICRCToken(token);
                 await newToken.build({ agent: this.agent, principal: this.principal, account: this.account, index: token.index });
-                this.tokens.add(id, newToken);
+                this.tokens.add(newToken);
             }
 
             // Tag as sucessfuly rebuilded

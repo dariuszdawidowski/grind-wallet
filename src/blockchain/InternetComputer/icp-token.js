@@ -23,7 +23,7 @@ export class ICPToken extends Token {
         this.actor = LedgerCanister.create({ agent });
 
         // Index Actor
-        this.index = Actor.createActor(idlICPIndex, { agent, canisterId: index });
+        // this.index = Actor.createActor(idlICPIndex, { agent, canisterId: index });
 
         // Tag as sucessfuly rebuilded
         this.rebuilded = Date.now();

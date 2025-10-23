@@ -134,8 +134,8 @@ export class Wallets {
     async load() {
         const storageLocal = await chrome.storage.local.get(['wallets']);
         if (storageLocal.wallets) {
-            for (const [publicKey, wallet] of Object.entries(storageLocal.wallets)) {
-                wallet = this.migrate(wallet);
+            for (const [_, w] of Object.entries(storageLocal.wallets)) {
+                const wallet = this.migrate(w);
                 const params = {
                     blockchain: wallet.blockchain,
                     name: wallet.name,

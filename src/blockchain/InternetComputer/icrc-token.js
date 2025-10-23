@@ -10,10 +10,10 @@ import { Token } from '/src/blockchain/token.js';
 export class ICRCToken extends Token {
 
     /**
-     * Rebuild ICRC token with actor
+     * Rebuild ICRC token with actors
      */
 
-    async build({ agent, principal, account }) {
+    async build({ agent, principal, account, index }) {
 
         // Params
         this.principal = principal;
@@ -23,7 +23,7 @@ export class ICRCToken extends Token {
         this.actor = IcrcLedgerCanister.create({ agent, canisterId: this.principal });
 
         // Index Actor
-        this.index = Actor.createActor(idlICRCIndex, { agent, canisterId: index });
+        // this.index = Actor.createActor(idlICRCIndex, { agent, canisterId: index });
 
         // Tag as sucessfuly rebuilded
         this.rebuilded = Date.now();

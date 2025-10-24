@@ -92,9 +92,18 @@ class GrindWalletPlugin {
         this.cache = new ObjectCache();
 
         // Get storage session data
-        const storageSession = await chrome.storage.session.get(['active', 'password']);
-        if (('active' in storageSession) && storageSession.active === true) {
-            
+        const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);
+        if (storageSession.hasOwnProperty('active') && storageSession.active === true && storageSession.hasOwnProperty('created')) {
+
+            // Check if session 'created' timestamp is older than 1 hour and clear session if expired
+            const createdTime = new Date(storageSession.created).getTime();
+            const ONE_HOUR = 60 * 60 * 1000;
+            if (isNaN(createdTime) || (Date.now() - createdTime) > ONE_HOUR) {
+                await chrome.storage.session.remove(['active', 'password', 'created']);
+                await this.init();
+                return;
+            }
+
             // Password
             this.user.password = storageSession.password;
 

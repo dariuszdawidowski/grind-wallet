@@ -65,7 +65,11 @@ export class PageLogin extends Component {
                 // Store password
                 this.app.user.password = password;
                 // Save session
-                chrome.storage.session.set({ active: true, password: this.app.user.password });
+                chrome.storage.session.set({
+                    'active': true,
+                    'password': this.app.user.password,
+                    'created': Date.now()
+                });
                 // Load and decode wallets
                 chrome.storage.local.get(['wallets', 'version'], (store) => {
 

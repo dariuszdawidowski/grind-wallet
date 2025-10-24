@@ -6,10 +6,10 @@ import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
 
 export class Wallets {
 
-    constructor(args) {
+    constructor({ app }) {
 
         // References
-        this.app = args.app;
+        this.app = app;
 
         // Wallets list: { publicKey: Wallet object, ... }
         this.list = {};

@@ -11,7 +11,7 @@ import { PageAcceptTerms } from '/src/chrome-extension/popup/pages/onboarding/te
 import { PageRegisterPassword } from '/src/chrome-extension/popup/pages/onboarding/register-password.js';
 import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
-import { Wallets } from '/src/blockchain/Wallets.js';
+import { Wallets } from '/src/blockchain/wallets.js';
 // Development mode
 if (process.env.DEV_MODE) import('/src/chrome-extension/popup/dev-mode.js');
 // E2E tests
@@ -86,7 +86,7 @@ class GrindWalletPlugin {
         };
 
         // Wallets list { ICPWallet, ... }
-        this.wallets = new Wallets(this);
+        this.wallets = new Wallets({ app: this });
 
         // Actor cache
         this.cache = new ObjectCache();

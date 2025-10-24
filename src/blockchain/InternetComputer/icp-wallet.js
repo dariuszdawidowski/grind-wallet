@@ -15,6 +15,8 @@ export class ICPWallet extends Wallet {
      */
 
     async build(password) {
+        console.log('build')
+        console.trace();
 
         // Canister ids
         this.ICP_LEDGER_CANISTER_ID = 'ryjl3-tyaaa-aaaaa-aaaba-cai';
@@ -22,7 +24,9 @@ export class ICPWallet extends Wallet {
 
         // Defaults
         if (!this.blockchain) this.blockchain = 'Internet Computer';
-        if (!this.tokens) this.tokens = { [this.ICP_LEDGER_CANISTER_ID]: {} };
+
+        // Add standard ICP token
+        // this.tokens.add = { [this.ICP_LEDGER_CANISTER_ID]: {} };
 
         // Wallet crypto symbol (for future)
         if (!this.crypto) this.crypto = 'ICP';
@@ -57,7 +61,7 @@ export class ICPWallet extends Wallet {
         }
 
         // Tokens with actors
-        for (const [id, token] of Object.entries(this.tokens)) {
+        for (const [id, token] of this.tokens.get()) {
 
             // ICP
             if (id == this.ICP_LEDGER_CANISTER_ID) {

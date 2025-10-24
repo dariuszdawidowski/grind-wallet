@@ -50,9 +50,6 @@ export class Wallet {
         // Agent: object HttpAgent
         this.agent = null;
 
-        // Rebuilded dynamic attributes: int timestamp
-        this.rebuilded = null;
-
     }
 
     serialize() {

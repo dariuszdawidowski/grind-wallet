@@ -9,24 +9,28 @@ import { Token } from '/src/blockchain/token.js';
 
 export class ICPToken extends Token {
 
+    constructor() {
+        super({
+            principal: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+            name: 'Internet Computer Protocol',
+            symbol: 'ICP',
+            decimals: 8,
+            fee: 10000,
+            index: 'qhbym-qaaaa-aaaaa-aaafq-cai'
+        });
+    }
+
     /**
      * Rebuild ICP token with actor
      */
 
-    async build({ agent, principal, account, index }) {
-
-        // Params
-        this.principal = principal;
-        this.account = account;
+    build({ agent }) {
 
         // Ledger Actor
         this.actor = LedgerCanister.create({ agent });
 
         // Index Actor
-        // this.index = Actor.createActor(idlICPIndex, { agent, canisterId: index });
-
-        // Tag as sucessfuly rebuilded
-        this.rebuilded = Date.now();
+        this.index = Actor.createActor(idlICPIndex, { agent, canisterId: this.index });
 
     }
 

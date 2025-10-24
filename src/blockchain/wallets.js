@@ -135,18 +135,21 @@ export class Wallets {
         const storageLocal = await chrome.storage.local.get(['wallets']);
         if (storageLocal.wallets) {
             for (const [_, w] of Object.entries(storageLocal.wallets)) {
+                // Migrate wallet data
                 const wallet = this.migrate(w);
-                const params = {
+                // Create wallet
+                const newWallet = new ICPWallet({
                     blockchain: wallet.blockchain,
                     name: wallet.name,
                     publicKey: wallet.public,
-                    secret: wallet.secret,
-                    tokens: ('tokens' in wallet) ? wallet.tokens : {},
-                    nfts: ('nfts' in wallet) ? wallet.nfts : {},
-                };
-                const newWallet = new ICPWallet(params);
+                    secret: wallet.secret
+                });
                 await newWallet.build(this.app.user.password);
                 this.add(newWallet);
+                // Load tokens
+                if (Object.keys(wallet.tokens).length) newWallet.tokens.load(wallet.tokens);
+                // Load NFTs
+                if (Object.keys(wallet.nfts).length) newWallet.nfts.load(wallet.nfts);
             }
         }
     }

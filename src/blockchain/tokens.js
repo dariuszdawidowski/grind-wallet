@@ -4,10 +4,10 @@
 
 export class Tokens {
 
-    constructor(tokens = {}) {
+    constructor() {
 
         // Tokens list: { canisterId: Token object, ... }
-        this.list = tokens;
+        this.list = {};
 
         // List proxy to access tokens directly by their canister IDs
         return new Proxy(this, {
@@ -52,7 +52,7 @@ export class Tokens {
      */
 
     get(principal = null) {
-        if (!principal) return Object.values(this.list);
+        if (!principal) return this.list;
         return this.list[principal];
     }
 
@@ -66,7 +66,18 @@ export class Tokens {
     }
 
     /**
-     * Serialize wallets for storage
+     * Load tokens
+     */
+
+    load(serialized) {
+        for (const [key, value] of Object.entries(serialized)) {
+            this.list[key] = new ICRCToken(value);
+            this.list[key].build();
+        }
+    }
+
+    /**
+     * Serialize tokens for storage
      * @returns {Object}
      */
 

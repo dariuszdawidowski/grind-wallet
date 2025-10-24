@@ -70,23 +70,8 @@ export class PageLogin extends Component {
                     'password': this.app.user.password,
                     'created': Date.now()
                 });
-                // Load and decode wallets
-                chrome.storage.local.get(['wallets', 'version'], (store) => {
-
-                    if (store.wallets && Object.keys(store.wallets).length) {
-                        this.app.load('wallets', store.wallets, store.version);
-                        this.app.create('wallets').then(() => {
-                            // Show accounts list
-                            this.app.page('accounts');
-                        });
-                    }
-
-                    // Empty accounts page
-                    else {
-                        this.app.page('accounts');
-                    }
-
-                });
+                // Proceed to accounts page
+                this.app.page('accounts');
             }
             else {
                 this.widget.password.set('');

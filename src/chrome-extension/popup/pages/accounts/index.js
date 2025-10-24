@@ -66,7 +66,7 @@ export class PageAccounts extends Component {
         importButton.element.style.marginBottom = '30px';
         this.append(importButton);
 
-        // Build page
+        // Get wallets and render
         this.app.wallets.load().then(() => {
             // No wallets
             if (this.app.wallets.count() === 0) this.renderNoWallets();

@@ -94,22 +94,7 @@ class GrindWalletPlugin {
         // Get storage session data
         const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);
         if (storageSession.hasOwnProperty('active') && storageSession.active === true && storageSession.hasOwnProperty('created')) {
-
-            // Check if session 'created' timestamp is older than 1 hour and clear session if expired
-            const createdTime = new Date(storageSession.created).getTime();
-            const ONE_HOUR = 60 * 60 * 1000;
-            if (isNaN(createdTime) || (Date.now() - createdTime) > ONE_HOUR) {
-                await chrome.storage.session.remove(['active', 'password', 'created']);
-                await this.init();
-                return;
-            }
-
-            // Password
-            this.user.password = storageSession.password;
-
-            // Show accounts list
-            this.page('accounts');
-
+            await this.continueSession(storageSession);
         }
 
         // No active session
@@ -119,22 +104,68 @@ class GrindWalletPlugin {
 
             // Login
             if (storageLocal.salt && storageLocal.password) {
-                this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+                this.login(storageLocal)
             }
 
             // First time
             else {
-                // Accept terms of use
-                if (!storageLocal.hasOwnProperty('terms') || storageLocal.terms == false) {
-                    this.page('terms');
-                }
-                // Create password (should be created but just in case)
-                else {
-                    this.page('register-password');
-                }
+                this.firstTime();
             }
         }
 
+    }
+
+    /**
+     * First-time page with terms acceptance and password creation
+     */
+
+    firstTime() {
+        // Accept terms of use
+        if (!storageLocal.hasOwnProperty('terms') || storageLocal.terms == false) {
+            this.page('terms');
+        }
+        // Create password (should be created but just in case)
+        else {
+            this.page('register-password');
+        }
+    }
+
+    /**
+     * Login page
+     */
+
+    login(storageLocal) {
+        this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+    }
+
+    /**
+     * Continue active session (if not expired)
+     */
+
+    async continueSession(storageSession) {
+
+        // Check if session expired
+        const createdTime = new Date(storageSession.created).getTime();
+        const ONE_HOUR = 60 * 60 * 1000;
+        if (isNaN(createdTime) || (Date.now() - createdTime) > ONE_HOUR) {
+            // Clear session storage
+            await chrome.storage.session.remove(['active', 'password', 'created']);
+            // Check that password exists
+            const storageLocal = await chrome.storage.local.get(['salt', 'password', 'terms']);
+            // Login
+            if (storageLocal.salt && storageLocal.password) {
+                this.login(storageLocal)
+            }
+        }
+
+        // Session valid - proceed to accounts
+        else {
+            // Password
+            this.user.password = storageSession.password;
+
+            // Show accounts list
+            this.page('accounts');
+        }
     }
 
     /**

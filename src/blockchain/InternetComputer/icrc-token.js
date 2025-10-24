@@ -20,10 +20,10 @@ export class ICRCToken extends Token {
         this.account = account;
 
         // Ledger Actor
-        this.actor = IcrcLedgerCanister.create({ agent, canisterId: this.principal });
+        this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.principal });
 
         // Index Actor
-        this.index = Actor.createActor(idlICRCIndex, { agent, canisterId: index });
+        this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: index });
 
     }
 
@@ -33,7 +33,7 @@ export class ICRCToken extends Token {
 
     async balance() {
         try {
-            return await this.actor.balance({ owner: Principal.fromText(this.principal) });
+            return await this.actor.ledger.balance({ owner: Principal.fromText(this.principal) });
         }
         catch (error) {
             console.error(error);
@@ -51,7 +51,7 @@ export class ICRCToken extends Token {
         if (('principal' in args) && typeof(args.principal) == 'string') args.principal = Principal.fromText(args.principal);
 
         try {
-            const response = await this.actor.transfer({
+            const response = await this.actor.ledger.transfer({
                 to: {
                 owner: args.principal,
                 subaccount: []

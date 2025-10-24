@@ -27,10 +27,10 @@ export class ICPToken extends Token {
     build({ agent }) {
 
         // Ledger Actor
-        this.actor = LedgerCanister.create({ agent });
+        this.actor.ledger = LedgerCanister.create({ agent });
 
         // Index Actor
-        this.index = Actor.createActor(idlICPIndex, { agent, canisterId: this.index });
+        this.actor.index = Actor.createActor(idlICPIndex, { agent, canisterId: this.index });
 
     }
 
@@ -41,7 +41,7 @@ export class ICPToken extends Token {
     async balance() {
 
         try {
-            return await this.actor.accountBalance({ accountIdentifier: this.account });
+            return await this.actor.ledger.accountBalance({ accountIdentifier: this.account });
         }
         catch (error) {
             console.error(error);
@@ -61,7 +61,7 @@ export class ICPToken extends Token {
         if (typeof(args.account) == 'string') args.account = hexStringToUint8Array(args.account);
 
         try {
-            const response = await this.actor.transfer({
+            const response = await this.actor.ledger.transfer({
                 to: args.account,
                 amount: ICP2icpt(args.amount, this.decimals),
                 memo: this.memo++

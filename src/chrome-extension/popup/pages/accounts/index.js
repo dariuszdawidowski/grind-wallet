@@ -6,6 +6,7 @@ import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { SheetNewAccount } from './new.js';
 import { SheetImportAccount } from './import.js';
+import { Card } from '/src/chrome-extension/popup/widgets/card.js';
 const { version } = require('/package.json');
 
 export class PageAccounts extends Component {
@@ -98,6 +99,29 @@ export class PageAccounts extends Component {
      */
 
     renderWalletsList() {
+
+        // Accounts
+        this.app.wallets.get().forEach(wallet => {
+
+            // Native token as credit card
+            this.content.append(new Card({
+                app: this.app,
+                wallet,
+                click: () => {
+                    if (!this.app.sheet.isOpen()) {
+                        this.app.sheet.append({
+                            title: `ICP wallet ${wallet.name}`,
+                            component: new SheetAccountDetails({
+                                app: this.app, wallet,
+                                canisterId: this.app.ICP_LEDGER_CANISTER_ID
+                            })
+                        });
+                    }
+                }
+            }).element);
+
+        });
+
         this.buttonsInfo.innerHTML = 'Create next one or import an existing one';
     }
 

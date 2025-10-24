@@ -7,6 +7,9 @@ export class Token {
         // Token Canister ID: string
         this.principal = principal;
 
+        // Index canister ID: string
+        this.index = index;
+
         // Token name: string
         this.name = name || 'Unknown';
 
@@ -19,13 +22,13 @@ export class Token {
         // Token fee: int
         this.fee = fee || 10000;
 
-        // Index canister ID: string
-        this.index = index;
-
         /*** Dynamic attributes ***/
 
-        // Token actor: object Actor
-        this.actor = null;
+        // Token actors
+        this.actor = {
+            ledger: null,
+            index: null
+        };
 
         // Memo counter
         this.memo = 0;

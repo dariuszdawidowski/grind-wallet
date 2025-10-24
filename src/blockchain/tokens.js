@@ -83,7 +83,7 @@ export class Tokens {
 
     serialize() {
         if (Object.keys(this.list).length === 0) return {};
-        return Object.fromEntries(
+        return Object.fromEntries( // TODO: move to Token.serialize()
             Object.entries(this.list).map(([key, value]) => [
                 key,
                 {

@@ -31,7 +31,7 @@ export class PageRegisterPassword extends Component {
             </h2>
             <p style="text-align: center; margin-top: 0px;">
                 It is specific to this particular extension<br>
-                not related to the blockchain
+                not related to the blockchain.
             </p>
         `;
 

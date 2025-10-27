@@ -7,6 +7,7 @@ import { LedgerCanister } from '@dfinity/ledger-icp';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ONE_SECOND } from '/src/utils/general.js';
+import { ICP2icpt } from '/src/utils/currency.js';
 
 export class ICPToken extends Token {
 
@@ -65,18 +66,18 @@ export class ICPToken extends Token {
 
     /**
      * Transfer ICP
-     * @param args.account: string | Uint8Array - destination (Account ID)
-     * @param args.amount: Number - amount of tokens to send
+     * @param account: string | Uint8Array - destination (Account ID)
+     * @param amount: Number - amount of tokens to send
      */
 
-    async transfer(args) {
+    async transfer({ account, amount }) {
 
-        if (typeof(args.account) == 'string') args.account = hexStringToUint8Array(args.account);
+        if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
         try {
             const response = await this.actor.ledger.transfer({
-                to: args.account,
-                amount: ICP2icpt(args.amount, this.decimals),
+                to: account,
+                amount: ICP2icpt(amount, this.decimals),
                 memo: this.memo++
             });
             return {'OK': response};

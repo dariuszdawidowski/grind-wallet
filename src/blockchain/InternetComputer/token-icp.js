@@ -6,7 +6,7 @@ import { Actor } from '@dfinity/agent';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { Token } from '/src/blockchain/token.js';
-import { ONE_SECOND } from '/src/utils/general.js';
+import { ONE_MINUTE } from '/src/utils/general.js';
 import { ICP2icpt } from '/src/utils/currency.js';
 
 export class ICPToken extends Token {
@@ -50,7 +50,7 @@ export class ICPToken extends Token {
         try {
             const balance = await this.cache.get({
                 id: `balance.${this.wallet.account}.${this.canister.indexId}`,
-                overdue: ONE_SECOND * 10,
+                overdue: ONE_MINUTE,
                 create: async () => {
                     return await this.actor.ledger.accountBalance({ accountIdentifier: this.wallet.account });
                 }

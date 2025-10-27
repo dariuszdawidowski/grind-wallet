@@ -15,7 +15,7 @@ export class SheetTransactionHistory extends Component {
         // References
         this.app = app;
         this.wallet = wallet;
-        this.canisterId = canister;
+        this.canister = canister;
         this.types = types; // ['send.token', 'recv.token', 'send.nft', 'add.nft', 'del.nft']
         this.tokens = tokens; // [canisterId1, canisterId2, ...]
 
@@ -90,24 +90,26 @@ export class SheetTransactionHistory extends Component {
 
         // Send Token
         if (entry.type === 'send.token') this.renderEntry({
+            op: '-',
             kind: 'token',
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
             subtitle: `To: ${recipient.address}`,
-            amount: `-${entry.token.amount}`,
-            type: recipient.type,
+            amount: entry.token.amount,
+            other: recipient.type,
             canisterId: entry.token.canister
         });
         // Error send token
         else if (entry.type === 'send.token.error') this.renderEntry({
+            op: '-',
             kind: 'token',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
             subtitle: `To: ${recipient.address}`,
-            amount: `-${entry.token.amount}`,
-            type: recipient.type,
+            amount: entry.token.amount,
+            other: recipient.type,
             canisterId: entry.token.canister
         });
         // Receive Token
@@ -116,13 +118,14 @@ export class SheetTransactionHistory extends Component {
             let icon = 'assets/material-design-icons/arrow-down-bold.svg';
             if (recipient.type === 'suspicious' && amount <= 0.0001) icon = 'assets/material-design-icons/skull.svg';
             this.renderEntry({
+                op: '+',
                 kind: 'token',
                 parent: row,
                 icon: icon,
                 title: 'Receive',
                 subtitle: `From: ${recipient.address}`,
-                amount: `+${entry.token.amount}`,
-                type: recipient.type,
+                amount: entry.token.amount,
+                other: recipient.type,
                 canisterId: entry.token.canister
             });
         }
@@ -133,7 +136,7 @@ export class SheetTransactionHistory extends Component {
             icon: 'assets/material-design-icons/plus.svg',
             title: 'Add NFT',
             subtitle: `Collection: ${shortAddress(entry.nft.canister)}`,
-            type: recipient.type,
+            other: recipient.type,
             canisterId: entry.nft.canister
         });
         // Del NFT
@@ -142,7 +145,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/minus.svg',
             title: 'Remove NFT',
-            type: recipient.type,
+            other: recipient.type,
             canisterId: entry.nft.canister
         });
         // Send NFT
@@ -152,7 +155,7 @@ export class SheetTransactionHistory extends Component {
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
             subtitle: `To: ${recipient.address}`,
-            type: recipient.type,
+            other: recipient.type,
             canisterId: entry.nft.canister
         });
         // Error send NFT
@@ -162,7 +165,7 @@ export class SheetTransactionHistory extends Component {
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Send',
             subtitle: `To: ${recipient.address}`,
-            type: recipient.type,
+            other: recipient.type,
             canisterId: entry.nft.canister
         });
 
@@ -172,7 +175,7 @@ export class SheetTransactionHistory extends Component {
      * Render entry template
      */
 
-    renderEntry({ kind, parent, icon, title, subtitle = null, amount = null, type, canisterId }) {
+    renderEntry({ op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId }) {
 
         // Icon circle container
         const logo = document.createElement('div');
@@ -200,8 +203,8 @@ export class SheetTransactionHistory extends Component {
             const subtitleElement = document.createElement('div');
             subtitleElement.classList.add('subtitle');
             let badge = '';
-            if (type === 'own') badge = ' <span class="own">own</span>';
-            else if (type === 'suspicious') badge = ' <span class="own suspicious">suspicious</span>';
+            if (other === 'own') badge = ' <span class="own">own</span>';
+            else if (other === 'suspicious') badge = ' <span class="own suspicious">suspicious</span>';
             subtitleElement.innerHTML = subtitle + badge;
             desc.append(subtitleElement);
         }
@@ -219,10 +222,14 @@ export class SheetTransactionHistory extends Component {
 
         // Amount
         if (amount) {
-            const amount = document.createElement('div');
-            amount.classList.add('amount');
-            amount.textContent = icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals) + ((kind === 'token') ? ` ${this.wallet.tokens.get(canisterId).symbol}` : '');
-            parent.append(amount);
+            const amountElement = document.createElement('div');
+            amountElement.classList.add('amount');
+            let text = '';
+            if (op) text = op;
+            text += icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals);
+            text += (kind === 'token') ? ` ${this.wallet.tokens.get(canisterId).symbol}` : '';
+            amountElement.textContent = text;
+            parent.append(amountElement);
         }
 
     }
@@ -294,9 +301,9 @@ export class SheetTransactionHistory extends Component {
     async fetchAndCache() {
 
         // Fetch transactions from ICP Index canister
-        if (this.wallet.tokens.get(this.canisterId).index) {
+        if (this.wallet.tokens.get(this.canister.ledgerId).canister.indexId) {
 
-            const response = await this.wallet.tokens.get(this.canisterId).actor.index.get_account_transactions({
+            const response = await this.wallet.tokens.get(this.canister.ledgerId).actor.index.get_account_transactions({
                 max_results: 100,
                 start: [],
                 account: {
@@ -324,7 +331,7 @@ export class SheetTransactionHistory extends Component {
                                     type: `${direction}.token`,
                                     pid: this.wallet.principal,
                                     token: {
-                                        canister: this.canisterId,
+                                        canister: this.canister.ledgerId,
                                         amount: Number(record.transaction.operation.Transfer.amount.e8s),
                                         fee: Number(record.transaction.operation.Transfer.fee.e8s)
                                     }
@@ -345,7 +352,7 @@ export class SheetTransactionHistory extends Component {
                                     pid: this.wallet.principal,
                                     to: { account: record.transaction.operation.Approve.spender },
                                     token: {
-                                        canister: this.canisterId,
+                                        canister: this.canister.ledgerId,
                                         amount: Number(record.transaction.operation.Approve.allowance.e8s),
                                         fee: Number(record.transaction.operation.Approve.fee.e8s)
                                     }

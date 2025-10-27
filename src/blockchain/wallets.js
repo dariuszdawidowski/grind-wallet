@@ -25,11 +25,11 @@ export class Wallets {
 
     /**
      * Remove wallet from the collection
-     * @param {Wallet} wallet 
+     * @param {string} publicKey 
      */
 
-    del(wallet) {
-        delete this.list[wallet.public];
+    del(publicKey) {
+        delete this.list[publicKey];
     }
 
     /**

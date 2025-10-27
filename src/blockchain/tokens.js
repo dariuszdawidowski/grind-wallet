@@ -25,11 +25,11 @@ export class Tokens {
 
     /**
      * Remove token from the collection
-     * @param {Token} token 
+     * @param {string} ledgerId
      */
 
-    del(token) {
-        delete this.list[token.canister.ledgerId];
+    del(ledgerId) {
+        delete this.list[ledgerId];
     }
 
     /**
@@ -57,9 +57,12 @@ export class Tokens {
      */
 
     load(serialized) {
+        console.log('Loading tokens:', serialized);
         for (const [key, value] of Object.entries(serialized)) {
-            this.list[key] = new ICRCToken({ ...value, cache: this.app.cache });
-            this.list[key].build();
+            if (!this.app.isICPLedger(key)) {
+                this.list[key] = new ICRCToken({ ...value, cache: this.app.cache });
+                this.list[key].build();
+            }
         }
     }
 
@@ -72,7 +75,7 @@ export class Tokens {
         if (Object.keys(this.list).length === 0) return {};
         const serialized = {};
         for (const [key, token] of Object.entries(this.list)) {
-            serialized[key] = token.serialize();
+            if (!this.app.isICPLedger(key)) serialized[key] = token.serialize();
         }
         return serialized;
     }

@@ -23,11 +23,11 @@ export class NFTs {
 
     /**
      * Remove NFT from the collection
-     * @param {NFT} nft
+     * @param {string} `${nft.collection}:${nft.id}`
      */
 
-    del(nft) {
-        delete this.list[`${nft.collection}:${nft.id}`];
+    del(nftId) {
+        delete this.list[nftId];
     }
 
     /**

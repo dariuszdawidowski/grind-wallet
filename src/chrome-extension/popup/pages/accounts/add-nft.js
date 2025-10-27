@@ -149,7 +149,7 @@ export class SheetAddCustomNFT extends Component {
                     standard: this.standard
                 });
                 // Save wallets
-                this.app.saveWallets();
+                this.app.wallets.save();
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();

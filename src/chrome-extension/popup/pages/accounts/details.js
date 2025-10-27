@@ -164,7 +164,7 @@ export class SheetAccountDetails extends Component {
                         if (newName !== null) {
                             this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
                             this.wallet.name = newName.trim();
-                            this.app.saveWallets();
+                            this.app.wallets.save();
                             document.body.dispatchEvent(new Event('update.name'));
                         }
                     }
@@ -195,7 +195,7 @@ export class SheetAccountDetails extends Component {
                 if (this.app.isICPLedger(this.canister.ledgerId)) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
                         this.app.wallets.del(this.wallet.public);
-                        this.app.saveWallets();
+                        this.app.wallets.save();
                         this.app.page('accounts');
                         this.app.sheet.clear();
                         this.app.sheet.hide();
@@ -206,7 +206,7 @@ export class SheetAccountDetails extends Component {
                 else {
                     if (confirm('Delete this token?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
                         this.app.wallets.get(this.wallet.public).tokens.del(this.canister.ledgerId);
-                        this.app.saveWallets();
+                        this.app.wallets.save();
                         this.app.page('accounts');
                         this.app.sheet.clear();
                         this.app.sheet.hide();

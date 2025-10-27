@@ -185,7 +185,7 @@ export class SheetNFTDetails extends Component {
             }
         });
         // Save wallets
-        this.app.saveWallets();
+        this.app.wallets.save();
     }
 
 }

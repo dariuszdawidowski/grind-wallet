@@ -7,13 +7,10 @@ import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 
 export class NFT {
 
-    constructor({ app, principal, agent, collection, id, thumbnail, standard }) {
+    constructor({ app, agent, collection, id, thumbnail, standard }) {
         
         // App
         this.app = app;
-
-        // Principal
-        this.principal = principal;
 
         // Agent
         this.agent = agent;

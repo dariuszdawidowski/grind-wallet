@@ -2,7 +2,7 @@
  * Manages a collection of wallets.
  */
 
-import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
+import { ICPWallet } from '/src/blockchain/InternetComputer/wallet-icp.js';
 
 export class Wallets {
 

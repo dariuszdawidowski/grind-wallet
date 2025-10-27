@@ -5,8 +5,8 @@
 import { HttpAgent } from '@dfinity/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/keys.js';
 import { Wallet } from '/src/blockchain/wallet.js';
-import { ICPToken } from '/src/blockchain/InternetComputer/icp-token.js';
-import { ICRCToken } from '/src/blockchain/InternetComputer/icrc-token.js';
+import { ICPToken } from '/src/blockchain/InternetComputer/token-icp.js';
+import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
 
 export class ICPWallet extends Wallet {
 

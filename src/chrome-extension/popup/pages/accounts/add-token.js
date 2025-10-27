@@ -7,7 +7,7 @@ import { validICRC1 } from '/src/utils/currency.js';
 import { isValidCanisterId } from '/src/utils/general.js';
 // import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { saveImage } from '/src/utils/image-cache.js';
-// import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/icp-wallet.js';
+// import { icpRebuildToken, icpBindTokenActions } from '/src/blockchain/InternetComputer/.js';
 
 export class SheetAddCustomToken extends Component {
 

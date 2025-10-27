@@ -130,8 +130,9 @@ export class PageAccounts extends Component {
                     this.app.sheet.append({
                         title: `ICP wallet ${wallet.name}`,
                         component: new SheetAccountDetails({
-                            app: this.app, wallet,
-                            canisterId: this.app.ICP_LEDGER_CANISTER_ID
+                            app: this.app,
+                            wallet,
+                            canister: { ledgerId: this.app.ICP_LEDGER_CANISTER_ID, indexId: this.app.ICP_INDEX_CANISTER_ID }
                         })
                     });
                 }

@@ -96,7 +96,7 @@ export class SheetAccountSendNFT extends Component {
                     });
                 }
                 // Remove from current wallet
-                delete this.app.wallets.get(this.wallet.public)?.nfts[`${this.nft.collection}:${this.nft.id}`];
+                this.app.wallets.get(this.wallet.public)?.nfts.del(`${this.nft.collection}:${this.nft.id}`);
                 // Save changes
                 this.app.saveWallets();
                 this.submit.set('OK - successfully sent!');

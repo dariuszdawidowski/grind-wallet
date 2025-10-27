@@ -174,7 +174,7 @@ export class SheetNFTDetails extends Component {
 
     delete() {
         // Remove from current wallet
-        delete this.app.wallets.list[this.wallet.public].nfts[`${this.nft.collection}:${this.nft.id}`];
+        this.app.wallets.get(this.wallet.public).nfts.del(`${this.nft.collection}:${this.nft.id}`);
         // Log transaction
         this.app.log.add({
             type: 'del.nft',

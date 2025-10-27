@@ -7,28 +7,11 @@ import { ICPWallet } from '/src/blockchain/InternetComputer/icp-wallet.js';
 export class Wallets {
 
     constructor({ app }) {
-
         // References
         this.app = app;
 
         // Wallets list: { publicKey: Wallet object, ... }
         this.list = {};
-
-        // List proxy to access wallets directly by their public keys
-        return new Proxy(this, {
-            get(target, prop) {
-                if (prop in target) return target[prop];
-                return target.list[prop];
-            },
-            set(target, prop, value) {
-                if (prop in target) {
-                    target[prop] = value;
-                } else {
-                    target.list[prop] = value;
-                }
-                return true;
-            }
-        });
     }
 
     /**

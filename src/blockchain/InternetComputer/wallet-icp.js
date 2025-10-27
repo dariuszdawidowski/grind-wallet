@@ -57,7 +57,7 @@ export class ICPWallet extends Wallet {
 
         // Default ICP token
         const newToken = new ICPToken({
-            cache: this.cache,
+            cache: this.app.cache,
             wallet: { principal: this.principal, account: this.account }
         });
         await newToken.build({ agent: this.agent });

@@ -57,7 +57,6 @@ export class Tokens {
      */
 
     load(serialized) {
-        console.log('Loading tokens:', serialized);
         for (const [key, value] of Object.entries(serialized)) {
             if (!this.app.isICPLedger(key)) {
                 this.list[key] = new ICRCToken({ ...value, cache: this.app.cache });

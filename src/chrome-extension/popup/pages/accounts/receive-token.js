@@ -4,17 +4,17 @@ import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 
 export class SheetAccountReceive extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet, canister }) {
+        super({ app });
 
         // Wallet
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // Build
         this.element.classList.add('form');
 
         // Render both Principal ID and Account ID for mail "card"
-        if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+        if (canister.ledgerId == this.app.ICP_LEDGER_CANISTER_ID) {
             this.render({ name: 'Principal ID', address: this.wallet.principal });
             // Separator
             const sep = document.createElement('hr');

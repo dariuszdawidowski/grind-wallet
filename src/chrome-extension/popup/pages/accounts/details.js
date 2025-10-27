@@ -102,7 +102,9 @@ export class SheetAccountDetails extends Component {
                 this.app.sheet.append({
                     title: `Transaction history of ${this.wallet.name}`,
                     component: new SheetTransactionHistory({
-                        ...args,
+                        app,
+                        wallet,
+                        canister,
                         types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft', 'send.nft.error'],
                         tokens: this.app.isICPLedger(this.canister.ledgerId) ? [this.canister.ledgerId, ...Object.keys(this.wallet.tokens.get())] : [this.canister.ledgerId]
                     })

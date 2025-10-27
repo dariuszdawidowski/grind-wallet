@@ -7,20 +7,20 @@ import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets
 
 export class SheetAccountSend extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet, canister }) {
+        super({ app });
 
         // Token
-        const token = this.wallet.tokens.get(this.canisterId);
+        const token = wallet.tokens.get(canister.ledgerId);
 
         // UI controls widgets
         this.widget = {};
 
         // Wallet reference
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // Canister ID
-        this.canisterId = args.canisterId;
+        this.canister = canister;
 
         // Sucessfuly sent
         this.sent = false;
@@ -35,7 +35,7 @@ export class SheetAccountSend extends Component {
         this.append(this.widget.amount);
 
         this.widget.address = new InputAddress({
-            placeholder: this.canisterId == this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
+            placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
         });
         this.append(this.widget.address);
 
@@ -66,7 +66,7 @@ export class SheetAccountSend extends Component {
 
         // Description
         this.append(new ButtonDescription({
-            app: args.app,
+            app: this.app,
             text: `Token charges a commission of <span id="fee">${token.fee ? icpt2ICP(token.fee, token.decimals) : 'unknown'}</span> ${token.symbol}.`
         }));
 
@@ -115,7 +115,7 @@ export class SheetAccountSend extends Component {
         // Ok to transfer
         if (allow) {
             this.submit.busy(true);
-            this.wallet.tokens[this.canisterId].transfer({
+            this.wallet.tokens.get(this.canister.ledgerId).transfer({
                 principal,
                 account,
                 amount: this.widget.amount.get()
@@ -131,7 +131,7 @@ export class SheetAccountSend extends Component {
                             account: account.toHex(),
                         },
                         token: {
-                            canister: this.canisterId,
+                            canister: this.canister.ledgerId,
                             amount: Number(ICP2icpt(this.widget.amount.get()))
                         }
                     });
@@ -150,7 +150,7 @@ export class SheetAccountSend extends Component {
                             account: account.toHex(),
                         },
                         token: {
-                            canister: this.canisterId,
+                            canister: this.canister.ledgerId,
                             amount: Number(ICP2icpt(this.widget.amount.get()))
                         },
                         error: errorMsg

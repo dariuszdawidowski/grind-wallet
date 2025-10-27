@@ -6,19 +6,18 @@ import { icpt2ICP } from '/src/utils/currency.js';
 
 export class SheetTransactionHistory extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet, canister, types, tokens }) {
+        super({ app });
 
         // CSS class
         this.element.classList.add('history');
 
         // References
-        this.app = args.app;
-        this.wallet = args.wallet;
-        this.canisterId = args.canisterId;
-        this.types = args.types; // ['send.token', 'recv.token', 'send.nft', 'add.nft', 'del.nft']
-        this.tokens = args.tokens; // [canisterId1, canisterId2, ...]
-        console.log(this.wallet)
+        this.app = app;
+        this.wallet = wallet;
+        this.canisterId = canister;
+        this.types = types; // ['send.token', 'recv.token', 'send.nft', 'add.nft', 'del.nft']
+        this.tokens = tokens; // [canisterId1, canisterId2, ...]
 
         // Last rendered date
         this.lastDate = null;
@@ -173,57 +172,57 @@ export class SheetTransactionHistory extends Component {
      * Render entry template
      */
 
-    renderEntry(args) {
+    renderEntry({ kind, parent, icon, title, subtitle = null, amount = null, type, canisterId }) {
 
         // Icon circle container
-        const icon = document.createElement('div');
-        icon.classList.add('circle');
-        args.parent.append(icon);
+        const logo = document.createElement('div');
+        logo.classList.add('circle');
+        parent.append(logo);
 
         // Icon image
         const image = document.createElement('img');
-        image.src = args.icon;
-        icon.append(image);
+        image.src = icon;
+        logo.append(image);
 
         // Description container
         const desc = document.createElement('div');
         desc.style.marginLeft = '10px';
-        args.parent.append(desc);
+        parent.append(desc);
 
         // Title
-        const title = document.createElement('div');
-        title.classList.add('title');
-        title.textContent = args.title;
-        desc.append(title);
+        const titleElement = document.createElement('div');
+        titleElement.classList.add('title');
+        titleElement.textContent = title;
+        desc.append(titleElement);
 
         // Subtitle
-        if ('subtitle' in args) {
-            const subtitle = document.createElement('div');
-            subtitle.classList.add('subtitle');
+        if (subtitle) {
+            const subtitleElement = document.createElement('div');
+            subtitleElement.classList.add('subtitle');
             let badge = '';
-            if (args.type === 'own') badge = ' <span class="own">own</span>';
-            else if (args.type === 'suspicious') badge = ' <span class="own suspicious">suspicious</span>';
-            subtitle.innerHTML = args.subtitle + badge;
-            desc.append(subtitle);
+            if (type === 'own') badge = ' <span class="own">own</span>';
+            else if (type === 'suspicious') badge = ' <span class="own suspicious">suspicious</span>';
+            subtitleElement.innerHTML = subtitle + badge;
+            desc.append(subtitleElement);
         }
 
         // Token image
-        if (args.kind === 'token') {
+        if (kind === 'token') {
             const coin = new TokenImage({
                 app: this.app,
-                canisterId: args.canisterId,
+                canisterId: canisterId,
                 wallet: this.wallet,
             });
             coin.element.style.marginRight = '6px';
-            args.parent.append(coin.element);
+            parent.append(coin.element);
         }
 
         // Amount
-        if ('amount' in args) {
+        if (amount) {
             const amount = document.createElement('div');
             amount.classList.add('amount');
-            amount.textContent = icpt2ICP(args.amount, this.wallet.tokens.get(args.canisterId).decimals) + ((args.kind === 'token') ? ` ${this.wallet.tokens.get(args.canisterId).symbol}` : '');
-            args.parent.append(amount);
+            amount.textContent = icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals) + ((kind === 'token') ? ` ${this.wallet.tokens.get(canisterId).symbol}` : '');
+            parent.append(amount);
         }
 
     }

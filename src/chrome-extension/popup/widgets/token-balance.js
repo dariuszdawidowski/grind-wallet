@@ -21,7 +21,7 @@ export class TokenBalance extends Component {
         // Label
         this.label = document.createElement('div');
         this.label.classList.add('label');
-        this.label.innerHTML = `${args.wallet.tokens[args.canisterId].symbol}<br>...`;
+        this.label.innerHTML = `${args.wallet.tokens.get(args.canisterId).symbol}<br>...`;
         this.element.append(this.label);
 
         // Click (with distance preventing scroll)

@@ -44,8 +44,15 @@ export class ICPToken extends Token {
 
     async balance() {
 
+        const cachedBalance = this.cache('balance');
+        if (cachedBalance) {
+            return cachedBalance;
+        }
+
         try {
-            return await this.actor.ledger.accountBalance({ accountIdentifier: this.wallet.account });
+            const balance = await this.actor.ledger.accountBalance({ accountIdentifier: this.wallet.account });
+            this.cache('balance', balance);
+            return balance;
         }
         catch (error) {
             console.error(error);

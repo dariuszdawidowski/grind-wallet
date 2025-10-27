@@ -88,7 +88,7 @@ class GrindWalletPlugin {
         // Wallets list { ICPWallet, ... }
         this.wallets = new Wallets({ app: this });
 
-        // Actor cache
+        // Object cache
         this.cache = new ObjectCache();
 
         // Get storage session data

@@ -221,11 +221,13 @@ export class SheetAccountDetails extends Component {
     }
 
     updateBalance() {
-        /*
-        if (('balance' in this.wallet.tokens.get[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
-            const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
-            this.amount.innerText = amount + ' ' + this.wallet.tokens[this.canisterId].symbol; 
-        }*/
+        const token = this.wallet.tokens.get(this.canister.ledgerId);
+        if (token) token.balance().then(balance => {
+            if (balance !== null) {
+                const amount = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
+                this.amount.innerText = `${amount} ${token.symbol}`;
+            }
+        });
     }
 
 }

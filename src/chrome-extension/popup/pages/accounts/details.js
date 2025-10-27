@@ -132,7 +132,7 @@ export class SheetAccountDetails extends Component {
                     this.app.sheet.clear();
                     this.app.sheet.append({
                         title: 'Register custom token',
-                        component: new SheetAddCustomToken({app: this.app, wallet: this.wallet})
+                        component: new SheetAddCustomToken({ app: this.app, wallet: this.wallet })
                     });
                 }
             }).element);
@@ -144,7 +144,7 @@ export class SheetAccountDetails extends Component {
                     this.app.sheet.clear();
                     this.app.sheet.append({
                         title: 'Add NFT',
-                        component: new SheetAddCustomNFT({app: this.app, wallet: this.wallet})
+                        component: new SheetAddCustomNFT({ app: this.app, wallet: this.wallet })
                     });
                 }
             }).element);

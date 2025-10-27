@@ -1,3 +1,7 @@
+/**
+ * Add Custom NFT Sheet
+ */
+
 import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
@@ -12,11 +16,11 @@ import { isValidCanisterId } from '/src/utils/general.js';
 
 export class SheetAddCustomNFT extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet }) {
+        super({ app });
 
         // Wallet reference
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // UI controls widgets
         this.widget = {};

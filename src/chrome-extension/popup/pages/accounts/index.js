@@ -4,9 +4,14 @@
 
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { SheetNewAccount } from './new.js';
-import { SheetImportAccount } from './import.js';
 import { Card } from '/src/chrome-extension/popup/widgets/card.js';
+import { TokenBalance } from '/src/chrome-extension/popup/widgets/token-balance.js';
+import { Cover } from '/src/chrome-extension/popup/widgets/cover.js';
+import { SheetNewAccount } from '/src/chrome-extension/popup/pages/accounts/new.js';
+import { SheetImportAccount } from '/src/chrome-extension/popup/pages/accounts/import.js';
+import { SheetAccountDetails } from '/src/chrome-extension/popup/pages/accounts/details.js';
+import { SheetNFTDetails } from '/src/chrome-extension/popup/pages/accounts/details-nft.js';
+import { NFT } from '/src/blockchain/nft.js';
 const { version } = require('/package.json');
 
 export class PageAccounts extends Component {
@@ -103,26 +108,136 @@ export class PageAccounts extends Component {
         // Accounts
         this.app.wallets.get().forEach(wallet => {
 
-            // Native token as credit card
-            this.content.append(new Card({
-                app: this.app,
-                wallet,
-                click: () => {
-                    if (!this.app.sheet.isOpen()) {
-                        this.app.sheet.append({
-                            title: `ICP wallet ${wallet.name}`,
-                            component: new SheetAccountDetails({
-                                app: this.app, wallet,
-                                canisterId: this.app.ICP_LEDGER_CANISTER_ID
-                            })
-                        });
-                    }
-                }
-            }).element);
+            this.renderWallet(wallet);
 
         });
 
+        // Info
         this.buttonsInfo.innerHTML = 'Create next one or import an existing one';
+    }
+
+    /**
+     * Render single wallet as a 'credit card'
+     */
+
+    renderWallet(wallet) {
+
+        this.content.append(new Card({
+            app: this.app,
+            wallet,
+            click: () => {
+                if (!this.app.sheet.isOpen()) {
+                    this.app.sheet.append({
+                        title: `ICP wallet ${wallet.name}`,
+                        component: new SheetAccountDetails({
+                            app: this.app, wallet,
+                            canisterId: this.app.ICP_LEDGER_CANISTER_ID
+                        })
+                    });
+                }
+            }
+        }).element);
+
+        // Coins container
+        const coins = document.createElement('div');
+        coins.classList.add('coins');
+        this.content.append(coins);
+
+        // Custom tokens as coins
+        if (wallet.tokens) Object.entries(wallet.tokens).forEach(([id, token]) => {
+            if (id != this.app.ICP_LEDGER_CANISTER_ID) {
+                const coin = new TokenBalance({
+                    app: this.app,
+                    canisterId: id,
+                    wallet,
+                    click: () => {
+                        if (!this.app.sheet.isOpen()) {
+                            this.app.sheet.append({
+                                title: `${token.name} tokens @ ${wallet.name}`,
+                                component: new SheetAccountDetails({
+                                    app: args.app,
+                                    wallet,
+                                    canisterId: id
+                                })
+                            });
+                        }
+                    }
+                });
+                coins.append(coin.element);
+            }
+        });
+
+        // Horizontal drag of coins
+        this.horizontalDrag(coins);
+
+        // NFTs container
+        const nfts = document.createElement('div');
+        nfts.classList.add('nfts');
+        this.content.append(nfts);
+
+        // NFTS as covers
+        if (wallet.nfts) Object.entries(wallet.nfts).forEach(([id, nft]) => {
+            const fullNFT = new NFT({
+                app: args.app,
+                principal: wallet.principal,
+                agent: wallet.agent,
+                ...nft
+            });
+            const cover = new Cover({
+                wallet,
+                nft: fullNFT,
+                click: () => {
+                    if (!this.app.sheet.isOpen()) {
+                        const sheetNFTDetails = new SheetNFTDetails({
+                            app: args.app,
+                            wallet,
+                            nft: fullNFT
+                        });
+                        this.app.sheet.append({
+                            title: `NFT @ ${wallet.name}`,
+                            component: sheetNFTDetails
+                        });
+                        sheetNFTDetails.update();
+                    }
+                }
+            });
+            nfts.append(cover.element);
+        });
+
+        // Horizontal drag of nfts
+        this.horizontalDrag(nfts);
+
+        // Separator
+        this.content.append(document.createElement('hr'));
+
+    }
+
+    horizontalDrag(container) {
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            startX = event.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+
+        container.addEventListener('mousemove', (event) => {
+            if (!isDragging) return;
+            event.preventDefault();
+            const x = event.pageX - container.offsetLeft;
+            const walk = (x - startX) * 1;
+            container.scrollLeft = scrollLeft - walk;
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
     }
 
 }

@@ -144,7 +144,7 @@ export class PageAccounts extends Component {
         this.content.append(coins);
 
         // Custom tokens as coins
-        if (wallet.tokens) Object.entries(wallet.tokens).forEach(([id, token]) => {
+        if (wallet.tokens.count()) Object.entries(wallet.tokens.get()).forEach(([id, token]) => {
             if (id != this.app.ICP_LEDGER_CANISTER_ID) {
                 const coin = new TokenBalance({
                     app: this.app,
@@ -176,9 +176,9 @@ export class PageAccounts extends Component {
         this.content.append(nfts);
 
         // NFTS as covers
-        if (wallet.nfts) Object.entries(wallet.nfts).forEach(([id, nft]) => {
+        if (wallet.nfts.count()) Object.entries(wallet.nfts.get()).forEach(([id, nft]) => {
             const fullNFT = new NFT({
-                app: args.app,
+                app: this.app,
                 principal: wallet.principal,
                 agent: wallet.agent,
                 ...nft

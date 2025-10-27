@@ -9,14 +9,15 @@ import { Token } from '/src/blockchain/token.js';
 
 export class ICPToken extends Token {
 
-    constructor() {
+    constructor({ wallet }) {
         super({
-            principal: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+            wallet,
+            canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
+            indexId: 'qhbym-qaaaa-aaaaa-aaafq-cai',
             name: 'Internet Computer Protocol',
             symbol: 'ICP',
             decimals: 8,
             fee: 10000,
-            index: 'qhbym-qaaaa-aaaaa-aaafq-cai'
         });
     }
 
@@ -30,7 +31,10 @@ export class ICPToken extends Token {
         this.actor.ledger = LedgerCanister.create({ agent });
 
         // Index Actor
-        this.actor.index = Actor.createActor(idlICPIndex, { agent, canisterId: this.index });
+        this.actor.index = Actor.createActor(idlICPIndex, { agent, canisterId: this.canister.indexId });
+
+        // Set ready flag
+        this.ready = true;
 
     }
 
@@ -41,7 +45,7 @@ export class ICPToken extends Token {
     async balance() {
 
         try {
-            return await this.actor.ledger.accountBalance({ accountIdentifier: this.account });
+            return await this.actor.ledger.accountBalance({ accountIdentifier: this.wallet.account });
         }
         catch (error) {
             console.error(error);

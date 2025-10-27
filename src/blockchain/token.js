@@ -1,14 +1,15 @@
 export class Token {
 
-    constructor({ principal, name, symbol, decimals, fee, index }) {
+    constructor({ wallet, canisterId, indexId, name, symbol, decimals, fee }) {
 
         /*** Persistent attributes ***/
 
-        // Token Canister ID: string
-        this.principal = principal;
-
-        // Index canister ID: string
-        this.index = index;
+        this.canister = Object.freeze({
+            // Token Canister ID: string
+            ledgerId: canisterId,
+            // Token Index Canister ID: string (optional)
+            indexId: indexId
+        });
 
         // Token name: string
         this.name = name || 'Unknown';
@@ -24,6 +25,12 @@ export class Token {
 
         /*** Dynamic attributes ***/
 
+        // Wallet
+        this.wallet = Object.freeze({
+            principal: wallet.principal,
+            account: wallet.account
+        });
+
         // Token actors
         this.actor = {
             ledger: null,
@@ -33,6 +40,19 @@ export class Token {
         // Memo counter
         this.memo = 0;
 
+        // Builded flag
+        this.ready = false;
+
+    }
+
+    serialize() {
+        return {
+            index: this.canister.indexId,
+            name: this.name,
+            symbol: this.symbol,
+            decimals: this.decimals,
+            fee: this.fee
+        };
     }
 
 }

@@ -30,7 +30,7 @@ export class TokenImage extends Component {
 
             // Fallback text
             catch(error) {
-                this.element.innerText = args.wallet.tokens[args.canisterId].symbol;
+                this.element.innerText = args.wallet.tokens.get(args.canisterId).symbol;
             }
         })();
 

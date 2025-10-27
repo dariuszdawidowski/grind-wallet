@@ -9,22 +9,6 @@ export class NFTs {
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
         this.list = nfts;
 
-        // List proxy to access NFTs directly by their collectionId:nftId
-        return new Proxy(this, {
-            get(target, prop) {
-                if (prop in target) return target[prop];
-                return target.list[prop];
-            },
-            set(target, prop, value) {
-                if (prop in target) {
-                    target[prop] = value;
-                } else {
-                    target.list[prop] = value;
-                }
-                return true;
-            }
-        });
-
     }
 
     serialize() {
@@ -40,6 +24,15 @@ export class NFTs {
                 }
             ])
         );
+    }
+
+    /**
+     * Count of NFTs
+     * @returns {number}
+     */
+
+    count() {
+        return Object.keys(this.list).length;
     }
 
 }

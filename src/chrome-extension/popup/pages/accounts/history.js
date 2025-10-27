@@ -51,7 +51,7 @@ export class SheetTransactionHistory extends Component {
             if (this.app.isICPLedger(this.tokens[0]))
                 info.textContent = `- No history on this wallet yet -`;
             else
-                info.textContent = `- No ${this.wallet.tokens[this.tokens[0]].symbol} history on this wallet yet -`;
+                info.textContent = `- No ${this.wallet.tokens.get(this.tokens[0]).symbol} history on this wallet yet -`;
             this.element.append(info);
         }
     }
@@ -222,7 +222,7 @@ export class SheetTransactionHistory extends Component {
         if ('amount' in args) {
             const amount = document.createElement('div');
             amount.classList.add('amount');
-            amount.textContent = icpt2ICP(args.amount, this.wallet.tokens[args.canisterId].decimals) + ((args.kind === 'token') ? ` ${this.wallet.tokens[args.canisterId].symbol}` : '');
+            amount.textContent = icpt2ICP(args.amount, this.wallet.tokens.get(args.canisterId).decimals) + ((args.kind === 'token') ? ` ${this.wallet.tokens.get(args.canisterId).symbol}` : '');
             args.parent.append(amount);
         }
 
@@ -295,9 +295,9 @@ export class SheetTransactionHistory extends Component {
     async fetchAndCache() {
 
         // Fetch transactions from ICP Index canister
-        if (this.wallet.tokens[this.canisterId].index) {
+        if (this.wallet.tokens.get(this.canisterId).index) {
 
-            const response = await this.wallet.tokens[this.canisterId].index.get_account_transactions({
+            const response = await this.wallet.tokens.get(this.canisterId).actor.index.get_account_transactions({
                 max_results: 100,
                 start: [],
                 account: {

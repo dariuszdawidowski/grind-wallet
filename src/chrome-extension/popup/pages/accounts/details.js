@@ -104,7 +104,7 @@ export class SheetAccountDetails extends Component {
                     component: new SheetTransactionHistory({
                         ...args,
                         types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft', 'send.nft.error'],
-                        tokens: this.app.isICPLedger(this.canisterId) ? [this.canisterId, ...Object.keys(this.wallet.tokens)] : [this.canisterId]
+                        tokens: this.app.isICPLedger(this.canisterId) ? [this.canisterId, ...Object.keys(this.wallet.tokens.get())] : [this.canisterId]
                     })
                 });
             }
@@ -194,7 +194,7 @@ export class SheetAccountDetails extends Component {
                 // ICP
                 if (this.app.isICPLedger(this.canisterId)) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
-                        delete this.app.wallets.list[this.wallet.public]
+                        this.app.wallets.del(this.wallet.public);
                         this.app.saveWallets();
                         this.app.page('accounts');
                         this.app.sheet.clear();
@@ -205,7 +205,7 @@ export class SheetAccountDetails extends Component {
                 // Token
                 else {
                     if (confirm('Delete this token?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {
-                        delete this.app.wallets.list[this.wallet.public].tokens[this.canisterId];
+                        this.app.wallets.get(this.wallet.public).tokens.del(this.canisterId);
                         this.app.saveWallets();
                         this.app.page('accounts');
                         this.app.sheet.clear();
@@ -221,10 +221,11 @@ export class SheetAccountDetails extends Component {
     }
 
     updateBalance() {
-        if (('balance' in this.wallet.tokens[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
+        /*
+        if (('balance' in this.wallet.tokens.get[this.canisterId]) && this.wallet.tokens[this.canisterId].balance !== null) {
             const amount = formatCurrency(icpt2ICP(this.wallet.tokens[this.canisterId].balance, this.wallet.tokens[this.canisterId].decimals), this.wallet.tokens[this.canisterId].decimals);
             this.amount.innerText = amount + ' ' + this.wallet.tokens[this.canisterId].symbol; 
-        }
+        }*/
     }
 
 }

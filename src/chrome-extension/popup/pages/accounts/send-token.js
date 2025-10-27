@@ -10,6 +10,9 @@ export class SheetAccountSend extends Component {
     constructor(args) {
         super(args);
 
+        // Token
+        const token = this.wallet.tokens.get(this.canisterId);
+
         // UI controls widgets
         this.widget = {};
 
@@ -26,8 +29,8 @@ export class SheetAccountSend extends Component {
         this.element.classList.add('form');
 
         this.widget.amount = new InputCurrency({
-            placeholder: formatCurrency(0, this.wallet.tokens[this.canisterId].decimals),
-            symbol: this.wallet.tokens[this.canisterId].symbol
+            placeholder: formatCurrency(0, token.decimals),
+            symbol: token.symbol
         });
         this.append(this.widget.amount);
 
@@ -64,7 +67,7 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: args.app,
-            text: `Token charges a commission of <span id="fee">${this.wallet.tokens[this.canisterId].fee ? icpt2ICP(this.wallet.tokens[this.canisterId].fee, this.wallet.tokens[this.canisterId].decimals) : 'unknown'}</span> ${this.wallet.tokens[this.canisterId].symbol}.`
+            text: `Token charges a commission of <span id="fee">${token.fee ? icpt2ICP(token.fee, token.decimals) : 'unknown'}</span> ${token.symbol}.`
         }));
 
     }

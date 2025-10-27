@@ -136,20 +136,20 @@ export class Wallets {
         if (storageLocal.wallets) {
             for (const [_, w] of Object.entries(storageLocal.wallets)) {
                 // Migrate wallet data
-                const wallet = this.migrate(w);
+                const walletData = this.migrate(w);
                 // Create wallet
                 const newWallet = new ICPWallet({
-                    blockchain: wallet.blockchain,
-                    name: wallet.name,
-                    publicKey: wallet.public,
-                    secret: wallet.secret
+                    blockchain: walletData.blockchain,
+                    name: walletData.name,
+                    publicKey: walletData.public,
+                    secret: walletData.secret
                 });
                 await newWallet.build(this.app.user.password);
                 this.add(newWallet);
                 // Load tokens
-                if (Object.keys(wallet.tokens).length) newWallet.tokens.load(wallet.tokens);
+                if (Object.keys(walletData.tokens).length) newWallet.tokens.load(walletData.tokens);
                 // Load NFTs
-                if (Object.keys(wallet.nfts).length) newWallet.nfts.load(wallet.nfts);
+                if (Object.keys(walletData.nfts).length) newWallet.nfts.load(walletData.nfts);
             }
         }
     }

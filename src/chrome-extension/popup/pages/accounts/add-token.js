@@ -206,7 +206,7 @@ export class SheetAddCustomToken extends Component {
     }
 
     addTokenToWallet(canisterId) {
-        if (!(canisterId in this.wallet.tokens)) {
+        if (!this.wallet.tokens.get(canisterId)) {
             const data = {
                 actor: this.actor.ledger,
                 name: this.metadata['icrc1:name'].Text,

@@ -45,10 +45,12 @@ export class TokenBalance extends Component {
         }
 
         // Fetch balance
-        args.wallet.tokens[args.canisterId].balance().then(balance => {
-            args.wallet.tokens[args.canisterId].balance = balance;
-            this.label.innerHTML = `${args.wallet.tokens[args.canisterId].symbol}<br>${formatCurrency(icpt2ICP(balance, args.wallet.tokens[args.canisterId].decimals), 4)}`;
-        });
+        const token = args.wallet.tokens.get(args.canisterId);
+        if (token.ready) {
+            token.balance().then(balance => {
+                this.label.innerHTML = `${token.symbol}<br>${formatCurrency(icpt2ICP(balance, token.decimals), 4)}`;
+            });
+        }
 
     }
 

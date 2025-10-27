@@ -13,17 +13,16 @@ export class ICRCToken extends Token {
      * Rebuild ICRC token with actors
      */
 
-    build({ agent, principal, index }) {
-
-        // Params
-        this.principal = principal;
-        this.account = account;
+    build({ agent }) {
 
         // Ledger Actor
-        this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.principal });
+        this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.canister.ledgerId });
 
         // Index Actor
-        this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: index });
+        this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: this.canister.indexId });
+
+        // Set ready flag
+        this.ready = true;
 
     }
 
@@ -33,7 +32,7 @@ export class ICRCToken extends Token {
 
     async balance() {
         try {
-            return await this.actor.ledger.balance({ owner: Principal.fromText(this.principal) });
+            return await this.actor.ledger.balance({ owner: Principal.fromText(this.wallet.principal) });
         }
         catch (error) {
             console.error(error);

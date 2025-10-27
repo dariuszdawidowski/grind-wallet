@@ -34,9 +34,9 @@ export class Card extends Component {
         if ('click' in args) this.element.addEventListener('click', args.click);
 
         // Fetch balance
-        this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance().then(balance => {
-            this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].balance = balance;
-            this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].decimals), this.wallet.tokens[this.app.ICP_LEDGER_CANISTER_ID].decimals);
+        const token = this.wallet.tokens.get(this.app.ICP_LEDGER_CANISTER_ID);
+        token.balance().then(balance => {
+            this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
             document.body.dispatchEvent(new Event('update.balance'));
             this.showLoader(false);
         });

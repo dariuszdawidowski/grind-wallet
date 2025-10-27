@@ -9,22 +9,6 @@ export class Tokens {
         // Tokens list: { canisterId: Token object, ... }
         this.list = {};
 
-        // List proxy to access tokens directly by their canister IDs
-        return new Proxy(this, {
-            get(target, prop) {
-                if (prop in target) return target[prop];
-                return target.list[prop];
-            },
-            set(target, prop, value) {
-                if (prop in target) {
-                    target[prop] = value;
-                } else {
-                    target.list[prop] = value;
-                }
-                return true;
-            }
-        });
-
     }
 
     /**
@@ -33,7 +17,7 @@ export class Tokens {
      */
 
     add(token) {
-        this.list[token.principal] = token;
+        this.list[token.canister.ledgerId] = token;
     }
 
     /**
@@ -42,18 +26,18 @@ export class Tokens {
      */
 
     del(token) {
-        delete this.list[token.principal];
+        delete this.list[token.canister.ledgerId];
     }
 
     /**
-     * Get token by public principal or get all tokens
-     * @param {string} publicKey 
+     * Get token by canister principal or get all tokens
+     * @param {string} ledgerId
      * @returns {Token | Token[]}
      */
 
-    get(principal = null) {
-        if (!principal) return this.list;
-        return this.list[principal];
+    get(ledgerId = null) {
+        if (!ledgerId) return this.list;
+        return this.list[ledgerId];
     }
 
     /**
@@ -83,18 +67,11 @@ export class Tokens {
 
     serialize() {
         if (Object.keys(this.list).length === 0) return {};
-        return Object.fromEntries( // TODO: move to Token.serialize()
-            Object.entries(this.list).map(([key, value]) => [
-                key,
-                {
-                    name: value.name,
-                    symbol: value.symbol,
-                    decimals: value.decimals,
-                    fee: value.fee,
-                    index: value.index
-                }
-            ])
-        );
+        const serialized = {};
+        for (const [key, token] of Object.entries(this.list)) {
+            serialized[key] = token.serialize();
+        }
+        return serialized;
     }
 
 }

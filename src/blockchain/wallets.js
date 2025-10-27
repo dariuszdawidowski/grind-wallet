@@ -122,6 +122,7 @@ export class Wallets {
                 const walletData = this.migrate(w);
                 // Create wallet
                 const newWallet = new ICPWallet({
+                    app: this.app,
                     blockchain: walletData.blockchain,
                     name: walletData.name,
                     publicKey: walletData.public,

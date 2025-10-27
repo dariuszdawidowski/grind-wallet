@@ -57,6 +57,7 @@ export class ICPWallet extends Wallet {
 
         // Default ICP token
         const newToken = new ICPToken({
+            cache: this.cache,
             wallet: { principal: this.principal, account: this.account }
         });
         await newToken.build({ agent: this.agent });
@@ -67,12 +68,9 @@ export class ICPWallet extends Wallet {
 
             // Old token list contain also ICP token so checking it
             if (id != this.ICP_LEDGER_CANISTER_ID) {
-                const newToken = new ICRCToken(token);
+                const newToken = new ICRCToken({ ...token, cache: this.cache });
                 newToken.build({
                     agent: this.agent,
-                    canisterId: token.canister.ledgerId,
-                    indexId: token.canister.indexId,
-                    wallet: { principal: this.principal, account: this.account }
                 });
                 this.tokens.add(newToken);
             }

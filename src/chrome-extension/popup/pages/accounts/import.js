@@ -65,6 +65,7 @@ export class SheetImportAccount extends Component {
         const encrypted = await encryptKey(wallet.private, this.app.user.password);
         const secret = serializeEncryptKey(encrypted);
         const newWallet = new ICPWallet({
+            app: this.app,
             blockchain: 'Internet Computer',
             name: this.name.get(),
             publicKey: wallet.public,

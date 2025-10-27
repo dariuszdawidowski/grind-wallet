@@ -12,7 +12,10 @@ export class Wallet {
      * @param {Object} raw serialized data
      */
 
-    constructor({ blockchain, name, publicKey, secret, tokens, nfts }) {
+    constructor({ app, blockchain, name, publicKey, secret, tokens, nfts }) {
+
+        // References
+        this.app = app;
 
         /*** Persistent attributes ***/
 
@@ -31,10 +34,10 @@ export class Wallet {
         /*** Partially persistent attributes ***/
 
         // Tokens list: object { canisterId: Token object }
-        this.tokens = new Tokens(tokens);
+        this.tokens = new Tokens({ app: this.app, ...tokens });
 
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
-        this.nfts = new NFTs(nfts);
+        this.nfts = new NFTs({ app: this.app, ...nfts });
 
         /*** Dynamic attributes ***/
 

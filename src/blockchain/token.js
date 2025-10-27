@@ -1,6 +1,9 @@
 export class Token {
 
-    constructor({ wallet, canisterId, indexId, name, symbol, decimals, fee }) {
+    constructor({ cache, wallet, canisterId, indexId, name, symbol, decimals, fee }) {
+
+        // References
+        this.cache = cache;
 
         /*** Persistent attributes ***/
 
@@ -43,27 +46,6 @@ export class Token {
         // Builded flag
         this.ready = false;
 
-        // Cache timestamp
-        this._cache = {
-            balance: null,
-            balanceTimestamp: 0
-        };
-
-    }
-
-    /**
-     * Get token balance from cache or return false
-     */
-
-    cache(property, value = null) {
-        if (value !== null) {
-            this._cache[property] = value;
-            this._cache[`${property}Timestamp`] = Date.now();
-        }
-        if (this._cache[property] && (Date.now() - this._cache[`${property}Timestamp`]) < 60000) { // 1 minute cache
-            return this._cache[property];
-        }
-        return false;
     }
 
     /**

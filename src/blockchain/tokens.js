@@ -4,7 +4,10 @@
 
 export class Tokens {
 
-    constructor() {
+    constructor({ app }) {
+
+        // References
+        this.app = app;
 
         // Tokens list: { canisterId: Token object, ... }
         this.list = {};
@@ -55,7 +58,7 @@ export class Tokens {
 
     load(serialized) {
         for (const [key, value] of Object.entries(serialized)) {
-            this.list[key] = new ICRCToken(value);
+            this.list[key] = new ICRCToken({ ...value, cache: this.app.cache });
             this.list[key].build();
         }
     }

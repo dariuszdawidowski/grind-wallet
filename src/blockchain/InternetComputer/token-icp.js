@@ -9,8 +9,9 @@ import { Token } from '/src/blockchain/token.js';
 
 export class ICPToken extends Token {
 
-    constructor({ wallet }) {
+    constructor({ cache, wallet }) {
         super({
+            cache,
             wallet,
             canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
             indexId: 'qhbym-qaaaa-aaaaa-aaafq-cai',
@@ -44,14 +45,8 @@ export class ICPToken extends Token {
 
     async balance() {
 
-        const cachedBalance = this.cache('balance');
-        if (cachedBalance) {
-            return cachedBalance;
-        }
-
         try {
             const balance = await this.actor.ledger.accountBalance({ accountIdentifier: this.wallet.account });
-            this.cache('balance', balance);
             return balance;
         }
         catch (error) {

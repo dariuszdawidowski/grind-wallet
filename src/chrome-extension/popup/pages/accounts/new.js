@@ -81,6 +81,7 @@ class SheetNewAccountPhrase extends Component {
             text: 'Add to my wallets',
             click: async () => {
                 await this.app.wallets.add(new ICPWallet({
+                    app: this.app,
                     blockchain: 'Internet Computer',
                     name: name.get(),
                     publicKey: args.wallet.public,

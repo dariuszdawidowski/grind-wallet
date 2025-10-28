@@ -8,6 +8,7 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ICP2icpt } from '/src/utils/currency.js';
+import { memo2Binary } from '/src/utils/general.js';
 
 export class ICRCToken extends Token {
 
@@ -42,20 +43,20 @@ export class ICRCToken extends Token {
 
     /**
      * Transfer ICRC-1/2
-     * @param args.principal: string | Principal - destination (Principal ID)
-     * @param args.amount: Number - amount of tokens to send
+     * @param principal: string | Principal - destination (Principal ID)
+     * @param amount: Number - amount of tokens to send
      */
 
-    async transfer(args) {
-        if (('principal' in args) && typeof(args.principal) == 'string') args.principal = Principal.fromText(args.principal);
+    async transfer({ principal, amount }) {
+        if (typeof(principal) == 'string') principal = Principal.fromText(principal);
 
         try {
             const response = await this.actor.ledger.transfer({
                 to: {
-                owner: args.principal,
-                subaccount: []
+                    owner: principal,
+                    subaccount: []
                 },
-                amount: ICP2icpt(args.amount, this.decimals),
+                amount: ICP2icpt(amount, this.decimals),
                 memo: memo2Binary(this.memo++)
             });
             return {'OK': response};

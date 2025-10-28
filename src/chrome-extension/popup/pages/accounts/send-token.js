@@ -107,7 +107,7 @@ export class SheetAccountSend extends Component {
         }
 
         // Send to byself
-        if (principal == this.wallet.principal) {
+        if (principal === this.wallet.principal) {
             alert('You want to send to yourself');
             allow = false;
         }

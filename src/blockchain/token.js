@@ -63,7 +63,7 @@ export class Token {
             decimals: this.decimals,
             fee: this.fee
         };
-        if (this.canister.indexId) data.indexId = this.canister.indexId;
+        if (this.canister.indexId) data['indexId'] = this.canister.indexId;
         return data;
     }
 

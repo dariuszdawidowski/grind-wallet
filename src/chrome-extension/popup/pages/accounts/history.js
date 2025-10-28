@@ -300,10 +300,13 @@ export class SheetTransactionHistory extends Component {
 
     async fetchAndCache() {
 
-        // Fetch transactions from ICP Index canister
-        if (this.wallet.tokens.get(this.canister.ledgerId).canister.indexId) {
+        // Get token
+        const token = this.wallet.tokens.get(this.canister.ledgerId);
 
-            const response = await this.wallet.tokens.get(this.canister.ledgerId).actor.index.get_account_transactions({
+        // Fetch transactions from ICP Index canister
+        if (token.canister.indexId) {
+
+            const response = await token.actor.index.get_account_transactions({
                 max_results: 100,
                 start: [],
                 account: {

@@ -8,6 +8,7 @@ import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
+import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { validICRC1 } from '/src/utils/currency.js';
 import { isValidCanisterId } from '/src/utils/general.js';
 import { saveImage } from '/src/utils/image-cache.js';
@@ -22,6 +23,12 @@ export class SheetAddCustomToken extends Component {
 
         // UI controls widgets
         this.widget = {};
+
+        // Token canister ID
+        this.canister = {
+            ledgerId: null,
+            indexId: null
+        };
 
         // Token actors
         this.actor = {
@@ -119,6 +126,7 @@ export class SheetAddCustomToken extends Component {
         const info = await this.connectLedgerCanister(canisterId);
         this.widget.submit.busy(false);
         if (info.valid) {
+            this.canister.ledgerId = canisterId;
             this.actor.ledger = info.actor;
             this.metadata = info.metadata;
             if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
@@ -188,6 +196,7 @@ export class SheetAddCustomToken extends Component {
         const info = await this.connectIndexCanister(canisterId);
         this.widget.submit.busy(false);
         if (info.valid) {
+            this.canister.indexId = canisterId;
             this.actor.index = info.actor;
         }
         else {
@@ -220,7 +229,7 @@ export class SheetAddCustomToken extends Component {
         }
 
         // Validate
-        if (status && ('num_blocks_synced' in status)) {
+        if (actor && status && ('num_blocks_synced' in status)) {
             return {
                 valid: true,
                 actor
@@ -239,13 +248,13 @@ export class SheetAddCustomToken extends Component {
             const data = {
                 app: this.app,
                 wallet: { principal: this.wallet.principal, account: this.wallet.account },
-                canisterId,
+                canisterId: this.canister.ledgerId,
                 name: this.metadata['icrc1:name'].Text,
                 symbol: this.metadata['icrc1:symbol'].Text,
                 decimals: Number(this.metadata['icrc1:decimals'].Nat),
                 fee: Number(this.metadata['icrc1:fee'].Nat)
             };
-            if (this.actor.index) data.indexId = this.actor.index;
+            if (this.actor.index) data['indexId'] = this.canister.indexId;
             const newToken = new ICRCToken(data);
             newToken.build({ agent: this.wallet.agent });
             this.wallet.tokens.add(newToken);

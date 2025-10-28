@@ -3,6 +3,7 @@
  */
 
 import { Actor } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';
@@ -15,16 +16,14 @@ export class ICRCToken extends Token {
      */
 
     build({ agent }) {
-
         // Ledger Actor
         this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.canister.ledgerId });
 
         // Index Actor
-        this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: this.canister.indexId });
+        if (this.canister.indexId) this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: this.canister.indexId });
 
         // Set ready flag
         this.ready = true;
-
     }
 
     /**

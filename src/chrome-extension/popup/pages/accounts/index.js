@@ -156,9 +156,9 @@ export class PageAccounts extends Component {
                             this.app.sheet.append({
                                 title: `${token.name} tokens @ ${wallet.name}`,
                                 component: new SheetAccountDetails({
-                                    app: args.app,
+                                    app: this.app,
                                     wallet,
-                                    canisterId: id
+                                    canister: { ledgerId: id, indexId: token.canister.indexId }
                                 })
                             });
                         }

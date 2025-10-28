@@ -4,9 +4,10 @@
 
 export class NFTs {
 
-    constructor({ app, nfts = {} }) {
+    constructor({ app, wallet, nfts = {} }) {
         // References
         this.app = app;
+        this.wallet = wallet;
 
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
         this.list = nfts;

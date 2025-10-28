@@ -2,10 +2,12 @@
  * Register Custom Token Sheet
  */
 
-import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
 import { validICRC1 } from '/src/utils/currency.js';
 import { isValidCanisterId } from '/src/utils/general.js';
 import { saveImage } from '/src/utils/image-cache.js';
@@ -21,11 +23,13 @@ export class SheetAddCustomToken extends Component {
         // UI controls widgets
         this.widget = {};
 
-        // Token actor and metadata fetched from canister
+        // Token actors
         this.actor = {
             ledger: null,
             index: null
         };
+
+        // Token metadata fetched from canister
         this.metadata = null;
 
         // Build
@@ -233,15 +237,18 @@ export class SheetAddCustomToken extends Component {
     addTokenToWallet(canisterId) {
         if (!this.wallet.tokens.get(canisterId)) {
             const data = {
-                actor: this.actor.ledger,
+                app: this.app,
+                wallet: { principal: this.wallet.principal, account: this.wallet.account },
+                canisterId,
                 name: this.metadata['icrc1:name'].Text,
                 symbol: this.metadata['icrc1:symbol'].Text,
-                decimals: this.metadata['icrc1:decimals'].Nat,
-                fee: this.metadata['icrc1:fee'].Nat
+                decimals: Number(this.metadata['icrc1:decimals'].Nat),
+                fee: Number(this.metadata['icrc1:fee'].Nat)
             };
-            if (this.actor.index) data.index = this.actor.index;
-            icpRebuildToken(data, canisterId, this.wallet);
-            icpBindTokenActions(this.wallet.tokens[canisterId], canisterId);
+            if (this.actor.index) data.indexId = this.actor.index;
+            const newToken = new ICRCToken(data);
+            newToken.build({ agent: this.wallet.agent });
+            this.wallet.tokens.add(newToken);
             if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
                 saveImage(`token:${canisterId}`, this.metadata['icrc1:logo'].Text);
             }

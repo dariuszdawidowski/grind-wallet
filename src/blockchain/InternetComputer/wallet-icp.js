@@ -68,7 +68,7 @@ export class ICPWallet extends Wallet {
 
             // Old token list contain also ICP token so checking it
             if (id != this.ICP_LEDGER_CANISTER_ID) {
-                const newToken = new ICRCToken({ ...token, cache: this.cache });
+                const newToken = new ICRCToken({ ...token, app: this.app });
                 newToken.build({
                     agent: this.agent,
                 });

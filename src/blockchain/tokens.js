@@ -2,12 +2,15 @@
  * Manages a collection of tokens.
  */
 
+import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
+
 export class Tokens {
 
-    constructor({ app }) {
+    constructor({ app, wallet }) {
 
         // References
         this.app = app;
+        this.wallet = wallet;
 
         // Tokens list: { canisterId: Token object, ... }
         this.list = {};
@@ -59,8 +62,13 @@ export class Tokens {
     load(serialized) {
         for (const [key, value] of Object.entries(serialized)) {
             if (!this.app.isICPLedger(key)) {
-                this.list[key] = new ICRCToken({ ...value, cache: this.app.cache });
-                this.list[key].build();
+                this.list[key] = new ICRCToken({
+                    app: this.app,
+                    wallet: { principal: this.wallet.principal, account: this.wallet.account },
+                    canisterId: key,
+                    ...value
+                });
+                this.list[key].build({ agent: this.wallet.agent });
             }
         }
     }
@@ -71,7 +79,6 @@ export class Tokens {
      */
 
     serialize() {
-        if (Object.keys(this.list).length === 0) return {};
         const serialized = {};
         for (const [key, token] of Object.entries(this.list)) {
             if (!this.app.isICPLedger(key)) serialized[key] = token.serialize();

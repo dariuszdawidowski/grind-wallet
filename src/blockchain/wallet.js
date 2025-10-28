@@ -34,10 +34,10 @@ export class Wallet {
         /*** Partially persistent attributes ***/
 
         // Tokens list: object { canisterId: Token object }
-        this.tokens = new Tokens({ app: this.app, ...tokens });
+        this.tokens = new Tokens({ app: this.app, wallet: this, ...tokens });
 
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
-        this.nfts = new NFTs({ app: this.app, ...nfts });
+        this.nfts = new NFTs({ app: this.app, wallet: this,...nfts });
 
         /*** Dynamic attributes ***/
 

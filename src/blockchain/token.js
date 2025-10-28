@@ -1,3 +1,7 @@
+/**
+ * Token abstract class
+ */
+
 export class Token {
 
     constructor({ app, wallet, canisterId, indexId, name, symbol, decimals, fee }) {
@@ -53,13 +57,14 @@ export class Token {
      */
 
     serialize() {
-        return {
-            index: this.canister.indexId,
+        const data = {
             name: this.name,
             symbol: this.symbol,
             decimals: this.decimals,
             fee: this.fee
         };
+        if (this.canister.indexId) data.indexId = this.canister.indexId;
+        return data;
     }
 
 }

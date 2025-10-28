@@ -1,9 +1,9 @@
 export class Token {
 
-    constructor({ cache, wallet, canisterId, indexId, name, symbol, decimals, fee }) {
+    constructor({ app, wallet, canisterId, indexId, name, symbol, decimals, fee }) {
 
         // References
-        this.cache = cache;
+        this.app = app;
 
         /*** Persistent attributes ***/
 

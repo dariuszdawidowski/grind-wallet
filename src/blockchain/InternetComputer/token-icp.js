@@ -11,9 +11,9 @@ import { ICP2icpt } from '/src/utils/currency.js';
 
 export class ICPToken extends Token {
 
-    constructor({ cache, wallet }) {
+    constructor({ app, wallet }) {
         super({
-            cache,
+            app,
             wallet,
             canisterId: 'ryjl3-tyaaa-aaaaa-aaaba-cai',
             indexId: 'qhbym-qaaaa-aaaaa-aaafq-cai',
@@ -48,7 +48,7 @@ export class ICPToken extends Token {
     async balance() {
 
         try {
-            const balance = await this.cache.get({
+            const balance = await this.app.cache.get({
                 id: `balance.${this.wallet.account}.${this.canister.indexId}`,
                 overdue: ONE_MINUTE,
                 create: async () => {
@@ -58,6 +58,7 @@ export class ICPToken extends Token {
             return balance;
         }
         catch (error) {
+            if (error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') this.app.offline(true);
             console.error(error);
         }
 

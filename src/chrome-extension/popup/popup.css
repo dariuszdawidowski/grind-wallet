@@ -23,6 +23,19 @@ body {
     height: 100%;
 }
 
+#top-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 0;
+    z-index: 9999;
+
+}
+
 .page {
     width: 100%;
     display: flex;

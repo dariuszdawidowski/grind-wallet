@@ -46,6 +46,9 @@ class GrindWalletPlugin {
         // ICP Index canister id
         this.ICP_INDEX_CANISTER_ID = 'qhbym-qaaaa-aaaaa-aaafq-cai';
 
+        // Offline flag
+        this._offline = false;
+
         // Launch
         document.addEventListener('DOMContentLoaded', () => { this.init(); }, { once: true });
 
@@ -215,6 +218,27 @@ class GrindWalletPlugin {
     isICPLedger(canisterId) {
         return canisterId === this.ICP_LEDGER_CANISTER_ID;
     }
+
+    /**
+     * Switch to offline mode on/off
+     */
+
+    offline(mode) {
+        this._offline = mode;
+        const topBanner = document.getElementById('top-banner');
+        if (topBanner) {
+            if (mode == true && !topBanner.innerText.includes('OFFLINE')) topBanner.innerText = topBanner.innerText + ' [OFFLINE]';
+            else topBanner.innerText.replace(' [OFFLINE]', '');
+        }
+        else {
+            const devBanner = document.createElement('div');
+            devBanner.id = 'top-banner';
+            devBanner.textContent = 'OFFLINE';
+            devBanner.style.backgroundColor = '#5b36ffff';
+            document.body.insertBefore(devBanner, document.body.firstChild);
+        }
+    }
+
 }
 
 /**

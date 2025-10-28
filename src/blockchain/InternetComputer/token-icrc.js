@@ -8,7 +8,7 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ICP2icpt } from '/src/utils/currency.js';
-import { memo2Binary } from '/src/utils/general.js';
+import { ONE_MINUTE, memo2Binary } from '/src/utils/general.js';
 
 export class ICRCToken extends Token {
 
@@ -33,9 +33,17 @@ export class ICRCToken extends Token {
 
     async balance() {
         try {
-            return await this.actor.ledger.balance({ owner: Principal.fromText(this.wallet.principal) });
+            const balance = await this.app.cache.get({
+                id: `balance.${this.wallet.account}.${this.canister.ledgerId}`,
+                overdue: ONE_MINUTE,
+                create: async () => {
+                    return await this.actor.ledger.balance({ owner: Principal.fromText(this.wallet.principal) });
+                }
+            });
+            return balance;
         }
         catch (error) {
+            if (error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') this.app.offline(true);
             console.error(error);
         }
         return null;

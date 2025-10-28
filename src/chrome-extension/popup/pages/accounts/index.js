@@ -11,7 +11,6 @@ import { SheetNewAccount } from '/src/chrome-extension/popup/pages/accounts/new.
 import { SheetImportAccount } from '/src/chrome-extension/popup/pages/accounts/import.js';
 import { SheetAccountDetails } from '/src/chrome-extension/popup/pages/accounts/details.js';
 import { SheetNFTDetails } from '/src/chrome-extension/popup/pages/accounts/details-nft.js';
-import { NFT } from '/src/blockchain/nft.js';
 const { version } = require('/package.json');
 
 export class PageAccounts extends Component {

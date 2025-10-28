@@ -2,6 +2,8 @@
  * Manages a collection of NFTs.
  */
 
+import { NFT } from '/src/blockchain/nft.js';
+
 export class NFTs {
 
     constructor({ app, wallet, nfts = {} }) {
@@ -54,6 +56,21 @@ export class NFTs {
 
     count() {
         return Object.keys(this.list).length;
+    }
+
+    /**
+     * Load NFTS
+     */
+
+    load(serialized) {
+        for (const [key, value] of Object.entries(serialized)) {
+            this.add(new NFT({
+                app: this.app,
+                agent: this.wallet.agent,
+                ...value
+            }));
+            this.list[key].build({ agent: this.wallet.agent });
+        }
     }
 
     /**

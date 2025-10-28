@@ -5,14 +5,14 @@ import { NFT } from '/src/blockchain/nft.js';
 
 export class SheetAccountSendNFT extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet, nft }) {
+        super({ app });
 
         // UI controls widgets
         this.widget = {};
         
         // Wallet reference
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // Sucessfuly sent
         this.sent = false;
@@ -48,12 +48,12 @@ export class SheetAccountSendNFT extends Component {
 
         // Description
         this.append(new ButtonDescription({
-            app: args.app,
+            app: this.app,
             text: `Transferring NFTs is free.`
         }));
 
         // NFT info {collection, id, standard, thumbnail} 
-        this.nft = args.nft;
+        this.nft = nft;
         this.nft.cache().then(() => {
             this.widget.submit.enable();
         });
@@ -99,7 +99,7 @@ export class SheetAccountSendNFT extends Component {
                 this.app.wallets.get(this.wallet.public)?.nfts.del(`${this.nft.collection}:${this.nft.id}`);
                 // Save changes
                 this.app.wallets.save();
-                this.submit.set('OK - successfully sent!');
+                this.widget.submit.set('OK - successfully sent!');
                 this.sent = true;
             }
             else {

@@ -62,12 +62,12 @@ export class Tokens {
     load(serialized) {
         for (const [key, value] of Object.entries(serialized)) {
             if (!this.app.isICPLedger(key)) {
-                this.list[key] = new ICRCToken({
+                this.add(new ICRCToken({
                     app: this.app,
                     wallet: { principal: this.wallet.principal, account: this.wallet.account },
                     canisterId: key,
                     ...value
-                });
+                }));
                 this.list[key].build({ agent: this.wallet.agent });
             }
         }

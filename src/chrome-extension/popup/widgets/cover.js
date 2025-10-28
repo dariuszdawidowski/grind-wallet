@@ -1,22 +1,26 @@
+/**
+ * NFT thumbnail cover widget
+ */
+
 import { Component } from '/src/utils/component.js';
 import { loadImage } from '/src/utils/image-cache.js';
 
 export class Cover extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ wallet, nft, click = null }) {
+        super({});
 
         // Wallet reference
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // NFT info
-        this.nft = args.nft;
+        this.nft = nft;
 
         // Class
         this.element.classList.add('cover');
 
         // Click (with distance preventing scroll)
-        this.click = {
+        this.clicked = {
             x: 0,
             y: 0,
             distance: function(x2, y2) {
@@ -25,13 +29,13 @@ export class Cover extends Component {
                 return Math.sqrt(dx * dx + dy * dy);
             }
         };
-        if ('click' in args) {
+        if (click) {
             this.element.addEventListener('mousedown', (event) => {
-                this.click.x = event.x;
-                this.click.y = event.y;
+                this.clicked.x = event.x;
+                this.clicked.y = event.y;
             });
             this.element.addEventListener('mouseup', (event) => {
-                if (this.click.distance(event.x, event.y) <= 10) args.click();
+                if (this.clicked.distance(event.x, event.y) <= 10) click();
             });
         }
 

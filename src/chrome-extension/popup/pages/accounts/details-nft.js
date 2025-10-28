@@ -1,5 +1,9 @@
+/**
+ * NFT details sheet
+ */
+
 import { Component } from '/src/utils/component.js';
-import { Button, ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
+import { ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { loadImage } from '/src/utils/image-cache.js';
 import { SheetAccountSendNFT } from '/src/chrome-extension/popup/pages/accounts/send-nft.js';
 import { SheetAccountReceiveNFT } from '/src/chrome-extension/popup/pages/accounts/receive-nft.js';
@@ -7,17 +11,17 @@ import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 
 export class SheetNFTDetails extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, wallet, nft }) {
+        super({ app });
 
         // UI controls widgets
         this.widget = {};
 
         // Wallet reference
-        this.wallet = args.wallet;
+        this.wallet = wallet;
 
         // NFT info {collection, id, standard, thumbnail} 
-        this.nft = args.nft;
+        this.nft = nft;
 
         // Build
         this.element.classList.add('form');
@@ -82,7 +86,7 @@ export class SheetNFTDetails extends Component {
                     this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Send NFT from ${this.wallet.name}`,
-                        component: new SheetAccountSendNFT(args)
+                        component: new SheetAccountSendNFT({ app, wallet, nft })
                     });
                 }
             }),
@@ -93,7 +97,7 @@ export class SheetNFTDetails extends Component {
                     this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Receive NFT to ${this.wallet.name}`,
-                        component: new SheetAccountReceiveNFT(args)
+                        component: new SheetAccountReceiveNFT({ app, wallet, nft })
                     });
                 }
             }),

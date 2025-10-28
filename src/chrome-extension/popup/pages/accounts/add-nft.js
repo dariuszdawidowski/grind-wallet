@@ -143,7 +143,7 @@ export class SheetAddCustomNFT extends Component {
                 const img = await this.nft.getImage({ token: tokenId });
                 await saveImage(`nft:${canisterId}:${tokenId}`, img);
                 // Add to wallet
-                this.wallet.nfts[`${canisterId}:${tokenId}`] = new NFT({
+                this.wallet.nfts.add(new NFT({
                     app: this.app,
                     principal: this.wallet.principal,
                     agent: this.wallet.agent,
@@ -151,7 +151,7 @@ export class SheetAddCustomNFT extends Component {
                     id: tokenId,
                     thumbnail: `nft:${canisterId}:${tokenId}`,
                     standard: this.standard
-                });
+                }));
                 // Save wallets
                 this.app.wallets.save();
                 this.app.page('accounts');

@@ -33,6 +33,14 @@ export class NFT {
     }
 
     /**
+     * Build the NFT
+     */
+
+    build() {
+        // Build the NFT
+    }
+
+    /**
      * Force to cache lazy service
      */
 

@@ -93,7 +93,7 @@ export class ICPToken extends Token {
      * Get transaction history from ICP Index canister
      * @param results: Number - number of results to fetch
      * @return { isodatetime: {
-     *     type: 'send.token' | 'recv.token',
+     *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
      *     to|from: { account: string },
      *     token: { canister: 'token principal id', amount: Number, fee: Number }
@@ -115,8 +115,10 @@ export class ICPToken extends Token {
 
         // Parse response
         if (('Ok' in response) && ('transactions' in response.Ok)) {
+
             // Traverse transactions
             for (const record of response.Ok.transactions) {
+
                 // Get transaction
                 if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
 
@@ -167,7 +169,6 @@ export class ICPToken extends Token {
                         // Save to history
                         history[datetime] = data;
                     }
-
 
                 }
             }

@@ -3,6 +3,7 @@
  */
 
 import { Actor } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { Token } from '/src/blockchain/token.js';
@@ -88,5 +89,91 @@ export class ICPToken extends Token {
         }
     }
 
-}
+    /**
+     * Get transaction history from ICP Index canister
+     * @param results: Number - number of results to fetch
+     * @return { isodatetime: {
+     *     type: 'send.token' | 'recv.token',
+     *     pid: 'my principal id',
+     *     to|from: { account: string },
+     *     token: { canister: 'token principal id', amount: Number, fee: Number }
+     * }, ...}
+     */
 
+    async transactions({ results = 100 } = {}) {
+        const history = {};
+
+        // Fetch transactions from ICP Index canister
+        const response = await this.actor.index.get_account_transactions({
+            max_results: results,
+            start: [],
+            account: {
+                owner: Principal.fromText(this.wallet.principal),
+                subaccount: [],
+            }
+        });
+
+        // Parse response
+        if (('Ok' in response) && ('transactions' in response.Ok)) {
+            // Traverse transactions
+            for (const record of response.Ok.transactions) {
+                // Get transaction
+                if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
+
+                    // Get timestamp
+                    const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+
+                    // Transfer transaction
+                    if ('Transfer' in record.transaction.operation) {
+
+                        // Direction: 'send' | 'recv' | 'unknown'
+                        const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+
+                        // Compose data
+                        const data = {
+                            datetime,
+                            type: `${direction}.token`,
+                            pid: this.wallet.principal,
+                            token: {
+                                canister: this.canister.ledgerId,
+                                amount: Number(record.transaction.operation.Transfer.amount.e8s),
+                                fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                            }
+                        };
+                        if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
+                        else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+
+                        // Save to history
+                        history[datetime] = data;
+
+                    }
+
+                    // Approve transaction
+                    else if ('Approve' in record.transaction.operation) {
+
+                        // Compose data
+                        const data = {
+                            datetime,
+                            type: 'aprv.token',
+                            pid: this.wallet.principal,
+                            to: { account: record.transaction.operation.Approve.spender },
+                            token: {
+                                canister: this.canister.ledgerId,
+                                amount: Number(record.transaction.operation.Approve.allowance.e8s),
+                                fee: Number(record.transaction.operation.Approve.fee.e8s)
+                            }
+                        };
+
+                        // Save to history
+                        history[datetime] = data;
+                    }
+
+
+                }
+            }
+        }
+
+        return history;
+    }
+
+}

@@ -75,4 +75,98 @@ export class ICRCToken extends Token {
 
     }
 
+    /**
+     * Get transaction history from ICRC Index canister
+     * @param results: Number - number of results to fetch
+     * @return { isodatetime: {
+     *     type: 'send.token' | 'recv.token' | 'aprv.token',
+     *     pid: 'my principal id',
+     *     to|from: { account: string },
+     *     token: { canister: 'token principal id', amount: Number, fee: Number }
+     * }, ...}
+     */
+
+    async transactions({ results = 100 } = {}) {
+        const history = {};
+
+        // Fetch transactions from ICP Index canister
+        const response = await this.actor.index.get_account_transactions({
+            max_results: results,
+            start: [],
+            account: {
+                owner: Principal.fromText(this.wallet.principal),
+                subaccount: [],
+            }
+        });
+        // Parse response
+        if (('Ok' in response) && ('transactions' in response.Ok)) {
+
+            // Traverse transactions
+            for (const record of response.Ok.transactions) {
+
+                // Get transaction
+                if (('transaction' in record) && ('kind' in record.transaction) && ('timestamp' in record.transaction)) {
+
+                    // Get timestamp
+                    const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
+
+                    console.log('d', datetime)
+
+                    // Transfer transaction
+                    if (('transfer' in record.transaction) && record.transaction.transfer.length) {
+
+                        const transfer = record.transaction.transfer[0];
+                        console.log('tr', transfer)
+/*
+                        // Direction: 'send' | 'recv' | 'unknown'
+                        const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+
+                        // Compose data
+                        const data = {
+                            datetime,
+                            type: `${direction}.token`,
+                            pid: this.wallet.principal,
+                            token: {
+                                canister: this.canister.ledgerId,
+                                amount: Number(record.transaction.operation.Transfer.amount.e8s),
+                                fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                            }
+                        };
+                        if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
+                        else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+
+                        // Save to history
+                        history[datetime] = data;
+*/                        
+
+                    }
+
+                    // Approve transaction
+                    else if ('Approve' in record.transaction.operation) {
+
+                        // Compose data
+                        const data = {
+                            datetime,
+                            type: 'aprv.token',
+                            pid: this.wallet.principal,
+                            to: { account: record.transaction.operation.Approve.spender },
+                            token: {
+                                canister: this.canister.ledgerId,
+                                amount: Number(record.transaction.operation.Approve.allowance.e8s),
+                                fee: Number(record.transaction.operation.Approve.fee.e8s)
+                            }
+                        };
+
+                        // Save to history
+                        history[datetime] = data;
+                    }
+
+                }
+            }
+        }
+
+        console.log('h', history)
+        return history;
+    }
+    
 }

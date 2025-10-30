@@ -76,7 +76,7 @@ export class ICRCToken extends Token {
     }
 
     /**
-     * Get transaction history from ICRC Index canister
+     * Get transaction history
      * @param results: Number - number of results to fetch
      * @return { isodatetime: {
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
@@ -87,6 +87,20 @@ export class ICRCToken extends Token {
      */
 
     async transactions({ results = 100 } = {}) {
+
+        // Get from ICRC Index canister
+        if (this.actor.index) {
+            return await this.transactionsFromIndex({ results });
+        }
+
+        return {};
+    }
+
+    /**
+     * Get transaction history from ICRC Index canister
+     */
+
+    async transactionsFromIndex({ results = 100 } = {}) {
         const history = {};
 
         // Fetch transactions from ICP Index canister
@@ -111,8 +125,9 @@ export class ICRCToken extends Token {
                     const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
 
                     // Transfer transaction
-                    if (('transfer' in record.transaction) && record.transaction.transfer.length) {
+                    if (record.transaction.kind === 'transfer' && ('transfer' in record.transaction) && record.transaction.transfer.length) {
 
+                        // Record
                         const transfer = record.transaction.transfer[0];
 
                         // Direction: 'send' | 'recv' | 'unknown'
@@ -138,30 +153,32 @@ export class ICRCToken extends Token {
                     }
 
                     // Approve transaction
-                    /*else if ('Approve' in record.transaction.operation) {
+                    else if (record.transaction.kind === 'approve' && ('approve' in record.transaction) && record.transaction.approve.length) {
+
+                        // Record
+                        const approve = record.transaction.approve[0];
 
                         // Compose data
                         const data = {
                             datetime,
                             type: 'aprv.token',
                             pid: this.wallet.principal,
-                            to: { account: record.transaction.operation.Approve.spender },
+                            to: { principal: approve.spender.owner.toText() },
                             token: {
                                 canister: this.canister.ledgerId,
-                                amount: Number(record.transaction.operation.Approve.allowance.e8s),
-                                fee: Number(record.transaction.operation.Approve.fee.e8s)
+                                amount: Number(approve.amount),
+                                fee: approve.fee.length ? Number(approve.fee[0]) : 0
                             }
                         };
 
                         // Save to history
                         history[datetime] = data;
-                    }*/
+                    }
 
                 }
             }
         }
 
-        console.log('h', history)
         return history;
     }
     

@@ -15,7 +15,7 @@ export class SheetTransactionHistory extends Component {
         this.app = app;
         this.wallet = wallet;
         this.canister = canister;
-        this.types = types; // ['send.token', 'recv.token', 'send.nft', 'add.nft', 'del.nft']
+        this.types = types; // ['send.token', 'recv.token', 'aprv.token', 'send.nft', 'add.nft', 'del.nft']
         this.tokens = tokens; // [canisterId1, canisterId2, ...]
 
         // Last rendered date

@@ -110,16 +110,13 @@ export class ICRCToken extends Token {
                     // Get timestamp
                     const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
 
-                    console.log('d', datetime)
-
                     // Transfer transaction
                     if (('transfer' in record.transaction) && record.transaction.transfer.length) {
 
                         const transfer = record.transaction.transfer[0];
-                        console.log('tr', transfer)
-/*
+
                         // Direction: 'send' | 'recv' | 'unknown'
-                        const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+                        const direction = transfer.from.owner.toText() === this.wallet.principal ? 'send' : transfer.to.owner.toText() === this.wallet.principal ? 'recv' : 'unknown';
 
                         // Compose data
                         const data = {
@@ -128,21 +125,20 @@ export class ICRCToken extends Token {
                             pid: this.wallet.principal,
                             token: {
                                 canister: this.canister.ledgerId,
-                                amount: Number(record.transaction.operation.Transfer.amount.e8s),
-                                fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                                amount: Number(transfer.amount),
+                                fee: transfer.fee.length ? Number(transfer.fee[0]) : 0
                             }
                         };
-                        if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
-                        else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+                        if (direction === 'send') data.to = { principal: transfer.to.owner.toText() };
+                        else if (direction === 'recv') data.from = { principal: transfer.from.owner.toText() };
 
                         // Save to history
                         history[datetime] = data;
-*/                        
 
                     }
 
                     // Approve transaction
-                    else if ('Approve' in record.transaction.operation) {
+                    /*else if ('Approve' in record.transaction.operation) {
 
                         // Compose data
                         const data = {
@@ -159,7 +155,7 @@ export class ICRCToken extends Token {
 
                         // Save to history
                         history[datetime] = data;
-                    }
+                    }*/
 
                 }
             }

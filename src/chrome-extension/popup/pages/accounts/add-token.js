@@ -88,10 +88,10 @@ export class SheetAddCustomToken extends Component {
         this.widget.address.disable();
 
         // Token canister ID
-        const canisterId = this.widget.address.get();
+        const ledgerCanisterId = this.widget.address.get();
 
         // Validate token canister ID
-        if (!isValidCanisterId(canisterId)) {
+        if (!isValidCanisterId(ledgerCanisterId)) {
             alert('Invalid Token Canister ID');
             this.widget.address.enable();
             return;
@@ -107,13 +107,13 @@ export class SheetAddCustomToken extends Component {
 
         // First pass (fetch actor+metadata & verify)
         if (!this.actor.ledger && !this.metadata) {
-            await this.verifyLedgerCanister(canisterId);
-            if (indexCanisterId.length) await this.verifyIndexCanister(canisterId, indexCanisterId);
+            await this.verifyLedgerCanister(ledgerCanisterId, indexCanisterId);
+            if (indexCanisterId.length || this.canister.indexId) await this.verifyIndexCanister(ledgerCanisterId, indexCanisterId || this.canister.indexId);
         }
 
         // Second pass (accept)
         else {
-            this.addTokenToWallet(canisterId);
+            this.addTokenToWallet(ledgerCanisterId);
         }
     }
 
@@ -121,12 +121,12 @@ export class SheetAddCustomToken extends Component {
      * Verify the ledger canister
      */
 
-    async verifyLedgerCanister(canisterId) {
+    async verifyLedgerCanister(ledgerCanisterId, indexCanisterId) {
         this.widget.submit.busy(true);
-        const info = await this.connectLedgerCanister(canisterId);
+        const info = await this.connectLedgerCanister(ledgerCanisterId, indexCanisterId);
         this.widget.submit.busy(false);
         if (info.valid) {
-            this.canister.ledgerId = canisterId;
+            this.canister.ledgerId = ledgerCanisterId;
             this.actor.ledger = info.actor;
             this.metadata = info.metadata;
             if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
@@ -148,16 +148,17 @@ export class SheetAddCustomToken extends Component {
      * Verify the ledger canister
      */
 
-    async connectLedgerCanister(canisterId) {
+    async connectLedgerCanister(ledgerCanisterId, indexCanisterId) {
         let actor = null
         let metadata = null;
+        let standards = null;
         let standard = null;
 
         // Try ICRC-1 ledger standard
         try {
             actor = IcrcLedgerCanister.create({
                 agent: this.wallet.agent,
-                canisterId,
+                canisterId: ledgerCanisterId,
             });
             const data = await actor.metadata({});
             if (data) metadata = Object.fromEntries(data);
@@ -169,12 +170,26 @@ export class SheetAddCustomToken extends Component {
 
         // Supported standards
         try {
-            const standards = await actor.service.icrc10_supported_standards();
+            standards = await actor.service.icrc10_supported_standards();
             const hasICRC1 = standards.some(item => item.name === 'ICRC-1');
             const hasICRC2 = standards.some(item => item.name === 'ICRC-2');
             standard = hasICRC2 ? 'ICRC-2' : hasICRC1 ? 'ICRC-1' : null;
         }
         catch (_) {}
+
+        // When index not provided, check ICRC-106
+        if (!indexCanisterId) {
+            const hasICRC106 = standards.some(item => item.name === 'ICRC-106');
+            if (hasICRC106) {
+                try {
+                    const icrc106IndexId = await actor.service.icrc106_get_index_principal();
+                    if ('Ok' in icrc106IndexId) {
+                        this.canister.indexId = icrc106IndexId.Ok.toText();
+                    }
+                }
+                catch (_) {}
+            }
+        }
 
         // Validate
         if (validICRC1(metadata)) return {
@@ -191,12 +206,12 @@ export class SheetAddCustomToken extends Component {
      * Verify the index canister
      */
 
-    async verifyIndexCanister(ledgerId, canisterId) {
+    async verifyIndexCanister(ledgerCanisterId, indexCanisterId) {
         this.widget.submit.busy(true);
-        const info = await this.connectIndexCanister(ledgerId, canisterId);
+        const info = await this.connectIndexCanister(ledgerCanisterId, indexCanisterId);
         this.widget.submit.busy(false);
         if (info.valid) {
-            this.canister.indexId = canisterId;
+            this.canister.indexId = indexCanisterId;
             this.actor.index = info.actor;
         }
         else {
@@ -215,14 +230,17 @@ export class SheetAddCustomToken extends Component {
      * Verify the index canister
      */
 
-    async connectIndexCanister(ledgerId, canisterId) {
+    async connectIndexCanister(ledgerCanisterId, indexCanisterId) {
         let actor = null
         let status = null;
         let fetchLedgerId = null;
 
         // Try ICRC-1 index standard
         try {
-            actor = Actor.createActor(idlICRCIndex, { agent: this.wallet.agent, canisterId })
+            actor = Actor.createActor(idlICRCIndex, {
+                agent: this.wallet.agent,
+                canisterId: indexCanisterId
+            });
             status = await actor.status();
             fetchLedgerId = await actor.ledger_id();
         }
@@ -231,7 +249,7 @@ export class SheetAddCustomToken extends Component {
         }
 
         // Validate ledger ID match
-        if (fetchLedgerId.toText() !== ledgerId) {
+        if (fetchLedgerId.toText() !== ledgerCanisterId) {
             return { valid: false, error: 'This is not the index canister for this ledger' };
         }
 
@@ -250,8 +268,8 @@ export class SheetAddCustomToken extends Component {
      * Add token to wallet
      */
 
-    addTokenToWallet(canisterId) {
-        if (!this.wallet.tokens.get(canisterId)) {
+    addTokenToWallet(ledgerCanisterId) {
+        if (!this.wallet.tokens.get(ledgerCanisterId)) {
             const data = {
                 app: this.app,
                 wallet: { principal: this.wallet.principal, account: this.wallet.account },
@@ -266,7 +284,7 @@ export class SheetAddCustomToken extends Component {
             newToken.build({ agent: this.wallet.agent });
             this.wallet.tokens.add(newToken);
             if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
-                saveImage(`token:${canisterId}`, this.metadata['icrc1:logo'].Text);
+                saveImage(`token:${ledgerCanisterId}`, this.metadata['icrc1:logo'].Text);
             }
             this.app.wallets.save();
             this.app.page('accounts');

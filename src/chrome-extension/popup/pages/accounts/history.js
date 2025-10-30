@@ -37,8 +37,7 @@ export class SheetTransactionHistory extends Component {
      */
 
     async render() {
-        // Clear
-        this.element.innerHTML = '';
+        this.clear();
 
         // Read logs from IndexedDB
         const logs = await this.app.log.get({ pids: [this.wallet.principal], types: this.types, tokens: this.tokens });
@@ -50,10 +49,10 @@ export class SheetTransactionHistory extends Component {
         }
         else {
             const info = document.createElement('h2');
-            if (this.app.isICPLedger(this.tokens[0]))
+            if (this.app.isICPLedger(this.canister.ledgerId))
                 info.textContent = `- No history on this wallet yet -`;
             else
-                info.textContent = `- No ${this.wallet.tokens.get(this.tokens[0]).symbol} history on this wallet yet -`;
+                info.textContent = `- No ${this.wallet.tokens.get(this.canister.ledgerId).symbol} history on this wallet yet -`;
             this.element.append(info);
         }
     }
@@ -302,14 +301,27 @@ export class SheetTransactionHistory extends Component {
      */
 
     async fetchAndCache() {
-        const token = this.wallet.tokens.get(this.canister.ledgerId);
-        const transactions = await token.transactions({ results: 100 });
-        for (const [datetime, entry] of Object.entries(transactions)) {
-            const existingEntry = await this.app.log.get({ datetime });
-            if (!Object.keys(existingEntry).length) {
-                this.app.log.add(entry);
+        // Traverse list of tokens
+        for (const canisterId of this.tokens) {
+            // Fetch transactions for this token
+            const token = this.wallet.tokens.get(canisterId);
+            const transactions = await token.transactions({ results: 100 });
+            for (const [datetime, entry] of Object.entries(transactions)) {
+                const existingEntry = await this.app.log.get({ datetime });
+                if (!Object.keys(existingEntry).length) {
+                    this.app.log.add(entry);
+                }
             }
         }
+    }
+
+    /**
+     * Reset
+     */
+
+    clear() {
+        this.element.innerHTML = '';
+        this.lastDate = null;
     }
 
 }

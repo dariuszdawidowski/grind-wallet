@@ -52,7 +52,7 @@ export class SheetTransactionHistory extends Component {
             if (this.app.isICPLedger(this.canister.ledgerId))
                 info.textContent = `- No history on this wallet yet -`;
             else
-                info.textContent = `- No ${this.wallet.tokens.get(this.canister.ledgerId).symbol} history on this wallet yet -`;
+                info.textContent = `- No ${this.wallet.tokens.get(this.canister.ledgerId)?.symbol} history on this wallet yet -`;
             this.element.append(info);
         }
     }

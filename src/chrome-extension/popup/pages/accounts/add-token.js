@@ -108,7 +108,7 @@ export class SheetAddCustomToken extends Component {
         // First pass (fetch actor+metadata & verify)
         if (!this.actor.ledger && !this.metadata) {
             await this.verifyLedgerCanister(canisterId);
-            if (indexCanisterId.length) await this.verifyIndexCanister(indexCanisterId);
+            if (indexCanisterId.length) await this.verifyIndexCanister(canisterId, indexCanisterId);
         }
 
         // Second pass (accept)
@@ -191,9 +191,9 @@ export class SheetAddCustomToken extends Component {
      * Verify the index canister
      */
 
-    async verifyIndexCanister(canisterId) {
+    async verifyIndexCanister(ledgerId, canisterId) {
         this.widget.submit.busy(true);
-        const info = await this.connectIndexCanister(canisterId);
+        const info = await this.connectIndexCanister(ledgerId, canisterId);
         this.widget.submit.busy(false);
         if (info.valid) {
             this.canister.indexId = canisterId;
@@ -207,7 +207,7 @@ export class SheetAddCustomToken extends Component {
             this.actor.index = null;
             this.metadata = null;
             this.widget.submit.set('Verify');
-            alert('Unable to fetch or recognize index canister');
+            alert(info.error || 'Unable to fetch or recognize index canister');
         }
     }
 
@@ -215,17 +215,24 @@ export class SheetAddCustomToken extends Component {
      * Verify the index canister
      */
 
-    async connectIndexCanister(canisterId) {
+    async connectIndexCanister(ledgerId, canisterId) {
         let actor = null
         let status = null;
+        let fetchLedgerId = null;
 
         // Try ICRC-1 index standard
         try {
             actor = Actor.createActor(idlICRCIndex, { agent: this.wallet.agent, canisterId })
             status = await actor.status();
+            fetchLedgerId = await actor.ledger_id();
         }
         catch (error) {
             return { valid: false, error: 'Unable to connect index canister' };
+        }
+
+        // Validate ledger ID match
+        if (fetchLedgerId.toText() !== ledgerId) {
+            return { valid: false, error: 'This is not the index canister for this ledger' };
         }
 
         // Validate

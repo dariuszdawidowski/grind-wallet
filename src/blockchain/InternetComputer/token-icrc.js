@@ -138,7 +138,6 @@ export class ICRCToken extends Token {
                         const data = {
                             datetime,
                             type: `${direction}.token`,
-                            pid: this.wallet.principal,
                             token: {
                                 canister: this.canister.ledgerId,
                                 amount: Number(transfer.amount),
@@ -163,7 +162,6 @@ export class ICRCToken extends Token {
                         const data = {
                             datetime,
                             type: 'aprv.token',
-                            pid: this.wallet.principal,
                             to: { principal: approve.spender.owner.toText() },
                             token: {
                                 canister: this.canister.ledgerId,

@@ -135,7 +135,6 @@ export class ICPToken extends Token {
                         const data = {
                             datetime,
                             type: `${direction}.token`,
-                            pid: this.wallet.principal,
                             token: {
                                 canister: this.canister.ledgerId,
                                 amount: Number(record.transaction.operation.Transfer.amount.e8s),
@@ -157,7 +156,6 @@ export class ICPToken extends Token {
                         const data = {
                             datetime,
                             type: 'aprv.token',
-                            pid: this.wallet.principal,
                             to: { account: record.transaction.operation.Approve.spender },
                             token: {
                                 canister: this.canister.ledgerId,

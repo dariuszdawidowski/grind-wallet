@@ -584,6 +584,14 @@ hr {
     align-items: center;
 }
 
+.history .entry .circle.recv {
+    background-color: #25b371;
+}
+
+.history .entry .circle.error {
+    background-color: #b33925;
+}
+
 .add-circle .plus img,
 .history .entry .circle img {
     width: 30px;

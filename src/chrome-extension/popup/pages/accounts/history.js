@@ -38,7 +38,6 @@ export class SheetTransactionHistory extends Component {
 
     async render() {
         this.clear();
-        console.log('idx', this.canister.indexId);
 
         // Read logs from IndexedDB
         const logs = await this.app.log.get({ pids: [this.wallet.principal], types: this.types, tokens: this.tokens });
@@ -99,6 +98,7 @@ export class SheetTransactionHistory extends Component {
 
         // Send Token
         if (entry.type === 'send.token') this.renderEntry({
+            type: entry.type,
             op: '-',
             kind: 'token',
             parent: row,
@@ -111,6 +111,7 @@ export class SheetTransactionHistory extends Component {
         });
         // Error send token
         else if (entry.type === 'send.token.error') this.renderEntry({
+            type: entry.type,
             op: '-',
             kind: 'token',
             parent: row,
@@ -127,6 +128,7 @@ export class SheetTransactionHistory extends Component {
             let icon = 'assets/material-design-icons/arrow-down-bold.svg';
             if (recipient.type === 'suspicious' && amount <= 0.0001) icon = 'assets/material-design-icons/skull.svg';
             this.renderEntry({
+                type: entry.type,
                 op: '+',
                 kind: 'token',
                 parent: row,
@@ -140,6 +142,7 @@ export class SheetTransactionHistory extends Component {
         }
         // Add NFT
         else if (entry.type === 'add.nft') this.renderEntry({
+            type: entry.type,
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/plus.svg',
@@ -150,6 +153,7 @@ export class SheetTransactionHistory extends Component {
         });
         // Del NFT
         else if (entry.type === 'del.nft') this.renderEntry({
+            type: entry.type,
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/minus.svg',
@@ -159,6 +163,7 @@ export class SheetTransactionHistory extends Component {
         });
         // Send NFT
         else if (entry.type === 'send.nft') this.renderEntry({
+            type: entry.type,
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
@@ -169,6 +174,7 @@ export class SheetTransactionHistory extends Component {
         });
         // Error send NFT
         else if (entry.type === 'send.nft.error') this.renderEntry({
+            type: entry.type,
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
@@ -184,11 +190,13 @@ export class SheetTransactionHistory extends Component {
      * Render entry template
      */
 
-    renderEntry({ op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId }) {
+    renderEntry({ type, op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId }) {
 
         // Icon circle container
         const logo = document.createElement('div');
         logo.classList.add('circle');
+        if (type.endsWith('.error')) logo.classList.add('error');
+        else if (type.startsWith('recv.')) logo.classList.add('recv');
         parent.append(logo);
 
         // Icon image
@@ -232,6 +240,7 @@ export class SheetTransactionHistory extends Component {
         // Amount
         if (amount) {
             const amountElement = document.createElement('div');
+            if (type.endsWith('.error')) amountElement.style.textDecoration = 'line-through';
             amountElement.classList.add('amount');
             let text = '';
             if (op) text = op;

@@ -135,6 +135,8 @@ export class SheetAccountSend extends Component {
                             amount: Number(ICP2icpt(this.widget.amount.get()))
                         }
                     });
+                    // Reset cache
+                    this.app.timestamps.reset({ id: `history:*:${this.canister.ledgerId}` });
                     // Show success
                     this.submit.set('OK - successfully sent!');
                     this.sent = true;

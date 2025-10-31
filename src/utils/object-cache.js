@@ -1,4 +1,6 @@
-/*** Cache Objects in the memory ***/
+/**
+ * Cache Objects in the memory
+ */
 
 export class ObjectCache {
 

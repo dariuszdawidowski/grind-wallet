@@ -48,7 +48,7 @@ export class SheetTransactionHistory extends Component {
     async render() {
         this.clear();
 
-        const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+        const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[1].datetime) - new Date(a[1].datetime));
         if (Object.keys(sortedLogs).length > 0) {
             for (const [datetime, entry] of sortedLogs) {
                 this.renderRow(datetime, entry);

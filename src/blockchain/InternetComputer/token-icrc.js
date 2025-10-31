@@ -112,6 +112,7 @@ export class ICRCToken extends Token {
                 subaccount: [],
             }
         });
+        
         // Parse response
         if (('Ok' in response) && ('transactions' in response.Ok)) {
 

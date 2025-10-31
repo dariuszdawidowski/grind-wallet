@@ -74,9 +74,16 @@ export class PageAccounts extends Component {
         // Get wallets and render
         this.app.wallets.load().then(() => {
             // No wallets
-            if (this.app.wallets.count() === 0) this.renderNoWallets();
+            if (this.app.wallets.count() === 0) {
+                this.renderNoWallets();
+            }
             // Wallets available
-            else this.renderWalletsList();
+            else {
+                // Intentionally not awaiting
+                this.app.log.init(this.app.wallets.get().map(wallet => wallet.principal));
+                // Render wallets list
+                this.renderWalletsList();
+            }
         });
 
     }

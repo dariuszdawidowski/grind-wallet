@@ -180,9 +180,8 @@ export class SheetNFTDetails extends Component {
         // Remove from current wallet
         this.app.wallets.get(this.wallet.public).nfts.del(`${this.nft.collection}:${this.nft.id}`);
         // Log transaction
-        this.app.log.add({
+        this.app.log.add(this.wallet.principal, {
             type: 'del.nft',
-            pid: this.wallet.principal,
             nft: {
                 canister: this.nft.collection,
                 id: this.nft.id

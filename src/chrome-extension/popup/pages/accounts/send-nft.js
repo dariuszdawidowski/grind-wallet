@@ -73,9 +73,8 @@ export class SheetAccountSendNFT extends Component {
             this.widget.submit.busy(false);
             if (result === true) {
                 // Log transaction
-                this.app.log.add({
+                this.app.log.add(this.wallet.principal, {
                     type: 'send.nft.begin',
-                    pid: this.wallet.principal,
                     to: to,
                     nft: {
                         canister: this.nft.collection,
@@ -105,9 +104,8 @@ export class SheetAccountSendNFT extends Component {
             else {
                 const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
                 // Log error
-                this.app.log.add({
+                this.app.log.add(this.wallet.principal, {
                     type: 'send.nft.error',
-                    pid: this.wallet.principal,
                     to: to,
                     nft: {
                         canister: this.nft.collection,

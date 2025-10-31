@@ -18,19 +18,27 @@ export class SheetTransactionHistory extends Component {
         this.canister = canister;
         this.types = types; // ['send.token', 'recv.token', 'aprv.token', 'send.nft', 'add.nft', 'del.nft']
         this.tokens = tokens; // [canisterId1, canisterId2, ...]
+        
+        // Logs cache
+        this.logs = {};
 
         // Last rendered date
         this.lastDate = null;
-
-        // Fetch logs from IndexedDB
+        
+        // Redraw
         this.handleHistoryUpdate = () => this.render();
         document.body.addEventListener('update.history', this.handleHistoryUpdate);
-        this.render();
-        
-        // Fetch and cache from blockchain
-        this.fetchAndCache().then(() => {
-            document.body.dispatchEvent(new Event('update.history'));
+
+        // Read logs from IndexedDB
+        this.app.log.get(this.wallet.principal, { types: this.types, tokens: this.tokens }).then(logs => {
+            this.logs = logs;
+            this.render();
+            // Fetch and cache from blockchain
+            this.fetchAndCache().then((rebuild) => {
+                if (rebuild) document.body.dispatchEvent(new Event('update.history'));
+            });
         });
+        
     }
 
     /**
@@ -40,9 +48,7 @@ export class SheetTransactionHistory extends Component {
     async render() {
         this.clear();
 
-        // Read logs from IndexedDB
-        const logs = await this.app.log.get({ pids: [this.wallet.principal], types: this.types, tokens: this.tokens });
-        const sortedLogs = Object.entries(logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
+        const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[0]) - new Date(a[0]));
         if (Object.keys(sortedLogs).length > 0) {
             for (const [datetime, entry] of sortedLogs) {
                 this.renderRow(datetime, entry);
@@ -317,9 +323,11 @@ export class SheetTransactionHistory extends Component {
 
     /**
      * Fetch and cache any missing data for log entries from a ledger or NFT canister
+     * @return {boolean} - true if new entries were added
      */
 
     async fetchAndCache() {
+        let rebuild = false;
         // Traverse list of tokens
         for (const canisterId of this.tokens) {
             // Fetch transactions for this token
@@ -327,13 +335,16 @@ export class SheetTransactionHistory extends Component {
                 const token = this.wallet.tokens.get(canisterId);
                 const transactions = await token.transactions({ results: 100 });
                 for (const [datetime, entry] of Object.entries(transactions)) {
-                    const existingEntry = await this.app.log.get({ datetime });
-                    if (!Object.keys(existingEntry).length) {
-                        this.app.log.add(entry);
+                    const existingEntry = this.logs[datetime] || null;
+                    if (!existingEntry) {
+                        this.logs[datetime] = entry;
+                        this.app.log.add(this.wallet.principal, entry);
+                        rebuild = true;
                     }
                 }
             }
         }
+        return rebuild;
     }
 
     /**

@@ -321,7 +321,7 @@ export class SheetTransactionHistory extends Component {
         // Traverse list of tokens
         for (const canisterId of this.tokens) {
             // Fetch transactions for this token
-            if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE })) {
+            if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 const token = this.wallet.tokens.get(canisterId);
                 const transactions = await token.transactions({ results: 100 });
                 for (const [datetime, entry] of Object.entries(transactions)) {

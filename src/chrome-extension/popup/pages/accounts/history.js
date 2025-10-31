@@ -38,6 +38,7 @@ export class SheetTransactionHistory extends Component {
 
     async render() {
         this.clear();
+        console.log('idx', this.canister.indexId);
 
         // Read logs from IndexedDB
         const logs = await this.app.log.get({ pids: [this.wallet.principal], types: this.types, tokens: this.tokens });
@@ -49,10 +50,16 @@ export class SheetTransactionHistory extends Component {
         }
         else {
             const info = document.createElement('h2');
-            if (this.app.isICPLedger(this.canister.ledgerId))
-                info.textContent = `- No history on this wallet yet -`;
-            else
-                info.textContent = `- No ${this.wallet.tokens.get(this.canister.ledgerId)?.symbol} history on this wallet yet -`;
+            if (this.app.isICPLedger(this.canister.ledgerId)) {
+                info.textContent = `No history on this wallet yet`;
+            }
+            else {
+                const tokenTxt = this.wallet.tokens.get(this.canister.ledgerId)?.symbol || this.canister.ledgerId;
+                if (this.canister.indexId)
+                    info.textContent = `No ${tokenTxt} history on this wallet yet`;
+                else
+                    info.textContent = `Token ${tokenTxt} has no registered index so history will not be displayed`;
+            }
             this.element.append(info);
         }
     }

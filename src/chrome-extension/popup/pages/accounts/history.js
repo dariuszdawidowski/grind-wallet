@@ -51,14 +51,16 @@ export class SheetTransactionHistory extends Component {
         else {
             const info = document.createElement('h2');
             if (this.app.isICPLedger(this.canister.ledgerId)) {
-                info.textContent = `No history on this wallet yet`;
+                info.innerText = `No history on this wallet yet`;
             }
             else {
                 const tokenTxt = this.wallet.tokens.get(this.canister.ledgerId)?.symbol || this.canister.ledgerId;
-                if (this.canister.indexId)
-                    info.textContent = `No ${tokenTxt} history on this wallet yet`;
-                else
-                    info.textContent = `Token ${tokenTxt} has no registered index so history will not be displayed`;
+                if (this.canister.indexId) {
+                    info.innerText = `No ${tokenTxt} history on this wallet yet`;
+                }
+                else {
+                    info.innerText = `Token ${tokenTxt} has no registered index so history will not be displayed`;
+                }
             }
             this.element.append(info);
         }
@@ -72,7 +74,7 @@ export class SheetTransactionHistory extends Component {
         const dateObj = new Date(isodate);
         const humanDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
         const header = document.createElement('h2');
-        header.textContent = humanDate;
+        header.innerText = humanDate;
         this.element.append(header);
     }
 
@@ -213,7 +215,7 @@ export class SheetTransactionHistory extends Component {
         // Title
         const titleElement = document.createElement('div');
         titleElement.classList.add('title');
-        titleElement.textContent = title;
+        titleElement.innerText = title;
         desc.append(titleElement);
 
         // Subtitle
@@ -247,7 +249,7 @@ export class SheetTransactionHistory extends Component {
             if (op) text = op;
             text += icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals);
             text += (kind === 'token') ? ` ${this.wallet.tokens.get(canisterId).symbol}` : '';
-            amountElement.textContent = text;
+            amountElement.innerText = text;
             parent.append(amountElement);
         }
 

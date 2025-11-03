@@ -151,7 +151,7 @@ export class SheetAddCustomToken extends Component {
     async connectLedgerCanister(ledgerCanisterId, indexCanisterId) {
         let actor = null
         let metadata = null;
-        let standards = null;
+        let standards = [];
         let standard = null;
 
         // Try ICRC-1 ledger standard

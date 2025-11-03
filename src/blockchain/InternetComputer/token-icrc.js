@@ -13,18 +13,102 @@ import { ONE_MINUTE, memo2Binary, timestampNanos2ISO } from '/src/utils/general.
 export class ICRCToken extends Token {
 
     /**
-     * Rebuild ICRC token with actors
+     * Rebuild ICRC token with actors (quicker method for registered tokens)
      */
 
     build({ agent }) {
         // Ledger Actor
-        this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.canister.ledgerId });
+        if (this.canister.ledgerId && !this.actor.ledger) this.actor.ledger = IcrcLedgerCanister.create({ agent, canisterId: this.canister.ledgerId });
 
         // Index Actor
-        if (this.canister.indexId) this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: this.canister.indexId });
+        if (this.canister.indexId && !this.actor.index) this.actor.index = Actor.createActor(idlICRCIndex, { agent, canisterId: this.canister.indexId });
 
         // Set ready flag
         this.ready = true;
+    }
+
+    /**
+     * Get metadata
+     * @returns Dictionary with metadata
+     */
+
+    async metadata() {
+        let data = {};
+
+        // ICRC-1 metadata
+        const icrc1Metadata = await this.actor.ledger.metadata({});
+        if (icrc1Metadata) {
+            const normalizedEntries = icrc1Metadata.map(([key, value]) => {
+                if (typeof key === 'string') {
+                    const parts = key.split(':');
+                    return [parts[parts.length - 1], value];
+                }
+                return [key, value];
+            });
+            data = Object.fromEntries(normalizedEntries);
+            if (('name' in data) && ('Text' in data['name']) &&
+                ('symbol' in data) && ('Text' in data['symbol']) &&
+                ('decimals' in data) && ('Nat' in data['decimals']) &&
+                ('fee' in data) && ('Nat' in data['fee'])) {
+                    this.name = data['name'].Text;
+                    this.symbol = data['symbol'].Text;
+                    this.decimals = Number(data['decimals'].Nat);
+                    this.fee = Number(data['fee'].Nat);
+                    this.valid = true;
+                    data['standards'] = ['ICRC-1'];
+            }
+
+        }
+
+        // ICRC-10 supported standards
+        try {
+            const standards = await this.actor.ledger.service.icrc10_supported_standards();
+            const standardNames = standards
+                .map((standard) => {
+                    if (typeof standard?.name === 'string') return standard.name;
+                    if (standard?.name?.Text) return standard.name.Text;
+                    return null;
+                })
+                .filter(Boolean);
+            data['standards'] = standardNames;
+        }
+        catch (_) {}
+
+        // ICRC-106 get index principal
+        if (!('index_principal' in data)) {
+            try {
+                const icrc106IndexId = await this.actor.ledger.service.icrc106_get_index_principal();
+                if ('Ok' in icrc106IndexId) data['index_principal'] = { 'Text': icrc106IndexId.Ok.toText() };
+            }
+            catch (_) {}
+        }
+
+        // Test index canister
+        if ('index_principal' in data) {
+            const indexId = data['index_principal'].Text;
+            if (indexId && Principal.isPrincipal(Principal.fromText(indexId))) {
+                this.canister.indexId = indexId;
+                if (!this.actor.index) {
+                    this.actor.index = Actor.createActor(idlICRCIndex, { agent: this.app.agent, canisterId: this.canister.indexId });
+                }
+                let status = null;
+                let fetchLedgerId = null;
+                try {
+                    status = await this.actor.index.status();
+                    fetchLedgerId = await this.actor.index.ledger_id();
+                } catch (_) {}
+                if (status && ('num_blocks_synced' in status) && fetchLedgerId && fetchLedgerId.toText() === this.canister.ledgerId) {
+                    data['ledger_principal'] = { 'Text': this.canister.ledgerId };
+                }
+                else {
+                    this.canister.indexId = null;
+                    this.actor.index = null;
+                    delete data['index_principal'];
+                }
+            }
+        }
+
+        return data;
     }
 
     /**

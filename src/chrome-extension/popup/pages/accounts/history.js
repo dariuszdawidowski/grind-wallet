@@ -2,7 +2,7 @@ import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { shortAddress } from '/src/utils/general.js';
 import { icpt2ICP } from '/src/utils/currency.js';
-import { ONE_MINUTE } from '/src/utils/general.js';
+import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -334,9 +334,15 @@ export class SheetTransactionHistory extends Component {
         let rebuild = false;
         // Traverse list of tokens
         for (const canisterId of this.tokens) {
-            // Fetch transactions for this token
             if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
+                // Get token
                 const token = this.wallet.tokens.get(canisterId);
+                // Refresh token info in weekly basis
+                if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                    console.log(`Refreshing token info for ${canisterId}...`);
+                    // await token.fetchInfo();
+                }
+                // Fetch transactions for this token
                 const transactions = await token.transactions({ results: 100, types: this.types });
                 for (const [key, entry] of Object.entries(transactions)) {
                     const existingEntry = this.logs[key] || null;

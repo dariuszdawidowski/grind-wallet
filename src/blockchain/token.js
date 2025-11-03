@@ -11,12 +11,12 @@ export class Token {
 
         /*** Persistent attributes ***/
 
-        this.canister = Object.freeze({
+        this.canister = {
             // Token Canister ID: string
             ledgerId: canisterId,
             // Token Index Canister ID: string (optional)
             indexId: indexId
-        });
+        };
 
         // Token name: string
         this.name = name || 'Unknown';
@@ -46,6 +46,9 @@ export class Token {
 
         // Memo counter
         this.memo = 0;
+
+        // Validated flag
+        this.valid = false;
 
         // Builded flag
         this.ready = false;

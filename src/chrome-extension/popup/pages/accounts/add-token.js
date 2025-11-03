@@ -2,15 +2,11 @@
  * Register Custom Token Sheet
  */
 
-import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
-import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
-import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
-import { validICRC1 } from '/src/utils/currency.js';
-import { isValidCanisterId } from '/src/utils/general.js';
+import { isValidCanisterId, ONE_WEEK } from '/src/utils/general.js';
 import { saveImage } from '/src/utils/image-cache.js';
 
 export class SheetAddCustomToken extends Component {
@@ -24,19 +20,13 @@ export class SheetAddCustomToken extends Component {
         // UI controls widgets
         this.widget = {};
 
-        // Token canister ID
-        this.canister = {
-            ledgerId: null,
-            indexId: null
-        };
+        // Verify stage passed
+        this.verified = false;
 
-        // Token actors
-        this.actor = {
-            ledger: null,
-            index: null
-        };
+        // New token instance
+        this.token = null;
 
-        // Token metadata fetched from canister
+        // Token metadata
         this.metadata = null;
 
         // Build
@@ -85,15 +75,16 @@ export class SheetAddCustomToken extends Component {
 
     async verifyAndAccept() {
 
+        // Disable inputs
         this.widget.address.disable();
-
-        // Token canister ID
-        const ledgerCanisterId = this.widget.address.get();
+        this.widget.index.disable();
 
         // Validate token canister ID
+        const ledgerCanisterId = this.widget.address.get();
         if (!isValidCanisterId(ledgerCanisterId)) {
             alert('Invalid Token Canister ID');
             this.widget.address.enable();
+            this.widget.index.enable();
             return;
         }
 
@@ -101,203 +92,70 @@ export class SheetAddCustomToken extends Component {
         const indexCanisterId = this.widget.index.get();
         if (indexCanisterId.length && !isValidCanisterId(indexCanisterId)) {
             alert('Invalid Index Canister ID');
+            this.widget.address.enable();
             this.widget.index.enable();
             return;
         }
 
-        // First pass (fetch actor+metadata & verify)
-        if (!this.actor.ledger && !this.metadata) {
-            await this.verifyLedgerCanister(ledgerCanisterId, indexCanisterId);
-            if (indexCanisterId.length || this.canister.indexId) await this.verifyIndexCanister(ledgerCanisterId, indexCanisterId || this.canister.indexId);
-        }
-
-        // Second pass (accept)
-        else {
-            this.addTokenToWallet(ledgerCanisterId);
-        }
-    }
-
-    /**
-     * Verify the ledger canister
-     */
-
-    async verifyLedgerCanister(ledgerCanisterId, indexCanisterId) {
-        this.widget.submit.busy(true);
-        const info = await this.connectLedgerCanister(ledgerCanisterId, indexCanisterId);
-        this.widget.submit.busy(false);
-        if (info.valid) {
-            this.canister.ledgerId = ledgerCanisterId;
-            this.actor.ledger = info.actor;
-            this.metadata = info.metadata;
-            if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
-                this.widget.preview.innerHTML = `<img src="${this.metadata['icrc1:logo'].Text}" style="width: 80px; margin: 10px">`;
-            }
-            this.widget.info.innerHTML = `${this.metadata['icrc1:name'].Text} (${this.metadata['icrc1:symbol'].Text})${info.standard ? ` [${info.standard}]` : ''}`;
-            this.widget.submit.set('Add to my wallet');
-        }
-        else {
-            this.widget.address.enable();
-            this.widget.index.enable();
-            this.actor.ledger = null;
-            this.metadata = null;
-            alert('Unable to fetch or recognize token');
-        }
-    }
-
-    /**
-     * Verify the ledger canister
-     */
-
-    async connectLedgerCanister(ledgerCanisterId, indexCanisterId) {
-        let actor = null
-        let metadata = null;
-        let standards = [];
-        let standard = null;
-
-        // Try ICRC-1 ledger standard
-        try {
-            actor = IcrcLedgerCanister.create({
-                agent: this.wallet.agent,
-                canisterId: ledgerCanisterId,
-            });
-            const data = await actor.metadata({});
-            if (data) metadata = Object.fromEntries(data);
-            standard = 'ICRC-1/2';
-        }
-        catch (error) {
-            return { valid: false, error: 'Unable to connect token canister' };
-        }
-
-        // Supported standards
-        try {
-            standards = await actor.service.icrc10_supported_standards();
-            const hasICRC1 = standards.some(item => item.name === 'ICRC-1');
-            const hasICRC2 = standards.some(item => item.name === 'ICRC-2');
-            standard = hasICRC2 ? 'ICRC-2' : hasICRC1 ? 'ICRC-1' : null;
-        }
-        catch (_) {}
-
-        // When index not provided, check ICRC-106
-        if (!indexCanisterId) {
-            const hasICRC106 = standards.some(item => item.name === 'ICRC-106');
-            if (hasICRC106) {
-                try {
-                    const icrc106IndexId = await actor.service.icrc106_get_index_principal();
-                    if ('Ok' in icrc106IndexId) {
-                        this.canister.indexId = icrc106IndexId.Ok.toText();
-                        this.widget.index.set(this.canister.indexId);
-                    }
-                }
-                catch (_) {}
-            }
-        }
-
-        // Validate
-        if (validICRC1(metadata)) return {
-            valid: true,
-            standard,
-            actor,
-            metadata
-        };
-
-        return { valid: false, error: 'Not an ICRC-1 standard' };
-    }
-
-    /**
-     * Verify the index canister
-     */
-
-    async verifyIndexCanister(ledgerCanisterId, indexCanisterId) {
-        this.widget.submit.busy(true);
-        const info = await this.connectIndexCanister(ledgerCanisterId, indexCanisterId);
-        this.widget.submit.busy(false);
-        if (info.valid) {
-            this.canister.indexId = indexCanisterId;
-            this.actor.index = info.actor;
-        }
-        else {
-            this.widget.address.enable();
-            this.widget.address.enable();
-            this.widget.index.enable();
-            this.actor.ledger = null;
-            this.actor.index = null;
-            this.metadata = null;
-            this.widget.submit.set('Verify');
-            alert(info.error || 'Unable to fetch or recognize index canister');
-        }
-    }
-
-    /**
-     * Verify the index canister
-     */
-
-    async connectIndexCanister(ledgerCanisterId, indexCanisterId) {
-        let actor = null
-        let status = null;
-        let fetchLedgerId = null;
-
-        // Try ICRC-1 index standard
-        try {
-            actor = Actor.createActor(idlICRCIndex, {
-                agent: this.wallet.agent,
-                canisterId: indexCanisterId
-            });
-            status = await actor.status();
-            fetchLedgerId = await actor.ledger_id();
-        }
-        catch (error) {
-            return { valid: false, error: 'Unable to connect index canister' };
-        }
-
-        // Validate ledger ID match
-        if (fetchLedgerId.toText() !== ledgerCanisterId) {
-            return { valid: false, error: 'This is not the index canister for this ledger' };
-        }
-
-        // Validate
-        if (actor && status && ('num_blocks_synced' in status)) {
-            return {
-                valid: true,
-                actor
-            };
-        }
-
-        return { valid: false, error: 'Not an ICRC-INDEX standard' };
-    }
-
-    /**
-     * Add token to wallet
-     */
-
-    addTokenToWallet(ledgerCanisterId) {
+        // Create but not build token yet
         if (!this.wallet.tokens.get(ledgerCanisterId)) {
-            const data = {
-                app: this.app,
-                wallet: { principal: this.wallet.principal, account: this.wallet.account },
-                canisterId: this.canister.ledgerId,
-                name: this.metadata['icrc1:name'].Text,
-                symbol: this.metadata['icrc1:symbol'].Text,
-                decimals: Number(this.metadata['icrc1:decimals'].Nat),
-                fee: Number(this.metadata['icrc1:fee'].Nat)
-            };
-            if (this.actor.index) data['indexId'] = this.canister.indexId;
-            const newToken = new ICRCToken(data);
-            newToken.build({ agent: this.wallet.agent });
-            this.wallet.tokens.add(newToken);
-            if (('icrc1:logo' in this.metadata) && ('Text' in this.metadata['icrc1:logo'])) {
-                saveImage(`token:${ledgerCanisterId}`, this.metadata['icrc1:logo'].Text);
+
+            // First pass (fetch actor+metadata & verify)
+            if (!this.verified) {
+                this.widget.submit.busy(true);
+                this.token = new ICRCToken({
+                    app: this.app,
+                    wallet: { principal: this.wallet.principal, account: this.wallet.account },
+                    canisterId: ledgerCanisterId
+                });
+                this.token.build({ agent: this.wallet.agent });
+                this.metadata = await this.token.metadata();
+                this.verified = this.token.valid;
+                if (this.verified) {
+                    // Found index
+                    if (this.metadata.index_principal) this.widget.index.set(this.metadata.index_principal.Text);
+                    // Logo
+                    if (('logo' in this.metadata) && ('Text' in this.metadata['logo'])) {
+                        this.widget.preview.innerHTML = `<img src="${this.metadata['logo'].Text}" style="width: 80px; margin: 10px">`;
+                    }
+                    // Info
+                    this.widget.info.innerHTML = `${this.metadata['name'].Text} (${this.metadata['symbol'].Text})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;
+                    // Prepare to accept
+                    this.widget.submit.set('Add to my wallet');
+                }
+                else {
+                    this.widget.address.enable();
+                    this.widget.index.enable();
+                    this.token = null;
+                    this.metadata = null;
+                    alert('Unable to fetch or recognize token');
+                }
+                this.widget.submit.busy(false);
             }
-            this.app.wallets.save();
-            this.app.page('accounts');
-            this.app.sheet.clear();
-            this.app.sheet.hide();
+
+            // Second pass (accept)
+            else {
+                // Add token to wallet
+                this.wallet.tokens.add(this.token);
+                // Save logo image
+                if (('logo' in this.metadata) && ('Text' in this.metadata['logo'])) {
+                    saveImage(`token:${this.token.canister.ledgerId}`, this.metadata['logo'].Text);
+                }
+                // Refresh token info in weekly basis
+                this.app.timestamps.expired({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK })
+                // Save wallets
+                this.app.wallets.save();
+                // Back to accounts page
+                this.app.page('accounts');
+                this.app.sheet.clear();
+                this.app.sheet.hide();
+
+            }
         }
         else {
-            this.widget.address.enable();
-            this.actor.ledger = null;
-            this.actor.index = null;
-            this.metadata = null;
             alert('Token already on the list');
+            this.widget.address.enable();
+            this.widget.index.enable();
         }
 
     }

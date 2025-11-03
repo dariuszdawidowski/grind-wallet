@@ -185,6 +185,7 @@ export class SheetAddCustomToken extends Component {
                     const icrc106IndexId = await actor.service.icrc106_get_index_principal();
                     if ('Ok' in icrc106IndexId) {
                         this.canister.indexId = icrc106IndexId.Ok.toText();
+                        this.widget.index.set(this.canister.indexId);
                     }
                 }
                 catch (_) {}

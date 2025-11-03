@@ -8,7 +8,7 @@ import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ICP2icpt } from '/src/utils/currency.js';
-import { ONE_MINUTE, memo2Binary } from '/src/utils/general.js';
+import { ONE_MINUTE, memo2Binary, timestampNanos2ISO } from '/src/utils/general.js';
 
 export class ICRCToken extends Token {
 
@@ -78,7 +78,7 @@ export class ICRCToken extends Token {
     /**
      * Get transaction history
      * @param results: Number - number of results to fetch
-     * @return { isodatetime: {
+     * @return { id: {
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
      *     to|from: { account: string },
@@ -128,7 +128,7 @@ export class ICRCToken extends Token {
                     if (('transaction' in record) && ('kind' in record.transaction) && ('timestamp' in record.transaction)) {
 
                         // Get timestamp
-                        const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
+                        const datetime = timestampNanos2ISO(record.transaction.timestamp);
 
                         // Transfer transaction
                         if (record.transaction.kind === 'transfer' && ('transfer' in record.transaction) && record.transaction.transfer.length) {

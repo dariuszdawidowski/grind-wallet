@@ -48,12 +48,16 @@ export class SheetTransactionHistory extends Component {
     async render() {
         this.clear();
 
-        const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[1].datetime) - new Date(a[1].datetime));
-        if (Object.keys(sortedLogs).length > 0) {
+        // Show logs
+        if (Object.keys(this.logs).length > 0) {
+            // Sort by datetime descending
+            const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[1].datetime) - new Date(a[1].datetime));
             for (const [_, entry] of sortedLogs) {
                 this.renderRow(entry);
             }
         }
+
+        // No logs
         else {
             const info = document.createElement('h2');
             if (this.app.isICPLedger(this.canister.ledgerId)) {

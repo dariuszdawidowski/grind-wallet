@@ -7,7 +7,7 @@ import { Principal } from '@dfinity/principal';
 import { LedgerCanister } from '@dfinity/ledger-icp';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { Token } from '/src/blockchain/token.js';
-import { ONE_MINUTE } from '/src/utils/general.js';
+import { ONE_MINUTE, timestampNanos2ISO } from '/src/utils/general.js';
 import { ICP2icpt } from '/src/utils/currency.js';
 
 export class ICPToken extends Token {
@@ -92,7 +92,7 @@ export class ICPToken extends Token {
     /**
      * Get transaction history from ICP Index canister
      * @param results: Number - number of results to fetch
-     * @return { isodatetime: {
+     * @return { id: {
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
      *     to|from: { account: string },
@@ -128,7 +128,7 @@ export class ICPToken extends Token {
                     if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
 
                         // Get timestamp
-                        const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+                        const datetime = timestampNanos2ISO(record.transaction.timestamp[0].timestamp_nanos);
 
                         // Transfer transaction
                         if ('Transfer' in record.transaction.operation) {

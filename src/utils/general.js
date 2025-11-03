@@ -75,3 +75,15 @@ export function shortAddress(address) {
     if (address.includes('-')) return shortPrincipalId(address);
     return shortAccountId(address);
 }
+
+/**
+ * Convert timestamp in nanoseconds to ISO datetime string.
+ *
+ * @param {bigint} timestampNanos - The timestamp in nanoseconds.
+ * @returns {string} The ISO datetime string.
+ */
+
+export function timestampNanos2ISO(timestampNanos) {
+    const ms = Number(BigInt(timestampNanos) / 1000000n);
+    return new Date(ms).toISOString();
+}

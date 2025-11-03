@@ -16,7 +16,7 @@ export class SheetTransactionHistory extends Component {
         this.app = app;
         this.wallet = wallet;
         this.canister = canister;
-        this.types = types; // ['send.token', 'recv.token', 'aprv.token', 'send.nft', 'add.nft', 'del.nft']
+        this.types = types; // ['send.token', 'send.token.error', ...]
         this.tokens = tokens; // [canisterId1, canisterId2, ...]
         
         // Logs cache
@@ -337,7 +337,7 @@ export class SheetTransactionHistory extends Component {
             // Fetch transactions for this token
             if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 const token = this.wallet.tokens.get(canisterId);
-                const transactions = await token.transactions({ results: 100 });
+                const transactions = await token.transactions({ results: 100, types: this.types });
                 for (const [key, entry] of Object.entries(transactions)) {
                     const existingEntry = this.logs[key] || null;
                     if (!existingEntry) {

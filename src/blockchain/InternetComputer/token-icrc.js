@@ -78,6 +78,7 @@ export class ICRCToken extends Token {
     /**
      * Get transaction history
      * @param results: Number - number of results to fetch
+     * @param types: Array - types of transactions to fetch or null for all
      * @return { id: {
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
@@ -86,11 +87,11 @@ export class ICRCToken extends Token {
      * }, ...}
      */
 
-    async transactions({ results = 100 } = {}) {
+    async transactions({ results = 100, types = null } = {}) {
 
         // Get from ICRC Index canister
         if (this.actor.index) {
-            return await this.transactionsFromIndex({ results });
+            return await this.transactionsFromIndex({ results, types });
         }
 
         return {};
@@ -100,7 +101,7 @@ export class ICRCToken extends Token {
      * Get transaction history from ICRC Index canister
      */
 
-    async transactionsFromIndex({ results = 100 } = {}) {
+    async transactionsFromIndex({ results = 100, types = null } = {}) {
         const history = {};
 
         // Fetch transactions from ICP Index canister
@@ -139,6 +140,9 @@ export class ICRCToken extends Token {
                             // Direction: 'send' | 'recv' | 'unknown'
                             const direction = transfer.from.owner.toText() === this.wallet.principal ? 'send' : transfer.to.owner.toText() === this.wallet.principal ? 'recv' : 'unknown';
 
+                            // Transaction type filtering
+                            if (types && !types.includes(`${direction}.token`)) continue;
+
                             // Compose data
                             const data = {
                                 datetime,
@@ -162,6 +166,9 @@ export class ICRCToken extends Token {
 
                             // Record
                             const approve = record.transaction.approve[0];
+
+                            // Transaction type filtering
+                            if (types && !types.includes('aprv.token')) continue;
 
                             // Compose data
                             const data = {

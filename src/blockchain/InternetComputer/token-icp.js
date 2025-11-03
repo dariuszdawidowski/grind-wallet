@@ -92,6 +92,7 @@ export class ICPToken extends Token {
     /**
      * Get transaction history from ICP Index canister
      * @param results: Number - number of results to fetch
+     * @param types: Array - types of transactions to fetch or null for all
      * @return { id: {
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
@@ -100,7 +101,7 @@ export class ICPToken extends Token {
      * }, ...}
      */
 
-    async transactions({ results = 100 } = {}) {
+    async transactions({ results = 100, types = null } = {}) {
         const history = {};
 
         // Fetch transactions from ICP Index canister
@@ -136,6 +137,9 @@ export class ICPToken extends Token {
                             // Direction: 'send' | 'recv' | 'unknown'
                             const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
 
+                            // Transaction type filtering
+                            if (types && !types.includes(`${direction}.token`)) continue;
+
                             // Compose data
                             const data = {
                                 datetime,
@@ -156,6 +160,9 @@ export class ICPToken extends Token {
 
                         // Approve transaction
                         else if ('Approve' in record.transaction.operation) {
+
+                            // Transaction type filtering
+                            if (types && !types.includes('aprv.token')) continue;
 
                             // Compose data
                             const data = {

@@ -113,13 +113,13 @@ export class SheetAddCustomToken extends Component {
                 this.verified = this.token.valid;
                 if (this.verified) {
                     // Found index
-                    if (this.metadata.index_principal) this.widget.index.set(this.metadata.index_principal.Text);
+                    if (this.metadata.index_principal) this.widget.index.set(this.metadata.index_principal);
                     // Logo
-                    if (('logo' in this.metadata) && ('Text' in this.metadata['logo'])) {
-                        this.widget.preview.innerHTML = `<img src="${this.metadata['logo'].Text}" style="width: 80px; margin: 10px">`;
+                    if ('logo' in this.metadata) {
+                        this.widget.preview.innerHTML = `<img src="${this.metadata['logo']}" style="width: 80px; margin: 10px">`;
                     }
                     // Info
-                    this.widget.info.innerHTML = `${this.metadata['name'].Text} (${this.metadata['symbol'].Text})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;
+                    this.widget.info.innerHTML = `${this.metadata['name']} (${this.metadata['symbol']})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;
                     // Prepare to accept
                     this.widget.submit.set('Add to my wallet');
                 }
@@ -138,9 +138,7 @@ export class SheetAddCustomToken extends Component {
                 // Add token to wallet
                 this.wallet.tokens.add(this.token);
                 // Save logo image
-                if (('logo' in this.metadata) && ('Text' in this.metadata['logo'])) {
-                    saveImage(`token:${this.token.canister.ledgerId}`, this.metadata['logo'].Text);
-                }
+                if ('logo' in this.metadata) saveImage(`token:${this.token.canister.ledgerId}`, this.metadata['logo']);
                 // Refresh token info in weekly basis
                 this.app.timestamps.expired({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK })
                 // Save wallets

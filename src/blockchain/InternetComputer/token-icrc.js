@@ -41,21 +41,19 @@ export class ICRCToken extends Token {
             const normalizedEntries = icrc1Metadata.map(([key, value]) => {
                 if (typeof key === 'string') {
                     const parts = key.split(':');
-                    return [parts[parts.length - 1], value];
+                    const cleanValue = ('Text' in value) ? value.Text : ('Nat' in value) ? Number(value.Nat) : value;
+                    return [parts[parts.length - 1], cleanValue];
                 }
                 return [key, value];
             });
             data = Object.fromEntries(normalizedEntries);
-            if (('name' in data) && ('Text' in data['name']) &&
-                ('symbol' in data) && ('Text' in data['symbol']) &&
-                ('decimals' in data) && ('Nat' in data['decimals']) &&
-                ('fee' in data) && ('Nat' in data['fee'])) {
-                    this.name = data['name'].Text;
-                    this.symbol = data['symbol'].Text;
-                    this.decimals = Number(data['decimals'].Nat);
-                    this.fee = Number(data['fee'].Nat);
-                    this.valid = true;
-                    data['standards'] = ['ICRC-1'];
+            if (('name' in data) && ('symbol' in data) && ('decimals' in data) && ('fee' in data)){
+                this.name = data['name'];
+                this.symbol = data['symbol'];
+                this.decimals = Number(data['decimals']);
+                this.fee = Number(data['fee']);
+                this.valid = true;
+                data['standards'] = ['ICRC-1'];
             }
 
         }
@@ -85,9 +83,8 @@ export class ICRCToken extends Token {
 
         // Test index canister
         if ('index_principal' in data) {
-            const indexId = data['index_principal'].Text;
-            if (indexId && Principal.isPrincipal(Principal.fromText(indexId))) {
-                this.canister.indexId = indexId;
+            if (data['index_principal'] && Principal.isPrincipal(Principal.fromText(data['index_principal']))) {
+                this.canister.indexId = data['index_principal'];
                 if (!this.actor.index) {
                     this.actor.index = Actor.createActor(idlICRCIndex, { agent: this.app.agent, canisterId: this.canister.indexId });
                 }
@@ -98,7 +95,7 @@ export class ICRCToken extends Token {
                     fetchLedgerId = await this.actor.index.ledger_id();
                 } catch (_) {}
                 if (status && ('num_blocks_synced' in status) && fetchLedgerId && fetchLedgerId.toText() === this.canister.ledgerId) {
-                    data['ledger_principal'] = { 'Text': this.canister.ledgerId };
+                    data['ledger_principal'] = this.canister.ledgerId;
                 }
                 else {
                     this.canister.indexId = null;

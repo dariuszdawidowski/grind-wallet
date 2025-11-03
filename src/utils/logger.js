@@ -82,17 +82,18 @@ export class LogSystem {
     }
 
     /**
-     * Save a specific log entry
+     * Add log entry
      * @param {string} storeName - Name of the object store
-     * @param {ISO Date} timestamp - Timestamp key for the log entry
-     * @param {Object} entry - Log entry data
+     * @param {string} key - key
+     * @param {object} value - content
      */
 
-    async saveEntry(storeName, timestamp, entry) {
+    async add(storeName, key, value) {
+        if (process.env.DEV_MODE) console.log(`[${key}]`, value);
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction([storeName], 'readwrite');
             const store = transaction.objectStore(storeName);
-            const request = store.put(entry, timestamp);
+            const request = store.put(value, key);
             
             request.onerror = (event) => {
                 console.error('Save error:', event.target.error);
@@ -106,18 +107,6 @@ export class LogSystem {
     }
 
     /**
-     * Add log entry
-     * @param {string} storeName - Name of the object store
-     * @param {object} entry with iso datetime - log content
-     */
-
-    async add(storeName, entry) {
-        const timestamp = ('datetime' in entry) ? entry.datetime : new Date().toISOString();
-        if (process.env.DEV_MODE) console.log(`[${timestamp}]`, entry);
-        await this.saveEntry(storeName, timestamp, entry);
-    }
-
-    /**
      * Get filtered or all logs
      */
 
@@ -126,14 +115,14 @@ export class LogSystem {
 
         // Optional filtering
         if (args !== null) {
-            return Object.fromEntries(Object.entries(logs).filter(([datetime, entry]) => {
+            return Object.fromEntries(Object.entries(logs).filter(([_, value]) => {
                 let result = true;
                 // Filter by ISO datetime key
-                if ('datetime' in args) result = result && (datetime == args.datetime);
+                if ('datetime' in args) result = result && (value?.datetime == args.datetime);
                 // Filter by types
-                if ('types' in args) result = result && args.types.includes(entry.type);
+                if ('types' in args) result = result && args.types.includes(value?.type);
                 // Filter by tokens
-                if ('tokens' in args) result = result && args.tokens.includes(entry?.token?.canister);
+                if ('tokens' in args) result = result && args.tokens.includes(value?.token?.canister);
                 return result;
             }));
         }

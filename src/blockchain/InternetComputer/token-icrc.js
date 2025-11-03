@@ -119,59 +119,66 @@ export class ICRCToken extends Token {
             // Traverse transactions
             for (const record of response.Ok.transactions) {
 
-                // Get transaction
-                if (('transaction' in record) && ('kind' in record.transaction) && ('timestamp' in record.transaction)) {
+                if ('id' in record) {
 
-                    // Get timestamp
-                    const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
+                    // Get id
+                    const transactionId = record.id;
 
-                    // Transfer transaction
-                    if (record.transaction.kind === 'transfer' && ('transfer' in record.transaction) && record.transaction.transfer.length) {
+                    // Get transaction
+                    if (('transaction' in record) && ('kind' in record.transaction) && ('timestamp' in record.transaction)) {
 
-                        // Record
-                        const transfer = record.transaction.transfer[0];
+                        // Get timestamp
+                        const datetime = new Date(Math.floor(Number(record.transaction.timestamp) / 1e6)).toISOString();
 
-                        // Direction: 'send' | 'recv' | 'unknown'
-                        const direction = transfer.from.owner.toText() === this.wallet.principal ? 'send' : transfer.to.owner.toText() === this.wallet.principal ? 'recv' : 'unknown';
+                        // Transfer transaction
+                        if (record.transaction.kind === 'transfer' && ('transfer' in record.transaction) && record.transaction.transfer.length) {
 
-                        // Compose data
-                        const data = {
-                            datetime,
-                            type: `${direction}.token`,
-                            token: {
-                                canister: this.canister.ledgerId,
-                                amount: Number(transfer.amount),
-                                fee: transfer.fee.length ? Number(transfer.fee[0]) : 0
-                            }
-                        };
-                        if (direction === 'send') data.to = { principal: transfer.to.owner.toText() };
-                        else if (direction === 'recv') data.from = { principal: transfer.from.owner.toText() };
+                            // Record
+                            const transfer = record.transaction.transfer[0];
 
-                        // Save to history
-                        history[datetime] = data;
+                            // Direction: 'send' | 'recv' | 'unknown'
+                            const direction = transfer.from.owner.toText() === this.wallet.principal ? 'send' : transfer.to.owner.toText() === this.wallet.principal ? 'recv' : 'unknown';
 
-                    }
+                            // Compose data
+                            const data = {
+                                datetime,
+                                type: `${direction}.token`,
+                                token: {
+                                    canister: this.canister.ledgerId,
+                                    amount: Number(transfer.amount),
+                                    fee: transfer.fee.length ? Number(transfer.fee[0]) : 0
+                                }
+                            };
+                            if (direction === 'send') data.to = { principal: transfer.to.owner.toText() };
+                            else if (direction === 'recv') data.from = { principal: transfer.from.owner.toText() };
 
-                    // Approve transaction
-                    else if (record.transaction.kind === 'approve' && ('approve' in record.transaction) && record.transaction.approve.length) {
+                            // Save to history
+                            history[`${this.canister.ledgerId}:${transactionId}`] = data;
 
-                        // Record
-                        const approve = record.transaction.approve[0];
+                        }
 
-                        // Compose data
-                        const data = {
-                            datetime,
-                            type: 'aprv.token',
-                            to: { principal: approve.spender.owner.toText() },
-                            token: {
-                                canister: this.canister.ledgerId,
-                                amount: Number(approve.amount),
-                                fee: approve.fee.length ? Number(approve.fee[0]) : 0
-                            }
-                        };
+                        // Approve transaction
+                        else if (record.transaction.kind === 'approve' && ('approve' in record.transaction) && record.transaction.approve.length) {
 
-                        // Save to history
-                        history[datetime] = data;
+                            // Record
+                            const approve = record.transaction.approve[0];
+
+                            // Compose data
+                            const data = {
+                                datetime,
+                                type: 'aprv.token',
+                                to: { principal: approve.spender.owner.toText() },
+                                token: {
+                                    canister: this.canister.ledgerId,
+                                    amount: Number(approve.amount),
+                                    fee: approve.fee.length ? Number(approve.fee[0]) : 0
+                                }
+                            };
+
+                            // Save to history
+                            history[`${this.canister.ledgerId}:${transactionId}`] = data;
+                        }
+
                     }
 
                 }

@@ -131,7 +131,7 @@ export class SheetAddCustomNFT extends Component {
             // Add NFT to the wallet
             if (!(`${canisterId}:${tokenId}` in this.wallet.nfts)) {
                 // Log transaction
-                this.app.log.add(this.wallet.principal, {
+                this.app.log.add(this.wallet.principal, `${canisterId}:${new Date().toISOString()}`, {
                     type: 'add.nft',
                     nft: {
                         canister: canisterId,

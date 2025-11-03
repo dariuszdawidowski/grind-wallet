@@ -50,8 +50,8 @@ export class SheetTransactionHistory extends Component {
 
         const sortedLogs = Object.entries(this.logs).sort((a, b) => new Date(b[1].datetime) - new Date(a[1].datetime));
         if (Object.keys(sortedLogs).length > 0) {
-            for (const [datetime, entry] of sortedLogs) {
-                this.renderRow(datetime, entry);
+            for (const [_, entry] of sortedLogs) {
+                this.renderRow(entry);
             }
         }
         else {
@@ -88,12 +88,12 @@ export class SheetTransactionHistory extends Component {
      * Render one entry
      */
 
-    renderRow(datetime, entry) {
+    renderRow(entry) {
 
         // New date header
-        const date = datetime.slice(0, 10);
+        const date = entry.datetime.slice(0, 10);
         if (date != this.lastDate) {
-            this.renderDate(datetime);
+            this.renderDate(entry.datetime);
             this.lastDate = date;
         }
 
@@ -334,11 +334,11 @@ export class SheetTransactionHistory extends Component {
             if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 const token = this.wallet.tokens.get(canisterId);
                 const transactions = await token.transactions({ results: 100 });
-                for (const [datetime, entry] of Object.entries(transactions)) {
-                    const existingEntry = this.logs[datetime] || null;
+                for (const [key, entry] of Object.entries(transactions)) {
+                    const existingEntry = this.logs[key] || null;
                     if (!existingEntry) {
-                        this.logs[datetime] = entry;
-                        this.app.log.add(this.wallet.principal, entry);
+                        this.logs[key] = entry;
+                        this.app.log.add(this.wallet.principal, key, entry);
                         rebuild = true;
                     }
                 }

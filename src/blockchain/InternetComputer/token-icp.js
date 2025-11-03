@@ -119,53 +119,60 @@ export class ICPToken extends Token {
             // Traverse transactions
             for (const record of response.Ok.transactions) {
 
-                // Get transaction
-                if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
+                if ('id' in record) {
 
-                    // Get timestamp
-                    const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
+                    // Get id
+                    const transactionId = record.id;
 
-                    // Transfer transaction
-                    if ('Transfer' in record.transaction.operation) {
+                    // Get transaction
+                    if (('transaction' in record) && ('operation' in record.transaction) && ('timestamp' in record.transaction) && record.transaction.timestamp.length) {
 
-                        // Direction: 'send' | 'recv' | 'unknown'
-                        const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
+                        // Get timestamp
+                        const datetime = new Date(Math.floor(Number(record.transaction.timestamp[0].timestamp_nanos) / 1e6)).toISOString();
 
-                        // Compose data
-                        const data = {
-                            datetime,
-                            type: `${direction}.token`,
-                            token: {
-                                canister: this.canister.ledgerId,
-                                amount: Number(record.transaction.operation.Transfer.amount.e8s),
-                                fee: Number(record.transaction.operation.Transfer.fee.e8s)
-                            }
-                        };
-                        if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
-                        else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
+                        // Transfer transaction
+                        if ('Transfer' in record.transaction.operation) {
 
-                        // Save to history
-                        history[datetime] = data;
+                            // Direction: 'send' | 'recv' | 'unknown'
+                            const direction = record.transaction.operation.Transfer.from === this.wallet.account ? 'send' : record.transaction.operation.Transfer.to === this.wallet.account ? 'recv' : 'unknown';
 
-                    }
+                            // Compose data
+                            const data = {
+                                datetime,
+                                type: `${direction}.token`,
+                                token: {
+                                    canister: this.canister.ledgerId,
+                                    amount: Number(record.transaction.operation.Transfer.amount.e8s),
+                                    fee: Number(record.transaction.operation.Transfer.fee.e8s)
+                                }
+                            };
+                            if (direction === 'send') data.to = { account: record.transaction.operation.Transfer.to };
+                            else if (direction === 'recv') data.from = { account: record.transaction.operation.Transfer.from };
 
-                    // Approve transaction
-                    else if ('Approve' in record.transaction.operation) {
+                            // Save to history
+                            history[`${this.canister.ledgerId}:${transactionId}`] = data;
 
-                        // Compose data
-                        const data = {
-                            datetime,
-                            type: 'aprv.token',
-                            to: { account: record.transaction.operation.Approve.spender },
-                            token: {
-                                canister: this.canister.ledgerId,
-                                amount: Number(record.transaction.operation.Approve.allowance.e8s),
-                                fee: Number(record.transaction.operation.Approve.fee.e8s)
-                            }
-                        };
+                        }
 
-                        // Save to history
-                        history[datetime] = data;
+                        // Approve transaction
+                        else if ('Approve' in record.transaction.operation) {
+
+                            // Compose data
+                            const data = {
+                                datetime,
+                                type: 'aprv.token',
+                                to: { account: record.transaction.operation.Approve.spender },
+                                token: {
+                                    canister: this.canister.ledgerId,
+                                    amount: Number(record.transaction.operation.Approve.allowance.e8s),
+                                    fee: Number(record.transaction.operation.Approve.fee.e8s)
+                                }
+                            };
+
+                            // Save to history
+                            history[`${this.canister.ledgerId}:${transactionId}`] = data;
+                        }
+
                     }
 
                 }

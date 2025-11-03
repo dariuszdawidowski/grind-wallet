@@ -123,7 +123,7 @@ export class SheetAccountSend extends Component {
                 this.submit.busy(false);
                 if ('OK' in result) {
                     // Log transaction
-                    this.app.log.add(this.wallet.principal, {
+                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
                         type: 'send.token.begin',
                         to: {
                             principal: principal.toText(),
@@ -143,7 +143,7 @@ export class SheetAccountSend extends Component {
                 else {
                     const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
                     // Log error
-                    this.app.log.add(this.wallet.principal, {
+                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
                         type: 'send.token.error',
                         to: {
                             principal: principal.toText(),

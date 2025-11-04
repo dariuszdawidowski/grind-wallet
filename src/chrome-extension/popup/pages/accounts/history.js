@@ -1,8 +1,9 @@
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
-import { shortAddress } from '/src/utils/general.js';
+import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
+import { loadImage, saveImage } from '/src/utils/image-cache.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -339,12 +340,20 @@ export class SheetTransactionHistory extends Component {
                 const token = this.wallet.tokens.get(canisterId);
                 // Refresh token info in weekly basis
                 if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                    // Compare current vs new
                     const oldData = token.serialize();
-                    await token.metadata();
+                    const metadata = await token.metadata(); // token data updated internally
                     const newData = token.serialize();
-                    // Token has changed
+                    const oldImage = await loadImage(`token:${canisterId}`);
+                    const oldImageHash = oldImage ? await hashString(oldImage) : null;
+                    const newImageHash = metadata.logo ? await hashString(metadata.logo) : null;
+                    // Token data has changed
                     if (JSON.stringify(oldData) !== JSON.stringify(newData)) {
                         this.app.wallets.save();
+                    }
+                    // Image logo has changed
+                    if (oldImageHash !== newImageHash) {
+                        saveImage(`token:${canisterId}`, metadata.logo);
                     }
                 }
                 // Fetch transactions for this token

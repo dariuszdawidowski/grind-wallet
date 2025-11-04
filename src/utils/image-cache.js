@@ -149,8 +149,9 @@ export async function loadImage(id) {
                     reject(`Invalid image MIME type: "${result.mimeType}".`);
                 }
 
-            } else {
-                reject(`No image found with ID "${id}".`);
+            }
+            else {
+                resolve(null);
             }
         };
 

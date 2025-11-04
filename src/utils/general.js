@@ -89,3 +89,28 @@ export function timestampNanos2ISO(timestampNanos) {
     const ms = Number(BigInt(timestampNanos) / 1000000n);
     return new Date(ms).toISOString();
 }
+
+/**
+ * Generates hash of given buffer using SHA-256 algorithm.
+ *
+ * @param {ArrayBuffer} buffer - The input buffer to hash.
+ * @returns {Promise<string>} The hexadecimal representation of the hash.
+ */
+
+export async function hashBuffer(buffer) {
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Generates hash of given string using SHA-256 algorithm.
+ *
+ * @param {string} str - The input string to hash.
+ * @returns {Promise<string>} The hexadecimal representation of the hash.
+ */
+
+export async function hashString(str) {
+    const buffer = new TextEncoder().encode(str);
+    return await hashBuffer(buffer);
+}

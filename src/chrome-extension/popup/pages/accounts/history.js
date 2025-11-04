@@ -340,6 +340,7 @@ export class SheetTransactionHistory extends Component {
                 const token = this.wallet.tokens.get(canisterId);
                 // Refresh token info in weekly basis
                 if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                    let changed = false;
                     // Compare current vs new
                     const oldData = token.serialize();
                     const metadata = await token.metadata(); // token data updated internally
@@ -350,11 +351,14 @@ export class SheetTransactionHistory extends Component {
                     // Token data has changed
                     if (JSON.stringify(oldData) !== JSON.stringify(newData)) {
                         this.app.wallets.save();
+                        changed = true;
                     }
                     // Image logo has changed
                     if (oldImageHash !== newImageHash) {
                         saveImage(`token:${canisterId}`, metadata.logo);
+                        changed = true;
                     }
+                    if (changed) document.body.dispatchEvent(new Event('render.all'));
                 }
                 // Fetch transactions for this token
                 const transactions = await token.transactions({ results: 100, types: this.types });

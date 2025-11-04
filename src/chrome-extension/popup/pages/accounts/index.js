@@ -71,8 +71,9 @@ export class PageAccounts extends Component {
         importButton.element.style.marginBottom = '30px';
         this.append(importButton);
 
-        // Get wallets and render
-        this.app.wallets.load().then(() => {
+        // Render wallets
+        document.body.addEventListener('render.all', () => {
+            this.content.innerHTML = '';
             // No wallets
             if (this.app.wallets.count() === 0) {
                 this.renderNoWallets();
@@ -84,6 +85,11 @@ export class PageAccounts extends Component {
                 // Render wallets list
                 this.renderWalletsList();
             }
+        });
+
+        // Get wallets and render
+        this.app.wallets.load().then(() => {
+            document.body.dispatchEvent(new Event('render.all'));
         });
 
     }

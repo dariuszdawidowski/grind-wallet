@@ -130,6 +130,10 @@ form {
     text-align: center;
 }
 
+.form a, .form a:visited {
+    color: var(--button-color);
+}
+
 /* Buttons */
 
 .buttonbar {
@@ -892,14 +896,56 @@ hr {
     height: 50px;
 }
 
-.token-box .select {
+.token-box .token-select {
     width: 40px;
     height: 40px;
 }
 
-.token-box .select img {
+.token-box .token-select img {
     width: 40px;
     height: 40px;
+}
+
+.token-box .token-label {
+    margin-left: 8px;
+    font-size: 16px;
+}
+
+.token-box .input-text.input-currency input {
+    width: 150px;
+    margin: 20px 0 20px auto;
+    padding-right: 0;
+}
+
+.exchange-arrow {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    position: relative;
+    font-size: 0;
+    pointer-events: none;
+    left: 50%;
+    overflow: visible;
+    z-index: 10;
+}
+
+.exchange-arrow .arrow-content {
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #aaa;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;    
 }
 
 /* Effects */

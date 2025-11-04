@@ -1,3 +1,7 @@
+/**
+ * Token image icon
+ */
+
 import { Component } from '/src/utils/component.js';
 import { loadImage } from '/src/utils/image-cache.js';
 

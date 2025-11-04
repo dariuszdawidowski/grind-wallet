@@ -26,7 +26,10 @@ export class SheetAccountExchange extends Component {
         this.element.append(h3);
 
         // Token box (from)
-        this.tokenFrom = new TokenBox({ selected: 'btc' });
+        this.tokenFrom = new TokenBox({
+            selected: 'btc',
+            onKeypress: this.updateTo.bind(this)
+        });
         this.append(this.tokenFrom);
 
         // Separator arrow
@@ -61,7 +64,10 @@ export class SheetAccountExchange extends Component {
         this.append(new Arrow({ direction: 'down' }));
 
         // Token box (to)
-        this.tokenTo = new TokenBox({ selected: 'ckbtc' });
+        this.tokenTo = new TokenBox({
+            selected: 'ckbtc',
+            onKeypress: this.updateFrom.bind(this)
+        });
         this.append(this.tokenTo);
 
         // Transaction summary
@@ -87,8 +93,47 @@ export class SheetAccountExchange extends Component {
             app: this.app,
             text: `Read more about Chain-Key technology <a href="https://internetcomputer.org/chainfusion" target="_blank">HERE</a>`
         }));
-        
 
+    }
+
+    /**
+     * Update 'from' value
+     */
+
+    updateFrom(data) {
+        const exchange = this.convert({
+            from: this.tokenFrom.getSymbol(),
+            to: this.tokenTo.getSymbol(),
+            amount: data.value
+        });
+        this.tokenFrom.setValue(exchange);
+    }
+
+    /**
+     * Update 'to' value
+     */
+
+    updateTo(data) {
+        const exchange = this.convert({
+            from: this.tokenTo.getSymbol(),
+            to: this.tokenFrom.getSymbol(),
+            amount: data.value
+        });
+        this.tokenTo.setValue(exchange);
+    }
+
+    /**
+     * Convert tokens with ratio (TODO: in a future change to global registry fetched and cached from a service canister)
+     */
+
+    convert({ from, to, amount }) {
+        // Exchange rates with BTC as referential 1
+        const rates = {
+            'btc': 1,
+            'ckbtc': 1
+        };
+        const amountInBTC = amount / rates[from];
+        return amountInBTC * rates[to];
     }
 
 }

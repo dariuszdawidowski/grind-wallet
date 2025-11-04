@@ -8,6 +8,13 @@ import { formatCurrency } from '/src/utils/currency.js';
 
 export class TokenBox extends Component {
 
+    /**
+     * Constructor
+     * 
+     * selected: string - symbol of preselected token
+     * onKeypress: fn - keyboard callback
+     */
+
     constructor(args) {
         super(args);
 
@@ -19,25 +26,44 @@ export class TokenBox extends Component {
         this.selector.classList.add('token-select');
         this.element.append(this.selector);
 
-        const token = this.getTokenInfo({ symbol: args.selected });
+        this.token = this.getTokenInfo({ symbol: args.selected });
 
         // Token icon image
         const icon = document.createElement('img');
-        icon.src = token.image;
+        icon.src = this.token.logo;
         this.selector.append(icon);
 
         // Token label
         const label = document.createElement('div');
         label.classList.add('token-label');
-        label.innerText = token.symbol;
+        label.innerText = this.token.symbol;
         this.element.append(label);
 
         // Input currency
         this.amount = new InputCurrency({
-            placeholder: formatCurrency(0, token.decimals),
+            placeholder: formatCurrency(0, this.token.decimals),
+            onKeypress: (data) => {
+                if ('onKeypress' in args) args.onKeypress(data);
+            }
         });
         this.append(this.amount);
 
+    }
+
+    /**
+     * Get token symbol
+     */
+
+    getSymbol() {
+        return (this.token && this.token.symbol ? this.token.symbol.toLowerCase() : '');
+    }
+
+    /**
+     * Set number value
+     */
+
+    setValue(value) {
+        this.amount.set(value);
     }
 
     /**
@@ -46,10 +72,10 @@ export class TokenBox extends Component {
 
     getTokenInfo({ symbol = null }) {
         if (symbol == 'btc') {
-            return { name: 'Bitcoin', symbol: 'BTC', image: 'assets/tokens/btc.svg', decimals: 8 };
+            return { name: 'Bitcoin', symbol: 'BTC', logo: 'assets/tokens/btc.svg', decimals: 8 };
         }
         else if (symbol == 'ckbtc') {
-            return { nake: 'ckBTC', symbol: 'ckBTC', image: 'assets/tokens/ckbtc.svg', decimals: 8 };
+            return { nake: 'ckBTC', symbol: 'ckBTC', logo: 'assets/tokens/ckbtc.svg', decimals: 8 };
         }
 
         return {};

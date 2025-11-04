@@ -6,6 +6,7 @@ import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { Summary } from '/src/chrome-extension/popup/widgets/summary.js';
+import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -25,37 +26,56 @@ export class SheetAccountExchange extends Component {
         this.element.append(h3);
 
         // Token box (from)
-        this.tokenFrom = new TokenBox({
-            selected: 'btc'
-        });
+        this.tokenFrom = new TokenBox({ selected: 'btc' });
         this.append(this.tokenFrom);
 
         // Separator arrow
-        const arrow = document.createElement('div');
-        arrow.classList.add('exchange-arrow');
-        this.element.append(arrow);
-        const arrowContent = document.createElement('div');
-        arrowContent.classList.add('arrow-content');
-        arrowContent.style.backgroundImage = `url('assets/material-design-icons/arrow-down-bold.svg')`;
-        arrow.append(arrowContent);
+        this.append(new Arrow({ direction: 'down' }));
+
+        // Send to adress
+        this.sendAddress = document.createElement('div');
+        this.sendAddress.classList.add('token-box');
+        this.element.append(this.sendAddress);
+
+        // QR Code
+        const qr = document.createElement('div');
+        this.element.append(qr);
+        const qrcode = new QRCode(qr, {
+            text: 'BTC',
+            width: 40,
+            height: 40,
+            colorDark : '#000',
+            colorLight : '#fff',
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        this.sendAddress.append(qr);
+
+        // Send address text
+        const sendAddressText = document.createElement('div');
+        sendAddressText.innerHTML = 'Transfer BTC to the specified address';
+        sendAddressText.style.textAlign = 'center';
+        sendAddressText.style.width = '100%';
+        this.sendAddress.append(sendAddressText);
+
+        // Separator arrow
+        this.append(new Arrow({ direction: 'down' }));
 
         // Token box (to)
-        this.tokenTo = new TokenBox({
-            selected: 'ckbtc'
-        });
+        this.tokenTo = new TokenBox({ selected: 'ckbtc' });
         this.append(this.tokenTo);
 
         // Transaction summary
         this.summary = new Summary();
-        this.summary.addRow('Provider', 'Dfinity Chain-key minter canister');
-        this.summary.addRow('Network fee', '0.00001 BTC');
-        this.summary.addRow('Wallet fee', '0.00001 BTC');
+        this.summary.addRow('Provider', 'Dfinity Chain-Key minter canister');
+        this.summary.addRow('Delay', 'Up to 20 min.');
+        this.summary.addRow('Network fee', '0.00001 ckBTC');
+        this.summary.addRow('Wallet fee', '0.00001 ckBTC');
         this.summary.element.style.marginTop = '16px';
         this.append(this.summary);
 
         // Exchange button
         const buttonExchange = new Button({
-            text: 'Mint Chain-key token',
+            text: 'Reveal BTC transfer address',
             click: () => {
             }
         });
@@ -65,7 +85,7 @@ export class SheetAccountExchange extends Component {
         // Description
         this.append(new ButtonDescription({
             app: this.app,
-            text: `Read more about Chain-key technology <a href="https://internetcomputer.org/chainfusion" target="_blank">HERE</a>`
+            text: `Read more about Chain-Key technology <a href="https://internetcomputer.org/chainfusion" target="_blank">HERE</a>`
         }));
         
 

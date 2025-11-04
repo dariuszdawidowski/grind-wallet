@@ -873,17 +873,33 @@ hr {
     -webkit-hyphens: manual;
 }
 
-#sheet .content .form .token-box {
+#sheet .end {
+    margin-bottom: 40px;
+}
+
+/* Token box widget */
+
+.token-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 8px 12px;
-    margin: 4px auto;
+    margin: 2px auto;
     width: calc(300px - 26px);
     height: 50px;
 }
 
-#sheet .end {
-    margin-bottom: 40px;
+.token-box .select {
+    width: 40px;
+    height: 40px;
+}
+
+.token-box .select img {
+    width: 40px;
+    height: 40px;
 }
 
 /* Effects */

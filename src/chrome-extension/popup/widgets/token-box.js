@@ -12,6 +12,16 @@ export class TokenBox extends Component {
         // Class
         this.element.classList.add('token-box');
 
+        // Token selector
+        this.selector = document.createElement('div');
+        this.selector.classList.add('select');
+        this.element.append(this.selector);
+
+        // Token icon image
+        const icon = document.createElement('img');
+        icon.src = `assets/tokens/${args.selected}.svg`;
+        this.selector.append(icon);
+
     }
 
 }

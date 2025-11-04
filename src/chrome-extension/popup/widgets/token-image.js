@@ -11,7 +11,7 @@ export class TokenImage extends Component {
 
         // ICP logo
         if (args.canisterId == args.app.ICP_LEDGER_CANISTER_ID) {
-            this.element.style.backgroundImage = `url('assets/icp-logo.svg')`;
+            this.element.style.backgroundImage = `url('assets/tokens/icp.svg')`;
         }
         // Load cached token image
         else (async () => {

@@ -873,6 +873,15 @@ hr {
     -webkit-hyphens: manual;
 }
 
+#sheet .content .form .token-box {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px auto;
+    width: calc(300px - 26px);
+    height: 50px;
+}
+
 #sheet .end {
     margin-bottom: 40px;
 }

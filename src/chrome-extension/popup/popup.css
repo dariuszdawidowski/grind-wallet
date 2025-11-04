@@ -141,6 +141,10 @@ form {
 }
 
 button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     width: 300px;
     height: 40px;
     padding: 9px 16px;
@@ -168,6 +172,14 @@ button:not(:disabled):hover {
 button.dimed {
     background-color: var(--button-color-dimed);
     pointer-events: none;
+}
+
+button .icon {
+    margin-right: 8px;
+}
+
+button .icon img {
+    height: 28px;
 }
 
 button .text {

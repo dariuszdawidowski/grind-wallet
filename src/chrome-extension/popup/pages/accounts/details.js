@@ -96,6 +96,7 @@ export class SheetAccountDetails extends Component {
 
         // Show transaction history
         this.append(new Button({
+            icon: '<img src="assets/material-design-icons/history.svg">',
             text: 'Show transaction history',
             click: () => {
                 this.app.sheet.clear();

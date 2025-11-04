@@ -1,14 +1,16 @@
-import { Component } from '/src/utils/component.js';
-
 /**
  * Default button
  * args:
  *   id: unique idientifier (optional)
+ *   app: reference to the main app
+ *   icon: icon html (optional)
  *   text: display
  *   click: callback
  *   enter: submit on enter (default false)
  *   disabled: initially disabled (default false)
  */
+
+import { Component } from '/src/utils/component.js';
 
 export class Button extends Component {
 
@@ -20,6 +22,14 @@ export class Button extends Component {
 
         // Build
         this.element.setAttribute('type', 'submit');
+
+        // Icon
+        if ('icon' in args) {
+            this.icon = document.createElement('span');
+            this.icon.classList.add('icon');
+            this.icon.innerHTML = args.icon;
+            this.element.append(this.icon);
+        }
 
         // Text
         this.text = document.createElement('span');

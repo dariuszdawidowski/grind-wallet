@@ -5,6 +5,7 @@
 import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
+import { Summary } from '/src/chrome-extension/popup/widgets/summary.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -43,6 +44,14 @@ export class SheetAccountExchange extends Component {
             selected: 'ckbtc'
         });
         this.append(this.tokenTo);
+
+        // Transaction summary
+        this.summary = new Summary();
+        this.summary.addRow('Provider', 'Dfinity Chain-key minter canister');
+        this.summary.addRow('Network fee', '0.00001 BTC');
+        this.summary.addRow('Wallet fee', '0.00001 BTC');
+        this.summary.element.style.marginTop = '16px';
+        this.append(this.summary);
 
         // Exchange button
         const buttonExchange = new Button({

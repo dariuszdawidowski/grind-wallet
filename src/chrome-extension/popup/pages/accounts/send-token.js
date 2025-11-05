@@ -13,6 +13,12 @@ export class SheetAccountSend extends Component {
         // Token
         const token = wallet.tokens.get(canister.ledgerId);
 
+        // Token balance
+        this.balance = null;
+        token.balance().then(balance => {
+            this.balance = balance;
+        });
+
         // UI controls widgets
         this.widget = {};
 
@@ -49,6 +55,12 @@ export class SheetAccountSend extends Component {
                     }
                     else if (!this.widget.address.valid()) {
                         alert('Invalid address');
+                    }
+                    else if (this.balance === null) {
+                        alert('Cannot fetch balance');
+                    }
+                    else if (ICP2icpt(this.widget.amount.get() + token.fee) > this.balance) {
+                        alert('Insufficient balance');
                     }
                     else {
                         this.transfer();

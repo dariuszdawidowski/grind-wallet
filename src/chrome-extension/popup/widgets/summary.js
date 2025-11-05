@@ -16,11 +16,17 @@ export class Summary extends Component {
     }
 
     /**
-     * Add row
+     * Add or update row value
      */
 
-    addRow(title, text) {
-        this.element.innerHTML += `<div class="summary-row"><b>${title}</b>: ${text}</div>`;
+    row(title, text) {
+        const rowElement = this.element.querySelector(`[data-title="${title}"]`);
+        if (rowElement) {
+            rowElement.innerHTML = `<b>${title}</b>: ${text}`;
+        }
+        else {
+            this.element.innerHTML += `<div data-title="${title}" class="summary-row"><b>${title}</b>: ${text}</div>`;
+        }
     }
 
 }

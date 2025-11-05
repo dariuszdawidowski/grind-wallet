@@ -2,11 +2,13 @@
  * Exchange sheet
  */
 
+import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { Summary } from '/src/chrome-extension/popup/widgets/summary.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
+import { icpt2ICP } from '/src/utils/currency.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -72,10 +74,9 @@ export class SheetAccountExchange extends Component {
 
         // Transaction summary
         this.summary = new Summary();
-        this.summary.addRow('Provider', 'Dfinity Chain-Key minter canister');
-        this.summary.addRow('Delay', 'Up to 20 min.');
-        this.summary.addRow('Network fee', '0.00001 ckBTC');
-        this.summary.addRow('Wallet fee', '0.00001 ckBTC');
+        this.summary.row('Provider', 'Dfinity Chain-Key minter canister');
+        this.summary.row('Delay', 'Up to 20 min.');
+        this.summary.row('Minter fee', '? BTC');
         this.summary.element.style.marginTop = '16px';
         this.append(this.summary);
 
@@ -83,6 +84,7 @@ export class SheetAccountExchange extends Component {
         const buttonExchange = new Button({
             text: 'Reveal BTC transfer address',
             click: () => {
+                this.mintBTC2ckBTC();
             }
         });
         buttonExchange.element.style.margin = '18px auto';
@@ -134,6 +136,30 @@ export class SheetAccountExchange extends Component {
         };
         const amountInBTC = amount / rates[from];
         return amountInBTC * rates[to];
+    }
+
+    /**
+     * BTC -> ckBTC minter
+     */
+
+    async mintBTC2ckBTC() {
+        const CKBTC_MINTER = 'mqygn-kiaaa-aaaar-qaadq-cai';
+        //const CKBTC_CHECKER = 'oltsj-fqaaa-aaaar-qal5q-cai';
+        const minter = CkBTCMinterCanister.create({
+            agent: this.wallet.agent,
+            canisterId: CKBTC_MINTER,
+        });
+        console.log(minter);
+        const btcAddress = await minter.getBtcAddress({});
+        console.log(btcAddress);
+        const fee = await minter.service.get_deposit_fee();
+        this.summary.row('Minter fee', `${icpt2ICP(fee, 8)} BTC`);
+        console.log(fee);
+        // Manually Send here
+        // ....
+        // Actual mint (when money arrives)
+        // const balance = await minter.updateBalance({});
+        // console.log(balance)
     }
 
 }

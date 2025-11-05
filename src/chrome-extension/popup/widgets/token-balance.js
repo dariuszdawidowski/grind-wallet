@@ -7,7 +7,11 @@ export class TokenBalance extends Component {
     constructor(args) {
         super(args);
 
+        // Token
+        const token = args.wallet.tokens.get(args.canisterId);
+
         // Class
+        this.element.id = `balance_${args.wallet.principal}_${token.symbol}`;
         this.element.classList.add('token-balance');
 
         // Token image
@@ -19,10 +23,21 @@ export class TokenBalance extends Component {
         this.append(coin);
 
         // Label
-        this.label = document.createElement('div');
-        this.label.classList.add('label');
-        this.label.innerHTML = `${args.wallet.tokens.get(args.canisterId).symbol}<br>...`;
-        this.element.append(this.label);
+        const label = document.createElement('div');
+        label.classList.add('label');
+        this.element.append(label);
+
+        // Symbol
+        const symbol = document.createElement('div');
+        symbol.classList.add('symbol');
+        symbol.innerText = token.symbol;
+        label.append(symbol);
+
+        // Amount
+        this.amount = document.createElement('div');
+        this.amount.classList.add('amount');
+        this.amount.innerText = '...';
+        label.append(this.amount);
 
         // Click (with distance preventing scroll)
         this.click = {
@@ -45,10 +60,9 @@ export class TokenBalance extends Component {
         }
 
         // Fetch balance
-        const token = args.wallet.tokens.get(args.canisterId);
         if (token.ready) {
             token.balance().then(balance => {
-                this.label.innerHTML = `${token.symbol}<br>${formatCurrency(icpt2ICP(balance, token.decimals), 4)}`;
+                this.amount.innerText = formatCurrency(icpt2ICP(balance, token.decimals), 4);
             });
         }
 

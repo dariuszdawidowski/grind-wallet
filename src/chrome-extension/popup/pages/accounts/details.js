@@ -229,6 +229,8 @@ export class SheetAccountDetails extends Component {
             if (balance !== null) {
                 const amount = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
                 this.amount.innerText = `${amount} ${token.symbol}`;
+                const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${token.symbol} .amount`);
+                if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(balance, token.decimals), 4);
             }
         });
     }

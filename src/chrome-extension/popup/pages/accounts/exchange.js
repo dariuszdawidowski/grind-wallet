@@ -144,22 +144,26 @@ export class SheetAccountExchange extends Component {
 
     async mintBTC2ckBTC() {
         const CKBTC_MINTER = 'mqygn-kiaaa-aaaar-qaadq-cai';
+        const CKBTC_MINTER_TESTNET4 = 'ml52i-qqaaa-aaaar-qaaba-cai';
         //const CKBTC_CHECKER = 'oltsj-fqaaa-aaaar-qal5q-cai';
         const minter = CkBTCMinterCanister.create({
             agent: this.wallet.agent,
-            canisterId: CKBTC_MINTER,
+            canisterId: CKBTC_MINTER_TESTNET4,
         });
         console.log(minter);
         const btcAddress = await minter.getBtcAddress({});
         console.log(btcAddress);
-        const fee = await minter.service.get_deposit_fee();
-        this.summary.row('Minter fee', `${icpt2ICP(fee, 8)} BTC`);
-        console.log(fee);
+        // const fee = await minter.service.get_deposit_fee();
+        // console.log(fee);
+        const info = await minter.getMinterInfo({});
+        console.log(info)
+        this.summary.row('Minter fee', `${icpt2ICP(info.kyt_fee, 8)} BTC`);
         // Manually Send here
         // ....
         // Actual mint (when money arrives)
-        // const balance = await minter.updateBalance({});
-        // console.log(balance)
+        const balance = await minter.updateBalance({});
+        console.log(balance[0].Minted.minted_amount)
+        
     }
 
 }

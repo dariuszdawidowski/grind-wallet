@@ -13,6 +13,11 @@ export class ObjectCache {
         this.timestamps = {};
     }
 
+    // Overwrite value
+    set({ id, value }) {
+        this.cache[id] = value;
+    }
+
     // Return or create a new object
     get({ id, create = null, overdue = null }) {
 

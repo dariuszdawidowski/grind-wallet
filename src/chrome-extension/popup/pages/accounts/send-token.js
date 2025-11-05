@@ -11,11 +11,11 @@ export class SheetAccountSend extends Component {
         super({ app });
 
         // Token
-        const token = wallet.tokens.get(canister.ledgerId);
+        this.token = wallet.tokens.get(canister.ledgerId);
 
         // Token balance
         this.balance = null;
-        token.balance().then(balance => {
+        this.token.balance().then(balance => {
             this.balance = balance;
         });
 
@@ -35,8 +35,8 @@ export class SheetAccountSend extends Component {
         this.element.classList.add('form');
 
         this.widget.amount = new InputCurrency({
-            placeholder: formatCurrency(0, token.decimals),
-            symbol: token.symbol
+            placeholder: formatCurrency(0, this.token.decimals),
+            symbol: this.token.symbol
         });
         this.append(this.widget.amount);
 
@@ -59,7 +59,7 @@ export class SheetAccountSend extends Component {
                     else if (this.balance === null) {
                         alert('Cannot fetch balance');
                     }
-                    else if (ICP2icpt(this.widget.amount.get() + token.fee) > this.balance) {
+                    else if (ICP2icpt(this.widget.amount.get()) + BigInt(this.token.fee) > this.balance) {
                         alert('Insufficient balance');
                     }
                     else {
@@ -79,7 +79,7 @@ export class SheetAccountSend extends Component {
         // Description
         this.append(new ButtonDescription({
             app: this.app,
-            text: `Token charges a commission of <span id="fee">${token.fee ? icpt2ICP(token.fee, token.decimals) : 'unknown'}</span> ${token.symbol}.`
+            text: `Token charges a commission of <span id="fee">${this.token.fee ? icpt2ICP(this.token.fee, this.token.decimals) : 'unknown'}</span> ${this.token.symbol}.`
         }));
 
     }
@@ -120,20 +120,25 @@ export class SheetAccountSend extends Component {
 
         // Send to byself
         if (principal === this.wallet.principal) {
-            alert('You want to send to yourself');
+            alert('Destination address cannot be the same as sender address');
             allow = false;
         }
 
         // Ok to transfer
         if (allow) {
             this.submit.busy(true);
-            this.wallet.tokens.get(this.canister.ledgerId).transfer({
+            this.token.transfer({
                 principal,
                 account,
                 amount: this.widget.amount.get()
             }).then(result => {
                 this.submit.busy(false);
                 if ('OK' in result) {
+                    // Calculate remaining balance and update
+                    this.balance -= ICP2icpt(this.widget.amount.get()) + BigInt(this.token.fee);
+                    this.app.cache.set({ id: `balance.${this.wallet.account}.${this.canister.ledgerId}`, value: this.balance });
+                    const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${this.token.symbol} .amount`);
+                    if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), 4);
                     // Log transaction
                     this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
                         type: 'send.token.begin',
@@ -143,10 +148,11 @@ export class SheetAccountSend extends Component {
                         },
                         token: {
                             canister: this.canister.ledgerId,
-                            amount: Number(ICP2icpt(this.widget.amount.get()))
+                            amount: Number(ICP2icpt(this.widget.amount.get())),
+                            fee: this.token.fee
                         }
                     });
-                    // Reset cache
+                    // Reset history logger cache
                     this.app.timestamps.reset({ id: `history:*:${this.canister.ledgerId}` });
                     // Show success
                     this.submit.set('OK - successfully sent!');

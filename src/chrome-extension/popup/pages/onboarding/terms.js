@@ -24,7 +24,7 @@ export class PageAcceptTerms extends Component {
             <p style="text-align: center; margin-top:0; margin-bottom: 32px; color: #ffe36c;">
                 This is an alpha version. Use with caution.
             </p>
-            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 130px;"></div>
+            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 100px;"></div>
             <p style="text-align: center;">
                 Before you continue, please familiarize yourself<br>with our <a href="https://www.grindwallet.com/en/security/" target="_blank">Security</a> and <a href="https://www.grindwallet.com/en/privacy/" target="_blank">Privacy</a> guidelines.
             </p>

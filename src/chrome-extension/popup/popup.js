@@ -115,7 +115,7 @@ class GrindWalletPlugin {
 
             // First time
             else {
-                this.firstTime();
+                this.firstTime(storageLocal);
             }
         }
 
@@ -125,7 +125,7 @@ class GrindWalletPlugin {
      * First-time page with terms acceptance and password creation
      */
 
-    firstTime() {
+    firstTime(storageLocal) {
         // Accept terms of use
         if (!storageLocal.hasOwnProperty('terms') || storageLocal.terms == false) {
             this.page('terms');

@@ -4,7 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 
-export class Summary extends Component {
+export class SummaryBox extends Component {
 
     constructor({ app = null, text = null } = {}) {
         super({ app });

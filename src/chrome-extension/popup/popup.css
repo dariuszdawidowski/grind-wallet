@@ -948,6 +948,77 @@ hr {
     background-position: center;
 }
 
+/* Steps box widget */
+
+.steps-box {
+    background-color: #2c2c2e;
+    border-radius: 8px;
+    margin: 2px auto;
+    padding: 16px;
+    position: relative;
+    width: calc(300px - 32px);
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.step:last-child {
+    margin-bottom: 0;
+}
+
+.step-nr {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--button-hilit);
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+#sheet .step-content h1 {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 4px 0;
+    text-align: left;
+}
+
+.step-content p {
+    color: #b0b0b0;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 10px; 
+    top: 20px;
+    bottom: -24px; 
+    width: 2px;
+    background-image: linear-gradient(
+        to bottom, 
+        #5a5a5c 70%,
+        transparent 30%
+    );
+    background-size: 2px 10px;
+    background-repeat: repeat-y;
+    z-index: 0;
+}
+
 /* Summary box widget */
 
 .summary-box {

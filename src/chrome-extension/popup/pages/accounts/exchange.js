@@ -6,7 +6,8 @@ import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
-import { Summary } from '/src/chrome-extension/popup/widgets/summary.js';
+import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
+import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 
@@ -37,6 +38,7 @@ export class SheetAccountExchange extends Component {
         // Separator arrow
         this.append(new Arrow({ direction: 'down' }));
 
+        /*
         // Send to adress
         this.sendAddress = document.createElement('div');
         this.sendAddress.classList.add('token-box');
@@ -61,6 +63,14 @@ export class SheetAccountExchange extends Component {
         sendAddressText.style.textAlign = 'center';
         sendAddressText.style.width = '100%';
         this.sendAddress.append(sendAddressText);
+        */
+
+        // Steps box
+        this.steps = new StepsBox();
+        this.steps.step(1, `<h1>Step one</h1><p>Lorem Ipsum jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia tekstem próbnej książki.</p>`);
+        this.steps.step(2, `<h1>Step two</h1><p>Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając praktycznie niezmienionym.</p>`);
+        this.steps.step(3, `<h1>Step three</h1><p>Spopularyzował się w latach 60. XX w. wraz z publikacją arkuszy Letrasetu, zawierających fragmenty Lorem Ipsum.</p>`);
+        this.append(this.steps);
 
         // Separator arrow
         this.append(new Arrow({ direction: 'down' }));
@@ -73,7 +83,7 @@ export class SheetAccountExchange extends Component {
         this.append(this.tokenTo);
 
         // Transaction summary
-        this.summary = new Summary();
+        this.summary = new SummaryBox();
         this.summary.row('Provider', 'Dfinity Chain-Key minter canister');
         this.summary.row('Delay', 'Up to 20 min.');
         this.summary.row('Minter fee', '? BTC');
@@ -160,9 +170,9 @@ export class SheetAccountExchange extends Component {
         this.summary.row('Minter fee', `${icpt2ICP(info.kyt_fee, 8)} BTC`);
         // Manually Send here
         // ....
-        // Actual mint (when money arrives)
-        const balance = await minter.updateBalance({});
-        console.log(balance[0].Minted.minted_amount)
+        // Claim ckBTC (when money arrives)
+        // const balance = await minter.updateBalance({});
+        // console.log(balance[0].Minted.minted_amount)
         
     }
 

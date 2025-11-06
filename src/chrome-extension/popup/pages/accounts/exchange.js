@@ -25,7 +25,7 @@ export class SheetAccountExchange extends Component {
         // Header
         const h3 = document.createElement('h3');
         h3.style.fontWeight = 'bold';
-        h3.innerText = 'Currently only one pair available (BTC->ckBTC)';
+        h3.innerHTML = `Currently only one pair available (BTC&rarr;ckBTC)`;
         this.element.append(h3);
 
         // Token box (from)
@@ -67,9 +67,9 @@ export class SheetAccountExchange extends Component {
 
         // Steps box
         this.steps = new StepsBox();
-        this.steps.step(1, `<h1>Step one</h1><p>Lorem Ipsum jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia tekstem próbnej książki.</p>`);
-        this.steps.step(2, `<h1>Step two</h1><p>Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając praktycznie niezmienionym.</p>`);
-        this.steps.step(3, `<h1>Step three</h1><p>Spopularyzował się w latach 60. XX w. wraz z publikacją arkuszy Letrasetu, zawierających fragmenty Lorem Ipsum.</p>`);
+        this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <span>0.1 BTC</span> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><button type="submit" style="width: 100%;margin-bottom: 0;"><span class="text">Reveal BTC transfer address<div class="spinner"></div></span></button>`);
+        this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your BTC transfer transaction to complete.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This page does not need to be open - a will be created on the main page of the wallet in which you can periodically attempt to collect minted ckBTC.</p>`);
         this.append(this.steps);
 
         // Separator arrow
@@ -85,14 +85,14 @@ export class SheetAccountExchange extends Component {
         // Transaction summary
         this.summary = new SummaryBox();
         this.summary.row('Provider', 'Dfinity Chain-Key minter canister');
-        this.summary.row('Delay', 'Up to 20 min.');
+        this.summary.row('Delay', '~20 min.');
         this.summary.row('Minter fee', '? BTC');
         this.summary.element.style.marginTop = '16px';
         this.append(this.summary);
 
         // Exchange button
         const buttonExchange = new Button({
-            text: 'Reveal BTC transfer address',
+            text: 'Close and create task',
             click: () => {
                 this.mintBTC2ckBTC();
             }

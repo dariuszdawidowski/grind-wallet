@@ -68,7 +68,6 @@ export class SheetAccountSend extends Component {
                 }
                 // Succesful sent
                 else {
-                    this.app.page('accounts');
                     this.app.sheet.clear();
                     this.app.sheet.hide();
                 }
@@ -139,6 +138,16 @@ export class SheetAccountSend extends Component {
                     this.app.cache.set({ id: `balance.${this.wallet.account}.${this.canister.ledgerId}`, value: this.balance });
                     const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${this.token.symbol} .amount`);
                     if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), 4);
+                    // Sent to my own wallet?
+                    const myownWallet = this.app.wallets.getByPrincipal(principal.toText());
+                    if (myownWallet) {
+                        const myownTokenBalance = document.querySelector(`#balance_${myownWallet.principal}_${this.token.symbol} .amount`);
+                        if (myownTokenBalance) {
+                            const balanceCurrent = Number(myownTokenBalance.innerText.replace(/,/g, ''));
+                            const balanceAdd = Number(this.widget.amount.get());
+                            myownTokenBalance.innerText = formatCurrency(balanceCurrent + balanceAdd, 4);
+                        }
+                    }
                     // Log transaction
                     this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
                         type: 'send.token.begin',

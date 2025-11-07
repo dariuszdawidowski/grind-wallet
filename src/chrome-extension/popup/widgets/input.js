@@ -90,6 +90,7 @@ export class InputPassword extends InputText {
  *
  * Constructor args:
  *  - symbol: string (optional) - currency symbol markup (used by InputCurrency)
+ *  - note: string (optional) - text below value
  */
 
 export class InputCurrency extends InputText {
@@ -98,6 +99,7 @@ export class InputCurrency extends InputText {
         super(args);
 
         this.element.classList.add('input-currency');
+        this.annotation = null;
 
         if ('symbol' in args) {
             const symbol = document.createElement('div');
@@ -105,7 +107,26 @@ export class InputCurrency extends InputText {
             this.element.append(symbol);
         }
 
+        if ('note' in args) this.note(args.note);
+
     }
+
+    /**
+     * Annotation
+     */
+
+    note(text) {
+        if (!this.annotation) {
+            this.annotation = document.createElement('div');
+            this.annotation.classList.add('note');
+            this.element.append(this.annotation);
+        }
+        this.annotation.innerHTML = text;
+    }
+
+    /**
+     * Validator
+     */
 
     valid() {
 

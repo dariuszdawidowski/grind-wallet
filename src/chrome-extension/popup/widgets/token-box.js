@@ -42,6 +42,7 @@ export class TokenBox extends Component {
         // Input currency
         this.amount = new InputCurrency({
             placeholder: formatCurrency(0, this.token.decimals),
+            note: 'This is note',
             onKeypress: (data) => {
                 if ('onKeypress' in args) args.onKeypress(data);
             }

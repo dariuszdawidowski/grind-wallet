@@ -8,8 +8,10 @@ import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
 import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
+import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
+import { shortAddress } from '/src/utils/general.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -18,6 +20,9 @@ export class SheetAccountExchange extends Component {
 
         // Wallet
         this.wallet = args.wallet;
+
+        // Fetched info about exchange
+        this.info = {};
 
         // Build
         this.element.classList.add('form');
@@ -38,39 +43,40 @@ export class SheetAccountExchange extends Component {
         // Separator arrow
         this.append(new Arrow({ direction: 'down' }));
 
-        /*
-        // Send to adress
-        this.sendAddress = document.createElement('div');
-        this.sendAddress.classList.add('token-box');
-        this.element.append(this.sendAddress);
-
-        // QR Code
-        const qr = document.createElement('div');
-        this.element.append(qr);
-        const qrcode = new QRCode(qr, {
-            text: 'BTC',
-            width: 40,
-            height: 40,
-            colorDark : '#000',
-            colorLight : '#fff',
-            correctLevel : QRCode.CorrectLevel.H
-        });
-        this.sendAddress.append(qr);
-
-        // Send address text
-        const sendAddressText = document.createElement('div');
-        sendAddressText.innerHTML = 'Transfer BTC to the specified address';
-        sendAddressText.style.textAlign = 'center';
-        sendAddressText.style.width = '100%';
-        this.sendAddress.append(sendAddressText);
-        */
-
         // Steps box
         this.steps = new StepsBox();
-        this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <span>0.1 BTC</span> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><button type="submit" style="width: 100%;margin-bottom: 0;"><span class="text">Reveal BTC transfer address<div class="spinner"></div></span></button>`);
+        this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b><span id="amount-of-btc"><span> BTC</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your BTC transfer transaction to complete.</p>`);
-        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This page does not need to be open - a will be created on the main page of the wallet in which you can periodically attempt to collect minted ckBTC.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This page does not need to be open - a <b>task</b> will be created on the main page of the wallet in which you can periodically attempt to collect minted ckBTC.</p>`);
         this.append(this.steps);
+
+        // Internal selectors
+        const amountOfBtc = this.steps.element.querySelector('#amount-of-btc');
+        const revealBtcContainer = this.steps.element.querySelector('#reveal-btc-container');
+
+        // Reveal address button
+        const buttonReveal = new Button({
+            text: 'Reveal BTC address',
+            click: async () => {
+                buttonReveal.busy(true);
+                this.info = await this.revealBTCAddress();
+                buttonReveal.busy(false);
+                console.log(this.info)
+                if (this.info.ok === true) {
+                    // Display fee
+                    this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
+                    // Show address instead of button                    
+                    buttonReveal.hide();
+                    this.renderBTCAddress(revealBtcContainer);
+                }
+                else {
+                    alert('Failed to reveal BTC address. Please try again later.');
+                }
+            }
+        });
+        buttonReveal.element.style.width = '100%';
+        buttonReveal.element.style.marginBottom = '0';
+        revealBtcContainer.append(buttonReveal.element);
 
         // Separator arrow
         this.append(new Arrow({ direction: 'down' }));
@@ -92,7 +98,7 @@ export class SheetAccountExchange extends Component {
 
         // Exchange button
         const buttonExchange = new Button({
-            text: 'Close and create task',
+            text: 'Create task',
             click: () => {
                 this.mintBTC2ckBTC();
             }
@@ -149,31 +155,70 @@ export class SheetAccountExchange extends Component {
     }
 
     /**
-     * BTC -> ckBTC minter
+     * Reveal BTC address
      */
 
-    async mintBTC2ckBTC() {
+    async revealBTCAddress() {
         const CKBTC_MINTER = 'mqygn-kiaaa-aaaar-qaadq-cai';
         const CKBTC_MINTER_TESTNET4 = 'ml52i-qqaaa-aaaar-qaaba-cai';
-        //const CKBTC_CHECKER = 'oltsj-fqaaa-aaaar-qal5q-cai';
-        const minter = CkBTCMinterCanister.create({
+        // Create minter actor
+        if (!this.minter) this.minter = CkBTCMinterCanister.create({
             agent: this.wallet.agent,
             canisterId: CKBTC_MINTER_TESTNET4,
         });
-        console.log(minter);
-        const btcAddress = await minter.getBtcAddress({});
-        console.log(btcAddress);
-        // const fee = await minter.service.get_deposit_fee();
-        // console.log(fee);
-        const info = await minter.getMinterInfo({});
-        console.log(info)
-        this.summary.row('Minter fee', `${icpt2ICP(info.kyt_fee, 8)} BTC`);
-        // Manually Send here
-        // ....
-        // Claim ckBTC (when money arrives)
-        // const balance = await minter.updateBalance({});
-        // console.log(balance[0].Minted.minted_amount)
-        
+        // Reveal BTC address
+        const btcAddress = await this.minter.getBtcAddress({});
+        // Get info about fee & minimal amount
+        const info = await this.minter.getMinterInfo({});
+        if (btcAddress && ('kyt_fee' in info) && ('retrieve_btc_min_amount' in info)) { 
+            return { ok: true, fee: info.kyt_fee, min: info.retrieve_btc_min_amount, address: btcAddress };
+        }
+        return { ok: false };
+    }
+    
+    /**
+     * Render BTC address
+     */
+
+    async renderBTCAddress(container) {
+
+        // QR Code
+        const qr = document.createElement('div');
+        qr.style.display = 'flex';
+        qr.style.alignItems = 'center';
+        qr.style.marginTop = '20px';
+        this.element.append(qr);
+        const qrcode = new QRCode(qr, {
+            text: this.info.address,
+            width: 120,
+            height: 120,
+            colorDark : '#000',
+            colorLight : '#e7e7e7',
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        container.append(qr);
+
+        // Address text
+        const showAddr = document.createElement('div');
+        showAddr.style.marginLeft = '20px';
+        showAddr.style.display = 'flex';
+        showAddr.style.alignItems = 'center';
+        showAddr.style.justifyContent = 'center';
+        showAddr.innerText = shortAddress(this.info.address);
+        qr.append(showAddr);
+
+        // Copy to clipboard icon
+        const copyAddr = new Copy({ text: this.info.address });
+        qr.append(copyAddr.element);
+    }
+
+    /**
+     * Claim ckBTC (when money arrives)
+     */
+
+    async claimUpdateMinter() {
+        const balance = await minter.updateBalance({});
+        console.log(balance[0].Minted.minted_amount)
     }
 
 }

@@ -47,7 +47,7 @@ export class SheetAccountExchange extends Component {
         this.steps = new StepsBox();
         this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b><span id="amount-of-btc"><span> BTC</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your BTC transfer transaction to complete.</p>`);
-        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This page does not need to be open - a <b>task</b> will be created on the main page of the wallet in which you can periodically attempt to collect minted ckBTC.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>A task will be created; you may close this window and periodically check the wallet's main page to see when you can mint the ckBTC.</p>`);
         this.append(this.steps);
 
         // Internal selectors
@@ -63,11 +63,15 @@ export class SheetAccountExchange extends Component {
                 buttonReveal.busy(false);
                 console.log(this.info)
                 if (this.info.ok === true) {
-                    // Display fee
-                    this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
                     // Show address instead of button                    
                     buttonReveal.hide();
                     this.renderBTCAddress(revealBtcContainer);
+                    // Display minimal amount
+                    this.tokenFrom.amount.note(`min. ${icpt2ICP(this.info.min, 8)}`);
+                    // Display fee
+                    this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
+                    // Display fee into
+                    this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
                 }
                 else {
                     alert('Failed to reveal BTC address. Please try again later.');

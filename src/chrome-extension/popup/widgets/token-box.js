@@ -12,6 +12,7 @@ export class TokenBox extends Component {
      * Constructor
      * 
      * selected: string - symbol of preselected token
+     * note: string annotation under a value
      * onKeypress: fn - keyboard callback
      */
 
@@ -42,7 +43,7 @@ export class TokenBox extends Component {
         // Input currency
         this.amount = new InputCurrency({
             placeholder: formatCurrency(0, this.token.decimals),
-            note: 'This is note',
+            note: ('note' in args) ? args.note : null,
             onKeypress: (data) => {
                 if ('onKeypress' in args) args.onKeypress(data);
             }

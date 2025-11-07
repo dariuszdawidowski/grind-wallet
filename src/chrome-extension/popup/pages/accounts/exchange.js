@@ -36,7 +36,7 @@ export class SheetAccountExchange extends Component {
         // Token box (from)
         this.tokenFrom = new TokenBox({
             selected: 'btc',
-            onKeypress: this.updateTo.bind(this)
+            onKeypress: this.handleFromInput.bind(this)
         });
         this.append(this.tokenFrom);
 
@@ -45,13 +45,13 @@ export class SheetAccountExchange extends Component {
 
         // Steps box
         this.steps = new StepsBox();
-        this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b><span id="amount-of-btc"><span> BTC</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
+        this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b><span id="amount-of-btc"></span> BTC</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your BTC transfer transaction to complete.</p>`);
-        this.steps.step(3, `<h1>Claim ckBTC</h1><p>A task will be created; you may close this window and periodically check the wallet's main page to see when you can mint the ckBTC.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint cbBTC.</p>`);
         this.append(this.steps);
 
         // Internal selectors
-        const amountOfBtc = this.steps.element.querySelector('#amount-of-btc');
+        this.amountOfBtc = this.steps.element.querySelector('#amount-of-btc');
         const revealBtcContainer = this.steps.element.querySelector('#reveal-btc-container');
 
         // Reveal address button
@@ -61,7 +61,6 @@ export class SheetAccountExchange extends Component {
                 buttonReveal.busy(true);
                 this.info = await this.revealBTCAddress();
                 buttonReveal.busy(false);
-                console.log(this.info)
                 if (this.info.ok === true) {
                     // Show address instead of button                    
                     buttonReveal.hide();
@@ -88,7 +87,7 @@ export class SheetAccountExchange extends Component {
         // Token box (to)
         this.tokenTo = new TokenBox({
             selected: 'ckbtc',
-            onKeypress: this.updateFrom.bind(this)
+            onKeypress: this.handleToInput.bind(this)
         });
         this.append(this.tokenTo);
 
@@ -119,29 +118,49 @@ export class SheetAccountExchange extends Component {
     }
 
     /**
-     * Update 'from' value
+     * Type in 'from' value
      */
 
-    updateFrom(data) {
+    handleFromInput(data) {
+        const exchange = this.convert({
+            from: this.tokenTo.getSymbol(),
+            to: this.tokenFrom.getSymbol(),
+            amount: data.value,
+        });
+        this.tokenTo.setValue(exchange - (('fee' in this.info) ? icpt2ICP(this.info.fee, 8) : 0));
+        if ('min' in this.info) {
+            if (data.value >= icpt2ICP(this.info.min, 8)) {
+                this.tokenFrom.error(false);
+                this.amountOfBtc.innerText = exchange;
+            }
+            else {
+                this.tokenFrom.error(true);
+                this.amountOfBtc.innerText = '';
+            }
+        }
+    }
+
+    /**
+     * Type in 'to' value
+     */
+
+    handleToInput(data) {
         const exchange = this.convert({
             from: this.tokenFrom.getSymbol(),
             to: this.tokenTo.getSymbol(),
             amount: data.value
         });
-        this.tokenFrom.setValue(exchange);
-    }
-
-    /**
-     * Update 'to' value
-     */
-
-    updateTo(data) {
-        const exchange = this.convert({
-            from: this.tokenTo.getSymbol(),
-            to: this.tokenFrom.getSymbol(),
-            amount: data.value
-        });
-        this.tokenTo.setValue(exchange);
+        this.tokenFrom.setValue(exchange + (('fee' in this.info) ? icpt2ICP(this.info.fee, 8) : 0));
+        if ('min' in this.info) {
+            if (data.value >= icpt2ICP(this.info.min, 8)) {
+                this.tokenFrom.error(false);
+                this.amountOfBtc.innerText = exchange + (('fee' in this.info) ? icpt2ICP(this.info.fee, 8) : 0);
+            }
+            else {
+                this.tokenFrom.error(true);
+                this.amountOfBtc.innerText = '';
+            }
+        }
     }
 
     /**

@@ -66,6 +66,11 @@ export class InputText extends Component {
         this.element.classList.add('dimed');
     }
 
+    color(value = null) {
+        if (value) this.input.style.color = value;
+        else this.input.style.removeProperty('color');
+    }
+
 }
 
 

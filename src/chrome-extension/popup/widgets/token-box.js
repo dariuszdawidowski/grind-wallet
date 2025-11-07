@@ -83,4 +83,13 @@ export class TokenBox extends Component {
         return {};
     }
 
+    /**
+     * Make number red
+     */
+
+    error(value = true) {
+        if (value) this.amount.color('red');
+        else this.amount.color();
+    }
+
 }

@@ -633,9 +633,16 @@ hr {
     cursor: pointer;
 }
 
-.macos .token-balance:hover {
+.macos .token-balance:hover,
+.macos .cover:hover {
     transform: scale(1.11);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
+
 
 .token-balance .token-image {
     display: flex;
@@ -666,12 +673,12 @@ hr {
 .nfts {
     display: flex;
     flex-direction: row;
-    overflow: auto clip;
+    overflow: auto visible;
     white-space: nowrap;
     scrollbar-width: none;
     height: 54px;
     margin-bottom: 10px;
-    gap: 8px;
+    gap: 7px;
 }
 
 .nfts > :first-child {
@@ -693,10 +700,6 @@ hr {
 
 .cover:hover {
     cursor: pointer;
-}
-
-.macos .cover:hover {
-    transform: scale(1.11);
 }
 
 .cover svg, .cover svg image {

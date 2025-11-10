@@ -18,6 +18,9 @@ export class SheetAccountExchange extends Component {
     constructor(args) {
         super(args);
 
+        // Current token
+        const token = args.wallet.tokens.get(args.canister.ledgerId);
+
         // Wallet
         this.wallet = args.wallet;
 
@@ -30,7 +33,8 @@ export class SheetAccountExchange extends Component {
         // Header
         const h3 = document.createElement('h3');
         h3.style.fontWeight = 'bold';
-        h3.innerHTML = `Currently only one pair available (BTC&rarr;ckBTC)`;
+        if (token.symbol != 'ckBTC') h3.innerHTML = `${token.symbol} token exchange is not implemented yet.<br>Currently only one pair available (BTC&rarr;ckBTC)`;
+        else  h3.innerHTML = `Mint BTC&rarr;ckBTC`;
         this.element.append(h3);
 
         // Token box (from)

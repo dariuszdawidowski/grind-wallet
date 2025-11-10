@@ -1,3 +1,7 @@
+/**
+ * Token balance widget
+ */
+
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from './token-image.js';
 import { formatCurrency, icpt2ICP } from '/src/utils/currency.js';
@@ -18,7 +22,7 @@ export class TokenBalance extends Component {
         const coin = new TokenImage({
             app: args.app,
             canisterId: args.canisterId,
-            wallet: args.wallet,
+            symbol: token.symbol
         });
         this.append(coin);
 

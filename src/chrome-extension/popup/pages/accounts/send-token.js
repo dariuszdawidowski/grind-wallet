@@ -1,6 +1,11 @@
+/**
+ * Send ICP/token form
+ */
+
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/component.js';
+import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
@@ -34,17 +39,20 @@ export class SheetAccountSend extends Component {
         // Build
         this.element.classList.add('form');
 
+        // Currency Input
         this.widget.amount = new InputCurrency({
             placeholder: formatCurrency(0, this.token.decimals),
             symbol: this.token.symbol
         });
         this.append(this.widget.amount);
 
+        // Addres
         this.widget.address = new InputAddress({
             placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
         });
         this.append(this.widget.address);
 
+        // Send buton
         this.submit = new Button({
             text: 'Send',
             click: () => {

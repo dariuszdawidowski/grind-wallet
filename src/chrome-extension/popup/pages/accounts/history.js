@@ -1,3 +1,7 @@
+/**
+ * Transaction history page
+ */
+
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
@@ -245,7 +249,7 @@ export class SheetTransactionHistory extends Component {
             const coin = new TokenImage({
                 app: this.app,
                 canisterId: canisterId,
-                wallet: this.wallet,
+                symbol: this.wallet.tokens.get(canisterId).symbol
             });
             coin.element.style.marginRight = '6px';
             parent.append(coin.element);

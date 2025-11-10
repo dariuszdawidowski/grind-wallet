@@ -32,11 +32,12 @@ export class SheetAccountDetails extends Component {
         this.balance.style.display = 'flex';
         this.balance.style.alignItems = 'center';
         this.element.append(this.balance);
+
         // Balance token logo
         const coin = new TokenImage({
             app: this.app,
             canisterId: this.canister.ledgerId,
-            wallet: this.wallet,
+            symbol: this.wallet.tokens.get(this.canister.canisterId).symbol
         });
         this.balance.append(coin.element);
         // Balance amount and symbol

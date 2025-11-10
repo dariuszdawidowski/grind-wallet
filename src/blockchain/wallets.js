@@ -115,7 +115,16 @@ export class Wallets {
      */
 
     async load() {
-        const storageLocal = await chrome.storage.local.get(['wallets']);
+        const storageLocal = await chrome.storage.local.get(['wallets', 'dbversion']);
+        // Determine IndexedDB version
+        if (storageLocal.dbversion) {
+            this.app.dbversion = storageLocal.dbversion;
+        }
+        else {
+            this.app.dbversion = 1;
+            await chrome.storage.local.set({ 'dbversion': this.app.dbversion });
+        }
+        // Load Wallets
         if (storageLocal.wallets) {
             for (const [_, w] of Object.entries(storageLocal.wallets)) {
                 // Migrate wallet data

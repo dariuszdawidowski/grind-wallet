@@ -4,12 +4,13 @@
 
 export class LogSystem {
 
-    constructor() {
+    constructor({ app }) {
+        // Reference
+        this.app = app;
+
         // Database connection
         this.db = null;
         this.DB_NAME = 'Logs';
-        this.DB_VERSION = 1;
-        this.STORAGE_LIMIT_WARNING = 50 * 1024 * 1024; // 50MB of storage limit in IndexedDB
     }
 
     /**
@@ -18,8 +19,22 @@ export class LogSystem {
      */
 
     async init(storeNames) {
+        
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
+            const request = indexedDB.open(this.DB_NAME, this.app.dbversion);
+
+            request.onsuccess = async (event) => {
+                this.db = event.target.result;
+                // Check if any stores are missing
+                const missingStores = storeNames.filter(store => !this.db.objectStoreNames.contains(store));
+                if (missingStores.length > 0) {
+                    this.db.close();
+                    this.app.dbversion++;
+                    await chrome.storage.local.set({ 'dbversion': this.app.dbversion });
+                    await this.init(storeNames);
+                }
+                resolve();
+            };
 
             request.onerror = (event) => {
                 console.error('Database error:', event.target.error);
@@ -32,12 +47,9 @@ export class LogSystem {
                 for (const store of storeNames) {
                     if (!db.objectStoreNames.contains(store)) db.createObjectStore(store);
                 }
+                // resolve goes from onsuccess
             };
             
-            request.onsuccess = async (event) => {
-                this.db = event.target.result;                
-                resolve();
-            };
         });
     }
 

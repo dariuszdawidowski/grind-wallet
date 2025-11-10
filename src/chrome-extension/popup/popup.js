@@ -71,8 +71,11 @@ class GrindWalletPlugin {
 
     async init() {
 
+        // IndexedDB version
+        this.dbversion = 0;
+
         // Initialize history system
-        this.log = new LogSystem();
+        this.log = new LogSystem({ app: this });
 
         // Detect macOS
         if (navigator.userAgent.includes('Mac')) {

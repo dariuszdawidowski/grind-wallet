@@ -12,20 +12,35 @@ export class TimestampCache {
     }
 
     /**
+     * Initialize from storage
+     */
+
+    async init() {
+        // Load existing timestamps from storage
+        const stored = await chrome.storage.local.get(['timestamps']);
+        if (stored.hasOwnProperty('timestamps')) {
+            this.cache = stored['timestamps'];
+        }
+    }
+
+    /**
+     * Save to storage
+     */
+
+    async save() {
+        await chrome.storage.local.set({ timestamps: this.cache });
+    }
+
+    /**
      * Check whether a timestamp exists for the given id and whether it is overdue
      * @returns boolean true if expired
      */
 
     expired({ id, overdue = null }) {
-        // Fresh
-        if (!(id in this.cache)) {
+        // Fresh or Found and expired
+        if (!(id in this.cache) || this.cache[id] <= Date.now()) {
             this.cache[id] = Date.now() + overdue;
-            return true;
-        }
-
-        // Found and expired
-        if (this.cache[id] <= Date.now()) {
-            this.cache[id] = Date.now() + overdue;
+            this.save();
             return true;
         }
 
@@ -41,11 +56,13 @@ export class TimestampCache {
     reset({ id }) {
         if (!id) {
             this.cache = {};
+            this.save();
             return;
         }
 
         if (!id.includes('*')) {
             delete this.cache[id];
+            this.save();
             return;
         }
 
@@ -60,6 +77,7 @@ export class TimestampCache {
                 delete this.cache[key];
             }
         }
+        this.save();
     }
 
 }

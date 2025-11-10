@@ -1,3 +1,7 @@
+/**
+ * Sending NFT form sheet
+ */
+
 import { Component } from '/src/utils/component.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
@@ -84,7 +88,7 @@ export class SheetAccountSendNFT extends Component {
                 // Add to own wallet if exists
                 const toOwnWallet = this.app.wallets.getByPrincipal(to);
                 if (toOwnWallet) {
-                    toOwnWallet.nfts[`${this.nft.collection}:${this.nft.id}`] = new NFT({
+                    toOwnWallet.nfts.add(new NFT({
                         app: this.app,
                         principal: toOwnWallet.principal,
                         agent: toOwnWallet.agent,
@@ -92,7 +96,7 @@ export class SheetAccountSendNFT extends Component {
                         id: this.nft.id,
                         thumbnail: this.nft.thumbnail,
                         standard: this.nft.standard
-                    });
+                    }));
                 }
                 // Remove from current wallet
                 this.app.wallets.get(this.wallet.public)?.nfts.del(`${this.nft.collection}:${this.nft.id}`);

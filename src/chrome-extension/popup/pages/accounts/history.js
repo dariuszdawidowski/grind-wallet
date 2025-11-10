@@ -210,6 +210,8 @@ export class SheetTransactionHistory extends Component {
 
     renderEntry({ type, op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId }) {
 
+        if (kind === 'nft') console.log('Rendering NFT entry:', { type, op, kind, parent, icon, title, subtitle, amount, other, canisterId });
+
         // Icon circle container
         const logo = document.createElement('div');
         logo.classList.add('circle');
@@ -341,37 +343,42 @@ export class SheetTransactionHistory extends Component {
         for (const canisterId of this.tokens) {
             if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 // Get token
-                const token = this.wallet.tokens.get(canisterId);
-                // Refresh token info in weekly basis
-                if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
-                    let changed = false;
-                    // Compare current vs new
-                    const oldData = token.serialize();
-                    const metadata = await token.metadata(); // token data updated internally
-                    const newData = token.serialize();
-                    const oldImage = await loadImage(`token:${canisterId}`);
-                    const oldImageHash = oldImage ? await hashString(oldImage) : null;
-                    const newImageHash = metadata.logo ? await hashString(metadata.logo) : null;
-                    // Token data has changed
-                    if (JSON.stringify(oldData) !== JSON.stringify(newData)) {
-                        this.app.wallets.save();
-                        changed = true;
+                console.log('Fetching history for token:', canisterId);
+                let token = this.wallet.tokens.get(canisterId);
+                if (!token) token = this.wallet.nfts.get(...canisterId.split(':'));
+                if (token) {
+                    // Refresh token info in weekly basis
+                    if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                        let changed = false;
+                        // Compare current vs new
+                        console.log(token)
+                        const oldData = token.serialize();
+                        const metadata = await token.metadata(); // token data updated internally
+                        const newData = token.serialize();
+                        const oldImage = await loadImage(`token:${canisterId}`);
+                        const oldImageHash = oldImage ? await hashString(oldImage) : null;
+                        const newImageHash = metadata.logo ? await hashString(metadata.logo) : null;
+                        // Token data has changed
+                        if (JSON.stringify(oldData) !== JSON.stringify(newData)) {
+                            this.app.wallets.save();
+                            changed = true;
+                        }
+                        // Image logo has changed
+                        if (oldImageHash !== newImageHash) {
+                            saveImage(`token:${canisterId}`, metadata.logo);
+                            changed = true;
+                        }
+                        if (changed) document.body.dispatchEvent(new Event('render.all'));
                     }
-                    // Image logo has changed
-                    if (oldImageHash !== newImageHash) {
-                        saveImage(`token:${canisterId}`, metadata.logo);
-                        changed = true;
-                    }
-                    if (changed) document.body.dispatchEvent(new Event('render.all'));
-                }
-                // Fetch transactions for this token
-                const transactions = await token.transactions({ results: 100, types: this.types });
-                for (const [key, entry] of Object.entries(transactions)) {
-                    const existingEntry = this.logs[key] || null;
-                    if (!existingEntry) {
-                        this.logs[key] = entry;
-                        this.app.log.add(this.wallet.principal, key, entry);
-                        rebuild = true;
+                    // Fetch transactions for this token
+                    const transactions = await token.transactions({ results: 100, types: this.types });
+                    for (const [key, entry] of Object.entries(transactions)) {
+                        const existingEntry = this.logs[key] || null;
+                        if (!existingEntry) {
+                            this.logs[key] = entry;
+                            this.app.log.add(this.wallet.principal, key, entry);
+                            rebuild = true;
+                        }
                     }
                 }
             }

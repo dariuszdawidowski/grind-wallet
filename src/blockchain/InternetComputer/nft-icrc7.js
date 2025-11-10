@@ -139,4 +139,31 @@ export class NFT_ICRC7 {
 
         return null;
     }
+
+    /**
+     * Get metadata
+     * @returns Dictionary with metadata
+     */
+
+    async metadata() {
+        let data = {};
+        return data;
+    }
+
+    /**
+     * Get transaction history
+     * @param results: Number - number of results to fetch
+     * @param types: Array - types of transactions to fetch or null for all
+     * @return { id: {
+     *     type: 'send.nft' | 'recv.nft' | 'aprv.nft',
+     *     pid: 'my principal id',
+     *     to|from: { account: string },
+     *     nft: { collection: 'principal id', id: Number }
+     * }, ...}
+     */
+
+    async transactions({ results = 100, types = null } = {}) {
+        return {};
+    }
+
 }

@@ -5,7 +5,6 @@
 import { Principal } from '@dfinity/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/component.js';
-import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';

@@ -11,7 +11,7 @@ import { loadImage, saveImage } from '/src/utils/image-cache.js';
 
 export class SheetTransactionHistory extends Component {
 
-    constructor({ app, wallet, canister, types, tokens }) {
+    constructor({ app, wallet, canister, types, tokens, nfts }) {
         super({ app });
 
         // CSS class
@@ -23,6 +23,7 @@ export class SheetTransactionHistory extends Component {
         this.canister = canister;
         this.types = types; // ['send.token', 'send.token.error', ...]
         this.tokens = tokens; // [canisterId1, canisterId2, ...]
+        this.nfts = nfts; // [collectionId1:id, collectionId2:id, ...]
         
         // Logs cache
         this.logs = {};
@@ -343,15 +344,12 @@ export class SheetTransactionHistory extends Component {
         for (const canisterId of this.tokens) {
             if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 // Get token
-                console.log('Fetching history for token:', canisterId);
-                let token = this.wallet.tokens.get(canisterId);
-                if (!token) token = this.wallet.nfts.get(...canisterId.split(':'));
+                const token = this.wallet.tokens.get(canisterId);
                 if (token) {
                     // Refresh token info in weekly basis
                     if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
                         let changed = false;
                         // Compare current vs new
-                        console.log(token)
                         const oldData = token.serialize();
                         const metadata = await token.metadata(); // token data updated internally
                         const newData = token.serialize();

@@ -46,7 +46,7 @@ export class SheetAccountSend extends Component {
         });
         this.append(this.widget.amount);
 
-        // Addres
+        // Address
         this.widget.address = new InputAddress({
             placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
         });
@@ -157,7 +157,9 @@ export class SheetAccountSend extends Component {
                         }
                     }
                     // Log transaction
-                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
+                    const datetime = new Date();
+                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${datetime.getTime()}`, {
+                        datetime: datetime.toISOString(),
                         type: 'send.token.begin',
                         to: {
                             principal: principal.toText(),
@@ -178,7 +180,9 @@ export class SheetAccountSend extends Component {
                 else {
                     const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
                     // Log error
-                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${new Date().toISOString()}`, {
+                    const datetime = new Date();
+                    this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${datetime.getTime()}`, {
+                        datetime: datetime.toISOString(),
                         type: 'send.token.error',
                         to: {
                             principal: principal.toText(),

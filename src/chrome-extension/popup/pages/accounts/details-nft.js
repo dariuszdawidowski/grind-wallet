@@ -181,7 +181,7 @@ export class SheetNFTDetails extends Component {
         this.app.wallets.get(this.wallet.public).nfts.del(`${this.nft.collection}:${this.nft.id}`);
         // Log transaction
         const datetime = new Date();
-        this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime}`, {
+        this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
             datetime: datetime.toISOString(),
             type: 'del.nft',
             nft: {

@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
+import { NFTImage } from '/src/chrome-extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
@@ -144,7 +145,7 @@ export class SheetTransactionHistory extends Component {
             kind: 'token',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
-            title: 'Error Send',
+            title: 'Error Sending',
             subtitle: `To: ${recipient.address}`,
             amount: entry.token.amount,
             other: recipient.type,
@@ -177,7 +178,8 @@ export class SheetTransactionHistory extends Component {
             title: 'Add NFT',
             subtitle: `Collection: ${shortAddress(entry.nft.canister)}`,
             other: recipient.type,
-            canisterId: entry.nft.canister
+            canisterId: entry.nft.canister,
+            nftId: entry.nft.id
         });
         // Del NFT
         else if (entry.type === 'del.nft') this.renderEntry({
@@ -187,7 +189,8 @@ export class SheetTransactionHistory extends Component {
             icon: 'assets/material-design-icons/minus.svg',
             title: 'Remove NFT',
             other: recipient.type,
-            canisterId: entry.nft.canister
+            canisterId: entry.nft.canister,
+            nftId: entry.nft.id
         });
         // Send NFT
         else if (entry.type === 'send.nft.begin') this.renderEntry({
@@ -195,10 +198,11 @@ export class SheetTransactionHistory extends Component {
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
-            title: 'Send',
+            title: 'Send NFT',
             subtitle: `To: ${recipient.address}`,
             other: recipient.type,
-            canisterId: entry.nft.canister
+            canisterId: entry.nft.canister,
+            nftId: entry.nft.id
         });
         // Error send NFT
         else if (entry.type === 'send.nft.error') this.renderEntry({
@@ -206,10 +210,11 @@ export class SheetTransactionHistory extends Component {
             kind: 'nft',
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
-            title: 'Error Send',
+            title: 'Error Sending NFT',
             subtitle: `To: ${recipient.address}`,
             other: recipient.type,
-            canisterId: entry.nft.canister
+            canisterId: entry.nft.canister,
+            nftId: entry.nft.id
         });
 
     }
@@ -218,9 +223,7 @@ export class SheetTransactionHistory extends Component {
      * Render entry template
      */
 
-    renderEntry({ type, op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId }) {
-
-        if (kind === 'nft') console.log('Rendering NFT entry:', { type, op, kind, parent, icon, title, subtitle, amount, other, canisterId });
+    renderEntry({ type, op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId, nftId = null }) {
 
         // Icon circle container
         const logo = document.createElement('div');
@@ -265,6 +268,15 @@ export class SheetTransactionHistory extends Component {
             });
             coin.element.style.marginRight = '6px';
             parent.append(coin.element);
+        }
+        // NFT miniature
+        else if (kind === 'nft') {
+            const miniature = new NFTImage({
+                app: this.app,
+                canisterId: canisterId,
+                nftId: nftId
+            });
+            parent.append(miniature.element);
         }
 
         // Amount

@@ -130,11 +130,13 @@ export class LogSystem {
             return Object.fromEntries(Object.entries(logs).filter(([_, value]) => {
                 let result = true;
                 // Filter by ISO datetime key
-                if (('datetime' in args) && args.datetime) result = result && (value?.datetime == args.datetime);
+                if (('datetime' in args) && args.datetime) result = result && (value.datetime == args.datetime);
                 // Filter by types
-                if (('types' in args) && args.types) result = result && args.types.includes(value?.type);
+                if (('types' in args) && args.types) result = result && args.types.includes(value.type);
                 // Filter by tokens
-                if (('tokens' in args) && args.tokens) result = result && args.tokens.includes(value?.token?.canister);
+                if (('tokens' in args) && args.tokens && ('token' in value)) result = result && args.tokens.includes(value.token.canister);
+                // Filter by NFTs
+                if (('nfts' in args) && args.nfts && ('nft' in value)) result = result && args.nfts.includes(`${value.nft.canister}:${value.nft.id}`);
                 return result;
             }));
         }

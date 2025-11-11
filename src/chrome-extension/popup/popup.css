@@ -563,6 +563,22 @@ hr {
     margin-left: auto;
 }
 
+.history .nft-image {
+    width: 36px;
+    height: 36px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: auto;
+}
+
+.history .token-image svg, .history .token-image svg image,
+.history .nft-image svg, .history .nft-image svg image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .history .amount {
     font-size: 14px;
     font-weight: 500;

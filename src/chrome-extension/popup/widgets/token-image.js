@@ -24,7 +24,7 @@ export class TokenImage extends Component {
                 this.element.style.backgroundColor = 'transparent';
                 // SVG
                 if (image.startsWith('<svg')) {
-                    this.element.style.backgroundImage = `url('data:image/svg+xml;utf8,${encodeURIComponent(image)}')`;
+                    this.element.innerHTML = image;
                 }
                 // Raster
                 else {

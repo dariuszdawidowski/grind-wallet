@@ -81,7 +81,7 @@ export class SheetAccountSendNFT extends Component {
                 this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
                     datetime: datetime.toISOString(),
                     type: 'send.nft.begin',
-                    to: to,
+                    to: { principal: to },
                     nft: {
                         canister: this.nft.collection,
                         id: this.nft.id
@@ -114,7 +114,7 @@ export class SheetAccountSendNFT extends Component {
                 this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
                     datetime: datetime.toISOString(),
                     type: 'send.nft.error',
-                    to: to,
+                    to: { principal: to },
                     nft: {
                         canister: this.nft.collection,
                         id: this.nft.id

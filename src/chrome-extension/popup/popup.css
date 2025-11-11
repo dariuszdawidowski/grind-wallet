@@ -390,16 +390,26 @@ hr {
     position: absolute;
     right: 24px;
     top: 18px;
+}
+
+.loader {
     width: 24px;
     height: 24px;
     transform: rotateZ(45deg);
     perspective: 1000px;
     border-radius: 50%;
-    color: #fff;
 }
 
-.card .loader:before,
-.card .loader:after {
+.loader.light {
+    color: white;
+}
+
+.loader.dark {
+    color: black;
+}
+
+.loader:before,
+.loader:after {
     content: '';
     display: block;
     position: absolute;
@@ -412,10 +422,17 @@ hr {
     animation: 1s loader-spin linear infinite;
 }
 
-.card .loader:after {
-    color: white;
+.loader:after {
     transform: rotateY(70deg);
     animation-delay: .4s;
+}
+
+.loader.light:after {
+    color: white;
+}
+
+.loader.dark:after {
+    color: black;
 }
 
 @keyframes loader-spin {

@@ -55,6 +55,13 @@ export class SheetTransactionHistory extends Component {
     async render() {
         this.clear();
 
+        // Loader
+        const loader = document.createElement('div');
+        loader.style.margin = '0 auto';
+        loader.style.display = 'none';
+        loader.classList.add('loader', 'dark');
+        this.element.append(loader);
+
         // Show logs
         if (Object.keys(this.logs).length > 0) {
             // Sort by datetime descending
@@ -66,6 +73,7 @@ export class SheetTransactionHistory extends Component {
 
         // No logs
         else {
+            loader.style.display = 'block';            
             const info = document.createElement('h2');
             if (this.app.isICPLedger(this.canister.ledgerId)) {
                 info.innerText = `No history on this wallet yet`;

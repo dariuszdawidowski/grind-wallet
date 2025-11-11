@@ -15,7 +15,7 @@ export class Card extends Component {
         this.element.innerHTML = `
             <div class="name">${this.wallet.name}</div>
             <div class="subname">CRYPTOCURRENCY WALLET</div>
-            <div class="loader"></div>
+            <div class="loader light"></div>
             <div class="currency">ICP</div>
             <div class="amount">Fetching...</div>
             <div class="account1">${formatWithSpaces(this.wallet.account.substring(0, 24), 4)}</div>

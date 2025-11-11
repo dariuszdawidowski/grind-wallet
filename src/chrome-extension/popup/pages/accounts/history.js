@@ -87,9 +87,18 @@ export class SheetTransactionHistory extends Component {
      */
 
     renderDate(isodate) {
+        // Year gap
+        if (this.lastDate && isodate.slice(0, 4) !== this.lastDate.slice(0, 4)) {
+            const yearHeader = document.createElement('h1');
+            yearHeader.style.marginTop = '32px';
+            yearHeader.innerText = isodate.slice(0, 4);
+            this.element.append(yearHeader);
+        }
+        // Date header
         const dateObj = new Date(isodate);
         const humanDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
         const header = document.createElement('h2');
+        header.style.marginTop = '1.5em';
         header.innerText = humanDate;
         this.element.append(header);
     }
@@ -181,7 +190,7 @@ export class SheetTransactionHistory extends Component {
             canisterId: entry.nft.canister
         });
         // Send NFT
-        else if (entry.type === 'send.nft') this.renderEntry({
+        else if (entry.type === 'send.nft.begin') this.renderEntry({
             type: entry.type,
             kind: 'nft',
             parent: row,

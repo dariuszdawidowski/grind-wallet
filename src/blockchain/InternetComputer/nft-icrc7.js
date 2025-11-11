@@ -49,19 +49,25 @@ export class NFT_ICRC7 {
 
     async transfer({ token, to }) {
 
-        const result = await this.actor.icrc7_transfer([{
-            to: { owner: Principal.fromText(to), subaccount: [] },
-            token_id: BigInt(token),
-            memo: [],
-            from_subaccount: [],
-            created_at_time: []
-        }]);
-
-        if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0 && 'Ok' in result[0][0]) {
-            return true;
+        let result;
+        try {
+            result = await this.actor.icrc7_transfer([{
+                to: { owner: Principal.fromText(to), subaccount: [] },
+                token_id: BigInt(token),
+                memo: [],
+                from_subaccount: [],
+                created_at_time: []
+            }]);
+        }
+        catch (error) {
+            return {'ERROR': error};
         }
 
-        return false;
+        if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0 && 'Ok' in result[0][0]) {
+            return {'OK': result[0][0].Ok};
+        }
+
+        return {'ERROR': 'Transfer failed'};
     }
 
     /**

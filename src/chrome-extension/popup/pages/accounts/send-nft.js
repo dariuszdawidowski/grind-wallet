@@ -75,7 +75,7 @@ export class SheetAccountSendNFT extends Component {
             to
         }).then(result => {
             this.widget.submit.busy(false);
-            if (result === true) {
+            if ('OK' in result) {
                 // Log transaction
                 const datetime = new Date();
                 this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
@@ -108,7 +108,7 @@ export class SheetAccountSendNFT extends Component {
                 this.sent = true;
             }
             else {
-                const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
+                const errorMsg = ('Error' in result) ? result.ERROR : 'Transfer error';
                 // Log error
                 const datetime = new Date();
                 this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {

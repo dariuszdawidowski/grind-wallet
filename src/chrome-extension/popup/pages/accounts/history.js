@@ -188,6 +188,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/minus.svg',
             title: 'Remove NFT',
+            subtitle: `Collection: ${shortAddress(entry.nft.canister)}`,
             other: recipient.type,
             canisterId: entry.nft.canister,
             nftId: entry.nft.id

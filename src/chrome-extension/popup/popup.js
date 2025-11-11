@@ -4,6 +4,7 @@
  */
 
 import '/src/chrome-extension/popup/popup.css';
+import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { PageAccounts } from '/src/chrome-extension/popup/pages/accounts/index.js';
@@ -35,6 +36,9 @@ class GrindWalletPlugin {
      */
 
     constructor(selector) {
+
+        // Initialize error handling system
+        this.errors = new ErrorSystem();
 
         // Main element
         this.element = document.querySelector(selector);

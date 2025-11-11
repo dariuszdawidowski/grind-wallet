@@ -177,7 +177,7 @@ export class SheetAccountSend extends Component {
                     this.sent = true;
                 }
                 else {
-                    const errorMsg = 'Error' in result ? result.ERROR : 'Transfer error';
+                    const errorMsg = ('Error' in result) ? result.ERROR : 'Transfer error';
                     // Log error
                     const datetime = new Date();
                     this.app.log.add(this.wallet.principal, `${this.canister.ledgerId}:${datetime.getTime()}`, {

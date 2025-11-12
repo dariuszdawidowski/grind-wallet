@@ -37,7 +37,7 @@ export class Wallet {
         this.tokens = new Tokens({ app: this.app, wallet: this, ...tokens });
 
         // NFTs list: { 'collectionId:nftId': NFT object, ... }
-        this.nfts = new NFTs({ app: this.app, wallet: this,...nfts });
+        this.nfts = new NFTs({ app: this.app, wallet: this, ...nfts });
 
         /*** Dynamic attributes ***/
 

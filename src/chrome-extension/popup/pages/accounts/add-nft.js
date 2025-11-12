@@ -146,8 +146,7 @@ export class SheetAddCustomNFT extends Component {
                 // Add to wallet
                 this.wallet.nfts.add(new NFT({
                     app: this.app,
-                    principal: this.wallet.principal,
-                    agent: this.wallet.agent,
+                    wallet: this.wallet,
                     collection: canisterId,
                     id: tokenId,
                     thumbnail: `nft:${canisterId}:${tokenId}`,

@@ -66,7 +66,7 @@ export class NFTs {
         for (const [key, value] of Object.entries(serialized)) {
             this.add(new NFT({
                 app: this.app,
-                agent: this.wallet.agent,
+                wallet: this.wallet,
                 ...value
             }));
             this.list[key].build({ agent: this.wallet.agent });

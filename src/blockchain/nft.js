@@ -7,13 +7,13 @@ import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 
 export class NFT {
 
-    constructor({ app, agent, collection, id, thumbnail, standard }) {
+    constructor({ app, wallet, collection, id, thumbnail, standard }) {
         
         // App
         this.app = app;
 
-        // Agent
-        this.agent = agent;
+        // Wallet
+        this.wallet = wallet;
 
         // Collection ID
         this.collection = collection;
@@ -46,13 +46,13 @@ export class NFT {
 
     async cache() {
         if (!this.service) this.service = await this.app.cache.get({
-            id: `${this.principal}:nft:${this.collection}`,
+            id: `${this.wallet.principal}:nft:${this.collection}`,
             create: () => {
                 if (this.standard == 'EXT') {
-                    return new NFT_EXT({ agent: this.agent, collection: this.collection });
+                    return new NFT_EXT({ agent: this.wallet.agent, collection: this.collection });
                 }
                 else if (this.standard == 'ICRC-7') {
-                    return new NFT_ICRC7({ agent: this.agent, collection: this.collection });
+                    return new NFT_ICRC7({ agent: this.wallet.agent, collection: this.collection });
                 }
                 return null;
             }

@@ -92,8 +92,7 @@ export class SheetAccountSendNFT extends Component {
                 if (toOwnWallet) {
                     toOwnWallet.nfts.add(new NFT({
                         app: this.app,
-                        principal: toOwnWallet.principal,
-                        agent: toOwnWallet.agent,
+                        wallet: toOwnWallet,
                         collection: this.nft.collection,
                         id: this.nft.id,
                         thumbnail: this.nft.thumbnail,

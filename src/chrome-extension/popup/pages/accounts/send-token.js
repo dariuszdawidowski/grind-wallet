@@ -118,12 +118,20 @@ export class SheetAccountSend extends Component {
 
         // Autodetect Account ID
         else {
-            try {
-                account = AccountIdentifier.fromHex(this.widget.address.get());
-                allow = true;
+            // ICP
+            if (this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID) {
+                try {
+                    account = AccountIdentifier.fromHex(this.widget.address.get());
+                    allow = true;
+                }
+                catch(error) {
+                    alert('Invalid Account ID');
+                }
             }
-            catch(error) {
-                alert('Invalid Account ID');
+            // ICRC
+            else {
+                alert('Only Principal ID allowed');
+                allow = false;
             }
         }
 

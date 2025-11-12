@@ -14,6 +14,7 @@ import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { TimestampCache } from '/src/utils/timestamp-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
+const { version } = require('/package.json');
 
 // Development mode
 if (process.env.DEV_MODE) import('/src/chrome-extension/popup/dev-mode.js');
@@ -37,9 +38,12 @@ class GrindWalletPlugin {
 
     constructor(selector) {
 
+        // Plugin version
+        this.version = version;
+
         // Initialize error handling system
         this.errors = new ErrorSystem();
-        this.errors.init('Errors', ['list']);
+        this.errors.init('Errors', [version]);
 
         // Main element
         this.element = document.querySelector(selector);

@@ -20,7 +20,7 @@ export class ErrorSystem extends LogBase {
         // Global promise rejection handler
         window.addEventListener('unhandledrejection', (ev) => {
             console.log('🐞', ev);
-            this.add('list', timestamp, ev?.reason?.stack || ev.message || 'Unknown error');
+            this.add('list', timestamp, ev?.reason?.stack || 'Unknown error');
         });
 
         // Console error override

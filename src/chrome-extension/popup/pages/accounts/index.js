@@ -11,7 +11,6 @@ import { SheetNewAccount } from '/src/chrome-extension/popup/pages/accounts/new.
 import { SheetImportAccount } from '/src/chrome-extension/popup/pages/accounts/import.js';
 import { SheetAccountDetails } from '/src/chrome-extension/popup/pages/accounts/details.js';
 import { SheetNFTDetails } from '/src/chrome-extension/popup/pages/accounts/details-nft.js';
-const { version } = require('/package.json');
 
 export class PageAccounts extends Component {
 
@@ -34,7 +33,7 @@ export class PageAccounts extends Component {
         header.append(img);
         const title = document.createElement('span');
         title.style.marginLeft = '8px';
-        title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${version}</span>`;
+        title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${this.app.version}</span>`;
         header.append(title);
 
         // Main content

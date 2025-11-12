@@ -154,8 +154,9 @@ export class SheetAccountSend extends Component {
                     // Calculate remaining balance and update
                     this.balance -= ICP2icpt(this.widget.amount.get()) + BigInt(this.token.fee);
                     this.app.cache.set({ id: `balance.${this.wallet.account}.${this.canister.ledgerId}`, value: this.balance });
+                    const tokenZeros = (this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID) ? 8 : 4;
                     const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${this.token.symbol} .amount`);
-                    if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), 4);
+                    if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), tokenZeros);
                     // Sent to my own wallet?
                     const myownWallet = this.app.wallets.getByPrincipalOrAccount(principal?.toText(), account?.toHex());
                     if (myownWallet) {
@@ -163,7 +164,7 @@ export class SheetAccountSend extends Component {
                         if (myownTokenBalance) {
                             const balanceCurrent = Number(myownTokenBalance.innerText.replace(/,/g, ''));
                             const balanceAdd = Number(this.widget.amount.get());
-                            myownTokenBalance.innerText = formatCurrency(balanceCurrent + balanceAdd, 4);
+                            myownTokenBalance.innerText = formatCurrency(balanceCurrent + balanceAdd, tokenZeros);
                         }
                     }
                     // Log transaction

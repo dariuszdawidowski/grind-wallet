@@ -231,8 +231,9 @@ export class SheetAccountDetails extends Component {
             if (balance !== null) {
                 const amount = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
                 this.amount.innerText = `${amount} ${token.symbol}`;
+                const tokenZeros = (this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID) ? 8 : 4;
                 const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${token.symbol} .amount`);
-                if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(balance, token.decimals), 4);
+                if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(balance, token.decimals), tokenZeros);
             }
         });
     }

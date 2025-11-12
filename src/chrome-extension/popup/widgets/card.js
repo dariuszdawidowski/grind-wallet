@@ -17,7 +17,7 @@ export class Card extends Component {
             <div class="subname">CRYPTOCURRENCY WALLET</div>
             <div class="loader light"></div>
             <div class="currency">ICP</div>
-            <div class="amount">Fetching...</div>
+            <div id="balance_${this.wallet.principal}_ICP"><div class="amount">Fetching...</div></div>
             <div class="account1">${formatWithSpaces(this.wallet.account.substring(0, 24), 4)}</div>
             <div class="account2">${formatWithSpaces(this.wallet.account.substring(24), 4)}</div>
             <img class="logo" src="${this.wallet.crypto == 'ICP' ? 'assets/IC_logo_horizontal.svg' : ''}">

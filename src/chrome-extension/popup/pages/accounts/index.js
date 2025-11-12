@@ -81,7 +81,7 @@ export class PageAccounts extends Component {
             // Wallets available
             else {
                 // Intentionally not awaiting
-                this.app.log.init(this.app.wallets.get().map(wallet => wallet.principal));
+                this.app.log.init('Logs', this.app.wallets.get().map(wallet => wallet.principal));
                 // Render wallets list
                 this.renderWalletsList();
             }

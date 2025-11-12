@@ -39,6 +39,7 @@ class GrindWalletPlugin {
 
         // Initialize error handling system
         this.errors = new ErrorSystem();
+        this.errors.init('Errors', ['list']);
 
         // Main element
         this.element = document.querySelector(selector);
@@ -75,11 +76,8 @@ class GrindWalletPlugin {
 
     async init() {
 
-        // IndexedDB version
-        this.dbversion = 0;
-
         // Initialize history system
-        this.log = new LogSystem({ app: this });
+        this.log = new LogSystem();
 
         // Detect macOS
         if (navigator.userAgent.includes('Mac')) {

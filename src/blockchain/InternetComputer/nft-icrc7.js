@@ -23,6 +23,9 @@ export class NFT_ICRC7 {
 
         // Actor
         this.actor = Actor.createActor(idlFactoryMinter, { agent: agent, canisterId: collection });
+
+        // Collection id
+        this.collection = collection;
     }
 
     /**
@@ -49,7 +52,7 @@ export class NFT_ICRC7 {
 
     async transfer({ token, to }) {
 
-        let result;
+        let result = null;
         try {
             result = await this.actor.icrc7_transfer([{
                 to: { owner: Principal.fromText(to), subaccount: [] },
@@ -63,7 +66,7 @@ export class NFT_ICRC7 {
             return {'ERROR': error};
         }
 
-        if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0 && 'Ok' in result[0][0]) {
+        if (result && Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0 && 'Ok' in result[0][0]) {
             return {'OK': result[0][0].Ok};
         }
 
@@ -85,12 +88,12 @@ export class NFT_ICRC7 {
             if (!type) {
                 return metadata;
             }
-            else if (`icrc7:metadata:uri:${type}` in metadata && 'Text' in metadata[`icrc7:metadata:uri:${type}`]) {
+            else if ((`icrc7:metadata:uri:${type}` in metadata) && ('Text' in metadata[`icrc7:metadata:uri:${type}`])) {
                 return metadata[`icrc7:metadata:uri:${type}`].Text;
             }
         }
 
-        return null
+        return null;
     }
 
     /**
@@ -147,12 +150,13 @@ export class NFT_ICRC7 {
     }
 
     /**
-     * Get metadata
-     * @returns Dictionary with metadata
+     * Get full page
+     * @param token: Number - token id
+     * @returns string with url
      */
 
-    async metadata() {
-        let data = {};
+    async experience({ token }) {
+        const data = await this.getMetadata({ token, type: 'image' });
         return data;
     }
 

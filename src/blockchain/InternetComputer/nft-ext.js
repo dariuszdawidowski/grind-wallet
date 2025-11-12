@@ -50,20 +50,29 @@ export class NFT_EXT {
      */
 
     async transfer({ token, to }) {
-        const principal = await this.agent.getPrincipal();
-        const result = await this.actor.transfer({
-            token: token,
-            to: { principal: Principal.fromText(to) },
-            from: { principal },
-            notify: false,
-            memo: [],
-            subaccount: [],
-            amount: 1
-        });
 
-        if ('ok' in result && Number(result.ok) == 1) return true;
+        let result = null;
+        try {
+            const principal = await this.agent.getPrincipal();
+            result = await this.actor.transfer({
+                token: token,
+                to: { principal: Principal.fromText(to) },
+                from: { principal },
+                notify: false,
+                memo: [],
+                subaccount: [],
+                amount: 1
+            });
+        }
+        catch (error) {
+            return {'ERROR': error};
+        }
 
-        return false;
+        if (result && ('ok' in result) && Number(result.ok) == 1) {
+            return {'OK': result.ok};
+        }
+
+        return {'ERROR': 'Transfer failed'};
     }
 
     /**
@@ -132,13 +141,13 @@ export class NFT_EXT {
     }
 
     /**
-     * Get metadata
-     * @returns Dictionary with metadata
+     * Get full page
+     * @param token: string - token id
+     * @returns string with url
      */
 
-    async metadata() {
-        let data = {};
-        return data;
+    async experience({ token }) {
+        return `https://${this.collection}.raw.icp0.io/?tokenid=${token}`;
     }
 
     /**

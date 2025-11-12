@@ -6,11 +6,11 @@ export class ErrorSystem {
 
     constructor() {
         window.addEventListener('error', (ev) => {
-            console.log('🪲', ev);
+            console.log('🪲', ev?.error?.stack);
         });
 
         window.addEventListener('unhandledrejection', (ev) => {
-            console.log('🐞', ev?.reason?.message);
+            console.log('🐞', ev?.reason?.stack);
         });
     }
 }

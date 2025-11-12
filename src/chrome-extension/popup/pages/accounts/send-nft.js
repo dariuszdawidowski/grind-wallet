@@ -76,60 +76,73 @@ export class SheetAccountSendNFT extends Component {
      */
 
     transfer(to) {
-        this.widget.submit.busy(true);
-        this.nft.service.transfer({
-            token: this.nft.id,
-            to
-        }).then(result => {
-            this.widget.submit.busy(false);
-            if ('OK' in result) {
-                // Log transaction
-                const datetime = new Date();
-                this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
-                    datetime: datetime.toISOString(),
-                    type: 'send.nft.begin',
-                    to: { principal: to },
-                    nft: {
-                        canister: this.nft.collection,
-                        id: this.nft.id
+        // Allot transfer
+        let allow = false;
+
+        if (this.widget.address.detect() == 'principal') {
+            allow = true;
+        }
+        else {
+            alert('Only Principal ID is supported for NFT transfers');
+        }
+
+        // Ok to transfer
+        if (allow) {
+            this.widget.submit.busy(true);
+            this.nft.service.transfer({
+                token: this.nft.id,
+                to
+            }).then(result => {
+                this.widget.submit.busy(false);
+                if ('OK' in result) {
+                    // Log transaction
+                    const datetime = new Date();
+                    this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
+                        datetime: datetime.toISOString(),
+                        type: 'send.nft.begin',
+                        to: { principal: to },
+                        nft: {
+                            canister: this.nft.collection,
+                            id: this.nft.id
+                        }
+                    });
+                    // Add to own wallet if exists
+                    const toOwnWallet = this.app.wallets.getByPrincipal(to);
+                    if (toOwnWallet) {
+                        toOwnWallet.nfts.add(new NFT({
+                            app: this.app,
+                            wallet: toOwnWallet,
+                            collection: this.nft.collection,
+                            id: this.nft.id,
+                            thumbnail: this.nft.thumbnail,
+                            standard: this.nft.standard
+                        }));
                     }
-                });
-                // Add to own wallet if exists
-                const toOwnWallet = this.app.wallets.getByPrincipal(to);
-                if (toOwnWallet) {
-                    toOwnWallet.nfts.add(new NFT({
-                        app: this.app,
-                        wallet: toOwnWallet,
-                        collection: this.nft.collection,
-                        id: this.nft.id,
-                        thumbnail: this.nft.thumbnail,
-                        standard: this.nft.standard
-                    }));
+                    // Remove from current wallet
+                    this.app.wallets.get(this.wallet.public)?.nfts.del(`${this.nft.collection}:${this.nft.id}`);
+                    // Save changes
+                    this.app.wallets.save();
+                    this.widget.submit.set('OK - successfully sent!');
+                    this.sent = true;
                 }
-                // Remove from current wallet
-                this.app.wallets.get(this.wallet.public)?.nfts.del(`${this.nft.collection}:${this.nft.id}`);
-                // Save changes
-                this.app.wallets.save();
-                this.widget.submit.set('OK - successfully sent!');
-                this.sent = true;
-            }
-            else {
-                const errorMsg = ('Error' in result) ? result.ERROR : 'Transfer error';
-                // Log error
-                const datetime = new Date();
-                this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
-                    datetime: datetime.toISOString(),
-                    type: 'send.nft.error',
-                    to: { principal: to },
-                    nft: {
-                        canister: this.nft.collection,
-                        id: this.nft.id
-                    },
-                    error: errorMsg
-                });
-                alert(errorMsg);
-            }        
-        });
+                else {
+                    const errorMsg = ('Error' in result) ? result.ERROR : 'Transfer error';
+                    // Log error
+                    const datetime = new Date();
+                    this.app.log.add(this.wallet.principal, `${this.nft.collection}:${datetime.getTime()}`, {
+                        datetime: datetime.toISOString(),
+                        type: 'send.nft.error',
+                        to: { principal: to },
+                        nft: {
+                            canister: this.nft.collection,
+                            id: this.nft.id
+                        },
+                        error: errorMsg
+                    });
+                    alert(errorMsg);
+                }
+            });
+        }
     }
 
 }

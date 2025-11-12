@@ -36,8 +36,15 @@ export class SheetAccountSendNFT extends Component {
             click: () => {
                 // Not sent yet
                 if (!this.sent) {
-                    if (this.widget.address.valid()) this.transfer(this.widget.address.get());
-                    else alert('Invalid address');
+                    if (!this.widget.address.valid()) {
+                        alert('Invalid address');
+                    }
+                    else if (this.widget.address.get() === this.wallet.principal) {
+                        alert('You are trying to send to yourself');
+                    }
+                    else {
+                        this.transfer(this.widget.address.get());
+                    }
                 }
                 // Succesful sent
                 else {

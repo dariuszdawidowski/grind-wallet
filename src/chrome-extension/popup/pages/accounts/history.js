@@ -73,14 +73,15 @@ export class SheetTransactionHistory extends Component {
 
         // No logs
         else {
-            loader.style.display = 'block';            
             const info = document.createElement('h2');
             if (this.app.isICPLedger(this.canister.ledgerId)) {
+                loader.style.display = 'block';            
                 info.innerText = `No history on this wallet yet`;
             }
             else {
                 const tokenTxt = this.wallet.tokens.get(this.canister.ledgerId)?.symbol || this.canister.ledgerId;
                 if (this.canister.indexId) {
+                    loader.style.display = 'block';            
                     info.innerText = `No ${tokenTxt} history on this wallet yet`;
                 }
                 else {

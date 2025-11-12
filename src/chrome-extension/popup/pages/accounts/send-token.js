@@ -69,6 +69,9 @@ export class SheetAccountSend extends Component {
                     else if (ICP2icpt(this.widget.amount.get()) + BigInt(this.token.fee) > this.balance) {
                         alert('Insufficient balance');
                     }
+                    else if (this.widget.address.get() === this.wallet.principal || this.widget.address.get() === this.wallet.account) {
+                        alert('You are trying to send to yourself');
+                    }
                     else {
                         this.transfer();
                     }

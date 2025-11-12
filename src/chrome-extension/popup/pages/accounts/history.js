@@ -42,6 +42,8 @@ export class SheetTransactionHistory extends Component {
             this.render();
             // Fetch and cache from blockchain
             this.fetchAndCache().then((rebuild) => {
+                const loader = document.getElementById('history-loader');
+                if (loader) loader.style.display = 'none';
                 if (rebuild) document.body.dispatchEvent(new Event('update.history'));
             });
         });
@@ -57,6 +59,7 @@ export class SheetTransactionHistory extends Component {
 
         // Loader
         const loader = document.createElement('div');
+        loader.id = 'history-loader';
         loader.style.margin = '0 auto';
         loader.style.display = 'none';
         loader.classList.add('loader', 'dark');

@@ -19,7 +19,6 @@ export class LogBase {
      */
 
     async init(dbName, storeNames) {
-
         // Open DB connection
         return new Promise((resolve, reject) => {
             // First, open without specifying version to get current version
@@ -78,6 +77,19 @@ export class LogBase {
                 };
             };
         });
+    }
+
+    /**
+     * Update database with new store names
+     * @param {string} dbName - Name of the database
+     * @param {[string]} newStoreNames - New store names to add
+     */
+
+    async reinit(dbName, newStoreNames) {
+        // Close current connection if exists
+        if (this.db) this.db.close();
+        // Reuse init method
+        await this.init(dbName, newStoreNames);
     }
 
     /**

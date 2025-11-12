@@ -74,6 +74,7 @@ export class SheetImportAccount extends Component {
         await newWallet.build(this.app.user.password);
         this.app.wallets.add(newWallet);
         await this.app.wallets.save();
+        await this.app.log.reinit('Logs', this.app.wallets.get().map(wallet => wallet.principal));
     }
 
 }

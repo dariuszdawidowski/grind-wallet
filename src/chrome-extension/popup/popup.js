@@ -42,7 +42,7 @@ class GrindWalletPlugin {
         this.version = version;
 
         // Initialize error handling system
-        this.errors = new ErrorSystem();
+        this.errors = new ErrorSystem({ app: this });
         this.errors.init('Errors', [version]);
 
         // Main element

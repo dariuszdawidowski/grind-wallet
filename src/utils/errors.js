@@ -14,19 +14,19 @@ export class ErrorSystem extends LogBase {
         // Global error handler
         window.addEventListener('error', (ev) => {
             console.log('🪲', ev);
-            this.add('list', timestamp, ev?.error?.stack || ev.message || 'Unknown error');
+            this.add(args.app.version, timestamp, ev?.error?.stack || ev.message || 'Unknown error');
         });
 
         // Global promise rejection handler
         window.addEventListener('unhandledrejection', (ev) => {
             console.log('🐞', ev);
-            this.add('list', timestamp, ev?.reason?.stack || 'Unknown error');
+            this.add(args.app.version, timestamp, ev?.reason?.stack || 'Unknown error');
         });
 
         // Console error override
         const origConsoleError = console.error;
         console.error = function(...args) {
-            this.add('list', timestamp, args.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg)).join(' '));
+            this.add(args.app.version, timestamp, args.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg)).join(' '));
             origConsoleError.apply(console, args);
         }
         

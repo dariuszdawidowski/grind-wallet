@@ -157,7 +157,7 @@ export class SheetAccountSend extends Component {
                     const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${this.token.symbol} .amount`);
                     if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), 4);
                     // Sent to my own wallet?
-                    const myownWallet = this.app.wallets.getByPrincipal(principal.toText());
+                    const myownWallet = this.app.wallets.getByPrincipalOrAccount(principal?.toText(), account?.toHex());
                     if (myownWallet) {
                         const myownTokenBalance = document.querySelector(`#balance_${myownWallet.principal}_${this.token.symbol} .amount`);
                         if (myownTokenBalance) {
@@ -172,8 +172,8 @@ export class SheetAccountSend extends Component {
                         datetime: datetime.toISOString(),
                         type: 'send.token.begin',
                         to: {
-                            principal: principal.toText(),
-                            account: account.toHex(),
+                            principal: principal?.toText(),
+                            account: account?.toHex(),
                         },
                         token: {
                             canister: this.canister.ledgerId,

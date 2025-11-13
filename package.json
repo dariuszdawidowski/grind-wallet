@@ -1,6 +1,6 @@
 {
   "name": "grind-wallet",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/chrome-extension/popup/popup.js",
   "scripts": {

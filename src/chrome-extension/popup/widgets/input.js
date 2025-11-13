@@ -5,6 +5,12 @@ const bip39 = require('bip39');
 
 /**
  * Input for generic text
+ *
+ * Constructor args:
+ *  - value: string (optional) - initial value to populate the input
+ *  - placeholder: string (optional) - placeholder text shown when empty
+ *  - focus: boolean (optional) - if true, set the autofocus attribute
+ *  - onKeypress: func (optional) - callback on key pressed
  */
 
 export class InputText extends Component {
@@ -23,6 +29,13 @@ export class InputText extends Component {
         if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
+
+        // Optional keypress callback
+        if ('onKeypress' in args) {
+            this.input.addEventListener('input', (event) => {
+                args.onKeypress({ key: event.data, value: this.input.value });
+            });
+        }
 
     }
 
@@ -53,6 +66,11 @@ export class InputText extends Component {
         this.element.classList.add('dimed');
     }
 
+    color(value = null) {
+        if (value) this.input.style.color = value;
+        else this.input.style.removeProperty('color');
+    }
+
 }
 
 
@@ -74,6 +92,10 @@ export class InputPassword extends InputText {
 
 /**
  * Input for currency
+ *
+ * Constructor args:
+ *  - symbol: string (optional) - currency symbol markup (used by InputCurrency)
+ *  - note: string (optional) - text below value
  */
 
 export class InputCurrency extends InputText {
@@ -82,6 +104,7 @@ export class InputCurrency extends InputText {
         super(args);
 
         this.element.classList.add('input-currency');
+        this.annotation = null;
 
         if ('symbol' in args) {
             const symbol = document.createElement('div');
@@ -89,7 +112,26 @@ export class InputCurrency extends InputText {
             this.element.append(symbol);
         }
 
+        if ('note' in args) this.note(args.note);
+
     }
+
+    /**
+     * Annotation
+     */
+
+    note(text) {
+        if (!this.annotation) {
+            this.annotation = document.createElement('div');
+            this.annotation.classList.add('note');
+            this.element.append(this.annotation);
+        }
+        this.annotation.innerHTML = text;
+    }
+
+    /**
+     * Validator
+     */
 
     valid() {
 
@@ -156,6 +198,12 @@ export class InputAddress extends InputText {
 
 /**
  * Input for pass phrase
+ *
+ * Constructor args:
+ *  - nr: number (optional) - index number for phrase inputs
+ *  - value: string (optional) - initial value to populate the input
+ *  - readonly: boolean (optional) - if true, make the input read-only
+ *
  */
 
 export class InputPhrase extends Component {
@@ -190,6 +238,11 @@ export class InputPhrase extends Component {
 
 /**
  * Block of multiple InputPhrases
+ * 
+ * Constructor args:
+ *  - phrase: string (optional) - paste phrase
+ *  - number: number (optional) - number of phrase inputs
+ *  - readonly: boolean (optional) - if true, make the input read-only
  */
 
 export class RecoveryPhrase extends Component {

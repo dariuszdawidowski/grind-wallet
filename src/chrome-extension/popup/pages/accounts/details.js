@@ -5,6 +5,7 @@ import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { SheetAccountSend } from './send-token.js';
 import { SheetAccountReceive } from './receive-token.js';
+import { SheetAccountExchange } from './exchange.js';
 import { SheetAddCustomToken } from './add-token.js';
 import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';
@@ -78,9 +79,13 @@ export class SheetAccountDetails extends Component {
             }),
             swap: new ButtIcon({
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
-                text: 'Swap',
+                text: 'Exchange',
                 click: () => {
-                    chrome.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
+                    this.app.sheet.clear();
+                    this.app.sheet.append({
+                        title: `Swap, mint, buy`,
+                        component: new SheetAccountExchange({ app, wallet, canister })
+                    });
                 }
             }),
             fiat: new ButtIcon({

@@ -87,6 +87,15 @@ export class Button extends Component {
         this.element.disabled = true;
         this.element.classList.add('dimed');
     }
+
+    show() {
+        this.element.style.display = 'flex';
+    }
+
+    hide() {
+        this.element.style.display = 'none';
+    }
+
 }
 
 

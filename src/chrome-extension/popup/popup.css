@@ -89,6 +89,7 @@ input[type="checkbox"]:hover {
 
 .copy {
     width: 16px;
+    height: 16px;
     margin-left: 10px;
     cursor: pointer;
 }
@@ -128,6 +129,10 @@ a, a:visited {
 
 form {
     text-align: center;
+}
+
+.form a, .form a:visited {
+    color: var(--button-color);
 }
 
 /* Buttons */
@@ -302,6 +307,7 @@ button.butticon img {
 }
 
 .input-currency {
+    position: relative;
     width: 100%;
     text-align: center;
     display: flex;
@@ -320,6 +326,13 @@ button.butticon img {
     outline: none;
     margin-left: 9px;
     background-color: transparent;
+}
+
+.input-currency .note {
+    color: #4a4a4a;
+    position: absolute;
+    right: 1px;
+    bottom: 10px;
 }
 
 .input-account {
@@ -912,6 +925,165 @@ hr {
 
 #sheet .end {
     margin-bottom: 40px;
+}
+
+/* Token box widget */
+
+.token-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 2px auto;
+    width: calc(300px - 26px);
+    height: 50px;
+}
+
+.token-box .token-select {
+    width: 40px;
+    height: 40px;
+}
+
+.token-box .token-select img {
+    width: 40px;
+    height: 40px;
+}
+
+.token-box .token-label {
+    margin-left: 8px;
+    font-size: 16px;
+}
+
+.token-box .input-text.input-currency input {
+    width: 150px;
+    margin: 20px 0 20px auto;
+    padding-right: 0;
+}
+
+.exchange-arrow {
+    width: 0;
+    height: 0;
+    display: inline-block;
+    position: relative;
+    font-size: 0;
+    pointer-events: none;
+    left: 50%;
+    overflow: visible;
+    z-index: 10;
+}
+
+.exchange-arrow .arrow-content {
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #bdbdbd;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Steps box widget */
+
+.steps-box {
+    background-color: #e7e7e7;
+    border-radius: 8px;
+    margin: 2px auto;
+    padding: 16px;
+    position: relative;
+    width: calc(300px - 32px);
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.step:last-child {
+    margin-bottom: 0;
+}
+
+.step-nr {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #575757;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+#sheet .step-content h1 {
+    color: #575757;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 4px 0;
+    text-align: left;
+}
+
+.step-content p {
+    color: #2c2c2c;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 9px; 
+    top: 20px;
+    bottom: -24px; 
+    width: 2px;
+    background-image: linear-gradient(
+        to bottom, 
+        #5a5a5c 70%,
+        transparent 30%
+    );
+    background-size: 2px 10px;
+    background-repeat: repeat-y;
+    z-index: 0;
+}
+
+/* Summary box widget */
+
+.summary-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: #d7d7d7;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 2px auto;
+    width: calc(300px - 32px);
+    min-height: 50px;
+    font-size: 12px;
+}
+
+.summary-box .summary-row {
+    margin: 2px 0;
 }
 
 /* Effects */

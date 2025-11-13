@@ -14,6 +14,7 @@ import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { TimestampCache } from '/src/utils/timestamp-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
+import { TaskManager } from '/src/chrome-extension/popup/widgets/tasks.js';
 const { version } = require('/package.json');
 
 // Development mode
@@ -88,9 +89,6 @@ class GrindWalletPlugin {
             document.body.classList.add('macos');
         }
 
-        // Bottom Sheet
-        this.sheet = new Sheet({ app: this, selector: '#sheet', hidden: true });
-
         // Active page
         this.current = null;
 
@@ -98,6 +96,13 @@ class GrindWalletPlugin {
         this.user = {
             password: null,
         };
+
+        // Bottom Sheet
+        this.sheet = new Sheet({ app: this, selector: '#sheet', hidden: true });
+
+        // Task Manager
+        this.tasks = new TaskManager({ app: this });
+        await this.tasks.init();
 
         // Wallets list { ICPWallet, ... }
         this.wallets = new Wallets({ app: this });
@@ -228,7 +233,7 @@ class GrindWalletPlugin {
      * @returns {boolean} - True if the canister ID is the ICP Ledger, false otherwise.
      */
 
-    isICPLedger(canisterId) {
+    isICP(canisterId) {
         return canisterId === this.ICP_LEDGER_CANISTER_ID;
     }
 

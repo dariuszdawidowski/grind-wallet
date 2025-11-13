@@ -1120,3 +1120,26 @@ hr {
     height: 35px;
     padding: 2px;
 }
+
+/* Task manager widget */
+
+.tasks {
+    width: 343px;
+    height: 108px;
+    border-radius: 20px;
+    margin: 20px auto;
+    position: relative;
+    color: #2a1a39;
+    background-color: #eff8ff;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    box-shadow: 0 0 16px #a30bbf;
+}
+
+.tasks:hover {
+    cursor: pointer;
+    box-shadow: 0 0 20px #a30bbf;
+}
+
+.macos .tasks:hover {
+    transform: scale(1.02);
+}

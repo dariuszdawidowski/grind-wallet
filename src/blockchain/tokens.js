@@ -61,7 +61,7 @@ export class Tokens {
 
     load(serialized) {
         for (const [key, value] of Object.entries(serialized)) {
-            if (!this.app.isICPLedger(key)) {
+            if (!this.app.isICP(key)) {
                 this.add(new ICRCToken({
                     app: this.app,
                     wallet: { principal: this.wallet.principal, account: this.wallet.account },
@@ -81,7 +81,7 @@ export class Tokens {
     serialize() {
         const serialized = {};
         for (const [key, token] of Object.entries(this.list)) {
-            if (!this.app.isICPLedger(key)) serialized[key] = token.serialize();
+            if (!this.app.isICP(key)) serialized[key] = token.serialize();
         }
         return serialized;
     }

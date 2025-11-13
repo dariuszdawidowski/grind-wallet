@@ -36,7 +36,13 @@ export class PageAccounts extends Component {
         title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${this.app.version}</span>`;
         header.append(title);
 
-        // Main content
+        // Task manager
+        this.append(this.app.tasks);
+
+        // Separator
+        this.element.append(document.createElement('hr'));
+
+        // Main content with cards
         this.content = document.createElement('div');
         this.element.append(this.content);
 
@@ -118,9 +124,7 @@ export class PageAccounts extends Component {
 
         // Accounts
         this.app.wallets.get().forEach(wallet => {
-
             this.renderWallet(wallet);
-
         });
 
         // Info

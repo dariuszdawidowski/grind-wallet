@@ -77,7 +77,7 @@ export class SheetTransactionHistory extends Component {
         // No logs
         else {
             const info = document.createElement('h2');
-            if (this.app.isICPLedger(this.canister.ledgerId)) {
+            if (this.app.isICP(this.canister.ledgerId)) {
                 loader.style.display = 'block';            
                 info.innerText = `No history on this wallet yet`;
             }
@@ -381,7 +381,7 @@ export class SheetTransactionHistory extends Component {
                 const token = this.wallet.tokens.get(canisterId);
                 if (token) {
                     // Refresh token info in weekly basis
-                    if (!this.app.isICPLedger(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                    if (!this.app.isICP(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
                         let changed = false;
                         // Compare current vs new
                         const oldData = token.serialize();

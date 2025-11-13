@@ -61,7 +61,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: `Send ${this.app.isICPLedger(this.canister.ledgerId) ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
+                        title: `Send ${this.app.isICP(this.canister.ledgerId) ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
                         component: new SheetAccountSend({ app, wallet, canister })
                     });
                 }
@@ -72,7 +72,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: `Receive ${this.app.isICPLedger(this.canister.ledgerId) ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
+                        title: `Receive ${this.app.isICP(this.canister.ledgerId) ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
                         component: new SheetAccountReceive({ app, wallet, canister })
                     });
                 }
@@ -113,8 +113,8 @@ export class SheetAccountDetails extends Component {
                         wallet,
                         canister,
                         types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft.begin', 'send.nft.error'],
-                        tokens: this.app.isICPLedger(this.canister.ledgerId) ? Object.keys(this.wallet.tokens.get()) : [this.canister.ledgerId],
-                        nfts: this.app.isICPLedger(this.canister.ledgerId) ? Object.keys(this.wallet.nfts.get()) : []
+                        tokens: this.app.isICP(this.canister.ledgerId) ? Object.keys(this.wallet.tokens.get()) : [this.canister.ledgerId],
+                        nfts: this.app.isICP(this.canister.ledgerId) ? Object.keys(this.wallet.nfts.get()) : []
                     })
                 });
             }
@@ -126,7 +126,7 @@ export class SheetAccountDetails extends Component {
         this.element.append(sep);
 
         // On the main details sheet
-        if (this.app.isICPLedger(this.canister.ledgerId)) {
+        if (this.app.isICP(this.canister.ledgerId)) {
 
             const horiz = document.createElement('div');
             horiz.style.display = 'flex';
@@ -166,7 +166,7 @@ export class SheetAccountDetails extends Component {
             }));
 
             // Edit name
-            if (this.app.isICPLedger(this.canister.ledgerId)) {
+            if (this.app.isICP(this.canister.ledgerId)) {
                 this.append(new ButtLink({
                     text: `Change wallet name`,
                     click: () => {
@@ -198,11 +198,11 @@ export class SheetAccountDetails extends Component {
 
         // Remove
         this.append(new ButtLink({
-            text: `Remove this ${(this.app.isICPLedger(this.canister.ledgerId)) ? 'account' : 'token'} from the list`,
+            text: `Remove this ${(this.app.isICP(this.canister.ledgerId)) ? 'account' : 'token'} from the list`,
             click: () => {
 
                 // ICP
-                if (this.app.isICPLedger(this.canister.ledgerId)) {
+                if (this.app.isICP(this.canister.ledgerId)) {
                     if (confirm('Delete this account?\nIt will only be removed from this list not from the blockchain - you can always recover it from the phrase.')) {
                         this.app.wallets.del(this.wallet.public);
                         this.app.wallets.save();

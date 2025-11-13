@@ -1128,8 +1128,8 @@ hr {
     height: 50px;
     border-radius: 50%;
     background: conic-gradient(
-        #2a1a39 0deg,
-        #2a1a39 calc(var(--progress, 0) * 3.6deg),
+        #3a244f 0deg,
+        #3a244f calc(var(--progress, 0) * 3.6deg),
         #d4ebfc calc(var(--progress, 0) * 3.6deg)
     );
     margin: 10px auto;
@@ -1165,6 +1165,8 @@ hr {
     background-color: #eff8ff;
     transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
     box-shadow: 0 0 16px #a30bbf;
+    display: flex;
+    flex-direction: row;
 }
 
 .tasks:hover {
@@ -1176,8 +1178,17 @@ hr {
     transform: scale(1.02);
 }
 
-.tasks .progress {
-   /* background-color: rgb(42, 26, 57); */
-   /* box-shadow: inset 0 0 15px #a30bbf; */
-   margin-left: calc(100% - 50px - 10px);
+.task-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    margin: 3px 24px;
+    width: 65%;
+}
+
+.task-item span {
+    font-weight: bold;
+    margin-left: auto;
 }

@@ -75,6 +75,13 @@ export class SheetAccountExchange extends Component {
                     this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
                     // Display fee into
                     this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
+                    // Recalculate 'to'
+                    const exchange = this.convert({
+                        from: this.tokenTo.getSymbol(),
+                        to: this.tokenFrom.getSymbol(),
+                        amount: this.tokenFrom.getValue(),
+                    });
+                    this.tokenTo.setValue(exchange - (('fee' in this.info) ? icpt2ICP(this.info.fee, 8) : 0));
                 }
                 else {
                     alert('Failed to reveal BTC address. Please try again later.');

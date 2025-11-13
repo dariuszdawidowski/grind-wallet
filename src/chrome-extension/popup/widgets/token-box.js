@@ -69,6 +69,14 @@ export class TokenBox extends Component {
     }
 
     /**
+     * Get number value
+     */
+
+    getValue() {
+        return this.amount.get();
+    }
+
+    /**
      * Get token info (TODO: in a future change to global registry fetched and cached from a service canister)
      */
 

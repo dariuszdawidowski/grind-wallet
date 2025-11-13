@@ -136,18 +136,7 @@ export class PageAccounts extends Component {
         this.content.append(new Card({
             app: this.app,
             wallet,
-            click: () => {
-                if (!this.app.sheet.isOpen()) {
-                    this.app.sheet.append({
-                        title: `ICP wallet ${wallet.name}`,
-                        component: new SheetAccountDetails({
-                            app: this.app,
-                            wallet,
-                            canister: { ledgerId: this.app.ICP_LEDGER_CANISTER_ID, indexId: this.app.ICP_INDEX_CANISTER_ID }
-                        })
-                    });
-                }
-            }
+            click: () => this.openICPWalletSheet(wallet)
         }).element);
 
         // Coins container
@@ -162,18 +151,7 @@ export class PageAccounts extends Component {
                     app: this.app,
                     canisterId: id,
                     wallet,
-                    click: () => {
-                        if (!this.app.sheet.isOpen()) {
-                            this.app.sheet.append({
-                                title: `${token.name} tokens @ ${wallet.name}`,
-                                component: new SheetAccountDetails({
-                                    app: this.app,
-                                    wallet,
-                                    canister: { ledgerId: id, indexId: token.canister.indexId }
-                                })
-                            });
-                        }
-                    }
+                    click: () => this.openTokenWalletSheet(wallet, token)
                 });
                 coins.append(coin.element);
             }
@@ -192,20 +170,7 @@ export class PageAccounts extends Component {
             const cover = new Cover({
                 wallet,
                 nft,
-                click: () => {
-                    if (!this.app.sheet.isOpen()) {
-                        const sheetNFTDetails = new SheetNFTDetails({
-                            app: this.app,
-                            wallet,
-                            nft
-                        });
-                        this.app.sheet.append({
-                            title: `NFT @ ${wallet.name}`,
-                            component: sheetNFTDetails
-                        });
-                        sheetNFTDetails.update();
-                    }
-                }
+                click: () => this.openNFTDetailsSheet(wallet, nft)
             });
             nfts.append(cover.element);
         });
@@ -217,6 +182,10 @@ export class PageAccounts extends Component {
         this.content.append(document.createElement('hr'));
 
     }
+
+    /**
+     * Enable horizontal drag on container
+     */
 
     horizontalDrag(container) {
         let isDragging = false;
@@ -244,6 +213,59 @@ export class PageAccounts extends Component {
         container.addEventListener('mouseleave', () => {
             isDragging = false;
         });
+    }
+
+    /**
+     * Open ICP Wallet sheet
+     */
+
+    openICPWalletSheet(wallet) {
+        if (!this.app.sheet.isOpen()) {
+            this.app.sheet.append({
+                title: `ICP wallet ${wallet.name}`,
+                component: new SheetAccountDetails({
+                    app: this.app,
+                    wallet,
+                    canister: { ledgerId: this.app.ICP_LEDGER_CANISTER_ID, indexId: this.app.ICP_INDEX_CANISTER_ID }
+                })
+            });
+        }
+    }
+
+    /**
+     * Open Token Wallet sheet
+     */
+
+    openTokenWalletSheet(wallet, token) {
+        if (!this.app.sheet.isOpen()) {
+            this.app.sheet.append({
+                title: `${token.name} tokens @ ${wallet.name}`,
+                component: new SheetAccountDetails({
+                    app: this.app,
+                    wallet,
+                    canister: { ledgerId: token.canister.ledgerId, indexId: token.canister.indexId }
+                })
+            });
+        }
+    }
+
+    /**
+     * Open NFT Details sheet
+     */
+
+    openNFTDetailsSheet(wallet, nft) {
+        if (!this.app.sheet.isOpen()) {
+            const sheetNFTDetails = new SheetNFTDetails({
+                app: this.app,
+                wallet,
+                nft
+            });
+            this.app.sheet.append({
+                title: `NFT @ ${wallet.name}`,
+                component: sheetNFTDetails
+            });
+            sheetNFTDetails.update();
+        }
     }
 
 }

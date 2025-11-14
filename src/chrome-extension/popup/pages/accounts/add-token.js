@@ -7,7 +7,6 @@ import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
 import { isValidCanisterId, ONE_WEEK } from '/src/utils/general.js';
-import { saveImage } from '/src/utils/image-cache.js';
 
 export class SheetAddCustomToken extends Component {
 
@@ -135,19 +134,20 @@ export class SheetAddCustomToken extends Component {
 
             // Second pass (accept)
             else {
+                this.widget.submit.busy(true);
                 // Add token to wallet
                 this.wallet.tokens.add(this.token);
                 // Save logo image
-                if ('logo' in this.metadata) saveImage(`token:${this.token.canister.ledgerId}`, this.metadata['logo']);
+                if ('logo' in this.metadata) await this.app.cache.image.save(`token:${this.token.canister.ledgerId}`, this.metadata['logo']);
                 // Create counter to refresh token info after a week
                 this.app.cache.storage.expired({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK });
                 // Save wallets
                 this.app.wallets.save();
+                this.widget.submit.busy(false);
                 // Back to accounts page
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();
-
             }
         }
         else {

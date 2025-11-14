@@ -175,6 +175,7 @@ export class PageAccounts extends Component {
         // NFTS as covers
         if (wallet.nfts.count()) Object.entries(wallet.nfts.get()).forEach(([id, nft]) => {
             const cover = new Cover({
+                app: this.app,
                 wallet,
                 nft,
                 click: () => this.openNFTDetailsSheet(wallet, nft)

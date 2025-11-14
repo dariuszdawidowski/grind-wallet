@@ -4,7 +4,6 @@
 
 import { Component } from '/src/utils/component.js';
 import { ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
-import { loadImage } from '/src/utils/image-cache.js';
 import { SheetAccountSendNFT } from '/src/chrome-extension/popup/pages/accounts/send-nft.js';
 import { SheetAccountReceiveNFT } from '/src/chrome-extension/popup/pages/accounts/receive-nft.js';
 import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
@@ -32,7 +31,7 @@ export class SheetNFTDetails extends Component {
         this.element.append(this.image);
         (async () => {
             try {
-                const thumbnail = await loadImage(this.nft.thumbnail);
+                const thumbnail = await this.app.cache.image.load(this.nft.thumbnail);
                 this.image.innerHTML = thumbnail;
             }
             catch(error) {}

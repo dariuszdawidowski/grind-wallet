@@ -8,7 +8,6 @@ import { NFTImage } from '/src/chrome-extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
-import { loadImage, saveImage } from '/src/utils/image-cache.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -387,7 +386,7 @@ export class SheetTransactionHistory extends Component {
                         const oldData = token.serialize();
                         const metadata = await token.metadata(); // token data updated internally
                         const newData = token.serialize();
-                        const oldImage = await loadImage(`token:${canisterId}`);
+                        const oldImage = await this.app.cache.image.load(`token:${canisterId}`);
                         const oldImageHash = oldImage ? await hashString(oldImage) : null;
                         const newImageHash = metadata.logo ? await hashString(metadata.logo) : null;
                         // Token data has changed
@@ -397,7 +396,7 @@ export class SheetTransactionHistory extends Component {
                         }
                         // Image logo has changed
                         if (oldImageHash !== newImageHash) {
-                            saveImage(`token:${canisterId}`, metadata.logo);
+                            await this.app.cache.image.save(`token:${canisterId}`, metadata.logo);
                             changed = true;
                         }
                         if (changed) document.body.dispatchEvent(new Event('render.all'));

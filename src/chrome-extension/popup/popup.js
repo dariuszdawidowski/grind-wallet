@@ -13,6 +13,7 @@ import { PageRegisterPassword } from '/src/chrome-extension/popup/pages/onboardi
 import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { DataCache } from '/src/utils/data-cache.js';
+import { ImageCache } from '/src/utils/image-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/chrome-extension/popup/widgets/tasks.js';
 const { version } = require('/package.json');
@@ -111,6 +112,7 @@ class GrindWalletPlugin {
         this.cache = {
             ram: new ObjectCache(),
             storage: new DataCache(),
+            image: new ImageCache()
         };
         await this.cache.storage.init();
 

@@ -3,12 +3,11 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { loadImage } from '/src/utils/image-cache.js';
 
 export class Cover extends Component {
 
-    constructor({ wallet, nft, click = null }) {
-        super({});
+    constructor({ app, wallet, nft, click = null }) {
+        super({ app });
 
         // Wallet reference
         this.wallet = wallet;
@@ -42,7 +41,7 @@ export class Cover extends Component {
         // Load cached image
         (async () => {
             try {
-                const image = await loadImage(`nft:${this.nft.collection}:${this.nft.id}`);
+                const image = await this.app.cache.image.load(`nft:${this.nft.collection}:${this.nft.id}`);
                 this.element.style.backgroundColor = 'transparent';
                 this.element.innerHTML = `${image}`;
             }

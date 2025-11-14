@@ -3,7 +3,6 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { loadImage } from '/src/utils/image-cache.js';
 
 export class TokenImage extends Component {
 
@@ -20,7 +19,7 @@ export class TokenImage extends Component {
         // Load cached token image
         else (async () => {
             try {
-                const image = await loadImage(`token:${canisterId}`);
+                const image = await this.app.cache.image.load(`token:${canisterId}`);
                 this.element.style.backgroundColor = 'transparent';
                 // SVG
                 if (image.startsWith('<svg')) {

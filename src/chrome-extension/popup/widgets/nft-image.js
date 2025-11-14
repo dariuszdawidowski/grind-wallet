@@ -3,7 +3,6 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { loadImage } from '/src/utils/image-cache.js';
 
 export class NFTImage extends Component {
 
@@ -16,7 +15,7 @@ export class NFTImage extends Component {
         // Load cached NFT image
         (async () => {
             try {
-                const image = await loadImage(`nft:${canisterId}:${nftId}`);
+                const image = await this.app.cache.image.load(`nft:${canisterId}:${nftId}`);
                 this.element.innerHTML = image;
             }
 

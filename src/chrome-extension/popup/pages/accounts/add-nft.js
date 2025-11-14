@@ -6,7 +6,6 @@ import { Actor } from '@dfinity/agent';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
-import { saveImage } from '/src/utils/image-cache.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/nft-ext.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';
@@ -142,7 +141,7 @@ export class SheetAddCustomNFT extends Component {
                 });
                 // Cache image and save
                 const img = await this.nft.getImage({ token: tokenId });
-                await saveImage(`nft:${canisterId}:${tokenId}`, img);
+                await this.app.cache.image.save(`nft:${canisterId}:${tokenId}`, img);
                 // Add to wallet
                 this.wallet.nfts.add(new NFT({
                     app: this.app,

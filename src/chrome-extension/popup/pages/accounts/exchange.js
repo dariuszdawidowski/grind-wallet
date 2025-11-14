@@ -12,6 +12,7 @@ import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 import { shortAddress } from '/src/utils/general.js';
+import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -114,7 +115,11 @@ export class SheetAccountExchange extends Component {
         const buttonExchange = new Button({
             text: 'Create task',
             click: () => {
-                this.mintBTC2ckBTC();
+                this.app.tasks.add(new TaskMintCK({
+                }));
+                this.app.tasks.update();
+                this.app.sheet.clear();
+                this.app.sheet.hide();
             }
         });
         buttonExchange.element.style.margin = '18px auto';

@@ -40,7 +40,10 @@ export class PageAccounts extends Component {
         this.append(this.app.tasks);
 
         // Separator
-        this.element.append(document.createElement('hr'));
+        const taskSeparator = document.createElement('hr');
+        taskSeparator.id = 'task-separator';
+        this.element.append(taskSeparator);
+        if (!this.app.tasks.update()) taskSeparator.style.display = 'none';
 
         // Main content with cards
         this.content = document.createElement('div');

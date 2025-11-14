@@ -47,16 +47,15 @@ export class TaskManager extends Component {
         right.append(this.progress.element);
         this.progress.set(75);
 
-        this.add(new Task({
-            description: 'Minting 12 BTC &rarr; ckBTC',
-            duration: 2
-        }));
+        // this.add(new Task({
+        //     description: 'Minting 12 BTC &rarr; ckBTC',
+        //     duration: 2
+        // }));
 
-
-        this.add(new Task({
-            description: 'Minting 0.01 BTC &rarr; ckBTC',
-            duration: 20
-        }));
+        // this.add(new Task({
+        //     description: 'Minting 0.01 BTC &rarr; ckBTC',
+        //     duration: 20
+        // }));
 
     }
 
@@ -99,36 +98,23 @@ export class TaskManager extends Component {
         delete this.tasks[id];
     }
 
-}
-
-
-export class Task {
-
     /**
-     * Single task representation
-     * 
-     * @param {string} description - The task description text
-     * @param {number} duration - The estimated duration in minutes
+     * Update render
      */
 
-    constructor({ description, duration }) {
+    update() {
+        const taskSeparator = document.getElementById('task-separator');
+        if (Object.keys(this.tasks).length === 0) {
+            this.element.style.display = 'none';
+            if (taskSeparator)  taskSeparator.style.display = 'none';
+            return false;
+        }
+        else {
+            this.element.style.display = 'flex';
+            if (taskSeparator) taskSeparator.style.display = 'block';
+            return true;
+        }
 
-        this.created = Date.now();
-        this.duration = duration;
-        this.durationMs = duration * 60 * 1000;
-        this.description = description;
-
-    }
-
-    /**
-     * Generate HTML entry
-     */
-
-    html() {
-        const taskItem = document.createElement('div');
-        taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.description}<span>~${this.duration}m</span>`;
-        return taskItem;
     }
 
 }

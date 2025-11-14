@@ -17,9 +17,6 @@ export class PageAccounts extends Component {
     constructor(args) {
         super(args);
 
-        // References
-        this.app = args.app;
-
         // Build
         this.element.classList.add('page');
 

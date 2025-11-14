@@ -6,12 +6,12 @@ import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
-import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
+// import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
 import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
-import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
+// import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
-import { shortAddress } from '/src/utils/general.js';
+// import { shortAddress } from '/src/utils/general.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
 
 export class SheetAccountExchange extends Component {
@@ -49,16 +49,17 @@ export class SheetAccountExchange extends Component {
         this.append(new Arrow({ direction: 'down' }));
 
         // Steps box
+        /*
         this.steps = new StepsBox();
         this.steps.step(1, `<h1>Transfer BTC to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b><span id="amount-of-btc"></span> BTC</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your BTC transfer transaction to complete.</p>`);
         this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint cbBTC.</p>`);
-        this.append(this.steps);
+        this.append(this.steps);*/
 
         // Internal selectors
-        this.amountOfBtc = this.steps.element.querySelector('#amount-of-btc');
-        const revealBtcContainer = this.steps.element.querySelector('#reveal-btc-container');
-
+        // this.amountOfBtc = this.steps.element.querySelector('#amount-of-btc');
+        // const revealBtcContainer = this.steps.element.querySelector('#reveal-btc-container');
+/*
         // Reveal address button
         const buttonReveal = new Button({
             text: 'Reveal BTC address',
@@ -92,7 +93,7 @@ export class SheetAccountExchange extends Component {
         buttonReveal.element.style.width = '100%';
         buttonReveal.element.style.marginBottom = '0';
         revealBtcContainer.append(buttonReveal.element);
-
+*/
         // Separator arrow
         this.append(new Arrow({ direction: 'down' }));
 
@@ -105,15 +106,15 @@ export class SheetAccountExchange extends Component {
 
         // Transaction summary
         this.summary = new SummaryBox();
-        this.summary.row('Provider', 'Dfinity Chain-Key minter canister');
+        this.summary.row('Provider', 'Dfinity Chain-Key minter');
         this.summary.row('Delay', '~20 min.');
         this.summary.row('Minter fee', '? BTC');
         this.summary.element.style.marginTop = '16px';
         this.append(this.summary);
 
-        // Exchange button
-        const buttonExchange = new Button({
-            text: 'Create task',
+        // Create task button
+        this.buttonTask = new Button({
+            text: 'Create 3-steps task',
             click: () => {
                 this.app.tasks.add(new TaskMintCK({
                     symbol: this.tokenFrom.getSymbol(),
@@ -124,14 +125,30 @@ export class SheetAccountExchange extends Component {
                 this.app.sheet.hide();
             }
         });
-        buttonExchange.element.style.margin = '18px auto';
-        this.append(buttonExchange);
+        this.buttonTask.element.style.margin = '18px auto';
+        this.buttonTask.disable();
+        this.buttonTask.busy(true);
+        this.append(this.buttonTask);
 
         // Description
         this.append(new ButtonDescription({
             app: this.app,
             text: `Read more about Chain-Key technology <a href="https://internetcomputer.org/chainfusion" target="_blank">HERE</a>`
         }));
+
+        // Fetch minter info
+        (async () => {
+            this.info = await this.revealBTCAddress();
+            this.buttonTask.busy(false);
+            // Display minimal amount
+            this.tokenFrom.amount.note(`min. ${icpt2ICP(this.info.min, 8)}`);
+            // Display fee
+            this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
+            // Display fee into
+            this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
+            // Recalculate 'to'
+            if (this.tokenFrom.getValue() > 0) this.handleFromInput({ value: this.tokenFrom.getValue() });
+        })();
 
     }
 
@@ -149,11 +166,11 @@ export class SheetAccountExchange extends Component {
         if ('min' in this.info) {
             if (data.value >= icpt2ICP(this.info.min, 8)) {
                 this.tokenFrom.error(false);
-                this.amountOfBtc.innerText = exchange;
+                this.buttonTask.enable();
             }
             else {
                 this.tokenFrom.error(true);
-                this.amountOfBtc.innerText = '';
+                this.buttonTask.disable();
             }
         }
     }
@@ -172,11 +189,11 @@ export class SheetAccountExchange extends Component {
         if ('min' in this.info) {
             if (data.value >= icpt2ICP(this.info.min, 8)) {
                 this.tokenFrom.error(false);
-                this.amountOfBtc.innerText = exchange + (('fee' in this.info) ? icpt2ICP(this.info.fee, 8) : 0);
+                this.buttonTask.enable();
             }
             else {
                 this.tokenFrom.error(true);
-                this.amountOfBtc.innerText = '';
+                this.buttonTask.disable();
             }
         }
     }
@@ -201,11 +218,11 @@ export class SheetAccountExchange extends Component {
 
     async revealBTCAddress() {
         const CKBTC_MINTER = 'mqygn-kiaaa-aaaar-qaadq-cai';
-        const CKBTC_MINTER_TESTNET4 = 'ml52i-qqaaa-aaaar-qaaba-cai';
+        // const CKBTC_MINTER_TESTNET4 = 'ml52i-qqaaa-aaaar-qaaba-cai';
         // Create minter actor
         if (!this.minter) this.minter = CkBTCMinterCanister.create({
             agent: this.wallet.agent,
-            canisterId: CKBTC_MINTER_TESTNET4,
+            canisterId: CKBTC_MINTER,
         });
         // Reveal BTC address
         const btcAddress = await this.minter.getBtcAddress({});
@@ -216,11 +233,11 @@ export class SheetAccountExchange extends Component {
         }
         return { ok: false };
     }
-    
+
     /**
      * Render BTC address
      */
-
+/*
     async renderBTCAddress(container) {
 
         // QR Code
@@ -252,14 +269,14 @@ export class SheetAccountExchange extends Component {
         const copyAddr = new Copy({ text: this.info.address });
         qr.append(copyAddr.element);
     }
-
+*/
     /**
      * Claim ckBTC (when money arrives)
      */
-
+/*
     async claimUpdateMinter() {
         const balance = await minter.updateBalance({});
         console.log(balance[0].Minted.minted_amount)
     }
-
+*/
 }

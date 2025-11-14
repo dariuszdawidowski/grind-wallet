@@ -10,6 +10,9 @@ export class TaskManager extends Component {
     constructor(args = {}) {
         super(args);
 
+        // Tasks registry { id: Task, ... }
+        this.tasks = {};
+
         // Style
         this.element.classList.add('tasks');
 
@@ -31,16 +34,6 @@ export class TaskManager extends Component {
         this.list.classList.add('task-list');
         left.append(this.list);
 
-        const taskItem = document.createElement('div');
-        taskItem.classList.add('task-item');
-        taskItem.innerHTML = 'Minting 12 BTC &rarr; ckBTC<span>~2m</span>';
-        this.list.append(taskItem);
-
-        const taskItem2 = document.createElement('div');
-        taskItem2.classList.add('task-item');
-        taskItem2.innerHTML = 'Minting 0.01 BTC &rarr; ckBTC<span>~20m</span>';
-        this.list.append(taskItem2);
-
         // Right
         const right = document.createElement('div');
         right.style.width = '20%';
@@ -53,6 +46,17 @@ export class TaskManager extends Component {
         this.progress = new Progress();
         right.append(this.progress.element);
         this.progress.set(75);
+
+        this.add(new Task({
+            description: 'Minting 12 BTC &rarr; ckBTC',
+            duration: 2
+        }));
+
+
+        this.add(new Task({
+            description: 'Minting 0.01 BTC &rarr; ckBTC',
+            duration: 20
+        }));
 
     }
 
@@ -75,6 +79,56 @@ export class TaskManager extends Component {
      */
 
     async save() {
+    }
+
+    /**
+     * Add a task
+     */
+
+    add(task) {
+        const id = crypto.randomUUID();
+        this.tasks[id] = task;
+        this.list.append(task.html());
+    }
+
+    /**
+     * Remove a task
+     */
+
+    del(id) {
+        delete this.tasks[id];
+    }
+
+}
+
+
+export class Task {
+
+    /**
+     * Single task representation
+     * 
+     * @param {string} description - The task description text
+     * @param {number} duration - The estimated duration in minutes
+     */
+
+    constructor({ description, duration }) {
+
+        this.created = Date.now();
+        this.duration = duration;
+        this.durationMs = duration * 60 * 1000;
+        this.description = description;
+
+    }
+
+    /**
+     * Generate HTML entry
+     */
+
+    html() {
+        const taskItem = document.createElement('div');
+        taskItem.classList.add('task-item');
+        taskItem.innerHTML = `${this.description}<span>~${this.duration}m</span>`;
+        return taskItem;
     }
 
 }

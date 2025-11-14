@@ -3,6 +3,7 @@
  */
 
 import { Task } from './task.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 
 export class TaskMintCK extends Task {
 
@@ -10,15 +11,29 @@ export class TaskMintCK extends Task {
      * Constructor for minting Chain-key token task
      */
 
-    constructor({ address, amount, symbol, fee, min } = {}) {
-        super({ duration: -1 });
-        this.address = address;
-        this.amount = amount;
-        this.symbol = symbol;
-        this.fee = fee;
-        this.min = min;
+    constructor({ app, address, amount, symbol, fee, min } = {}) {
+        super({ app, duration: -1 });
+
+        // Task details
+        this.task.address = address;
+        this.task.amount = amount;
+        this.task.symbol = symbol;
+        this.task.fee = fee;
+        this.task.min = min;
         const symbols = this.getSymbol(symbol);
-        this.description = `Minting ${amount} ${symbols.from} &rarr; ${symbols.to}`;
+        this.task.description = `Minting ${amount} ${symbols.from} &rarr; ${symbols.to}`;
+
+        // Build
+        this.element.classList.add('form');
+
+        // Show transaction history
+        this.append(new Button({
+            icon: '<img src="assets/material-design-icons/history.svg">',
+            text: 'Hello world',
+            click: () => {
+            }
+        }));
+
     }
 
     /**
@@ -41,14 +56,14 @@ export class TaskMintCK extends Task {
     serialize() {
         return {
             class: 'TaskMintCK',
-            description: this.description,
-            created: this.created,
-            duration: this.duration,
-            address: this.address,
-            amount: this.amount,
-            min: this.min,
-            symbol: this.symbol,
-            fee: this.fee
+            description: this.task.description,
+            created: this.task.created,
+            duration: this.task.duration,
+            address: this.task.address,
+            amount: this.task.amount,
+            min: this.task.min,
+            symbol: this.task.symbol,
+            fee: this.task.fee
         };
     }
 

@@ -48,7 +48,7 @@ export class Sheet extends Component {
         this.open = true;
 
         // Title
-        this.title.innerText = args.title;
+        this.title.innerHTML = args.title;
 
         // Append
         this.children.push(args.component);

@@ -2,7 +2,9 @@
  * Base class for a task
  */
 
-export class Task {
+import { Component } from '/src/utils/component.js';
+
+export class Task extends Component {
 
     /**
      * Single task representation
@@ -11,11 +13,14 @@ export class Task {
      * @param {number} duration - The estimated duration in minutes
      */
 
-    constructor({ description, duration }) {
-        this.created = Date.now();
-        this.duration = duration;
-        this.durationMs = duration * 60 * 1000;
-        this.description = description;
+    constructor({ app, description, duration }) {
+        super({ app });
+        this.task = {
+            created: Date.now(),
+            duration: duration,
+            durationMs: duration * 60 * 1000,
+            description: description
+        };
     }
 
     /**
@@ -25,9 +30,9 @@ export class Task {
     serialize() {
         return {
             class: 'Task',
-            description: this.description,
-            created: this.created,
-            duration: this.duration
+            description: this.task.description,
+            created: this.task.created,
+            duration: this.task.duration
         };
     }
 
@@ -46,7 +51,7 @@ export class Task {
     html() {
         const taskItem = document.createElement('div');
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.description}<span>${this.duration === -1 ? 'enter to start &#9679;&#9675;&#9675;' : `~${this.duration}m`}</span>`;
+        taskItem.innerHTML = `${this.task.description}<span>${this.task.duration === -1 ? 'enter to start &#9679;&#9675;&#9675;' : `~${this.task.duration}m`}</span>`;
         return taskItem;
     }
 

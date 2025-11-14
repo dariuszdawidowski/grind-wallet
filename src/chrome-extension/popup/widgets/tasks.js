@@ -6,12 +6,11 @@ import { Component } from '/src/utils/component.js';
 import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
 import { Task } from '/src/chrome-extension/popup/tasks/task.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 
 export class TaskManager extends Component {
 
-    constructor(args = {}) {
-        super(args);
+    constructor({ app }) {
+        super({ app });
 
         // Tasks registry { id: Task, ... }
         this.tasks = {};
@@ -86,7 +85,7 @@ export class TaskManager extends Component {
                         const tasksData = result.tasks || {};
                         for (const [id, data] of Object.entries(tasksData)) {
                             const TaskClass = classRegistry[data.class] || Task;
-                            const task = TaskClass.deserialize(data);
+                            const task = TaskClass.deserialize({ app: this.app, ...data });
                             this.tasks[id] = task;
                             this.list.append(task.html());
                         }
@@ -174,37 +173,13 @@ export class TaskManager extends Component {
 
     openTaskSheet() {
         if (!this.app.sheet.isOpen()) {
+            // Clicked task TODO - support multiple tasks
+            const clickedTask = this.tasks[Object.keys(this.tasks)[0]];
             this.app.sheet.append({
-                title: `Task`,
-                component: new SheetTask({
-                    app: this.app,
-                })
+                title: clickedTask.task.description,
+                component: clickedTask,
             });
         }
     }
 
 }
-
-export class SheetTask extends Component {
-
-    constructor({ app }) {
-        super({ app });
-
-        // Build
-        this.element.classList.add('form');
-
-        // Show transaction history
-        this.append(new Button({
-            icon: '<img src="assets/material-design-icons/history.svg">',
-            text: 'Hello',
-            click: () => {
-            }
-        }));
-
-    }
-
-    destructor() {
-    }
-
-}
-

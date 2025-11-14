@@ -6,20 +6,20 @@ export class DataCache {
 
     constructor() {
 
-        // Cached objects { 'id': { timestamp, custom_data... }, ... }
+        // Cached objects { 'id': { timestamp, data: { ... } }, ... }
         this.cache = {};
 
     }
 
     /**
-     * Initialize from storage
+     * Initialize and load from storage
      */
 
     async init() {
-        // Load existing timestamps from storage
-        const stored = await chrome.storage.local.get(['timestamps']);
-        if (stored.hasOwnProperty('timestamps')) {
-            this.cache = stored['timestamps'];
+        // Load existing entries from storage
+        const stored = await chrome.storage.local.get(['datacache']);
+        if (stored.hasOwnProperty('datacache')) {
+            this.cache = stored['datacache'];
         }
     }
 
@@ -28,24 +28,25 @@ export class DataCache {
      */
 
     async save() {
-        await chrome.storage.local.set({ timestamps: this.cache });
+        await chrome.storage.local.set({ datacache: this.cache });
     }
 
     /**
      * Check whether a timestamp exists for the given id and whether it is overdue
-     * @returns boolean true if expired
+     * @returns data if created or refreshed, false if not expired yet
      */
 
-    expired({ id, overdue = null }) {
-        // Fresh or Found and expired
-        if (!(id in this.cache) || this.cache[id] <= Date.now()) {
-            this.cache[id] = Date.now() + overdue;
+    get({ id, create = null, overdue = null }) {
+        // Create: fresh or found but expired
+        if (!(id in this.cache) || this.cache[id].timestamp <= Date.now()) {
+            this.cache[id] = { timestamp: Date.now() + overdue };
+            const data = (create !== null) ? create() : null;
+            if (data !== null) this.cache[id].data = data;
             this.save();
-            return true;
         }
 
-        // Not expired yet
-        return false;
+        // Read: not expired yet
+        return this.cache[id].data;
     }
 
     /**

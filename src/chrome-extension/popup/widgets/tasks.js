@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
+import { Task } from '/src/chrome-extension/popup/tasks/task.js';
 
 export class TaskManager extends Component {
 
@@ -57,6 +58,8 @@ export class TaskManager extends Component {
      */
 
     async init() {
+        await this.load();
+        this.update();
     }
 
     /**
@@ -64,6 +67,27 @@ export class TaskManager extends Component {
      */
 
     async load() {
+        return new Promise((resolve, reject) => {
+            try {
+                chrome.storage.local.get(['tasks'], (result) => {
+                    if (chrome.runtime.lastError) {
+                        reject(new Error(chrome.runtime.lastError.message));
+                    }
+                    else {
+                        const tasksData = result.tasks || {};
+                        for (const [id, data] of Object.entries(tasksData)) {
+                            const task = Task.deserialize(data);
+                            this.tasks[id] = task;
+                            this.list.append(task.html());
+                        }
+                        resolve(true);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
     }
 
     /**
@@ -71,6 +95,29 @@ export class TaskManager extends Component {
      */
 
     async save() {
+        // Prepare serializable tasks
+        const payload = {};
+        for (const [id, task] of Object.entries(this.tasks)) {
+            let data = task.serialize();
+            payload[id] = data;
+        }
+
+        // Save to chrome extension local storage
+        return new Promise((resolve, reject) => {
+            try {
+                chrome.storage.local.set({ tasks: payload }, () => {
+                    if (chrome.runtime.lastError) {
+                        reject(new Error(chrome.runtime.lastError.message));
+                    }
+                    else {
+                        resolve(true);
+                    }
+                });
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
     }
 
     /**
@@ -81,6 +128,7 @@ export class TaskManager extends Component {
         const id = crypto.randomUUID();
         this.tasks[id] = task;
         this.list.append(task.html());
+        this.save();
     }
 
     /**

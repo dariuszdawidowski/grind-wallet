@@ -21,6 +21,25 @@ export class Task {
     }
 
     /**
+     * Serialize task data
+     */
+
+    serialize() {
+        return {
+            description: this.description,
+            duration: this.duration
+        };
+    }
+
+    /**
+     * Deserialize task data
+     */
+
+    static deserialize(data) {
+        return new Task(data);
+    }
+
+    /**
      * Generate HTML entry
      */
 

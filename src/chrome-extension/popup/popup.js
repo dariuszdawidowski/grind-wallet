@@ -82,6 +82,9 @@ class GrindWalletPlugin {
 
     async init() {
 
+        // Migrate old data if needed
+        await this.migrate();
+
         // Initialize history system
         this.log = new LogSystem();
 
@@ -259,6 +262,21 @@ class GrindWalletPlugin {
             devBanner.style.backgroundColor = '#5b36ffff';
             document.body.insertBefore(devBanner, document.body.firstChild);
         }
+    }
+
+    /**
+     * Migrate old data if needed
+     */
+
+    async migrate() {
+        try {
+            // 0.6.2 -> 0.6.3: remove old timestamps
+            const storageLocal = await chrome.storage.local.get(['timestamps']);
+            if (storageLocal && Object.prototype.hasOwnProperty.call(storageLocal, 'timestamps')) {
+                await chrome.storage.local.remove(['timestamps']);
+            }
+        }
+        catch (_) {}
     }
 
 }

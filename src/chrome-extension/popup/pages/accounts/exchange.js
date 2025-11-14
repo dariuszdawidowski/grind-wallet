@@ -231,8 +231,8 @@ export class SheetAccountExchange extends Component {
      */
 
     async revealBTCAddress() {
-        const CKBTC_MINTER = 'mqygn-kiaaa-aaaar-qaadq-cai';
-        // const CKBTC_MINTER_TESTNET4 = 'ml52i-qqaaa-aaaar-qaaba-cai';
+        // Minter canister ID (testnet4 : mainnet)
+        const CKBTC_MINTER = process.env.DEV_MODE ? 'ml52i-qqaaa-aaaar-qaaba-cai' : 'mqygn-kiaaa-aaaar-qaadq-cai';
         // Create minter actor
         if (!this.minter) this.minter = CkBTCMinterCanister.create({
             agent: this.wallet.agent,

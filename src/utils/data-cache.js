@@ -36,12 +36,20 @@ export class DataCache {
      * @returns data if created or refreshed, false if not expired yet
      */
 
-    get({ id, create = null, overdue = null }) {
+    async get({ id, create = null, overdue = null }) {
         // Create: fresh or found but expired
         if (!(id in this.cache) || this.cache[id].timestamp <= Date.now()) {
             this.cache[id] = { timestamp: Date.now() + overdue };
-            const data = (create !== null) ? create() : null;
-            if (data !== null) this.cache[id].data = data;
+            if (create !== null) {
+                const data = await create();
+                if (data !== null) {
+                    this.cache[id].data = data;
+                }
+                else {
+                    delete this.cache[id];
+                    return null;
+                }
+            }
             this.save();
         }
 

@@ -10,10 +10,13 @@ export class TaskMintCK extends Task {
      * Constructor for minting Chain-key token task
      */
 
-    constructor({ amount, symbol }) {
+    constructor({ address, amount, symbol, fee, min } = {}) {
         super({ duration: -1 });
+        this.address = address;
         this.amount = amount;
         this.symbol = symbol;
+        this.fee = fee;
+        this.min = min;
         const symbols = this.getSymbol(symbol);
         this.description = `Minting ${amount} ${symbols.from} &rarr; ${symbols.to}`;
     }
@@ -39,9 +42,13 @@ export class TaskMintCK extends Task {
         return {
             class: 'TaskMintCK',
             description: this.description,
+            created: this.created,
             duration: this.duration,
+            address: this.address,
             amount: this.amount,
-            symbol: this.symbol
+            min: this.min,
+            symbol: this.symbol,
+            fee: this.fee
         };
     }
 

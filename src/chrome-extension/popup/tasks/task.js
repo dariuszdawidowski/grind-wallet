@@ -26,6 +26,7 @@ export class Task {
         return {
             class: 'Task',
             description: this.description,
+            created: this.created,
             duration: this.duration
         };
     }

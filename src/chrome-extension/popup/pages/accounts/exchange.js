@@ -13,6 +13,7 @@ import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 // import { shortAddress } from '/src/utils/general.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
+import { ONE_WEEK } from '/src/utils/general.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -24,9 +25,6 @@ export class SheetAccountExchange extends Component {
 
         // Wallet
         this.wallet = args.wallet;
-
-        // Fetched info about exchange
-        this.info = {};
 
         // Build
         this.element.classList.add('form');
@@ -117,8 +115,11 @@ export class SheetAccountExchange extends Component {
             text: 'Create 3-steps task',
             click: () => {
                 this.app.tasks.add(new TaskMintCK({
+                    address: this.info.address,
                     symbol: this.tokenFrom.getSymbol(),
                     amount: this.tokenFrom.getValue() || 0,
+                    min: this.info.min,
+                    fee: this.info.fee
                 }));
                 this.app.tasks.update();
                 this.app.sheet.clear();
@@ -138,16 +139,29 @@ export class SheetAccountExchange extends Component {
 
         // Fetch minter info
         (async () => {
-            this.info = await this.revealBTCAddress();
+            this.info = await this.app.cache.storage.get({
+                id: `mintinfo:${this.wallet.principal}:ckbtc`,
+                overdue: ONE_WEEK,
+                create: async () => {
+                    const info = await this.revealBTCAddress();
+                    if (info.ok === true) return { address: info.address, fee: Number(info.fee), min: Number(info.min)};
+                    return null;
+                }
+            });
             this.buttonTask.busy(false);
-            // Display minimal amount
-            this.tokenFrom.amount.note(`min. ${icpt2ICP(this.info.min, 8)}`);
-            // Display fee
-            this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
-            // Display fee into
-            this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
-            // Recalculate 'to'
-            if (this.tokenFrom.getValue() > 0) this.handleFromInput({ value: this.tokenFrom.getValue() });
+            if (this.info) {
+                // Display minimal amount
+                this.tokenFrom.amount.note(`min. ${icpt2ICP(this.info.min, 8)}`);
+                // Display fee
+                this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
+                // Display fee into
+                this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
+                // Recalculate 'to'
+                if (this.tokenFrom.getValue() > 0) this.handleFromInput({ value: this.tokenFrom.getValue() });
+            }
+            else {
+                alert('Failed to reveal BTC address. Please try again later.');
+            }
         })();
 
     }

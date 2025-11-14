@@ -376,12 +376,12 @@ export class SheetTransactionHistory extends Component {
         let rebuild = false;
         // Traverse list of tokens
         for (const canisterId of this.tokens) {
-            if (this.app.timestamps.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
+            if (this.app.cache.storage.expired({ id: `history:${this.wallet.principal}:${canisterId}`, overdue: ONE_MINUTE * 10 })) {
                 // Get token
                 const token = this.wallet.tokens.get(canisterId);
                 if (token) {
                     // Refresh token info in weekly basis
-                    if (!this.app.isICP(canisterId) && this.app.timestamps.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
+                    if (!this.app.isICP(canisterId) && this.app.cache.storage.expired({ id: `token:${canisterId}`, overdue: ONE_WEEK })) {
                         let changed = false;
                         // Compare current vs new
                         const oldData = token.serialize();

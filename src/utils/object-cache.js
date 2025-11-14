@@ -1,5 +1,5 @@
 /**
- * Cache Objects in the memory
+ * Cache Objects in the memory (once created they stay in RAM, it's not persistent)
  */
 
 export class ObjectCache {

@@ -12,7 +12,7 @@ import { PageAcceptTerms } from '/src/chrome-extension/popup/pages/onboarding/te
 import { PageRegisterPassword } from '/src/chrome-extension/popup/pages/onboarding/register-password.js';
 import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
-import { TimestampCache } from '/src/utils/timestamp-cache.js';
+import { DataCache } from '/src/utils/data-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/chrome-extension/popup/widgets/tasks.js';
 const { version } = require('/package.json');
@@ -108,9 +108,11 @@ class GrindWalletPlugin {
         this.wallets = new Wallets({ app: this });
 
         // Cache
-        this.cache = new ObjectCache();
-        this.timestamps = new TimestampCache();
-        await this.timestamps.init();
+        this.cache = {
+            ram: new ObjectCache(),
+            storage: new DataCache(),
+        };
+        await this.cache.storage.init();
 
         // Get storage session data
         const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);

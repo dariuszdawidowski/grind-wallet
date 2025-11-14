@@ -49,7 +49,7 @@ export class ICPToken extends Token {
     async balance() {
 
         try {
-            const balance = await this.app.cache.get({
+            const balance = await this.app.cache.ram.get({
                 id: `balance.${this.wallet.account}.${this.canister.ledgerId}`,
                 overdue: ONE_MINUTE,
                 create: async () => {

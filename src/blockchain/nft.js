@@ -45,7 +45,7 @@ export class NFT {
      */
 
     async cache() {
-        if (!this.service) this.service = await this.app.cache.get({
+        if (!this.service) this.service = await this.app.cache.ram.get({
             id: `${this.wallet.principal}:nft:${this.collection}`,
             create: () => {
                 if (this.standard == 'EXT') {

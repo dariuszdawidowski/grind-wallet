@@ -153,7 +153,7 @@ export class SheetAccountSend extends Component {
                 if ('OK' in result) {
                     // Calculate remaining balance and update
                     this.balance -= ICP2icpt(this.widget.amount.get()) + BigInt(this.token.fee);
-                    this.app.cache.set({ id: `balance.${this.wallet.account}.${this.canister.ledgerId}`, value: this.balance });
+                    this.app.cache.ram.set({ id: `balance.${this.wallet.account}.${this.canister.ledgerId}`, value: this.balance });
                     const tokenZeros = (this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID) ? 8 : 4;
                     const tokenBalance = document.querySelector(`#balance_${this.wallet.principal}_${this.token.symbol} .amount`);
                     if (tokenBalance) tokenBalance.innerText = formatCurrency(icpt2ICP(this.balance, this.token.decimals), tokenZeros);
@@ -183,7 +183,7 @@ export class SheetAccountSend extends Component {
                         }
                     });
                     // Reset history logger cache
-                    this.app.timestamps.reset({ id: `history:*:${this.canister.ledgerId}` });
+                    this.app.cache.storage.reset({ id: `history:*:${this.canister.ledgerId}` });
                     // Show success
                     this.submit.set('OK - successfully sent!');
                     this.sent = true;

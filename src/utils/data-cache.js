@@ -1,12 +1,12 @@
 /**
- * Stores only id + timestamp of the last operation without data
+ * Stores data objects with expiration timestamps in Chrome local storage
  */
 
-export class TimestampCache {
+export class DataCache {
 
     constructor() {
 
-        // Cached objects { 'id': timestamp }
+        // Cached objects { 'id': { timestamp, custom_data... }, ... }
         this.cache = {};
 
     }

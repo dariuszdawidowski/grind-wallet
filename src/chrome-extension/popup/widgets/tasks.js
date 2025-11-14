@@ -6,6 +6,7 @@ import { Component } from '/src/utils/component.js';
 import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
 import { Task } from '/src/chrome-extension/popup/tasks/task.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 
 export class TaskManager extends Component {
 
@@ -37,7 +38,7 @@ export class TaskManager extends Component {
         // Open tasks
         const openTasks = document.createElement('div');
         openTasks.classList.add('task-link');
-        openTasks.innerHTML = 'Click to open the task &gt;';
+        openTasks.innerHTML = 'Click to open the task<img src="assets/material-design-icons/chevron-right-black.svg" width="20" height="20" style="margin-bottom: -6px;">';
         left.append(openTasks);
 
         // Right
@@ -61,6 +62,7 @@ export class TaskManager extends Component {
     async init() {
         await this.load();
         this.update();
+        this.element.addEventListener('click', this.openTaskSheet.bind(this));
     }
 
     /**
@@ -166,4 +168,43 @@ export class TaskManager extends Component {
 
     }
 
+    /**
+     * Open task sheet
+     */
+
+    openTaskSheet() {
+        if (!this.app.sheet.isOpen()) {
+            this.app.sheet.append({
+                title: `Task`,
+                component: new SheetTask({
+                    app: this.app,
+                })
+            });
+        }
+    }
+
 }
+
+export class SheetTask extends Component {
+
+    constructor({ app }) {
+        super({ app });
+
+        // Build
+        this.element.classList.add('form');
+
+        // Show transaction history
+        this.append(new Button({
+            icon: '<img src="assets/material-design-icons/history.svg">',
+            text: 'Hello',
+            click: () => {
+            }
+        }));
+
+    }
+
+    destructor() {
+    }
+
+}
+

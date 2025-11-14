@@ -27,7 +27,7 @@ export class Task {
     html() {
         const taskItem = document.createElement('div');
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.description}<span>~${this.duration}m</span>`;
+        taskItem.innerHTML = `${this.description}<span>${this.duration === -1 ? 'enter to start' : `~${this.duration}m`}</span>`;
         return taskItem;
     }
 

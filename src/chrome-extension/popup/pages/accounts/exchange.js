@@ -116,6 +116,8 @@ export class SheetAccountExchange extends Component {
             text: 'Create task',
             click: () => {
                 this.app.tasks.add(new TaskMintCK({
+                    symbol: this.tokenFrom.getSymbol(),
+                    amount: this.tokenFrom.getValue(),
                 }));
                 this.app.tasks.update();
                 this.app.sheet.clear();

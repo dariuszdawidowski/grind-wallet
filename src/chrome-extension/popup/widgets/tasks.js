@@ -18,14 +18,12 @@ export class TaskManager extends Component {
 
         // Left
         const left = document.createElement('div');
-        left.style.width = '80%';
+        left.classList.add('tasks-left');
         this.element.append(left);
 
         // Title
         const title = document.createElement('h2');
-        title.style.marginLeft = '24px';
-        title.style.textAlign = 'left';
-        title.style.fontWeight = '500';
+        title.classList.add('task-title');
         title.textContent = 'Task Manager';
         left.append(title);
 
@@ -33,6 +31,12 @@ export class TaskManager extends Component {
         this.list = document.createElement('div');
         this.list.classList.add('task-list');
         left.append(this.list);
+
+        // Open tasks
+        const openTasks = document.createElement('div');
+        openTasks.classList.add('task-link');
+        openTasks.innerHTML = 'Click to open the task &gt;';
+        left.append(openTasks);
 
         // Right
         const right = document.createElement('div');
@@ -46,17 +50,6 @@ export class TaskManager extends Component {
         this.progress = new Progress();
         right.append(this.progress.element);
         this.progress.set(75);
-
-        // this.add(new Task({
-        //     description: 'Minting 12 BTC &rarr; ckBTC',
-        //     duration: 2
-        // }));
-
-        // this.add(new Task({
-        //     description: 'Minting 0.01 BTC &rarr; ckBTC',
-        //     duration: 20
-        // }));
-
     }
 
     /**

@@ -5,6 +5,7 @@
 import { Component } from '/src/utils/component.js';
 import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
 import { Task } from '/src/chrome-extension/popup/tasks/task.js';
+import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
 
 export class TaskManager extends Component {
 
@@ -67,6 +68,12 @@ export class TaskManager extends Component {
      */
 
     async load() {
+        // Class registry for deserialization
+        const classRegistry = {
+            Task: Task,
+            TaskMintCK: TaskMintCK
+        };
+
         return new Promise((resolve, reject) => {
             try {
                 chrome.storage.local.get(['tasks'], (result) => {
@@ -76,7 +83,8 @@ export class TaskManager extends Component {
                     else {
                         const tasksData = result.tasks || {};
                         for (const [id, data] of Object.entries(tasksData)) {
-                            const task = Task.deserialize(data);
+                            const TaskClass = classRegistry[data.class] || Task;
+                            const task = TaskClass.deserialize(data);
                             this.tasks[id] = task;
                             this.list.append(task.html());
                         }

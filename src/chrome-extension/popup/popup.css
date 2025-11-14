@@ -1128,8 +1128,8 @@ hr {
     height: 50px;
     border-radius: 50%;
     background: conic-gradient(
-        #3a244f 0deg,
-        #3a244f calc(var(--progress, 0) * 3.6deg),
+        rgb(42, 26, 57) 0deg,
+        rgb(42, 26, 57) calc(var(--progress, 0) * 3.6deg),
         #d4ebfc calc(var(--progress, 0) * 3.6deg)
     );
     margin: 10px auto;

@@ -12,12 +12,10 @@ export class Task {
      */
 
     constructor({ description, duration }) {
-
         this.created = Date.now();
         this.duration = duration;
         this.durationMs = duration * 60 * 1000;
         this.description = description;
-
     }
 
     /**
@@ -26,6 +24,7 @@ export class Task {
 
     serialize() {
         return {
+            class: 'Task',
             description: this.description,
             duration: this.duration
         };
@@ -46,7 +45,7 @@ export class Task {
     html() {
         const taskItem = document.createElement('div');
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.description}<span>${this.duration === -1 ? 'enter to start' : `~${this.duration}m`}</span>`;
+        taskItem.innerHTML = `${this.description}<span>${this.duration === -1 ? 'enter to start &#9679;&#9675;&#9675;' : `~${this.duration}m`}</span>`;
         return taskItem;
     }
 

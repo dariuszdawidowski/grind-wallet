@@ -791,6 +791,7 @@ hr {
     border-radius: 2px;
     background-color: #555;
     transition: background-color 0.3s ease-in-out;
+    z-index: 20;
 }
 
 #sheet .handler:hover {
@@ -818,6 +819,7 @@ hr {
     font-size: 16px;
     background-color: #333;
     transition: background-color 0.3s ease-in-out;
+    z-index: 20;
 }
 
 #sheet .x:hover {

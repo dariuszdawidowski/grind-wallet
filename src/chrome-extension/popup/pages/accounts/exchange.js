@@ -103,7 +103,7 @@ export class SheetAccountExchange extends Component {
                 // Display fee
                 this.summary.row('Minter fee', `${icpt2ICP(this.info.fee, 8)} BTC`);
                 // Display fee into
-                this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee included`);
+                this.tokenTo.amount.note(`${icpt2ICP(this.info.fee, 8)} fee excluded`);
                 // Recalculate 'to'
                 if (this.tokenFrom.getValue() > 0) this.handleFromInput({ value: this.tokenFrom.getValue() });
             }

@@ -7,6 +7,7 @@ import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { shortAddress } from '/src/utils/general.js';
+import { dictionary } from '/src/utils/dictionary.js';
 
 export class TaskMintCK extends Task {
 
@@ -32,7 +33,8 @@ export class TaskMintCK extends Task {
         // Steps
         this.steps = new StepsBox();
         this.steps.element.style.width = 'calc(100% - 32px)';
-        this.steps.step(1, `<h1>Transfer ${this.task.symbol} to the address below</h1><p>Using any Bitcoin wallet, send the amount of <b>${this.task.amount} ${this.task.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
+        const token = dictionary[this.task.symbol];
+        this.steps.step(1, `<h1>Transfer ${token.symbol} to the address below</h1><p>Using any ${token.name} wallet, send the amount of <b>${this.task.amount} ${token.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your ${this.task.symbol} transfer transaction to complete.</p>`);
         this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint ckBTC.</p>`);
         this.append(this.steps);
@@ -71,7 +73,7 @@ export class TaskMintCK extends Task {
 
         // Button
         const buttonDone = new Button({
-            text: 'Done',
+            text: `I just sent ${token.symbol}`,
             click: () => {
             }
         });

@@ -12,7 +12,7 @@ import { dictionary } from '/src/utils/dictionary.js';
 export class TaskMintCK extends Task {
 
     /**
-     * Constructor for minting Chain-key token task
+     * Task for minting Chain-key token
      */
 
     constructor({ app, address, amount, symbol, fee, min } = {}) {
@@ -26,6 +26,7 @@ export class TaskMintCK extends Task {
         this.task.min = min;
         const symbols = this.getSymbol(symbol);
         this.task.description = `Mint ${symbols.to}`;
+        const token = dictionary[this.task.symbol];
 
         // Build
         this.element.classList.add('form');
@@ -33,14 +34,13 @@ export class TaskMintCK extends Task {
         // Steps
         this.steps = new StepsBox();
         this.steps.element.style.width = 'calc(100% - 32px)';
-        const token = dictionary[this.task.symbol];
-        this.steps.step(1, `<h1>Transfer ${token.symbol} to the address below</h1><p>Using any ${token.name} wallet, send the amount of <b>${this.task.amount} ${token.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="reveal-btc-container"></div>`);
+        this.steps.step(1, `<h1>Transfer ${token.symbol} to the address below</h1><p>Using any ${token.name} wallet, send the amount of <b>${this.task.amount} ${token.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="container-step-1"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your ${this.task.symbol} transfer transaction to complete.</p>`);
         this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint ckBTC.</p>`);
         this.append(this.steps);
 
         // Reveal BTC address container
-        const container = this.steps.element.querySelector('#reveal-btc-container');
+        const container1 = this.steps.element.querySelector('#container-step-1');
 
         // QR Code
         const qr = document.createElement('div');
@@ -56,7 +56,7 @@ export class TaskMintCK extends Task {
             colorLight : '#e7e7e7',
             correctLevel : QRCode.CorrectLevel.H
         });
-        container.append(qr);
+        container1.append(qr);
 
         // Address text
         const showAddr = document.createElement('div');
@@ -71,15 +71,17 @@ export class TaskMintCK extends Task {
         const copyAddr = new Copy({ text: this.task.address });
         qr.append(copyAddr.element);
 
-        // Button
-        const buttonDone = new Button({
-            text: `I just sent ${token.symbol}`,
-            click: () => {
-            }
-        });
-        buttonDone.element.style.marginTop = '20px';
-        buttonDone.element.style.width = '100%';
-        container.append(buttonDone.element);
+        // Button sent
+        if (this.task.step === 1) {
+            const buttonSent = new Button({
+                text: `I just sent ${token.symbol}`,
+                click: () => {
+                }
+            });
+            buttonSent.element.style.marginTop = '20px';
+            buttonSent.element.style.width = '100%';
+            container1.append(buttonSent.element);
+        }
 
     }
 
@@ -103,6 +105,7 @@ export class TaskMintCK extends Task {
     serialize() {
         return {
             class: 'TaskMintCK',
+            step: this.task.step,
             description: this.task.description,
             created: this.task.created,
             duration: this.task.duration,

@@ -16,6 +16,7 @@ export class Task extends Component {
     constructor({ app, description, duration }) {
         super({ app });
         this.task = {
+            step: 1,
             created: Date.now(),
             duration: duration,
             durationMs: duration * 60 * 1000,
@@ -30,9 +31,10 @@ export class Task extends Component {
     serialize() {
         return {
             class: 'Task',
-            description: this.task.description,
+            step: this.task.step,
             created: this.task.created,
-            duration: this.task.duration
+            duration: this.task.duration,
+            description: this.task.description,
         };
     }
 

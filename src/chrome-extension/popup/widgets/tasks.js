@@ -86,6 +86,7 @@ export class TaskManager extends Component {
                         for (const [id, data] of Object.entries(tasksData)) {
                             const TaskClass = classRegistry[data.class] || Task;
                             const task = TaskClass.deserialize({ app: this.app, ...data });
+                            task.task.id = id;
                             this.tasks[id] = task;
                             this.list.append(task.html());
                         }
@@ -135,6 +136,7 @@ export class TaskManager extends Component {
 
     add(task) {
         const id = crypto.randomUUID();
+        task.task.id = id;
         this.tasks[id] = task;
         this.list.append(task.html());
         this.save();
@@ -144,8 +146,12 @@ export class TaskManager extends Component {
      * Remove a task
      */
 
-    del(id) {
+    async del(id) {
+        const taskElement = this.list.querySelector(`#task-${id}`);
+        taskElement.remove();
         delete this.tasks[id];
+        await this.save();
+        this.update();
     }
 
     /**
@@ -156,7 +162,7 @@ export class TaskManager extends Component {
         const taskSeparator = document.getElementById('task-separator');
         if (Object.keys(this.tasks).length === 0) {
             this.element.style.display = 'none';
-            if (taskSeparator)  taskSeparator.style.display = 'none';
+            if (taskSeparator) taskSeparator.style.display = 'none';
             return false;
         }
         else {

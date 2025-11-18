@@ -83,7 +83,7 @@ export class SheetAccountDetails extends Component {
                 click: () => {
                     this.app.sheet.clear();
                     this.app.sheet.append({
-                        title: `Swap, mint, buy`,
+                        title: `Swap, buy, mint, bridge`,
                         component: new SheetAccountExchange({ app, wallet, canister })
                     });
                 }

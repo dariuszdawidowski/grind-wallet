@@ -4,7 +4,7 @@
 
 import { Task } from './task.js';
 import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { shortAddress } from '/src/utils/general.js';
 import { dictionary } from '/src/utils/dictionary.js';
@@ -16,7 +16,11 @@ export class TaskMintCK extends Task {
      */
 
     constructor({ app, address, amount, symbol, fee, min } = {}) {
-        super({ app, duration: -1 });
+        super({
+            app,
+            step: 'begin', // begin | waiting | claim | success | error
+            duration: 20
+        });
 
         // Task details
         this.task.address = address;
@@ -36,11 +40,12 @@ export class TaskMintCK extends Task {
         this.steps.element.style.width = 'calc(100% - 32px)';
         this.steps.step(1, `<h1>Transfer ${token.symbol} to the address below</h1><p>Using any ${token.name} wallet, send the amount of <b>${this.task.amount} ${token.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="container-step-1"></div>`);
         this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your ${this.task.symbol} transfer transaction to complete.</p>`);
-        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint ckBTC.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint ckBTC.</p><div id="container-step-3"></div>`);
         this.append(this.steps);
 
         // Reveal BTC address container
         const container1 = this.steps.element.querySelector('#container-step-1');
+        const container3 = this.steps.element.querySelector('#container-step-3');
 
         // QR Code
         const qr = document.createElement('div');
@@ -72,16 +77,44 @@ export class TaskMintCK extends Task {
         qr.append(copyAddr.element);
 
         // Button sent
-        if (this.task.step === 1) {
-            const buttonSent = new Button({
-                text: `I just sent ${token.symbol}`,
-                click: () => {
+        const buttonSent = new Button({
+            text: `OK, I just sent ${token.symbol}`,
+            click: () => {
+                this.task.step = 'claim';
+                this.save();
+                buttonSent.hide();
+                buttonClaim.show();
+            }
+        });
+        buttonSent.element.style.marginTop = '20px';
+        buttonSent.element.style.width = '100%';
+        if (this.task.step != 'begin' && this.task.step != 'transfer') buttonSent.element.style.display = 'none';
+        container1.append(buttonSent.element);
+
+        // Button claim
+        const buttonClaim = new Button({
+            text: `Claim ckBTC`,
+            click: () => {
+            }
+        });
+        buttonClaim.element.style.marginTop = '20px';
+        buttonClaim.element.style.width = '100%';
+        if (this.task.step != 'claim') buttonClaim.element.style.display = 'none';
+        container3.append(buttonClaim.element);
+
+        // Remove
+        this.append(new ButtLink({
+            text: `Discard task`,
+            classList: ['end'],
+            click: () => {
+                if (confirm('Delete this Task?')) {
+                    this.app.page('accounts');
+                    this.app.sheet.clear();
+                    this.app.sheet.hide();
+                    this.del();
                 }
-            });
-            buttonSent.element.style.marginTop = '20px';
-            buttonSent.element.style.width = '100%';
-            container1.append(buttonSent.element);
-        }
+            }
+        }));
 
     }
 

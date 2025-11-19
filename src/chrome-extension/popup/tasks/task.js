@@ -102,7 +102,22 @@ export class Task extends Component {
         const taskItem = document.createElement('div');
         taskItem.id = `task-${this.task.id}`;
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.task.description}<span>${this.timer.started ? `~${this.timer.remainingMinutes()}m &#9679;&#9675;&#9675;` : 'run to start &#9675;&#9675;&#9675;'}</span>`;
+        let line = this.task.description;
+        line += '<span>';
+        if (this.timer.started) {
+            if (this.timer.remaining() > 0) {
+                line += `~${this.timer.remainingMinutes()}m`;
+            }
+            else {
+                line += `done`;
+            }
+        }
+        else {
+            line += 'run to start';
+        }
+        line += ' &#9679;&#9675;&#9675;';
+        line += '</span>';
+        taskItem.innerHTML = line;
         return taskItem;
     }
 

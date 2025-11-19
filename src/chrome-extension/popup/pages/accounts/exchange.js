@@ -63,6 +63,7 @@ export class SheetAccountExchange extends Component {
             text: 'Create 3-steps task',
             click: () => {
                 this.app.tasks.add(new TaskMintCK({
+                    app: this.app,
                     address: this.info.address,
                     symbol: this.tokenFrom.getSymbol(),
                     amount: this.tokenFrom.getValue() || 0,

@@ -15,13 +15,41 @@ export class Task extends Component {
 
     constructor({ app, description, duration, step = 'begin' }) {
         super({ app });
+
+        // Task properties
         this.task = {
             id: null,
             step,
             created: Date.now(),
             duration,
-            durationMs: duration * 60 * 1000,
             description
+        };
+
+        // Timer
+        this.timer = {
+            started: null,
+            duration: duration * 60 * 1000,
+            start: () => {
+                this.timer.started = Date.now();
+            },
+            elapsed: () => {
+                if (this.timer.started === null) return 0;
+                return Date.now() - this.timer.started;
+            },
+            remaining: () => {
+                if (this.timer.started === null) return this.timer.duration;
+                return Math.max(0, this.timer.duration - this.timer.elapsed());
+            },
+            pause: () => {
+                if (this.timer.started === null) return;
+                const elapsed = this.timer.elapsed();
+                this.timer.duration -= elapsed;
+                this.timer.started = null;
+            },
+            reset: () => {
+                this.timer.started = null;
+                this.timer.duration = duration * 60 * 1000;
+            }
         };
     }
 

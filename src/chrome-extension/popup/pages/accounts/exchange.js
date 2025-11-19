@@ -64,6 +64,7 @@ export class SheetAccountExchange extends Component {
             click: () => {
                 this.app.tasks.add(new TaskMintCK({
                     app: this.app,
+                    principal: this.wallet.principal,
                     address: this.info.address,
                     symbol: this.tokenFrom.getSymbol(),
                     amount: this.tokenFrom.getValue() || 0,
@@ -197,13 +198,4 @@ export class SheetAccountExchange extends Component {
         return { ok: false };
     }
 
-    /**
-     * Claim ckBTC (when money arrives)
-     */
-/*
-    async claimUpdateMinter() {
-        const balance = await minter.updateBalance({});
-        console.log(balance[0].Minted.minted_amount)
-    }
-*/
 }

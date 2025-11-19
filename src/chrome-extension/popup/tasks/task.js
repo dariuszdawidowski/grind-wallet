@@ -22,6 +22,8 @@ export class Task extends Component {
             id: null,
             // Named step
             step,
+            // List of steps
+            steps: [],
             // Creation timestamp
             created: Date.now(),
             // Estimated duration in minutes (1.0 = 1 minute)
@@ -115,7 +117,12 @@ export class Task extends Component {
         else {
             line += 'run to start';
         }
-        line += ' &#9679;&#9675;&#9675;';
+        // Show step progress with filled and empty dots
+        const currentStep = this.task.steps.indexOf(this.task.step) + 1;
+        line += ' ';
+        for (let i = 1; i <= this.task.steps.length; i++) {
+            line += i <= currentStep ? '&#9679;' : '&#9675;';
+        }
         line += '</span>';
         taskItem.innerHTML = line;
         return taskItem;

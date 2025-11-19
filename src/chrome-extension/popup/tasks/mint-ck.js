@@ -2,6 +2,7 @@
  * Task: mint Chain-key token
  */
 
+import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Task } from './task.js';
 import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
 import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
@@ -15,10 +16,10 @@ export class TaskMintCK extends Task {
      * Constructor
      */
 
-    constructor({ app, address, amount, symbol, fee, min, started, step = 'begin' } = {}) {
+    constructor({ app, address, amount, symbol, fee, min, started, step = 'begin', principal } = {}) {
         super({
             app,
-            step, // begin | waiting | claim | success | error
+            step,
             started,
             duration: 20
         });
@@ -29,9 +30,11 @@ export class TaskMintCK extends Task {
         this.task.symbol = symbol;
         this.task.fee = fee;
         this.task.min = min;
+        this.task.principal = principal;
         const symbols = this.getSymbol(symbol);
         this.task.description = `Bridge ${symbols.from} &rarr; ${symbols.to}`;
         const token = dictionary[this.task.symbol];
+        this.task.steps = ['begin', 'claim', 'done'];
 
         // Build
         this.element.classList.add('form');
@@ -91,13 +94,18 @@ export class TaskMintCK extends Task {
         });
         buttonSent.element.style.marginTop = '20px';
         buttonSent.element.style.width = '100%';
-        if (this.task.step != 'begin' && this.task.step != 'transfer') buttonSent.element.style.display = 'none';
+        if (this.task.step != 'begin') buttonSent.element.style.display = 'none';
         container1.append(buttonSent.element);
 
         // Button claim
         const buttonClaim = new Button({
             text: `Claim ckBTC`,
-            click: () => {
+            click: async () => {
+                buttonClaim.busy(true);
+                await this.claimUpdateMinter();
+                buttonClaim.busy(false);
+                // this.task.step = 'done';
+                // this.app.tasks.update();
             }
         });
         buttonClaim.element.style.marginTop = '20px';
@@ -150,7 +158,8 @@ export class TaskMintCK extends Task {
             symbol: this.task.symbol,
             fee: this.task.fee,
             started: this.timer.started,
-            duration: this.timer.duration
+            duration: this.timer.duration,
+            principal: this.task.principal
         };
     }
 
@@ -161,5 +170,29 @@ export class TaskMintCK extends Task {
     static deserialize(data) {
         return new TaskMintCK(data);
     }
+
+    /**
+     * Claim ckBTC (when money arrives)
+     */
+
+    async claimUpdateMinter() {
+        // Access wallet
+        const wallet = this.app.wallets.getByPrincipal(this.task.principal);
+        if (!wallet) {
+            console.error('Wallet not found for principal:', this.task.principal);
+            return;
+        }
+        // Minter canister ID (testnet4 : mainnet)
+        const CKBTC_MINTER = process.env.DEV_MODE ? 'ml52i-qqaaa-aaaar-qaaba-cai' : 'mqygn-kiaaa-aaaar-qaadq-cai';
+        // Create minter actor
+        const minter = CkBTCMinterCanister.create({
+            agent: wallet.agent,
+            canisterId: CKBTC_MINTER,
+        });
+        const balance = await minter.updateBalance({});
+        console.log('balance', balance)
+        // console.log(balance[0].Minted.minted_amount)
+    }
+
 
 }

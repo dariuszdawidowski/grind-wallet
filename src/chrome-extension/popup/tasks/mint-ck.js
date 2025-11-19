@@ -30,7 +30,7 @@ export class TaskMintCK extends Task {
         this.task.fee = fee;
         this.task.min = min;
         const symbols = this.getSymbol(symbol);
-        this.task.description = `Mint ${symbols.to}`;
+        this.task.description = `Bridge ${symbols.from} &rarr; ${symbols.to}`;
         const token = dictionary[this.task.symbol];
 
         // Build

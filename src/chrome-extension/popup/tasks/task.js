@@ -13,7 +13,7 @@ export class Task extends Component {
      * @param {number} duration - The estimated duration in minutes
      */
 
-    constructor({ app, description, duration, step = 'begin' }) {
+    constructor({ app, description, started = null, duration = 0, step = 'begin' }) {
         super({ app });
 
         // Task properties
@@ -33,7 +33,7 @@ export class Task extends Component {
         // Timer
         this.timer = {
             // Timestamp when started
-            started: null,
+            started,
             // Total duration in milliseconds
             duration: duration * 60 * 1000,
             // Start the timer
@@ -44,6 +44,9 @@ export class Task extends Component {
             elapsed: () => {
                 if (this.timer.started === null) return 0;
                 return Date.now() - this.timer.started;
+            },
+            elapsedMinutes: () => {
+                return Math.floor(this.timer.elapsed() / 60000);
             },
             // Get remaining time in milliseconds
             remaining: () => {
@@ -96,7 +99,7 @@ export class Task extends Component {
         const taskItem = document.createElement('div');
         taskItem.id = `task-${this.task.id}`;
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.task.description}<span>${this.task.duration === -1 ? 'enter to start &#9679;&#9675;&#9675;' : `~${this.task.duration}m`}</span>`;
+        taskItem.innerHTML = `${this.task.description}<span>${this.timer.started ? `~${this.timer.elapsedMinutes()}m &#9679;&#9675;&#9675;` : 'run to start &#9675;&#9675;&#9675;'}</span>`;
         return taskItem;
     }
 

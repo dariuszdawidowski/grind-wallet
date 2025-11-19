@@ -15,10 +15,11 @@ export class TaskMintCK extends Task {
      * Task for minting Chain-key token
      */
 
-    constructor({ app, address, amount, symbol, fee, min } = {}) {
+    constructor({ app, address, amount, symbol, fee, min, started } = {}) {
         super({
             app,
             step: 'begin', // begin | waiting | claim | success | error
+            started,
             duration: 20
         });
 
@@ -81,6 +82,7 @@ export class TaskMintCK extends Task {
             text: `OK, I just sent ${token.symbol}`,
             click: () => {
                 this.task.step = 'claim';
+                this.timer.start();
                 this.save();
                 buttonSent.hide();
                 buttonClaim.show();

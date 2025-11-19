@@ -141,12 +141,13 @@ export class TaskMintCK extends Task {
             step: this.task.step,
             description: this.task.description,
             created: this.task.created,
-            duration: this.task.duration,
             address: this.task.address,
             amount: this.task.amount,
             min: this.task.min,
             symbol: this.task.symbol,
-            fee: this.task.fee
+            fee: this.task.fee,
+            started: this.timer.started,
+            duration: this.timer.duration
         };
     }
 

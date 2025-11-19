@@ -18,34 +18,46 @@ export class Task extends Component {
 
         // Task properties
         this.task = {
+            // UUID4 identifier
             id: null,
+            // Named step
             step,
+            // Creation timestamp
             created: Date.now(),
+            // Estimated duration in minutes (1.0 = 1 minute)
             duration,
+            // Task description
             description
         };
 
         // Timer
         this.timer = {
+            // Timestamp when started
             started: null,
+            // Total duration in milliseconds
             duration: duration * 60 * 1000,
+            // Start the timer
             start: () => {
                 this.timer.started = Date.now();
             },
+            // Get elapsed time in milliseconds
             elapsed: () => {
                 if (this.timer.started === null) return 0;
                 return Date.now() - this.timer.started;
             },
+            // Get remaining time in milliseconds
             remaining: () => {
                 if (this.timer.started === null) return this.timer.duration;
                 return Math.max(0, this.timer.duration - this.timer.elapsed());
             },
+            // Pause the timer
             pause: () => {
                 if (this.timer.started === null) return;
                 const elapsed = this.timer.elapsed();
                 this.timer.duration -= elapsed;
                 this.timer.started = null;
             },
+            // Reset the timer
             reset: () => {
                 this.timer.started = null;
                 this.timer.duration = duration * 60 * 1000;
@@ -62,8 +74,9 @@ export class Task extends Component {
             class: 'Task',
             step: this.task.step,
             created: this.task.created,
-            duration: this.task.duration,
             description: this.task.description,
+            started: this.timer.started,
+            duration: this.timer.duration
         };
     }
 

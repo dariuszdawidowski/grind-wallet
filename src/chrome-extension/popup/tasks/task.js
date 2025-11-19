@@ -53,6 +53,9 @@ export class Task extends Component {
                 if (this.timer.started === null) return this.timer.duration;
                 return Math.max(0, this.timer.duration - this.timer.elapsed());
             },
+            remainingMinutes: () => {
+                return Math.ceil(this.timer.remaining() / 60000);
+            },
             // Pause the timer
             pause: () => {
                 if (this.timer.started === null) return;
@@ -99,7 +102,7 @@ export class Task extends Component {
         const taskItem = document.createElement('div');
         taskItem.id = `task-${this.task.id}`;
         taskItem.classList.add('task-item');
-        taskItem.innerHTML = `${this.task.description}<span>${this.timer.started ? `~${this.timer.elapsedMinutes()}m &#9679;&#9675;&#9675;` : 'run to start &#9675;&#9675;&#9675;'}</span>`;
+        taskItem.innerHTML = `${this.task.description}<span>${this.timer.started ? `~${this.timer.remainingMinutes()}m &#9679;&#9675;&#9675;` : 'run to start &#9675;&#9675;&#9675;'}</span>`;
         return taskItem;
     }
 

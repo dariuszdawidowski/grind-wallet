@@ -12,13 +12,13 @@ import { dictionary } from '/src/utils/dictionary.js';
 export class TaskMintCK extends Task {
 
     /**
-     * Task for minting Chain-key token
+     * Constructor
      */
 
-    constructor({ app, address, amount, symbol, fee, min, started } = {}) {
+    constructor({ app, address, amount, symbol, fee, min, started, step = 'begin' } = {}) {
         super({
             app,
-            step: 'begin', // begin | waiting | claim | success | error
+            step, // begin | waiting | claim | success | error
             started,
             duration: 20
         });
@@ -86,6 +86,7 @@ export class TaskMintCK extends Task {
                 this.save();
                 buttonSent.hide();
                 buttonClaim.show();
+                this.app.tasks.update();
             }
         });
         buttonSent.element.style.marginTop = '20px';

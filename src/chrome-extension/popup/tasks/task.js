@@ -1,5 +1,5 @@
 /**
- * Base class for a task
+ * Base class for a task (both ui sheet and task logic)
  */
 
 import { Component } from '/src/utils/component.js';

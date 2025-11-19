@@ -52,6 +52,9 @@ export class TaskManager extends Component {
         this.progress = new Progress();
         right.append(this.progress.element);
         this.progress.set(75);
+
+        // Update every 1 minute
+        setInterval(() => this.update(), 60000);
     }
 
     /**
@@ -159,6 +162,13 @@ export class TaskManager extends Component {
      */
 
     update() {
+        // Update tasks list
+        for (const [id, task] of Object.entries(this.tasks)) {
+            const taskElement = this.list.querySelector(`#task-${id}`);
+            const newTaskElement = task.html();
+            this.list.replaceChild(newTaskElement, taskElement);
+        }
+        // Show/hide widget
         const taskSeparator = document.getElementById('task-separator');
         if (Object.keys(this.tasks).length === 0) {
             this.element.style.display = 'none';

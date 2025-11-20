@@ -6,7 +6,14 @@ import { Component } from '/src/utils/component.js';
 
 export class TokenImage extends Component {
 
-    constructor({ app, canisterId, symbol }) {
+    /**
+     * Constructor
+     * @param {object} app App reference
+     * @param {string} canisterId Token Ledger canister ID
+     * @param {string} symbol Token symbol (optional)
+     */
+
+    constructor({ app, canisterId, symbol = null}) {
         super({ app });
 
         // Coin shape
@@ -33,13 +40,13 @@ export class TokenImage extends Component {
                 }
                 // Fallback placeholder
                 else {
-                    this.element.innerText = symbol;
+                    if (symbol) this.element.innerText = symbol;
                 }
             }
 
             // Fallback placeholder
             catch(error) {
-                this.element.innerText = symbol;
+                if (symbol) this.element.innerText = symbol;
             }
         })();
 

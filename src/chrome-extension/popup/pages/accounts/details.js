@@ -1,3 +1,7 @@
+/**
+ * ICP/ICRC token details sheet
+ */
+
 import { Component } from '/src/utils/component.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
@@ -11,6 +15,13 @@ import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';
 
 export class SheetAccountDetails extends Component {
+    
+    /**
+     * Constructor
+     * @param {object} app App reference
+     * @param {object} wallet Wallet reference
+     * @param { ledgerId, indexId } canister Token Ledger and Index canister IDs
+     */
 
     constructor({ app, wallet, canister }) {
         super({ app });
@@ -23,6 +34,7 @@ export class SheetAccountDetails extends Component {
 
         // Token Ledger and Index canister IDs
         this.canister = canister;
+        console.log(this.canister)
 
         // Build
         this.element.classList.add('form');
@@ -37,8 +49,7 @@ export class SheetAccountDetails extends Component {
         // Balance token logo
         const coin = new TokenImage({
             app: this.app,
-            canisterId: this.canister.ledgerId,
-            symbol: this.wallet.tokens.get(this.canister.canisterId).symbol
+            canisterId: this.canister.ledgerId
         });
         this.balance.append(coin.element);
         // Balance amount and symbol

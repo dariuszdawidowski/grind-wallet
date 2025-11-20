@@ -701,8 +701,13 @@ hr {
     color: black;
     font-weight: 500;
     background-color: #e4990e;
-    font-size: 12px;
+    font-size: 10px;
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .token-balance .label {
@@ -862,6 +867,11 @@ hr {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+#sheet .content .form h1 .token-image svg {
+    width: 40px;
+    height: 40px;
 }
 
 #sheet .content .form h1 span {

@@ -9,7 +9,7 @@ import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/b
 import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
-import { TaskMintCK } from '/src/chrome-extension/popup/tasks/mint-ck.js';
+import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
 import { ONE_WEEK } from '/src/utils/general.js';
 
 export class SheetAccountExchange extends Component {
@@ -181,8 +181,11 @@ export class SheetAccountExchange extends Component {
      */
 
     async revealBTCAddress() {
-        // Minter canister ID (testnet4 : mainnet)
-        const CKBTC_MINTER = process.env.DEV_MODE ? 'ml52i-qqaaa-aaaar-qaaba-cai' : 'mqygn-kiaaa-aaaar-qaadq-cai';
+        // Minter canister ID
+        const CKBTC_MINTER = process.env.DEV_MODE ?
+            'ml52i-qqaaa-aaaar-qaaba-cai' // testnet4
+            :
+            'mqygn-kiaaa-aaaar-qaadq-cai'; // mainnet
         // Create minter actor
         if (!this.minter) this.minter = CkBTCMinterCanister.create({
             agent: this.wallet.agent,

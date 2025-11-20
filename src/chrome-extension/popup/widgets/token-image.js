@@ -20,18 +20,24 @@ export class TokenImage extends Component {
         else (async () => {
             try {
                 const image = await this.app.cache.image.load(`token:${canisterId}`);
-                this.element.style.backgroundColor = 'transparent';
-                // SVG
-                if (image.startsWith('<svg')) {
-                    this.element.innerHTML = image;
+                if (image) {
+                    this.element.style.backgroundColor = 'transparent';
+                    // SVG
+                    if (image.startsWith('<svg')) {
+                        this.element.innerHTML = image;
+                    }
+                    // Raster
+                    else {
+                        this.element.style.backgroundImage = `url('${image}')`;
+                    }
                 }
-                // Raster
+                // Fallback placeholder
                 else {
-                    this.element.style.backgroundImage = `url('${image}')`;
+                    this.element.innerText = symbol;
                 }
             }
 
-            // Fallback text
+            // Fallback placeholder
             catch(error) {
                 this.element.innerText = symbol;
             }

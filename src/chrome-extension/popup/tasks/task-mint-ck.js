@@ -9,6 +9,7 @@ import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js'
 import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
 import { shortAddress } from '/src/utils/general.js';
 import { dictionary } from '/src/utils/dictionary.js';
+import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 
 export class TaskMintCK extends Task {
 
@@ -99,13 +100,11 @@ export class TaskMintCK extends Task {
 
         // Button claim
         const buttonClaim = new Button({
-            text: `Claim ckBTC`,
+            text: (this.timer.remainingMinutes() > 5) ? `Check if it's ready` : 'Claim ckBTC',
             click: async () => {
                 buttonClaim.busy(true);
                 await this.claimUpdateMinter();
                 buttonClaim.busy(false);
-                // this.task.step = 'done';
-                // this.app.tasks.update();
             }
         });
         buttonClaim.element.style.marginTop = '20px';
@@ -176,22 +175,48 @@ export class TaskMintCK extends Task {
      */
 
     async claimUpdateMinter() {
+        // Minter canister ID
+        const CKBTC_MINTER = process.env.DEV_MODE ?
+            'ml52i-qqaaa-aaaar-qaaba-cai' // testnet4
+            :
+            'mqygn-kiaaa-aaaar-qaadq-cai'; // mainnet
+        // Ledger canister ID
+        const CKBTC_LEDGER = process.env.DEV_MODE ?
+            'mc6ru-gyaaa-aaaar-qaaaq-cai' // ckTESTBTC
+            :
+            'mxzaz-hqaaa-aaaar-qaada-cai'; // ckBTC
         // Access wallet
         const wallet = this.app.wallets.getByPrincipal(this.task.principal);
         if (!wallet) {
-            console.error('Wallet not found for principal:', this.task.principal);
+            console.error(`Wallet not found for principal: ${this.task.principal}`);
             return;
         }
-        // Minter canister ID (testnet4 : mainnet)
-        const CKBTC_MINTER = process.env.DEV_MODE ? 'ml52i-qqaaa-aaaar-qaaba-cai' : 'mqygn-kiaaa-aaaar-qaadq-cai';
+        // Access destination token
+        const token = wallet.tokens.get(CKBTC_LEDGER);
+        if (!token) {
+            console.error(`Token ${CKBTC_LEDGER} not found for principal: ${this.task.principal}`);
+            return;
+        }
         // Create minter actor
         const minter = CkBTCMinterCanister.create({
             agent: wallet.agent,
             canisterId: CKBTC_MINTER,
         });
-        const balance = await minter.updateBalance({});
-        console.log('balance', balance)
-        // console.log(balance[0].Minted.minted_amount)
+        // Check if there are new UTXOs
+        let balance = null;
+        try {
+            balance = await minter.updateBalance({});
+        }
+        // The error is normal behavior to show that the transaction is not yet completed
+        catch (_) { }
+        if (balance && balance.length && ('Minted' in balance[0]) && ('minted_amount' in balance[0].Minted)) {
+            const amount = formatCurrency(icpt2ICP(balance[0].Minted.minted_amount, token.decimals), token.decimals);
+            alert(`Succesfully received ${amount} ${token.symbol}`);
+            // TODO: remove task
+            return;
+        }
+        alert(`Not ready yet. Bitcoin network operations may take longer than expected.`);
+        return;
     }
 
 

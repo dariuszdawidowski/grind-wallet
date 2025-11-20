@@ -111,7 +111,7 @@ export class Task extends Component {
                 line += `~${this.timer.remainingMinutes()}m`;
             }
             else {
-                line += `done`;
+                line += `ready`;
             }
         }
         else {

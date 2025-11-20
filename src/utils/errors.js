@@ -13,13 +13,11 @@ export class ErrorSystem extends LogBase {
 
         // Global error handler
         window.addEventListener('error', (ev) => {
-            console.log('🪲', ev);
             this.add(args.app.version, timestamp, ev?.error?.stack || ev.message || 'Unknown error');
         });
 
         // Global promise rejection handler
         window.addEventListener('unhandledrejection', (ev) => {
-            console.log('🐞', ev);
             this.add(args.app.version, timestamp, ev?.reason?.stack || 'Unknown error');
         });
 

@@ -34,7 +34,6 @@ export class SheetAccountDetails extends Component {
 
         // Token Ledger and Index canister IDs
         this.canister = canister;
-        console.log(this.canister)
 
         // Build
         this.element.classList.add('form');

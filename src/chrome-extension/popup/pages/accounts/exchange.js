@@ -10,7 +10,7 @@ import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
 import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
-import { ONE_WEEK } from '/src/utils/general.js';
+import { ONE_DAY } from '/src/utils/general.js';
 
 export class SheetAccountExchange extends Component {
 
@@ -91,7 +91,7 @@ export class SheetAccountExchange extends Component {
         (async () => {
             this.info = await this.app.cache.storage.get({
                 id: `mintinfo:${this.wallet.principal}:ckbtc`,
-                overdue: ONE_WEEK,
+                overdue: ONE_DAY,
                 create: async () => {
                     const info = await this.revealBTCAddress();
                     if (info.ok === true) return { address: info.address, fee: Number(info.fee), min: Number(info.min)};

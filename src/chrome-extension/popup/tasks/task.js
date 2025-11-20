@@ -74,6 +74,17 @@ export class Task extends Component {
     }
 
     /**
+     * Progress percentage
+     */
+
+    progress() {
+        if (this.timer.duration === 0) return 100;
+        if (this.timer.started === null) return 0;
+        const elapsed = this.timer.elapsed();
+        return Math.min(100, (elapsed / this.timer.duration) * 100);
+    }
+
+    /**
      * Serialize task data
      */
 
@@ -113,15 +124,15 @@ export class Task extends Component {
             else {
                 line += `ready`;
             }
+            // Show step progress with filled and empty dots
+            const currentStep = this.task.steps.indexOf(this.task.step) + 1;
+            line += ' ';
+            for (let i = 1; i <= this.task.steps.length; i++) {
+                line += i < currentStep ? '&#9679;' : '&#9675;';
+            }
         }
         else {
-            line += 'run to start';
-        }
-        // Show step progress with filled and empty dots
-        const currentStep = this.task.steps.indexOf(this.task.step) + 1;
-        line += ' ';
-        for (let i = 1; i <= this.task.steps.length; i++) {
-            line += i <= currentStep ? '&#9679;' : '&#9675;';
+            line += 'run to start &#9675;&#9675;&#9675;';
         }
         line += '</span>';
         taskItem.innerHTML = line;

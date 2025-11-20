@@ -17,7 +17,7 @@ export class TaskMintCK extends Task {
      * Constructor
      */
 
-    constructor({ app, address, amount, symbol, fee, min, started, step = 'begin', principal } = {}) {
+    constructor({ app, address, amount, symbol, fee, min, started, step = 'transfer', principal } = {}) {
         super({
             app,
             step,
@@ -35,7 +35,7 @@ export class TaskMintCK extends Task {
         const symbols = this.getSymbol(symbol);
         this.task.description = `Bridge ${symbols.from} &rarr; ${symbols.to}`;
         const token = dictionary[this.task.symbol];
-        this.task.steps = ['begin', 'claim', 'done'];
+        this.task.steps = ['transfer', 'wait', 'claim'];
 
         // Build
         this.element.classList.add('form');
@@ -85,7 +85,7 @@ export class TaskMintCK extends Task {
         const buttonSent = new Button({
             text: `OK, I just sent ${token.symbol}`,
             click: () => {
-                this.task.step = 'claim';
+                this.task.step = 'wait';
                 this.timer.start();
                 this.save();
                 buttonSent.hide();
@@ -95,7 +95,7 @@ export class TaskMintCK extends Task {
         });
         buttonSent.element.style.marginTop = '20px';
         buttonSent.element.style.width = '100%';
-        if (this.task.step != 'begin') buttonSent.element.style.display = 'none';
+        if (this.task.step != 'transfer') buttonSent.element.style.display = 'none';
         container1.append(buttonSent.element);
 
         // Button claim
@@ -109,7 +109,7 @@ export class TaskMintCK extends Task {
         });
         buttonClaim.element.style.marginTop = '20px';
         buttonClaim.element.style.width = '100%';
-        if (this.task.step != 'claim') buttonClaim.element.style.display = 'none';
+        if (this.task.step != 'wait' && this.task.step != 'claim') buttonClaim.element.style.display = 'none';
         container3.append(buttonClaim.element);
 
         // Remove

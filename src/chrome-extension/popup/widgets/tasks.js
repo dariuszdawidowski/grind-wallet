@@ -9,6 +9,11 @@ import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
 
 export class TaskManager extends Component {
 
+    /**
+     * Constructor
+     * @param {object} app App reference
+     */
+
     constructor({ app }) {
         super({ app });
 
@@ -51,7 +56,7 @@ export class TaskManager extends Component {
         // Progress meter
         this.progress = new Progress();
         right.append(this.progress.element);
-        this.progress.set(75);
+        this.progress.set(0);
 
         // Update every 1 minute
         setInterval(() => this.update(), 60000);
@@ -162,15 +167,27 @@ export class TaskManager extends Component {
      */
 
     update() {
+        let totalPercent = 0;
+        let taskCount = Object.keys(this.tasks).length;
+        
         // Update tasks list
         for (const [id, task] of Object.entries(this.tasks)) {
             const taskElement = this.list.querySelector(`#task-${id}`);
             const newTaskElement = task.html();
             this.list.replaceChild(newTaskElement, taskElement);
+            // Accumulate progress
+            totalPercent += task.progress();
         }
+        
+        // Calculate average progress and update progress meter
+        if (taskCount > 0) {
+            const averagePercent = totalPercent / taskCount;
+            this.progress.set(averagePercent);
+        }
+        
         // Show/hide widget
         const taskSeparator = document.getElementById('task-separator');
-        if (Object.keys(this.tasks).length === 0) {
+        if (taskCount === 0) {
             this.element.style.display = 'none';
             if (taskSeparator) taskSeparator.style.display = 'none';
             return false;
@@ -180,7 +197,6 @@ export class TaskManager extends Component {
             if (taskSeparator) taskSeparator.style.display = 'block';
             return true;
         }
-
     }
 
     /**

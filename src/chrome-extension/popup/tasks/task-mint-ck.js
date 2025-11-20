@@ -129,6 +129,19 @@ export class TaskMintCK extends Task {
     }
 
     /**
+     * Progress percentage
+     */
+
+    progress() {
+        const percent = super.progress();
+        if (percent >= 100 && this.task.step == 'wait') {
+            this.task.step = 'claim';
+            this.save();
+        }
+        return percent;
+    }
+
+    /**
      * Get symbol from
      */
 

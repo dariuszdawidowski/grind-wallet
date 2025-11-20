@@ -183,7 +183,7 @@ export class SheetAccountSend extends Component {
                         }
                     });
                     // Reset history logger cache
-                    this.app.cache.storage.reset({ id: `history:*:${this.canister.ledgerId}` });
+                    this.app.cache.info.reset({ id: `history:*:${this.canister.ledgerId}` });
                     // Show success
                     this.submit.set('OK - successfully sent!');
                     this.sent = true;

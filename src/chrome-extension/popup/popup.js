@@ -114,10 +114,10 @@ class GrindWalletPlugin {
         // Cache
         this.cache = {
             ram: new ObjectCache(),
-            storage: new DataCache(),
+            info: new DataCache('cache:info'),
             image: new ImageCache()
         };
-        await this.cache.storage.init();
+        await this.cache.info.init();
 
         // Get storage session data
         const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);

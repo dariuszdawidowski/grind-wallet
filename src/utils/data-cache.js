@@ -4,7 +4,10 @@
 
 export class DataCache {
 
-    constructor() {
+    constructor(name) {
+
+        // Custom storage name
+        this.name = name;
 
         // Cached objects { 'id': { timestamp, data: { ... } }, ... }
         this.cache = {};
@@ -17,9 +20,9 @@ export class DataCache {
 
     async init() {
         // Load existing entries from storage
-        const stored = await chrome.storage.local.get(['datacache']);
-        if (stored.hasOwnProperty('datacache')) {
-            this.cache = stored['datacache'];
+        const stored = await chrome.storage.local.get([this.name]);
+        if (stored.hasOwnProperty(this.name)) {
+            this.cache = stored[this.name];
         }
     }
 
@@ -28,7 +31,7 @@ export class DataCache {
      */
 
     async save() {
-        await chrome.storage.local.set({ datacache: this.cache });
+        await chrome.storage.local.set({ [this.name]: this.cache });
     }
 
     /**

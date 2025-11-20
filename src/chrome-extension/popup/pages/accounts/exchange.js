@@ -89,7 +89,7 @@ export class SheetAccountExchange extends Component {
 
         // Fetch minter info
         (async () => {
-            this.info = await this.app.cache.storage.get({
+            this.info = await this.app.cache.info.get({
                 id: `mintinfo:${this.wallet.principal}:ckbtc`,
                 overdue: ONE_DAY,
                 create: async () => {

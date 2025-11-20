@@ -140,7 +140,7 @@ export class SheetAddCustomToken extends Component {
                 // Save logo image
                 if ('logo' in this.metadata) await this.app.cache.image.save(`token:${this.token.canister.ledgerId}`, this.metadata['logo']);
                 // Create counter to refresh token info after a week
-                this.app.cache.storage.get({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK });
+                this.app.cache.info.get({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK });
                 // Save wallets
                 this.app.wallets.save();
                 this.widget.submit.busy(false);

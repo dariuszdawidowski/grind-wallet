@@ -138,6 +138,7 @@ export class TaskMintCK extends Task {
             this.task.step = 'claim';
             this.save();
         }
+        this.steps.current(this.task.steps.indexOf(this.task.step) + 1);
         return percent;
     }
 

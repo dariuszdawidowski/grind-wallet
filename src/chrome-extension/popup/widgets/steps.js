@@ -28,4 +28,29 @@ export class StepsBox extends Component {
         }
     }
 
+    /**
+     * Mark as completed and current step
+     */
+
+    current(nr) {
+        const steps = this.element.querySelectorAll('.step');
+        steps.forEach(step => {
+            const stepNr = parseInt(step.getAttribute('data-nr'));
+            if (stepNr < nr) {
+                step.classList.add('done');
+                step.classList.remove('current');
+                const stepNrContent = step.querySelector('.step-nr');
+                stepNrContent.innerHTML = '&#10003;';
+            }
+            else if (stepNr === nr) {
+                step.classList.add('current');
+                step.classList.remove('done');
+            }
+            else {
+                step.classList.remove('done');
+                step.classList.remove('current');
+            }
+        });
+    }
+
 }

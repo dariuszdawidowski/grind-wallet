@@ -1047,6 +1047,10 @@ hr {
     z-index: 1;
 }
 
+.step.current .step-nr {
+    background: var(--button-color);
+}
+
 #sheet .step-content h1 {
     color: #575757;
     font-size: 14px;

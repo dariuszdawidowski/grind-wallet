@@ -44,8 +44,8 @@ export class TaskMintCK extends Task {
         this.steps = new StepsBox();
         this.steps.element.style.width = 'calc(100% - 32px)';
         this.steps.step(1, `<h1>Transfer ${token.symbol} to the address below</h1><p>Using any ${token.name} wallet, send the amount of <b>${this.task.amount} ${token.symbol}</b> to the specified minter address. This is the address permanently assigned only to your Principal ID.</p><div id="container-step-1"></div>`);
-        this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your ${this.task.symbol} transfer transaction to complete.</p>`);
-        this.steps.step(3, `<h1>Claim ckBTC</h1><p>This window doesn't need to be open at this time. Create a task and periodically check your wallet's homepage to see when you can mint ckBTC.</p><div id="container-step-3"></div>`);
+        this.steps.step(2, `<h1>Wait 15-30 min.</h1><p>Please wait 15 to 30 minutes as usual for your ${this.task.symbol} transfer transaction to complete. At least 6 confirmations are required. You can close this window meanwhile.</p>`);
+        this.steps.step(3, `<h1>Claim ckBTC</h1><p>You can check periodically to see if it's ready.</p><div id="container-step-3"></div>`);
         this.append(this.steps);
 
         // Reveal BTC address container

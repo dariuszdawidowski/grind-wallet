@@ -55,7 +55,7 @@ export class Sheet extends Component {
         this.content.append(args.component.element);
 
         // Show animation
-        this.element.style.display = 'block';
+        this.element.style.display = 'flex';
         setTimeout(() => {
             this.element.classList.add('visible');
         }, 10);

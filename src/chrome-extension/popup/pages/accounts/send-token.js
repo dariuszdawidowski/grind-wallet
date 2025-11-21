@@ -54,6 +54,7 @@ export class SheetAccountSend extends Component {
         // Send buton
         this.submit = new Button({
             text: 'Send',
+            classList: ['bottom'],
             click: () => {
                 // Not sent yet
                 if (!this.sent) {

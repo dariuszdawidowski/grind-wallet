@@ -179,6 +179,10 @@ button.dimed {
     pointer-events: none;
 }
 
+button.bottom {
+    margin-top: auto;
+}
+
 button .icon {
     margin-right: 8px;
 }
@@ -770,7 +774,7 @@ hr {
 
 /* Bottom sheet */
 
-#sheet {
+.sheet {
     position: fixed;
     bottom: -100%;
     left: 0;
@@ -781,13 +785,15 @@ hr {
     border-radius: 16px 16px 0 0;
     transition: bottom 0.5s ease;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-#sheet.visible {
+.sheet.visible {
     bottom: 0;
 }
 
-#sheet .handler {
+.sheet .handler {
     position: fixed;
     width: 10%;
     height: 4px;
@@ -799,18 +805,18 @@ hr {
     z-index: 20;
 }
 
-#sheet .handler:hover {
+.sheet .handler:hover {
     background-color: #888;
     cursor: grab;
 }
 
-#sheet h1 {
+.sheet h1 {
     color: #222;
     text-align: center;
     margin: 38px auto 20px auto;
 }
 
-#sheet .x {
+.sheet .x {
     position: fixed;
     right: 6px;
     margin-top: 6px;
@@ -827,40 +833,44 @@ hr {
     z-index: 20;
 }
 
-#sheet .x:hover {
+.sheet .x:hover {
     background-color: #888;
     cursor: pointer;
 }
 
-#sheet .content {
+.sheet .content {
     font-size: 12px;
     padding: 0px 25px 25px 25px;
-}
-
-#sheet .content .form {
+    min-height: 80%;
     display: flex;
     flex-direction: column;
 }
 
-#sheet .content .form h3 {
+.sheet .content .form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.sheet .content .form h3 {
     font-size: 12px;
     font-weight: normal;
     text-align: center;
 }
 
-#sheet .content .form .line {
+.sheet .content .form .line {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#sheet .content .form .button-description {
+.sheet .content .form .button-description {
     font-size: 10px;
     text-align: center;
     color: rgb(136, 136, 136);
 }
 
-#sheet .content .form h1 .token-image {
+.sheet .content .form h1 .token-image {
     width: 40px;
     height: 40px;
     margin-right: 10px;
@@ -869,16 +879,16 @@ hr {
     background-size: contain;
 }
 
-#sheet .content .form h1 .token-image svg {
+.sheet .content .form h1 .token-image svg {
     width: 40px;
     height: 40px;
 }
 
-#sheet .content .form h1 span {
+.sheet .content .form h1 span {
     font-size: 20px;
 }
 
-#sheet .content .form .preview-token {
+.sheet .content .form .preview-token {
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -887,7 +897,7 @@ hr {
     margin: 0 auto 12px auto;
 }
 
-#sheet .content .form .preview-nft {
+.sheet .content .form .preview-nft {
     width: 80px;
     height: 0;
     overflow: hidden;
@@ -898,47 +908,47 @@ hr {
     margin: 0 auto 12px auto;
 }
 
-#sheet .content .form .info-token,
-#sheet .content .form .info-nft {
+.sheet .content .form .info-token,
+.sheet .content .form .info-nft {
     font-size: 14px;
     font-weight: 500;
     text-align: center;
     margin-bottom: 8px;
 }
 
-#sheet .content .form .preview-nft svg,
-#sheet .content .form .preview-nft image,
-#sheet .content .form .nft svg,
-#sheet .content .form .nft image {
+.sheet .content .form .preview-nft svg,
+.sheet .content .form .preview-nft image,
+.sheet .content .form .nft svg,
+.sheet .content .form .nft image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-#sheet .content .form .nft {
+.sheet .content .form .nft {
     width: 50%;
     margin: 0 auto;
 }
 
-#sheet .content .form .address {
+.sheet .content .form .address {
     text-align: center;
     width: 80%;
     margin: 0 auto 20px auto;
 }
 
-#sheet .content .form .address.account {
+.sheet .content .form .address.account {
     word-wrap: break-word;
     overflow-wrap: break-word;
     word-break: break-all;
 }
 
-#sheet .content .form .address.principal {
+.sheet .content .form .address.principal {
     hyphens: manual;
     -webkit-hyphens: manual;
 }
 
-#sheet .end {
-    margin-bottom: 40px;
+.sheet .end {
+    padding-bottom: 30px;
 }
 
 /* Token box widget */
@@ -1051,7 +1061,7 @@ hr {
     background: var(--button-color);
 }
 
-#sheet .step-content h1 {
+.sheet .step-content h1 {
     color: #575757;
     font-size: 14px;
     font-weight: bold;

@@ -62,6 +62,7 @@ export class SheetAddCustomToken extends Component {
         // Button
         this.widget.submit = new Button({
             text: 'Verify',
+            classList: ['bottom'],
             click: this.verifyAndAccept.bind(this)
         });
         this.append(this.widget.submit);

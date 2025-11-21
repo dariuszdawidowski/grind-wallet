@@ -8,6 +8,7 @@ import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { AddressBook } from '/src/chrome-extension/popup/widgets/address-book.js';
 
 export class SheetAccountSend extends Component {
 
@@ -50,6 +51,7 @@ export class SheetAccountSend extends Component {
             placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onIconClick: () => {
+                this.app.drawer.append(new AddressBook());
                 this.app.drawer.toggle();
             }
         });

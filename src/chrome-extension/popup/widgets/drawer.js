@@ -5,6 +5,10 @@
 export class Drawer {
 
     constructor() {
+        // Children components
+        this.children = [];
+
+        // Query panels
         this.mainPanel = document.getElementById('main-panel');
         this.drawerPanel = document.getElementById(`drawer-panel`);
     }
@@ -26,6 +30,29 @@ export class Drawer {
 
     isOpen() {
         return this.mainPanel.classList.contains('drawer-open');
+    }
+
+    /**
+     * Append content to the drawer
+     */
+
+    append(component) {
+        // Append Component
+        this.children.push(component);
+        this.drawerPanel.append(component.element);
+    }
+
+    /**
+     * Clear content
+     */
+
+    clear() {
+        // Destroy child components
+        this.children.forEach(child => child.destructor?.());
+        this.children = [];
+
+        // Clear DOM
+        this.drawerPanel.innerHTML = '';
     }
 
 }

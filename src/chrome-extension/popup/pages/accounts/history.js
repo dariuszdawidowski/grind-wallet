@@ -18,7 +18,6 @@ export class SheetTransactionHistory extends Component {
         this.element.classList.add('history');
 
         // References
-        this.app = app;
         this.wallet = wallet;
         this.canister = canister;
         this.types = types; // ['send.token', 'send.token.error', ...]

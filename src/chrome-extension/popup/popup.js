@@ -6,6 +6,7 @@
 import '/src/chrome-extension/popup/popup.css';
 import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
+import { Drawer } from '/src/chrome-extension/popup/widgets/drawer.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { PageAccounts } from '/src/chrome-extension/popup/pages/accounts/index.js';
 import { PageAcceptTerms } from '/src/chrome-extension/popup/pages/onboarding/terms.js';
@@ -100,6 +101,9 @@ class GrindWalletPlugin {
         this.user = {
             password: null,
         };
+
+        // Drawer menu
+        this.drawer = new Drawer();
 
         // Bottom Sheet
         this.sheet = new Sheet({ app: this, selector: '#sheet', hidden: true });

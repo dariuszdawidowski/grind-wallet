@@ -74,6 +74,46 @@ body {
     display: none;  /* Chrome, Safari, Edge */
 }
 
+/* Drawer menu */
+
+#main-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+    z-index: 1;
+    overflow: hidden;
+}
+
+#main-panel.drawer-open {
+    transform: translateX(-80%);
+}
+
+#main-panel-content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#drawer-panel {
+    position: fixed;
+    top: 0;
+    right: -80%;
+    width: 80%;
+    height: 100%;
+    background: #1a1a1a;
+    transition: right 0.3s ease;
+    z-index: 2;
+    overflow-y: auto;
+}
+
+#drawer-panel.drawer-open {
+    right: 0;
+}
+
 /* Checkbox */
 
 input[type="checkbox"] {
@@ -363,7 +403,7 @@ button.butticon img {
     width: 26px;
     height: 26px;
     position: absolute;
-    right: 14px;
+    right: 20px;
     bottom: 2px;
 }
 

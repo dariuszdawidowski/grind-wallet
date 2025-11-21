@@ -50,7 +50,7 @@ export class SheetAccountSend extends Component {
             placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onIconClick: () => {
-                console.log('addressbook')
+                this.app.drawer.toggle();
             }
         });
         this.append(this.widget.address);

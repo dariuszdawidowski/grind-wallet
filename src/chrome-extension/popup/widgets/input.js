@@ -45,13 +45,11 @@ export class InputText extends Component {
 
         // Optional right-side icon
         if ('icon' in args) {
-            console.log('append icon')
             this.icon = document.createElement('div');
             this.icon.classList.add('input-icon');
             this.icon.innerHTML = args.icon;
             this.element.append(this.icon);
             if ('onIconClick' in args) this.icon.addEventListener('click', args.onIconClick);
-            console.log(this.icon)
         }
 
     }

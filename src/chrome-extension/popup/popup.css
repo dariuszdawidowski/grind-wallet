@@ -88,7 +88,7 @@ body {
 }
 
 #main-panel.drawer-open {
-    transform: translateX(-80%);
+    transform: translateX(-85%);
 }
 
 #main-panel-content {
@@ -101,8 +101,8 @@ body {
 #drawer-panel {
     position: fixed;
     top: 0;
-    right: -80%;
-    width: 80%;
+    right: -85%;
+    width: 85%;
     height: 100%;
     background: #1a1a1a;
     transition: right 0.3s ease;

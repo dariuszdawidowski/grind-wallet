@@ -10,22 +10,31 @@ export class Drawer {
 
         // Query panels
         this.mainPanel = document.getElementById('main-panel');
-        this.drawerPanel = document.getElementById(`drawer-panel`);
+        this.drawerPanel = document.getElementById('drawer-panel');
+
+        // Click handler reference for cleanup
+        this.clickHandler = (e) => {
+            if (e.target.closest('#drawer-panel') === null) this.close();
+        };
     }
 
     open() {
         this.mainPanel.classList.add('drawer-open');
         this.drawerPanel.classList.add('drawer-open');
+        setTimeout(() => {
+            this.mainPanel.addEventListener('click', this.clickHandler);
+        }, 0);
     }
 
     close() {
         this.mainPanel.classList.remove('drawer-open');
         this.drawerPanel.classList.remove('drawer-open');
+        this.mainPanel.removeEventListener('click', this.clickHandler);
     }
 
     toggle() {
-        this.mainPanel.classList.toggle('drawer-open');
-        this.drawerPanel.classList.toggle('drawer-open');
+        if (this.isOpen()) this.close();
+        else this.open();
     }
 
     isOpen() {
@@ -37,7 +46,6 @@ export class Drawer {
      */
 
     append(component) {
-        // Append Component
         this.children.push(component);
         this.drawerPanel.append(component.element);
     }

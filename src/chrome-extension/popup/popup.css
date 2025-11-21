@@ -343,6 +343,7 @@ button.butticon img {
     width: 100%;
     text-align: center;
     margin: 20px auto;
+    position: relative;
 }
 
 .input-account input {
@@ -355,6 +356,15 @@ button.butticon img {
     border-bottom: 1px solid #4f4f67;
     outline: none;
     background-color: transparent;
+}
+
+.input-icon {
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    right: 14px;
+    bottom: 2px;
 }
 
 /* Separators */

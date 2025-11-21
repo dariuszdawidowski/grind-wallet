@@ -6,11 +6,17 @@ const bip39 = require('bip39');
 /**
  * Input for generic text
  *
+ * Component args:
+ *   id: unique idientifier (optional)
+ *   classList: additional classes (optional)
+ *   app: reference to the main app (optional)
  * Constructor args:
- *  - value: string (optional) - initial value to populate the input
- *  - placeholder: string (optional) - placeholder text shown when empty
- *  - focus: boolean (optional) - if true, set the autofocus attribute
- *  - onKeypress: func (optional) - callback on key pressed
+ *   value: string (optional) - initial value to populate the input
+ *   placeholder: string (optional) - placeholder text shown when empty
+ *   focus: boolean (optional) - if true, set the autofocus attribute
+ *   onKeypress: func (optional) - callback on key pressed
+ *   icon: string (optional) - HTML for right-side icon
+ *   onIconClick: func (optional) - callback when icon is clicked
  */
 
 export class InputText extends Component {
@@ -35,6 +41,17 @@ export class InputText extends Component {
             this.input.addEventListener('input', (event) => {
                 args.onKeypress({ key: event.data, value: this.input.value });
             });
+        }
+
+        // Optional right-side icon
+        if ('icon' in args) {
+            console.log('append icon')
+            this.icon = document.createElement('div');
+            this.icon.classList.add('input-icon');
+            this.icon.innerHTML = args.icon;
+            this.element.append(this.icon);
+            if ('onIconClick' in args) this.icon.addEventListener('click', args.onIconClick);
+            console.log(this.icon)
         }
 
     }
@@ -104,6 +121,12 @@ export class InputCurrency extends InputText {
         super(args);
 
         this.element.classList.add('input-currency');
+
+        // Set numeric input pattern
+        this.input.setAttribute('type', 'number');
+        this.input.setAttribute('pattern', '[0-9]*');
+        this.input.setAttribute('inputmode', 'decimal');
+
         this.annotation = null;
 
         if ('symbol' in args) {

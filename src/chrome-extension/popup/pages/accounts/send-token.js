@@ -47,7 +47,11 @@ export class SheetAccountSend extends Component {
 
         // Address
         this.widget.address = new InputAddress({
-            placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID'
+            placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID',
+            icon: '<img src="assets/material-design-icons/account-box.svg">',
+            onIconClick: () => {
+                console.log('addressbook')
+            }
         });
         this.append(this.widget.address);
 

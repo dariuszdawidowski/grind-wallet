@@ -1,12 +1,13 @@
 /**
  * Default button
- * args:
+ * Component args:
  *   id: unique idientifier (optional)
- *   app: reference to the main app
+ *   classList: additional classes (optional)
+ *   app: reference to the main app (optional)
+ * Constructor args:
  *   icon: icon html (optional)
  *   text: display
  *   click: callback
- *   classList: additional classes (optional)
  *   enter: submit on enter (default false)
  *   disabled: initially disabled (default false)
  */
@@ -17,9 +18,6 @@ export class Button extends Component {
 
     constructor(args) {
         super({...args, type: 'button'});
-
-        // Additional classes
-        if ('classList' in args) this.element.classList.add(...args.classList);
 
         // State machine (used to advance next stage)
         this.state = 0;

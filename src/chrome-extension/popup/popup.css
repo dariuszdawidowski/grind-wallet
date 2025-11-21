@@ -112,6 +112,7 @@ body {
 
 #drawer-panel.drawer-open {
     right: 0;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Checkbox */
@@ -405,6 +406,7 @@ button.butticon img {
     position: absolute;
     right: 20px;
     bottom: 2px;
+    background-color: #fff;
 }
 
 /* Separators */
@@ -1289,4 +1291,26 @@ hr {
     font-size: 10px;
     font-weight: 500;
     margin-bottom: 12px;
+}
+
+/* Address book widget */
+
+.address-book {
+    width: 100%;
+    min-height: calc(100% - 20px);
+    padding-top: 20px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.address-book .entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    color: #333;
+    font-size: 14px;
+    border-bottom: 1px solid #ccc;
 }

@@ -86,6 +86,10 @@ export class InputText extends Component {
         else this.input.style.removeProperty('color');
     }
 
+    valid() {
+        return this.get().length > 0;
+    }
+
 }
 
 
@@ -320,6 +324,10 @@ export class RecoveryPhrase extends Component {
 
     valid() {
 
+        // Check if all inputs are valid (non-empty)
+        if (!this.inputs.every(input => input.get().length > 0)) return false;
+
+        // Get phrase
         const phrase = this.get();
         const mnemonic = phrase.join(' ');
 

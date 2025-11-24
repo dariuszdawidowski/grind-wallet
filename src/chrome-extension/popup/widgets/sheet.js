@@ -58,9 +58,6 @@ export class Sheet extends Component {
 
     append(args) {
 
-        // Change state
-        this.open = true;
-
         // Title
         this.title.innerHTML = args.title;
 
@@ -68,11 +65,7 @@ export class Sheet extends Component {
         this.children.push(args.component);
         this.content.append(args.component.element);
 
-        // Show animation
-        this.element.style.display = 'flex';
-        setTimeout(() => {
-            this.element.classList.add('visible');
-        }, 10);
+        this.show();
     }
 
     /**
@@ -95,6 +88,21 @@ export class Sheet extends Component {
 
         // Clear DOM
         this.content.innerHTML = '';
+    }
+
+    /**
+     * Show sheet
+     */
+
+    show() {
+        // Change state
+        this.open = true;
+
+        // Show animation
+        this.element.style.display = 'flex';
+        setTimeout(() => {
+            this.element.classList.add('visible');
+        }, 10);
     }
 
     /**

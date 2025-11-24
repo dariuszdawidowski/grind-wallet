@@ -1,3 +1,7 @@
+/**
+ * Receive NFT Sheet
+ */
+
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 

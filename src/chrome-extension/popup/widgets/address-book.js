@@ -5,12 +5,15 @@
 import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
 import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
+import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
+import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { shortAddress } from '/src/utils/general.js';
 
 export class AddressBook extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app }) {
+        super({ app });
 
         // CSS class
         this.element.classList.add('address-book');
@@ -20,6 +23,11 @@ export class AddressBook extends Component {
 
         // Callback on address select
         this.callback = null;
+
+        // Bottom sheet
+        this.sheet = new Sheet({ app, id: '#contact-sheet', hidden: false });
+        this.element.append(this.sheet.element);
+
     }
 
     async load() {
@@ -32,6 +40,7 @@ export class AddressBook extends Component {
     }
 
     async addContact({ name, address }) {
+        console.log('Adding contact', name, address);
         const id = crypto.randomUUID();
         this.contacts.push({ id, name, address });
         await this.save();
@@ -43,9 +52,6 @@ export class AddressBook extends Component {
     }
 
     render() {
-        // Clear existing content
-        this.element.innerHTML = '';
-
         // Header
         const header = document.createElement('div');
         header.classList.add('header');
@@ -63,16 +69,14 @@ export class AddressBook extends Component {
         // Add contact button
         const addContact = new AddPlus({
             click: () => {
-                console.log('add contact')
-                // this.sheet.clear();
-                // this.sheet.append({
-                //     title: 'New contact',
-                //     component: new SheetContact({ app: this.app })
-                // });
+                this.sheet.clear();
+                this.sheet.append({
+                    title: 'New contact',
+                    component: new SheetContact({ app: this.app, addressbook: this })
+                });
             }
         });
-        addContact.element.style.marginTop = '16px';
-        addContact.element.style.marginBottom = '0';
+        addContact.element.style.margin = '16px 16px 0 auto';
         titleContainer.append(addContact.element);
 
         // Separator
@@ -124,8 +128,64 @@ export class AddressBook extends Component {
 
         // Address
         const address = document.createElement('div');
+        address.classList.add('address');
         address.innerText = shortAddress(contact.address);
         right.append(address);
+    }
+
+}
+
+/**
+ * Add/Edit contact sheet
+ */
+
+export class SheetContact extends Component {
+
+    constructor({ app, addressbook }) {
+        super({ app });
+
+        // Build
+        this.element.classList.add('form');
+
+        // Name
+        const name = new InputText({
+            placeholder: 'Contact name'
+        });
+        this.append(name);
+
+        // Address
+        const address = new InputAddress({
+            placeholder: 'Principal ID or Account ID',
+        });
+        this.append(address);
+
+        // Save button
+        const buttonSave = new Button({
+            text: 'Save contact',
+            click: () => {
+                if (!name.valid()) {
+                    alert('Invalid name');
+                }
+                else if (!address.valid()) {
+                    alert('Invalid address');
+                }
+                else {
+                    addressbook.addContact({
+                        name: name.get(),
+                        address: address.get()
+                    }).then(() => {
+                        // addressbook.sheet.clear();
+                        // addressbook.sheet.hide();
+                        // addressbook.element.innerHTML = '';
+                        // addressbook.load().then(() => {
+                            // addressbook.render();
+                        // });
+                    });
+                }
+            }
+        });
+        this.append(buttonSave);
+
     }
 
 }

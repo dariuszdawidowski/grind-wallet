@@ -37,7 +37,7 @@ export class SheetAccountSend extends Component {
         this.sent = false;
 
         // Address book
-        this.addressbook = new AddressBook();
+        this.addressbook = new AddressBook({ app });
         this.addressbook.addContact({ id: '1', name: 'DEV #1', address: 'qio7v-m7jbv-huagd-pd6l4-s7x2z-wg73b-ltj44-2h42x-23qfx-ryouz-hae' });
         this.addressbook.addContact({ id: '2', name: 'DEV #2', address: 'udb3f-hgkk3-3csng-n56yz-bd5nx-v223k-4mas2-pumih-cpoed-ueshl-6qe' });
         this.addressbook.addContact({ id: '3', name: 'Sztefan', address: '3lctn-geggl-nydg3-anh45-n67cf-zjin2-eruva-vm5wy-txxfo-jac3n-4ae' });

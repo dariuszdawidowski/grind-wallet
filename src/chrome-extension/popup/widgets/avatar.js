@@ -1,32 +1,27 @@
 /**
- * Token icon image
+ * Contact avatar image
  */
 
 import { Component } from '/src/utils/component.js';
 
-export class TokenImage extends Component {
+export class Avatar extends Component {
 
     /**
      * Constructor
      * @param {object} app App reference
-     * @param {string} canisterId Token Ledger canister ID
-     * @param {string} symbol Token symbol (optional)
+     * @param {string} id Id of a contact
      */
 
-    constructor({ app, canisterId, symbol = null }) {
+    constructor({ app, id, name }) {
         super({ app });
 
-        // Coin shape
-        this.element.classList.add('token-image');
+        // Class
+        this.element.classList.add('avatar-image');
 
-        // ICP logo
-        if (canisterId == app.ICP_LEDGER_CANISTER_ID) {
-            this.element.style.backgroundImage = `url('assets/tokens/icp.svg')`;
-        }
-        // Load cached token image
-        else (async () => {
+        // Load cached image
+        (async () => {
             try {
-                const image = await this.app.cache.image.load(`token:${canisterId}`);
+                const image = await this.app.cache.image.load(`avatar:${id}`);
                 if (image) {
                     this.element.style.backgroundColor = 'transparent';
                     // SVG
@@ -40,13 +35,15 @@ export class TokenImage extends Component {
                 }
                 // Fallback placeholder
                 else {
-                    if (symbol) this.element.innerText = symbol;
+                    if (name.length) this.element.innerText = name[0].toUpperCase();
+                    else this.element.innerText = '?';
                 }
             }
 
             // Fallback placeholder
             catch(error) {
-                if (symbol) this.element.innerText = symbol;
+                if (name.length) this.element.innerText = name[0].toUpperCase();
+                else this.element.innerText = '?';
             }
         })();
 

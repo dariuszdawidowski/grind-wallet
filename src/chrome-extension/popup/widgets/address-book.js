@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
 
 export class AddressBook extends Component {
 
@@ -29,12 +30,13 @@ export class AddressBook extends Component {
     }
 
     async addContact({ name, address }) {
-        this.contacts.push({ name, address });
+        const id = crypto.randomUUID();
+        this.contacts.push({ id, name, address });
         await this.save();
     }
 
-    async delContact(address) {
-        this.contacts = this.contacts.filter(contact => contact.address !== address);
+    async delContact(id) {
+        this.contacts = this.contacts.filter(contact => contact.id !== id);
         await this.save();
     }
 
@@ -42,7 +44,7 @@ export class AddressBook extends Component {
         // Clear existing content
         this.element.innerHTML = '';
 
-        // Entries container
+        // Whole container
         const entriesContainer = document.createElement('div');
         this.element.appendChild(entriesContainer);
         entriesContainer.addEventListener('click', (event) => {
@@ -55,12 +57,30 @@ export class AddressBook extends Component {
 
         // Render contacts
         this.contacts.forEach(contact => {
-            const entry = document.createElement('div');
-            entry.dataset.address = contact.address;
-            entry.classList.add('entry');
-            entry.innerText = `${contact.name} - ${contact.address}`;
-            entriesContainer.appendChild(entry);
+            this.renderContact(entriesContainer, contact);
         });
+    }
+
+    renderContact(container, contact) {
+        // Entry bar
+        const entry = document.createElement('div');
+        entry.dataset.address = contact.address;
+        entry.classList.add('entry');
+        container.appendChild(entry);
+
+        // Avatar
+        const avatar = new Avatar({
+            app: this.app,
+            id: contact.id,
+            name: contact.name
+        });
+        entry.append(avatar.element);
+
+        // Name
+        const right = document.createElement('div');
+        right.innerText = `${contact.name} - ${contact.address}`;
+        entry.append(right);
+
     }
 
 }

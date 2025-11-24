@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
+import { shortAddress } from '/src/utils/general.js';
 
 export class AddressBook extends Component {
 
@@ -76,11 +77,20 @@ export class AddressBook extends Component {
         });
         entry.append(avatar.element);
 
-        // Name
+        // Right side
         const right = document.createElement('div');
-        right.innerText = `${contact.name} - ${contact.address}`;
         entry.append(right);
 
+        // Name
+        const name = document.createElement('div');
+        name.classList.add('name');
+        name.innerText = contact.name;
+        right.append(name);
+
+        // Address
+        const address = document.createElement('div');
+        address.innerText = shortAddress(contact.address);
+        right.append(address);
     }
 
 }

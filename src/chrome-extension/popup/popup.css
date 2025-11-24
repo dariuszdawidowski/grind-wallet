@@ -1320,7 +1320,6 @@ hr {
     color: white;
     width: 20px;
     height: 20px;
-    padding: 6px;
     border-radius: 50%;
     background-size: contain;
     background-repeat: no-repeat;
@@ -1330,6 +1329,22 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.address-book .entry .avatar-image { 
+    margin: 0 14px 0 4px;
+    padding: 8px;
     font-size: 18px;
-    margin: 0 16px 0 6px;
+}
+
+.address-book .entry .name {
+    color: #444;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.address-book .entry .address {
+    color: #444;
+    font-size: 14px;
+    font-weight: normal;
 }

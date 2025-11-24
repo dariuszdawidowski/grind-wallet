@@ -8,9 +8,10 @@ import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { DrawerList } from '/src/chrome-extension/popup/widgets/drawer-list';
 import { shortAddress } from '/src/utils/general.js';
 
-export class AddressBook extends Component {
+export class AddressBook extends DrawerList {
 
     constructor({ app }) {
         super({ app });
@@ -114,8 +115,14 @@ export class AddressBook extends Component {
 
         // Render wallets
         if (Object.values(this.contacts['My wallets']).length) {
-            Object.values(this.contacts['My wallets']).sort((a, b) => a.name.localeCompare(b.name)).forEach(contact => {
-                this.renderContact(walletsGroupElement, contact);
+            Object.entries(this.contacts['My wallets']).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
+                this.renderEntry({
+                    container: walletsGroupElement,
+                    id,
+                    name: contact.name,
+                    value: contact.address,
+                    icon: 'assets/material-design-icons/pencil-box.svg'
+                });
             });
         }
         else {
@@ -130,8 +137,14 @@ export class AddressBook extends Component {
 
         // Render contacts
         if (Object.values(this.contacts['Contacts']).length) {
-            Object.values(this.contacts['Contacts']).sort((a, b) => a.name.localeCompare(b.name)).forEach(contact => {
-                this.renderContact(contactsGroupElement, contact);
+            Object.entries(this.contacts['Contacts']).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
+                this.renderEntry({
+                    container: contactsGroupElement,
+                    id,
+                    name: contact.name,
+                    value: contact.address,
+                    icon: 'assets/material-design-icons/pencil-box.svg'
+                });
             });
         }
         else {
@@ -185,57 +198,34 @@ export class AddressBook extends Component {
         const entriesContainer = document.createElement('div');
         this.element.appendChild(entriesContainer);
         entriesContainer.addEventListener('click', (event) => {
+
+            // Edit icon click
+            const icon = event.target.closest('.icon');
+            if (icon) {
+                const entry = icon.closest('.entry');
+                if (entry) {
+                    const id = entry.dataset.value;
+                    const contact = this.contacts[name][id];
+                    this.sheet.clear();
+                    this.sheet.append({
+                        title: `Edit ${contact.name}`,
+                        component: new SheetContact({ app: this.app, addressbook: this, group: name })
+                    });
+                    return;
+                }
+            }
+
+            // Entry click
             const entry = event.target.closest('.entry');
             if (entry) {
-                const address = entry.dataset.address;
-                this.callback?.(address);
+                const id = entry.dataset.value;
+                const contact = this.contacts[name][id];
+                this.callback?.(contact.address);
             }
+
         });
 
         return entriesContainer;
-    }
-
-    /**
-     * Render single contact entry
-     */
-
-    renderContact(container, contact) {
-        // Entry bar
-        const entry = document.createElement('div');
-        entry.dataset.address = contact.address;
-        entry.classList.add('entry');
-        container.appendChild(entry);
-
-        // Avatar
-        const avatar = new Avatar({
-            app: this.app,
-            id: contact.id,
-            name: contact.name
-        });
-        entry.append(avatar.element);
-
-        // Middle section
-        const middle = document.createElement('div');
-        entry.append(middle);
-
-        // Name
-        const name = document.createElement('div');
-        name.classList.add('name');
-        name.innerText = contact.name;
-        middle.append(name);
-
-        // Address
-        const address = document.createElement('div');
-        address.classList.add('address');
-        address.innerText = shortAddress(contact.address);
-        middle.append(address);
-
-        // Right icon
-        const right = document.createElement('div');
-        right.classList.add('icon');
-        entry.append(right);
-        right.innerHTML = '<img src="assets/material-design-icons/pencil-box.svg"></img>';
-
     }
 
 }

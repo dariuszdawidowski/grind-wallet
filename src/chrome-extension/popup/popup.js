@@ -105,10 +105,11 @@ class GrindWalletPlugin {
         // Drawer menu
         this.drawer = new Drawer();
 
-        // Bottom Sheet
-        this.sheet = new Sheet({ app: this, selector: '#sheet', hidden: true });
+        // Main bottom sheet
+        this.sheet = new Sheet({ app: this, id: '#sheet', hidden: true });
+        document.querySelector('#main-panel-content').append(this.sheet.element);
 
-        // Task Manager
+        // Task manager
         this.tasks = new TaskManager({ app: this });
         await this.tasks.init();
 

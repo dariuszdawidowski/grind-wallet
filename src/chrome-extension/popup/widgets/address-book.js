@@ -64,10 +64,10 @@ export class AddressBook extends Component {
         const addContact = new AddPlus({
             click: () => {
                 console.log('add contact')
-                // this.app.sheet.clear();
-                // this.app.sheet.append({
-                //     title: 'Add NFT',
-                //     component: new SheetAddCustomNFT({ app: this.app, wallet: this.wallet })
+                // this.sheet.clear();
+                // this.sheet.append({
+                //     title: 'New contact',
+                //     component: new SheetContact({ app: this.app })
                 // });
             }
         });

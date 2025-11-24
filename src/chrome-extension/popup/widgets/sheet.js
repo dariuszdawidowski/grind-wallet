@@ -1,16 +1,30 @@
 /**
- * Grind Card
+ * Grind sheet card
  * args:
- *   selector: query
- *   hidded: hide at start
+ *   id: unique identifier
+ *   hidden: hide at start
  */
 
 import { Component } from '/src/utils/component.js';
 
 export class Sheet extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ app, id, hidden = true }) {
+        super({ app });
+
+        this.element.id = id;
+        this.element.classList.add('sheet', 'hide-scrollbar');
+         this.element.innerHTML = `
+            <div class="handler"></div>
+            <div class="x">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </div>
+            <h1 class="title"></h1>
+            <div class="content"></div>
+        `;
 
         // State open/close
         this.open = false;
@@ -32,7 +46,7 @@ export class Sheet extends Component {
         this.content = this.element.querySelector('.content');
 
         // Hide
-        if (('hidden' in args) && args.hidden) this.hide();
+        if (hidden) this.hide();
     }
 
     /**

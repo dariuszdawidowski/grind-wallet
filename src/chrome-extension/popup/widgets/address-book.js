@@ -214,21 +214,28 @@ export class AddressBook extends Component {
         });
         entry.append(avatar.element);
 
-        // Right side
-        const right = document.createElement('div');
-        entry.append(right);
+        // Middle section
+        const middle = document.createElement('div');
+        entry.append(middle);
 
         // Name
         const name = document.createElement('div');
         name.classList.add('name');
         name.innerText = contact.name;
-        right.append(name);
+        middle.append(name);
 
         // Address
         const address = document.createElement('div');
         address.classList.add('address');
         address.innerText = shortAddress(contact.address);
-        right.append(address);
+        middle.append(address);
+
+        // Right icon
+        const right = document.createElement('div');
+        right.classList.add('icon');
+        entry.append(right);
+        right.innerHTML = '<img src="assets/material-design-icons/pencil-box.svg"></img>';
+
     }
 
 }

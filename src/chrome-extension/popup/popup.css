@@ -1340,7 +1340,7 @@ hr {
     padding-top: 0;
 }
 
-.avatar-image {
+.avatar {
     color: white;
     width: 40px;
     height: 40px;
@@ -1355,7 +1355,7 @@ hr {
     align-items: center;
 }
 
-.address-book .entry .avatar-image { 
+.address-book .entry .avatar { 
     margin: 0 16px 0 6px;
     font-size: 18px;
 }
@@ -1372,6 +1372,12 @@ hr {
     font-size: 14px;
     font-weight: normal;
     line-height: 22px;
+}
+
+.address-book .entry .icon {
+    width: 26px;
+    height: 26px;
+    margin-left: auto;
 }
 
 .address-book .infotext {

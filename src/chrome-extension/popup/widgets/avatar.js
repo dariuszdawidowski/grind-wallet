@@ -16,7 +16,7 @@ export class Avatar extends Component {
         super({ app });
 
         // Class
-        this.element.classList.add('avatar-image');
+        this.element.classList.add('avatar');
 
         // Load cached image
         (async () => {

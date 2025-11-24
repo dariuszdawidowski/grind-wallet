@@ -1298,11 +1298,25 @@ hr {
 
 .address-book {
     width: 100%;
-    min-height: calc(100% - 20px);
-    padding-top: 20px;
+    min-height: 100%;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+}
+
+.address-book .header {
+    background-color: #f9f9f9;
+}
+
+.address-book .header h1 {
+    color: #222;
+    margin: 32px 12px 20px 12px;
+}
+
+.address-book .separator {
+    background-color: #fff;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 0;
 }
 
 .address-book .entry {
@@ -1314,6 +1328,10 @@ hr {
     color: #333;
     font-size: 14px;
     border-bottom: 1px solid #ccc;
+}
+
+.address-book .entry:first-child {
+    padding-top: 0;
 }
 
 .avatar-image {

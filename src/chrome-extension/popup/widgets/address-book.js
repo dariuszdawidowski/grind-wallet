@@ -45,7 +45,21 @@ export class AddressBook extends Component {
         // Clear existing content
         this.element.innerHTML = '';
 
-        // Whole container
+        // Header
+        const header = document.createElement('div');
+        header.classList.add('header');
+        this.element.append(header);
+
+        const title = document.createElement('h1');
+        title.innerText = 'Contacts';
+        header.append(title);
+
+        // Separator
+        const separator = document.createElement('div');
+        separator.classList.add('separator');
+        header.append(separator);
+
+        // All contacts container
         const entriesContainer = document.createElement('div');
         this.element.appendChild(entriesContainer);
         entriesContainer.addEventListener('click', (event) => {

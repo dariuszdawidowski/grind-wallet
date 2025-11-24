@@ -33,10 +33,11 @@ export class AddressBook extends Component {
     async load() {
         const data = await chrome.storage.local.get('addressbook');
         if (data && data.addressbook) this.contacts = data.addressbook;
+        this.contacts = this.addDynamicWallets(this.contacts);
     }
 
     async save() {
-        await chrome.storage.local.set({ addressbook: this.contacts });
+        await chrome.storage.local.set({ addressbook: this.delDynamicWallets(this.contacts) });
     }
 
     addGroup({ name }) {
@@ -59,17 +60,61 @@ export class AddressBook extends Component {
     }
 
     /**
+     * Add dynamic wallets from app to contacts
+     */
+
+    addDynamicWallets(contacts) {
+        // Clone contacts
+        const updatedContacts = JSON.parse(JSON.stringify(contacts));
+
+        // Add wallets to 'My wallets' group
+        this.app.wallets.get().forEach(wallet => {
+            // Check if wallet already exists
+            let exists = false;
+            Object.values(updatedContacts['My wallets']).forEach(contact => {
+                if (contact.address === wallet.address) exists = true;
+            });
+            // Add wallet if not exists
+            if (!exists) {
+                updatedContacts['My wallets'][`mywallet-${wallet.principal}`] = {
+                    name: wallet.name,
+                    address: wallet.principal
+                };
+            }
+        });
+
+        return updatedContacts;
+    }
+
+    /**
+     * Delete dynamic wallets from contacts before saving
+     */
+
+    delDynamicWallets(contacts) {
+        // Clone contacts
+        const updatedContacts = JSON.parse(JSON.stringify(contacts));
+
+        // Remove dynamic wallets from 'My wallets' group
+        Object.keys(updatedContacts['My wallets']).forEach(id => {
+            if (id.startsWith('mywallet-')) {
+                delete updatedContacts['My wallets'][id];
+            }
+        });
+
+        return updatedContacts;
+    }
+
+    /**
      * Render address book
      */
 
     render() {
-        console.log('this.contacts', this.contacts)
         // My wallets header
         const walletsGroupElement = this.renderGroup({ name: 'My wallets' });
 
         // Render wallets
         if (Object.values(this.contacts['My wallets']).length) {
-            Object.values(this.contacts['My wallets']).forEach(contact => {
+            Object.values(this.contacts['My wallets']).sort((a, b) => a.name.localeCompare(b.name)).forEach(contact => {
                 this.renderContact(walletsGroupElement, contact);
             });
         }
@@ -85,7 +130,7 @@ export class AddressBook extends Component {
 
         // Render contacts
         if (Object.values(this.contacts['Contacts']).length) {
-            Object.values(this.contacts['Contacts']).forEach(contact => {
+            Object.values(this.contacts['Contacts']).sort((a, b) => a.name.localeCompare(b.name)).forEach(contact => {
                 this.renderContact(contactsGroupElement, contact);
             });
         }
@@ -123,7 +168,7 @@ export class AddressBook extends Component {
             click: () => {
                 this.sheet.clear();
                 this.sheet.append({
-                    title: `New contact for ${name}`,
+                    title: `New entry for ${name}`,
                     component: new SheetContact({ app: this.app, addressbook: this, group: name })
                 });
             }
@@ -215,6 +260,7 @@ export class SheetContact extends Component {
         // Save button
         const buttonSave = new Button({
             text: 'Save contact',
+            classList: ['bottom'],
             click: () => {
                 if (!name.valid()) {
                     alert('Invalid name');
@@ -227,13 +273,11 @@ export class SheetContact extends Component {
                         name: name.get(),
                         address: address.get(),
                         group: group
-                    }).then(() => {
-                        // addressbook.sheet.clear();
-                        // addressbook.sheet.hide();
-                        // addressbook.element.innerHTML = '';
-                        // addressbook.load().then(() => {
-                            // addressbook.render();
-                        // });
+                    });
+                    addressbook.save().then(() => {
+                        addressbook.element.innerHTML = '';
+                        addressbook.render();
+                        this.app.sheet.hide();
                     });
                 }
             }

@@ -38,14 +38,14 @@ export class SheetAccountSend extends Component {
 
         // Address book
         this.addressbook = new AddressBook({ app });
-        this.addressbook.addContact({ id: '1', name: 'DEV #1', address: 'qio7v-m7jbv-huagd-pd6l4-s7x2z-wg73b-ltj44-2h42x-23qfx-ryouz-hae' });
-        this.addressbook.addContact({ id: '2', name: 'DEV #2', address: 'udb3f-hgkk3-3csng-n56yz-bd5nx-v223k-4mas2-pumih-cpoed-ueshl-6qe' });
-        this.addressbook.addContact({ id: '3', name: 'Sztefan', address: '3lctn-geggl-nydg3-anh45-n67cf-zjin2-eruva-vm5wy-txxfo-jac3n-4ae' });
-        // this.addressbook.load();
-        this.addressbook.callback = (address) => {
-            this.widget.address.set(address);
-            this.app.drawer.close();
-        };
+        this.addressbook.load().then(() => {
+            this.app.drawer.append(this.addressbook);
+            this.addressbook.render();
+            this.addressbook.callback = (address) => {
+                this.widget.address.set(address);
+                this.app.drawer.close();
+            };
+        });
 
         // Build
         this.element.classList.add('form');
@@ -62,8 +62,6 @@ export class SheetAccountSend extends Component {
             placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onIconClick: () => {
-                this.app.drawer.append(this.addressbook);
-                this.addressbook.render();
                 this.app.drawer.toggle();
             }
         });
@@ -111,6 +109,10 @@ export class SheetAccountSend extends Component {
         }));
 
     }
+
+    /**
+     * Transfer token
+     */
 
     transfer() {
 

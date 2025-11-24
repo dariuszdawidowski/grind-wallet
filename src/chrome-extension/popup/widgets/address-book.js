@@ -18,8 +18,8 @@ export class AddressBook extends Component {
         // CSS class
         this.element.classList.add('address-book');
 
-        // Contact list
-        this.contacts = [];
+        // Contact list {'group name': { id: { name, address } }, ...}, ...}
+        this.contacts = { 'My wallets': {}, 'Contacts': {} };
 
         // Callback on address select
         this.callback = null;
@@ -32,59 +32,111 @@ export class AddressBook extends Component {
 
     async load() {
         const data = await chrome.storage.local.get('addressbook');
-        this.contacts = data.addressbook || [];
+        if (data && data.addressbook) this.contacts = data.addressbook;
     }
 
     async save() {
         await chrome.storage.local.set({ addressbook: this.contacts });
     }
 
-    async addContact({ name, address }) {
-        console.log('Adding contact', name, address);
-        const id = crypto.randomUUID();
-        this.contacts.push({ id, name, address });
-        await this.save();
+    addGroup({ name }) {
+        if (!id) id = crypto.randomUUID();
+        this.contacts[id] = {};
     }
 
-    async delContact(id) {
-        this.contacts = this.contacts.filter(contact => contact.id !== id);
-        await this.save();
+    addContact({ id = null, name, address, group }) {
+        if (!id) id = crypto.randomUUID();
+        this.contacts[group][id] = { name, address };
     }
+
+    delContact(id) {
+        for (const group in this.contacts) {
+            if (this.contacts[group][id]) {
+                delete this.contacts[group][id];
+                break;
+            }
+        }
+    }
+
+    /**
+     * Render address book
+     */
 
     render() {
-        // Header
+        console.log('this.contacts', this.contacts)
+        // My wallets header
+        const walletsGroupElement = this.renderGroup({ name: 'My wallets' });
+
+        // Render wallets
+        if (Object.values(this.contacts['My wallets']).length) {
+            Object.values(this.contacts['My wallets']).forEach(contact => {
+                this.renderContact(walletsGroupElement, contact);
+            });
+        }
+        else {
+            const noWallets = document.createElement('div');
+            noWallets.classList.add('infotext');
+            noWallets.innerHTML = 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.';
+            walletsGroupElement.append(noWallets);
+        }
+
+        // Contacts header
+        const contactsGroupElement = this.renderGroup({ name: 'Contacts' });
+
+        // Render contacts
+        if (Object.values(this.contacts['Contacts']).length) {
+            Object.values(this.contacts['Contacts']).forEach(contact => {
+                this.renderContact(contactsGroupElement, contact);
+            });
+        }
+        else {
+            const noContacts = document.createElement('div');
+            noContacts.classList.add('infotext');
+            noContacts.innerHTML = 'You have no contacts saved yet.<br>Tap the + button to add a new contact.';
+            contactsGroupElement.append(noContacts);
+        }
+    }
+
+    /**
+     * Render group header & container
+     * @param {string} name Group name
+     */
+
+    renderGroup({ name }) {
+        // Header container
         const header = document.createElement('div');
         header.classList.add('header');
         this.element.append(header);
 
+        // Header row
         const titleContainer = document.createElement('div');
         titleContainer.classList.add('header-row');
         header.append(titleContainer);
 
-        // Title "Contacts"
+        // Title
         const title = document.createElement('h1');
-        title.innerText = 'Contacts';
+        title.innerText = name;
         titleContainer.append(title);
 
         // Add contact button
-        const addContact = new AddPlus({
+        const plusButton = new AddPlus({
             click: () => {
                 this.sheet.clear();
                 this.sheet.append({
-                    title: 'New contact',
-                    component: new SheetContact({ app: this.app, addressbook: this })
+                    title: `New contact for ${name}`,
+                    component: new SheetContact({ app: this.app, addressbook: this, group: name })
                 });
             }
         });
-        addContact.element.style.margin = '16px 16px 0 auto';
-        titleContainer.append(addContact.element);
+        plusButton.element.style.margin = '16px 16px 0 auto';
+        titleContainer.append(plusButton.element);
 
         // Separator
         const separator = document.createElement('div');
         separator.classList.add('separator');
         header.append(separator);
 
-        // All contacts container
+        // Contacts container
         const entriesContainer = document.createElement('div');
         this.element.appendChild(entriesContainer);
         entriesContainer.addEventListener('click', (event) => {
@@ -95,11 +147,12 @@ export class AddressBook extends Component {
             }
         });
 
-        // Render contacts
-        this.contacts.forEach(contact => {
-            this.renderContact(entriesContainer, contact);
-        });
+        return entriesContainer;
     }
+
+    /**
+     * Render single contact entry
+     */
 
     renderContact(container, contact) {
         // Entry bar
@@ -141,7 +194,7 @@ export class AddressBook extends Component {
 
 export class SheetContact extends Component {
 
-    constructor({ app, addressbook }) {
+    constructor({ app, addressbook, group }) {
         super({ app });
 
         // Build
@@ -172,7 +225,8 @@ export class SheetContact extends Component {
                 else {
                     addressbook.addContact({
                         name: name.get(),
-                        address: address.get()
+                        address: address.get(),
+                        group: group
                     }).then(() => {
                         // addressbook.sheet.clear();
                         // addressbook.sheet.hide();

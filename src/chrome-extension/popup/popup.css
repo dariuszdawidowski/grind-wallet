@@ -104,7 +104,6 @@ body {
     right: -85%;
     width: 85%;
     height: 100%;
-    background: #1a1a1a;
     transition: right 0.3s ease;
     z-index: 2;
     overflow-y: auto;
@@ -1374,4 +1373,11 @@ hr {
     font-size: 14px;
     font-weight: normal;
     line-height: 22px;
+}
+
+.address-book .infotext {
+    text-align: center;
+    color: #333;
+    font-size: 12px;
+    margin: 4px 16px 20px 16px;
 }

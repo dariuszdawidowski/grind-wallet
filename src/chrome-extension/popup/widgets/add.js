@@ -1,20 +1,22 @@
+/**
+ * Plus icon
+ */
+
 import { Component } from '/src/utils/component.js';
 
 export class AddPlus extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor({ text = null, click = null }) {
+        super();
 
         // Build
         this.element.classList.add('add-circle');
-        this.element.innerHTML = `
-            <div class="plus"><img src="assets/material-design-icons/plus.svg"></img></div>
-            <div class="label">${args.text}</div>
-        `;
+        let html = '<div class="plus"><img src="assets/material-design-icons/plus.svg"></img></div>';
+        if (text) html += `<div class="label">${text}</div>`;
+        this.element.innerHTML = html;
 
         // Events
-        this.element.addEventListener('click', args.click);
-
+        this.element.addEventListener('click', click);
     }
     
 }

@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
+import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { shortAddress } from '/src/utils/general.js';
 
 export class AddressBook extends Component {
@@ -50,9 +51,29 @@ export class AddressBook extends Component {
         header.classList.add('header');
         this.element.append(header);
 
+        const titleContainer = document.createElement('div');
+        titleContainer.classList.add('header-row');
+        header.append(titleContainer);
+
+        // Title "Contacts"
         const title = document.createElement('h1');
         title.innerText = 'Contacts';
-        header.append(title);
+        titleContainer.append(title);
+
+        // Add contact button
+        const addContact = new AddPlus({
+            click: () => {
+                console.log('add contact')
+                // this.app.sheet.clear();
+                // this.app.sheet.append({
+                //     title: 'Add NFT',
+                //     component: new SheetAddCustomNFT({ app: this.app, wallet: this.wallet })
+                // });
+            }
+        });
+        addContact.element.style.marginTop = '16px';
+        addContact.element.style.marginBottom = '0';
+        titleContainer.append(addContact.element);
 
         // Separator
         const separator = document.createElement('div');

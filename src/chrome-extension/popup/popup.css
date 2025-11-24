@@ -1308,7 +1308,14 @@ hr {
     background-color: #f9f9f9;
 }
 
-.address-book .header h1 {
+.address-book .header .header-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.address-book .header .header-row h1 {
     color: #222;
     margin: 32px 12px 20px 12px;
 }
@@ -1336,8 +1343,8 @@ hr {
 
 .avatar-image {
     color: white;
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-size: contain;
     background-repeat: no-repeat;
@@ -1351,7 +1358,6 @@ hr {
 
 .address-book .entry .avatar-image { 
     margin: 0 14px 0 4px;
-    padding: 8px;
     font-size: 18px;
 }
 

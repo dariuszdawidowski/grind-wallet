@@ -85,7 +85,7 @@ export class TaskManager extends Component {
 
         return new Promise((resolve, reject) => {
             try {
-                chrome.storage.local.get(['tasks'], (result) => {
+                chrome.storage.local.get('tasks', (result) => {
                     if (chrome.runtime.lastError) {
                         reject(new Error(chrome.runtime.lastError.message));
                     }

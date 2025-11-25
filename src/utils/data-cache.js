@@ -20,7 +20,7 @@ export class DataCache {
 
     async init() {
         // Load existing entries from storage
-        const stored = await chrome.storage.local.get([this.name]);
+        const stored = await chrome.storage.local.get(this.name);
         if (stored.hasOwnProperty(this.name)) {
             this.cache = stored[this.name];
         }

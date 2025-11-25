@@ -126,7 +126,7 @@ export class Wallets {
      */
 
     async load() {
-        const storageLocal = await chrome.storage.local.get(['wallets']);
+        const storageLocal = await chrome.storage.local.get('wallets');
         // Load Wallets
         if (storageLocal.wallets) {
             for (const [_, w] of Object.entries(storageLocal.wallets)) {

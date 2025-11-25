@@ -276,7 +276,7 @@ class GrindWalletPlugin {
     async migrate() {
         try {
             // 0.6.2 -> 0.6.3: remove old timestamps
-            const storageLocal = await chrome.storage.local.get(['timestamps']);
+            const storageLocal = await chrome.storage.local.get('timestamps');
             if (storageLocal && Object.prototype.hasOwnProperty.call(storageLocal, 'timestamps')) {
                 await chrome.storage.local.remove(['timestamps']);
             }

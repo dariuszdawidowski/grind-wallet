@@ -16,8 +16,14 @@ export class AddressBook extends ListView {
         // CSS class
         this.element.classList.add('address-book');
 
-        // Contact list {'group name': { id: { name, address } }, ...}, ...}
-        this.contacts = { 'My wallets': {}, 'Contacts': {} };
+        // Contact groups
+        this.groups = {
+            'my': { name: 'My wallets', order: 1 },
+            'contacts': { name: 'Contacts', order: 2 }
+        };
+
+        // Contact list {'group': { id: { name, address } }, ...}, ...}
+        this.contacts = { 'my': {}, 'contacts': {} };
 
         // Callback on address select
         this.callback = null;
@@ -28,32 +34,85 @@ export class AddressBook extends ListView {
 
     }
 
+    /**
+     * Load address book from storage
+     */
+
     async load() {
-        const data = await chrome.storage.local.get('addressbook');
-        if (data && data.addressbook) this.contacts = data.addressbook;
+        const data = await chrome.storage.local.get(['address:groups', 'address:contacts']);
+        if (data) {
+            if (data['address:groups']) this.groups = { ...this.groups, ...data['address:groups'] };
+            if (data['address:contacts']) this.contacts = data['address:contacts'];
+        }
         this.contacts = this.addDynamicWallets(this.contacts);
     }
 
+    /**
+     * Save address book to storage
+     */
+
     async save() {
-        await chrome.storage.local.set({ addressbook: this.delDynamicWallets(this.contacts) });
+        await chrome.storage.local.set({
+            'address:groups': this.delBaseGroups(this.groups),
+            'address:contacts': this.delDynamicWallets(this.contacts)
+        });
     }
 
-    // addGroup({ name }) {
-    //     if (!id) id = crypto.randomUUID();
-    //     this.contacts[id] = {};
-    // }
+    /**
+     * Add a new group
+     */
+
+    addGroup({ id = null, name }) {
+        if (!id) id = crypto.randomUUID();
+        this.groups[id] = { name };
+        this.contacts[id] = {};
+    }
+
+    /**
+     * Edit a group
+     */
+
+    setGroup({ id, name = null, order = null }) {
+        if (id in this.groups) {
+            if (name) this.groups[id].name = name;
+            if (order) this.groups[id].order = order;
+        }
+    }
+
+    /**
+     * Delete a group
+     */
+
+    delGroup(id) {
+        if (id in this.groups) {
+            delete this.groups[id];
+            delete this.contacts[id];
+        }
+    }
+
+    /**
+     * Add a new contact
+     */
 
     addContact({ id = null, name, address, group }) {
         if (!id) id = crypto.randomUUID();
         this.contacts[group][id] = { name, address };
     }
 
-    setContact({ id, name, address, group }) {
+    /**
+     * Edit a contact
+     */
+
+    setContact({ id, name = null, address = null, group }) {
         if ((group in this.contacts) && (id in this.contacts[group])) {
-            this.contacts[group][id].name = name;
-            this.contacts[group][id].address = address;
+            if (name) this.contacts[group][id].name = name;
+            if (address) this.contacts[group][id].address = address;
         }
     }
+
+    /**
+     * Delete a contact
+     */
 
     delContact(id) {
         for (const group in this.contacts) {
@@ -76,12 +135,12 @@ export class AddressBook extends ListView {
         this.app.wallets.get().forEach(wallet => {
             // Check if wallet already exists
             let exists = false;
-            Object.values(updatedContacts['My wallets']).forEach(contact => {
+            Object.values(updatedContacts['my']).forEach(contact => {
                 if (contact.address === wallet.address) exists = true;
             });
             // Add wallet if not exists
             if (!exists) {
-                updatedContacts['My wallets'][`mywallet-${wallet.principal}`] = {
+                updatedContacts['my'][`mywallet-${wallet.principal}`] = {
                     name: wallet.name,
                     address: wallet.principal,
                     dynamic: true
@@ -101,13 +160,24 @@ export class AddressBook extends ListView {
         const updatedContacts = JSON.parse(JSON.stringify(contacts));
 
         // Remove dynamic wallets from 'My wallets' group
-        Object.keys(updatedContacts['My wallets']).forEach(id => {
+        Object.keys(updatedContacts['my']).forEach(id => {
             if (id.startsWith('mywallet-')) {
-                delete updatedContacts['My wallets'][id];
+                delete updatedContacts['my'][id];
             }
         });
 
         return updatedContacts;
+    }
+
+    /**
+     * Delete base groups before saving
+     */
+
+    delBaseGroups(groups) {
+        const updatedGroups = JSON.parse(JSON.stringify(groups));
+        delete updatedGroups['my'];
+        delete updatedGroups['contacts'];
+        return updatedGroups;
     }
 
     /**
@@ -117,17 +187,19 @@ export class AddressBook extends ListView {
     render() {
 
         // My wallets
-        this.renderContactGroup({
-            name: 'My wallets',
-            data: this.contacts['My wallets'],
+        this.renderGroup({
+            id: 'my',
+            name: this.groups['my'].name,
+            data: this.contacts['my'],
             emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
             newMsg: 'New entry for my wallets'
         });
 
         // Contacts
-        this.renderContactGroup({
-            name: 'Contacts',
-            data: this.contacts['Contacts'],
+        this.renderGroup({
+            id: 'contacts',
+            name: this.groups['contacts'].name,
+            data: this.contacts['contacts'],
             emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
             newMsg: 'New contact'
         });
@@ -135,38 +207,37 @@ export class AddressBook extends ListView {
     }
 
     /**
-     * Render contact group
+     * Render group
      */
 
-    renderContactGroup({ name, data, emptyMsg, newMsg }) {
+    renderGroup({ id, name, data, emptyMsg, newMsg }) {
         this.renderList({
             name,
             data,
             emptyMsg,
-            onSelect: (id) => {
-                const contact = this.contacts[name][id];
+            onSelect: (contactId) => {
+                const contact = this.contacts[id][contactId];
                 this.callback?.(contact.address);
             },
             onAdd: () => {
                 this.sheet.clear();
                 this.sheet.append({
                     title: newMsg,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: name })
+                    component: new SheetContact({ app: this.app, addressbook: this, group: id })
                 });
 
             },
-            onEdit: (id) => {
-                const contact = this.contacts[name][id];
+            onEdit: (contactId) => {
+                const contact = this.contacts[id][contactId];
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: name, contactId: id, contact })
+                    component: new SheetContact({ app: this.app, addressbook: this, group: id, contactId: contactId, contact })
                 });
             }
         });
 
     }
-
 
 }
 

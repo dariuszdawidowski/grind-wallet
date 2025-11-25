@@ -52,7 +52,7 @@ export class PageAccounts extends Component {
         this.element.append(this.buttonsInfo);
 
         // Button: Create account
-        const createButton = new Button({
+        this.append(new Button({
             text: 'Create account',
             click: () => {
                 this.app.sheet.append({
@@ -60,11 +60,10 @@ export class PageAccounts extends Component {
                     component: new SheetNewAccount(args)
                 });
             }
-        });
-        this.append(createButton);
+        }));
 
         // Button: Import account
-        const importButton = new Button({
+        this.append(new Button({
             text: 'Import account',
             click: () => {
                 this.app.sheet.append({
@@ -72,9 +71,17 @@ export class PageAccounts extends Component {
                     component: new SheetImportAccount(args)
                 });
             }
-        });
-        importButton.element.style.marginBottom = '30px';
-        this.append(importButton);
+        }));
+
+        // Security and Privacy info
+        const info = document.createElement('p');
+        info.classList.add('end');
+        info.style.textAlign = 'center';
+        info.style.marginTop = '30px';
+        info.innerHTML = `
+            <a href="https://www.grindwallet.com/en/security/" target="_blank" style="color: #f1e6fd;">Security</a> &bull; <a href="https://www.grindwallet.com/en/privacy/" target="_blank" style="color: #f1e6fd;">Privacy</a>
+        `;
+        this.element.append(info);
 
         // Render wallets
         document.body.addEventListener('render.all', () => {

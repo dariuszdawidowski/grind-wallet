@@ -785,7 +785,7 @@ hr {
     white-space: nowrap;
     scrollbar-width: none;
     height: 54px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     gap: 7px;
 }
 
@@ -1001,7 +1001,7 @@ hr {
     -webkit-hyphens: manual;
 }
 
-.sheet .end {
+.end {
     padding-bottom: 30px;
 }
 

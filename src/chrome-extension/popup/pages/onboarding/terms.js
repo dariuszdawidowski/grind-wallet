@@ -28,7 +28,6 @@ export class PageAcceptTerms extends Component {
             <p style="text-align: center;">
                 Before you continue, please familiarize yourself<br>with our <a href="https://www.grindwallet.com/en/security/" target="_blank">Security</a> and <a href="https://www.grindwallet.com/en/privacy/" target="_blank">Privacy</a> guidelines.
             </p>
-
         `;
 
         // H2

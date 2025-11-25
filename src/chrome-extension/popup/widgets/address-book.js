@@ -79,7 +79,8 @@ export class AddressBook extends DrawerList {
             if (!exists) {
                 updatedContacts['My wallets'][`mywallet-${wallet.principal}`] = {
                     name: wallet.name,
-                    address: wallet.principal
+                    address: wallet.principal,
+                    dynamic: true
                 };
             }
         });
@@ -121,7 +122,7 @@ export class AddressBook extends DrawerList {
                     id,
                     name: contact.name,
                     value: contact.address,
-                    icon: 'assets/material-design-icons/pencil-box.svg'
+                    icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
                 });
             });
         }

@@ -20,7 +20,7 @@ export class DrawerList extends Component {
      * Render single contact entry
      */
 
-    renderEntry({ container, id, name, value, icon }) {
+    renderEntry({ container, id, name, value, icon = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -53,10 +53,12 @@ export class DrawerList extends Component {
         middle.append(subtitle);
 
         // Right icon
-        const right = document.createElement('div');
-        right.classList.add('icon');
-        entry.append(right);
-        right.innerHTML = `<img src="${icon}"></img>`;
+        if (icon) {
+            const right = document.createElement('div');
+            right.classList.add('icon');
+            entry.append(right);
+            right.innerHTML = `<img src="${icon}"></img>`;
+        }
 
     }
 

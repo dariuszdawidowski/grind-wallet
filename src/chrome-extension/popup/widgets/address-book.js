@@ -5,7 +5,7 @@
 import { Component } from '/src/utils/component.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { DrawerList } from '/src/chrome-extension/popup/widgets/drawer-list';
 
 export class AddressBook extends DrawerList {
@@ -38,10 +38,10 @@ export class AddressBook extends DrawerList {
         await chrome.storage.local.set({ addressbook: this.delDynamicWallets(this.contacts) });
     }
 
-    addGroup({ name }) {
-        if (!id) id = crypto.randomUUID();
-        this.contacts[id] = {};
-    }
+    // addGroup({ name }) {
+    //     if (!id) id = crypto.randomUUID();
+    //     this.contacts[id] = {};
+    // }
 
     addContact({ id = null, name, address, group }) {
         if (!id) id = crypto.randomUUID();
@@ -232,6 +232,23 @@ export class SheetContact extends Component {
             }
         });
         this.append(buttonSave);
+
+        // Delete button
+        if (contact) {
+            this.append(new ButtLink({
+                text: `Remove contact`,
+                click: () => {
+                    if (confirm('Delete this contact?')) {
+                        addressbook.delContact(contactId);
+                        addressbook.save().then(() => {
+                            addressbook.element.innerHTML = '';
+                            addressbook.render();
+                            this.app.sheet.hide();
+                        });
+                    }
+                }
+            }));            
+        }
 
     }
 

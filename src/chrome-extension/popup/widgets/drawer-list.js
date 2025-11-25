@@ -90,7 +90,7 @@ export class DrawerList extends Component {
             const noWallets = document.createElement('div');
             noWallets.classList.add('infotext');
             noWallets.innerHTML = emptyMsg;
-            walletsGroupElement.append(noWallets);
+            container.append(noWallets);
         }
 
     }

@@ -5,9 +5,6 @@
 import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
 import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
-import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
-import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { shortAddress } from '/src/utils/general.js';
 
 export class DrawerList extends Component {

@@ -68,6 +68,7 @@ module.exports = (env = {}, argv = {}) => {
                         globOptions: {
                             ignore: [
                                 '**/card-ICP-01.svg',
+                                '**/.git/**',
                             ]
                         }
                     },

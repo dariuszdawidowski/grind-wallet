@@ -4,10 +4,10 @@
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/chrome-extension/popup/popup.js",
   "scripts": {
-    "build": "npx webpack",
+    "build:prod": "npx webpack",
     "build:dev": "cross-env DEV_MODE=1 npx webpack --mode development",
     "build:test": "cross-env TEST_MODE=1 npx webpack --mode development",
-    "deploy": "npm run build && node deploy.js"
+    "deploy": "npm run build:prod && node deploy.js"
   },
   "repository": {
     "type": "git",

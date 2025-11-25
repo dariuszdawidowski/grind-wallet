@@ -8,6 +8,21 @@ import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/inp
 import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { ListView } from '/src/chrome-extension/popup/widgets/list';
 
+class Contact {
+
+    constructor({ id = null, name, address, dynamic = false }) {
+        // Contact ID
+        this.id = id;
+        // Contact name
+        this.name = name;
+        // Contact address list { 'icp:pid': ..., 'icp:acc0': ..., 'btc:bech32': ... }
+        this.address = address;
+        // Is dynamic (from wallets)
+        this.dynamic = dynamic;
+    }
+
+}
+
 export class AddressBook extends ListView {
 
     constructor({ app }) {
@@ -17,13 +32,10 @@ export class AddressBook extends ListView {
         this.element.classList.add('address-book');
 
         // Contact groups
-        this.groups = {
-            'my': { name: 'My wallets', order: 1 },
-            'contacts': { name: 'Contacts', order: 2 }
-        };
+        this.groups = null;
 
-        // Contact list {'group': { id: { name, address } }, ...}, ...}
-        this.contacts = { 'my': {}, 'contacts': {} };
+        // Contact list {'group': { id: Contact, ... }, ...}
+        this.contacts = null;
 
         // Callback on address select
         this.callback = null;
@@ -40,11 +52,11 @@ export class AddressBook extends ListView {
 
     async load() {
         const data = await chrome.storage.local.get(['address:groups', 'address:contacts']);
-        if (data) {
-            if (data['address:groups']) this.groups = { ...this.groups, ...data['address:groups'] };
-            if (data['address:contacts']) this.contacts = data['address:contacts'];
-        }
-        this.contacts = this.addDynamicWallets(this.contacts);
+        // console.log(data);
+        this.deserializeGroups(('address:groups' in data) ? data['address:groups'] : {});
+        // console.log(this.groups);
+        this.deserializeContacts(('address:contacts' in data) ? data['address:contacts'] : {});
+        // console.log(this.contacts);
     }
 
     /**
@@ -53,8 +65,8 @@ export class AddressBook extends ListView {
 
     async save() {
         await chrome.storage.local.set({
-            'address:groups': this.delBaseGroups(this.groups),
-            'address:contacts': this.delDynamicWallets(this.contacts)
+            'address:groups': this.serializeGroups(this.groups),
+            'address:contacts': this.serializeContacts(this.contacts)
         });
     }
 
@@ -96,7 +108,7 @@ export class AddressBook extends ListView {
 
     addContact({ id = null, name, address, group }) {
         if (!id) id = crypto.randomUUID();
-        this.contacts[group][id] = { name, address };
+        this.contacts[group][id] = new Contact({ id, name, address });
     }
 
     /**
@@ -124,38 +136,56 @@ export class AddressBook extends ListView {
     }
 
     /**
-     * Add dynamic wallets from app to contacts
+     * Deserialize groups from storage
      */
 
-    addDynamicWallets(contacts) {
-        // Clone contacts
-        const updatedContacts = JSON.parse(JSON.stringify(contacts));
+    deserializeGroups(data) {
+        // Default groups structure
+        this.groups = { 'my': { name: 'My wallets', order: 1 }, 'contacts': { name: 'Contacts', order: 2 } };
 
-        // Add wallets to 'My wallets' group
+        // Add stored groups
+        Object.entries(data).forEach(([id, group]) => {
+            this.groups[id] = { name: group.name, order: group.order || 99 };
+        });
+    }
+
+    /**
+     * Deserialize contacts from storage
+     */
+
+    deserializeContacts(data) {
+        // Default contacts structure
+        this.contacts = { 'my': {}, 'contacts': {} };
+
+        // Add dynamic wallets to 'My wallets' group
         this.app.wallets.get().forEach(wallet => {
-            // Check if wallet already exists
-            let exists = false;
-            Object.values(updatedContacts['my']).forEach(contact => {
-                if (contact.address === wallet.address) exists = true;
+            this.contacts['my'][`mywallet-${wallet.principal}`] = new Contact({
+                id: `mywallet-${wallet.principal}`,
+                name: wallet.name,
+                address: { 'icp:pid': wallet.principal, 'icp:acc0': wallet.account },
+                dynamic: true
             });
-            // Add wallet if not exists
-            if (!exists) {
-                updatedContacts['my'][`mywallet-${wallet.principal}`] = {
-                    name: wallet.name,
-                    address: wallet.principal,
-                    dynamic: true
-                };
-            }
         });
 
-        return updatedContacts;
+        // Add stored contacts
+        Object.entries(data).forEach(([group, contacts]) => {
+            this.contacts[group] = {};
+            Object.entries(contacts).forEach(([id, contact]) => {
+                this.contacts[group][id] = new Contact({
+                    id,
+                    name: contact.name,
+                    address: contact.address,
+                    dynamic: contact.dynamic || false
+                });
+            });
+        });
     }
 
     /**
      * Delete dynamic wallets from contacts before saving
      */
 
-    delDynamicWallets(contacts) {
+    serializeContacts(contacts) {
         // Clone contacts
         const updatedContacts = JSON.parse(JSON.stringify(contacts));
 
@@ -173,7 +203,7 @@ export class AddressBook extends ListView {
      * Delete base groups before saving
      */
 
-    delBaseGroups(groups) {
+    serializeGroups(groups) {
         const updatedGroups = JSON.parse(JSON.stringify(groups));
         delete updatedGroups['my'];
         delete updatedGroups['contacts'];
@@ -188,8 +218,7 @@ export class AddressBook extends ListView {
 
         // My wallets
         this.renderGroup({
-            id: 'my',
-            name: this.groups['my'].name,
+            groupId: 'my',
             data: this.contacts['my'],
             emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
             newMsg: 'New entry for my wallets'
@@ -197,8 +226,7 @@ export class AddressBook extends ListView {
 
         // Contacts
         this.renderGroup({
-            id: 'contacts',
-            name: this.groups['contacts'].name,
+            groupId: 'contacts',
             data: this.contacts['contacts'],
             emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
             newMsg: 'New contact'
@@ -210,29 +238,29 @@ export class AddressBook extends ListView {
      * Render group
      */
 
-    renderGroup({ id, name, data, emptyMsg, newMsg }) {
+    renderGroup({ groupId, data, emptyMsg, newMsg }) {
         this.renderList({
-            name,
+            name: this.groups[groupId].name,
             data,
             emptyMsg,
             onSelect: (contactId) => {
-                const contact = this.contacts[id][contactId];
+                const contact = this.contacts[groupId][contactId];
                 this.callback?.(contact.address);
             },
             onAdd: () => {
                 this.sheet.clear();
                 this.sheet.append({
                     title: newMsg,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: id })
+                    component: new SheetContact({ app: this.app, addressbook: this, group: groupId })
                 });
 
             },
             onEdit: (contactId) => {
-                const contact = this.contacts[id][contactId];
+                const contact = this.contacts[groupId][contactId];
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: id, contactId: contactId, contact })
+                    component: new SheetContact({ app: this.app, addressbook: this, group: groupId, contactId: contactId, contact })
                 });
             }
         });
@@ -260,12 +288,19 @@ export class SheetContact extends Component {
         if (contact) name.set(contact.name);
         this.append(name);
 
-        // Address
-        const address = new InputAddress({
-            placeholder: 'Principal ID or Account ID',
+        // Principal ID
+        const principalId = new InputAddress({
+            placeholder: 'Principal ID',
         });
-        if (contact) address.set(contact.address);
-        this.append(address);
+        if (contact) principalId.set(contact.address[0]);
+        this.append(principalId);
+
+        // Account ID
+        const accountId = new InputAddress({
+            placeholder: 'Account ID (optional)',
+        });
+        if (contact && contact.address.length > 1) accountId.set(contact.address[1]);
+        this.append(accountId);
 
         // Save button
         const buttonSave = new Button({
@@ -275,22 +310,25 @@ export class SheetContact extends Component {
                 if (!name.valid()) {
                     alert('Invalid name');
                 }
-                else if (!address.valid()) {
-                    alert('Invalid address');
+                else if (!principalId.valid()) {
+                    alert('Invalid Principal ID');
+                }
+                else if (accountId.get().length && !accountId.valid()) {
+                    alert('Invalid Account ID');
                 }
                 else {
                     if (contact) {
                         addressbook.setContact({
                             id: contactId,
                             name: name.get(),
-                            address: address.get(),
+                            address: [principalId.get(), accountId.get()],
                             group
                         });
                     }
                     else {
                         addressbook.addContact({
                             name: name.get(),
-                            address: address.get(),
+                            address: [principalId.get(), accountId.get()],
                             group
                         });
                     }

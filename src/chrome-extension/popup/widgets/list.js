@@ -35,7 +35,7 @@ export class ListView extends Component {
         title.innerText = name;
         titleContainer.append(title);
 
-        // Add contact button
+        // Add new
         const plusButton = new AddPlus({
             click: () => {
                 if (onAdd) onAdd();
@@ -74,14 +74,14 @@ export class ListView extends Component {
 
         });
 
-        // Render wallets
+        // Render entries
         if (Object.values(data).length) {
             Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
                 this.renderEntry({
                     container,
                     id,
                     name: contact.name,
-                    value: contact.address,
+                    value: contact.address['icp:pid'],
                     icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
                 });
             });

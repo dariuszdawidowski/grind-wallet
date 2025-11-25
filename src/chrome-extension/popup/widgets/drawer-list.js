@@ -17,6 +17,88 @@ export class DrawerList extends Component {
     }
 
     /**
+     * Render group header & container
+     * @param {string} name Group name
+     */
+
+    renderList({ name, data, emptyMsg, onAdd = null, onSelect = null, onEdit = null}) {
+
+        // Header container
+        const header = document.createElement('div');
+        header.classList.add('header');
+        this.element.append(header);
+
+        // Header row
+        const titleContainer = document.createElement('div');
+        titleContainer.classList.add('header-row');
+        header.append(titleContainer);
+
+        // Title
+        const title = document.createElement('h1');
+        title.innerText = name;
+        titleContainer.append(title);
+
+        // Add contact button
+        const plusButton = new AddPlus({
+            click: () => {
+                if (onAdd) onAdd();
+            }
+        });
+        plusButton.element.style.margin = '16px 16px 0 auto';
+        titleContainer.append(plusButton.element);
+
+        // Separator
+        const separator = document.createElement('div');
+        separator.classList.add('separator');
+        header.append(separator);
+
+        // Contacts container
+        const container = document.createElement('div');
+        this.element.appendChild(container);
+        container.addEventListener('click', (event) => {
+
+            // Edit icon click
+            const icon = event.target.closest('.icon');
+            if (icon) {
+                const entry = icon.closest('.entry');
+                if (entry) {
+                    const id = entry.dataset.value;
+                    if (onEdit) onEdit(id);
+                    return;
+                }
+            }
+
+            // Entry click
+            const entry = event.target.closest('.entry');
+            if (entry) {
+                const id = entry.dataset.value;
+                if (onSelect) onSelect(id);
+            }
+
+        });
+
+        // Render wallets
+        if (Object.values(data).length) {
+            Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
+                this.renderEntry({
+                    container,
+                    id,
+                    name: contact.name,
+                    value: contact.address,
+                    icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
+                });
+            });
+        }
+        else {
+            const noWallets = document.createElement('div');
+            noWallets.classList.add('infotext');
+            noWallets.innerHTML = emptyMsg;
+            walletsGroupElement.append(noWallets);
+        }
+
+    }
+
+    /**
      * Render single contact entry
      */
 

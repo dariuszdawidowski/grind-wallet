@@ -111,122 +111,60 @@ export class AddressBook extends DrawerList {
      */
 
     render() {
-        // My wallets header
-        const walletsGroupElement = this.renderGroup({ name: 'My wallets' });
 
-        // Render wallets
-        if (Object.values(this.contacts['My wallets']).length) {
-            Object.entries(this.contacts['My wallets']).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
-                this.renderEntry({
-                    container: walletsGroupElement,
-                    id,
-                    name: contact.name,
-                    value: contact.address,
-                    icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
-                });
-            });
-        }
-        else {
-            const noWallets = document.createElement('div');
-            noWallets.classList.add('infotext');
-            noWallets.innerHTML = 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.';
-            walletsGroupElement.append(noWallets);
-        }
+        // My wallets
+        this.renderList({
+            name: 'My wallets',
+            data: this.contacts['My wallets'],
+            emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
+            onSelect: (id) => {
+                const contact = this.contacts['My wallets'][id];
+                this.callback?.(contact.address);
+            },
+            onAdd: () => {
+                this.addContact('New entry for my wallets', 'My wallets');
+            },
+            onEdit: (id) => {
+                this.editContact(id, 'My wallets');
+            }
+        });
 
-        // Contacts header
-        const contactsGroupElement = this.renderGroup({ name: 'Contacts' });
+        // Contacts
+        this.renderList({
+            name: 'Contacts',
+            data: this.contacts['Contacts'],
+            emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
+            onSelect: (id) => {
+                const contact = this.contacts['Contacts'][id];
+                this.callback?.(contact.address);
+            },
+            onAdd: () => {
+                this.addContact('New contact', 'Contacts');
+            },
+            onEdit: (id) => {
+                this.editContact(id, 'Contacts');
+            }
 
-        // Render contacts
-        if (Object.values(this.contacts['Contacts']).length) {
-            Object.entries(this.contacts['Contacts']).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
-                this.renderEntry({
-                    container: contactsGroupElement,
-                    id,
-                    name: contact.name,
-                    value: contact.address,
-                    icon: 'assets/material-design-icons/pencil-box.svg'
-                });
-            });
-        }
-        else {
-            const noContacts = document.createElement('div');
-            noContacts.classList.add('infotext');
-            noContacts.innerHTML = 'You have no contacts saved yet.<br>Tap the + button to add a new contact.';
-            contactsGroupElement.append(noContacts);
-        }
+        });
+
     }
 
-    /**
-     * Render group header & container
-     * @param {string} name Group name
-     */
-
-    renderGroup({ name }) {
-        // Header container
-        const header = document.createElement('div');
-        header.classList.add('header');
-        this.element.append(header);
-
-        // Header row
-        const titleContainer = document.createElement('div');
-        titleContainer.classList.add('header-row');
-        header.append(titleContainer);
-
-        // Title
-        const title = document.createElement('h1');
-        title.innerText = name;
-        titleContainer.append(title);
-
-        // Add contact button
-        const plusButton = new AddPlus({
-            click: () => {
-                this.sheet.clear();
-                this.sheet.append({
-                    title: `New entry for ${name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: name })
-                });
-            }
+    addContact(title, group) {
+        this.sheet.clear();
+        this.sheet.append({
+            title,
+            component: new SheetContact({ app: this.app, addressbook: this, group })
         });
-        plusButton.element.style.margin = '16px 16px 0 auto';
-        titleContainer.append(plusButton.element);
+    }
 
-        // Separator
-        const separator = document.createElement('div');
-        separator.classList.add('separator');
-        header.append(separator);
-
-        // Contacts container
-        const entriesContainer = document.createElement('div');
-        this.element.appendChild(entriesContainer);
-        entriesContainer.addEventListener('click', (event) => {
-
-            // Edit icon click
-            const icon = event.target.closest('.icon');
-            if (icon) {
-                const entry = icon.closest('.entry');
-                if (entry) {
-                    const id = entry.dataset.value;
-                    const contact = this.contacts[name][id];
-                    this.sheet.clear();
-                    this.sheet.append({
-                        title: `Edit ${contact.name}`,
-                        component: new SheetContact({ app: this.app, addressbook: this, group: name })
-                    });
-                    return;
-                }
-            }
-
-            // Entry click
-            const entry = event.target.closest('.entry');
-            if (entry) {
-                const id = entry.dataset.value;
-                const contact = this.contacts[name][id];
-                this.callback?.(contact.address);
-            }
-
+    editContact(id, group) {
+        const contact = this.contacts[group][id];
+        this.sheet.clear();
+        this.sheet.append({
+            title: `Edit ${contact.name}`,
+            component: new SheetContact({ app: this.app, addressbook: this, group })
         });
 
-        return entriesContainer;
     }
 
 }

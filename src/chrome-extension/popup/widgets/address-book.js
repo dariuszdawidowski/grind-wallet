@@ -122,10 +122,20 @@ export class AddressBook extends DrawerList {
                 this.callback?.(contact.address);
             },
             onAdd: () => {
-                this.addContact('New entry for my wallets', 'My wallets');
+                this.sheet.clear();
+                this.sheet.append({
+                    title: 'New entry for my wallets',
+                    component: new SheetContact({ app: this.app, addressbook: this, group: 'My wallets' })
+                });
+
             },
             onEdit: (id) => {
-                this.editContact(id, 'My wallets');
+                const contact = this.contacts['My wallets'][id];
+                this.sheet.clear();
+                this.sheet.append({
+                    title: `Edit ${contact.name}`,
+                    component: new SheetContact({ app: this.app, addressbook: this, group })
+                });
             }
         });
 
@@ -139,33 +149,25 @@ export class AddressBook extends DrawerList {
                 this.callback?.(contact.address);
             },
             onAdd: () => {
-                this.addContact('New contact', 'Contacts');
+                this.sheet.clear();
+                this.sheet.append({
+                    title: 'New contact',
+                    component: new SheetContact({ app: this.app, addressbook: this, group: 'Contacts' })
+                });
             },
             onEdit: (id) => {
-                this.editContact(id, 'Contacts');
+                const contact = this.contacts['Contacts'][id];
+                this.sheet.clear();
+                this.sheet.append({
+                    title: `Edit ${contact.name}`,
+                    component: new SheetContact({ app: this.app, addressbook: this, group })
+                });
             }
 
         });
 
     }
 
-    addContact(title, group) {
-        this.sheet.clear();
-        this.sheet.append({
-            title,
-            component: new SheetContact({ app: this.app, addressbook: this, group })
-        });
-    }
-
-    editContact(id, group) {
-        const contact = this.contacts[group][id];
-        this.sheet.clear();
-        this.sheet.append({
-            title: `Edit ${contact.name}`,
-            component: new SheetContact({ app: this.app, addressbook: this, group })
-        });
-
-    }
 
 }
 
@@ -205,10 +207,11 @@ export class SheetContact extends Component {
                     alert('Invalid address');
                 }
                 else {
+                    console.log('button pressed')
                     addressbook.addContact({
                         name: name.get(),
                         address: address.get(),
-                        group: group
+                        group
                     });
                     addressbook.save().then(() => {
                         addressbook.element.innerHTML = '';

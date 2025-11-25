@@ -840,6 +840,7 @@ hr {
     display: flex;
     flex-direction: column;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 10;
 }
 
 .sheet.visible {
@@ -1049,7 +1050,7 @@ hr {
     pointer-events: none;
     left: 50%;
     overflow: visible;
-    z-index: 10;
+    z-index: 11;
 }
 
 .exchange-arrow .arrow-content {

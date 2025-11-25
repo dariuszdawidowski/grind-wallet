@@ -51,6 +51,13 @@ export class AddressBook extends DrawerList {
         this.contacts[group][id] = { name, address };
     }
 
+    setContact({ id, name, address, group }) {
+        if ((group in this.contacts) && (id in this.contacts[group])) {
+            this.contacts[group][id].name = name;
+            this.contacts[group][id].address = address;
+        }
+    }
+
     delContact(id) {
         for (const group in this.contacts) {
             if (this.contacts[group][id]) {
@@ -156,7 +163,7 @@ export class AddressBook extends DrawerList {
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group })
+                    component: new SheetContact({ app: this.app, addressbook: this, group: name, contactId: id, contact })
                 });
             }
         });
@@ -172,7 +179,7 @@ export class AddressBook extends DrawerList {
 
 export class SheetContact extends Component {
 
-    constructor({ app, addressbook, group }) {
+    constructor({ app, addressbook, group, contactId, contact = null }) {
         super({ app });
 
         // Build
@@ -182,17 +189,19 @@ export class SheetContact extends Component {
         const name = new InputText({
             placeholder: 'Contact name'
         });
+        if (contact) name.set(contact.name);
         this.append(name);
 
         // Address
         const address = new InputAddress({
             placeholder: 'Principal ID or Account ID',
         });
+        if (contact) address.set(contact.address);
         this.append(address);
 
         // Save button
         const buttonSave = new Button({
-            text: 'Save contact',
+            text: contact ? 'Update contact' : 'Save contact',
             classList: ['bottom'],
             click: () => {
                 if (!name.valid()) {
@@ -202,11 +211,21 @@ export class SheetContact extends Component {
                     alert('Invalid address');
                 }
                 else {
-                    addressbook.addContact({
-                        name: name.get(),
-                        address: address.get(),
-                        group
-                    });
+                    if (contact) {
+                        addressbook.setContact({
+                            id: contactId,
+                            name: name.get(),
+                            address: address.get(),
+                            group
+                        });
+                    }
+                    else {
+                        addressbook.addContact({
+                            name: name.get(),
+                            address: address.get(),
+                            group
+                        });
+                    }
                     addressbook.save().then(() => {
                         addressbook.element.innerHTML = '';
                         addressbook.render();

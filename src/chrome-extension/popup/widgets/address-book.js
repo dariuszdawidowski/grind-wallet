@@ -113,57 +113,52 @@ export class AddressBook extends DrawerList {
     render() {
 
         // My wallets
-        this.renderList({
+        this.renderContactGroup({
             name: 'My wallets',
             data: this.contacts['My wallets'],
             emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
-            onSelect: (id) => {
-                const contact = this.contacts['My wallets'][id];
-                this.callback?.(contact.address);
-            },
-            onAdd: () => {
-                this.sheet.clear();
-                this.sheet.append({
-                    title: 'New entry for my wallets',
-                    component: new SheetContact({ app: this.app, addressbook: this, group: 'My wallets' })
-                });
-
-            },
-            onEdit: (id) => {
-                const contact = this.contacts['My wallets'][id];
-                this.sheet.clear();
-                this.sheet.append({
-                    title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group })
-                });
-            }
+            newMsg: 'New entry for my wallets'
         });
 
         // Contacts
-        this.renderList({
+        this.renderContactGroup({
             name: 'Contacts',
             data: this.contacts['Contacts'],
             emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
+            newMsg: 'New contact'
+        });
+
+    }
+
+    /**
+     * Render contact group
+     */
+
+    renderContactGroup({ name, data, emptyMsg, newMsg }) {
+        this.renderList({
+            name,
+            data,
+            emptyMsg,
             onSelect: (id) => {
-                const contact = this.contacts['Contacts'][id];
+                const contact = this.contacts[name][id];
                 this.callback?.(contact.address);
             },
             onAdd: () => {
                 this.sheet.clear();
                 this.sheet.append({
-                    title: 'New contact',
-                    component: new SheetContact({ app: this.app, addressbook: this, group: 'Contacts' })
+                    title: newMsg,
+                    component: new SheetContact({ app: this.app, addressbook: this, group: name })
                 });
+
             },
             onEdit: (id) => {
-                const contact = this.contacts['Contacts'][id];
+                const contact = this.contacts[name][id];
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit ${contact.name}`,
                     component: new SheetContact({ app: this.app, addressbook: this, group })
                 });
             }
-
         });
 
     }
@@ -207,7 +202,6 @@ export class SheetContact extends Component {
                     alert('Invalid address');
                 }
                 else {
-                    console.log('button pressed')
                     addressbook.addContact({
                         name: name.get(),
                         address: address.get(),

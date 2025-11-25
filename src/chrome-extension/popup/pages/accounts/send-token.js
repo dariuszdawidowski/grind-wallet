@@ -39,6 +39,7 @@ export class SheetAccountSend extends Component {
         // Address book
         this.addressbook = new AddressBook({ app });
         this.addressbook.load().then(() => {
+            this.app.drawer.clear();
             this.app.drawer.append(this.addressbook);
             this.addressbook.render();
             this.addressbook.callback = (address) => {

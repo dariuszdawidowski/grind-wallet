@@ -6,9 +6,9 @@ import { Component } from '/src/utils/component.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
-import { DrawerList } from '/src/chrome-extension/popup/widgets/drawer-list';
+import { ListView } from '/src/chrome-extension/popup/widgets/list';
 
-export class AddressBook extends DrawerList {
+export class AddressBook extends ListView {
 
     constructor({ app }) {
         super({ app });

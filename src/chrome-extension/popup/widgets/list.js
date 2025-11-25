@@ -7,7 +7,7 @@ import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
 import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { shortAddress } from '/src/utils/general.js';
 
-export class DrawerList extends Component {
+export class ListView extends Component {
 
     constructor({ app }) {
         super({ app });

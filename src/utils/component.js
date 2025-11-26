@@ -10,6 +10,7 @@ export class Component {
      * args.app: reference to the main app object (optional)
      * args.id: id for the DOM element (optional)
      * args.type: DOM element e.g. 'div' (default), 'button', 'input' (optional)
+     * args.style: apply custom style (optional)
      * args.html: html string to render (optional)
      * args.selector: dont create new element but assign to selector (optional)
      */
@@ -48,6 +49,28 @@ export class Component {
         // ID
         if (args.id !== undefined) {
             this.element.id = args.id;
+        }
+
+        // Optional custom style
+        if (args.style !== undefined) {
+            // Apply style specified as a string like 'color: red; background: blue;' or as an object
+            if (typeof args.style === 'string') {
+                args.style.split(';').forEach(rule => {
+                    const [prop, ...valParts] = rule.split(':');
+                    if (!prop) return;
+                    const value = valParts.join(':').trim();
+                    if (!value) return;
+                    const property = prop.trim();
+                    this.element.style.setProperty(property, value);
+                });
+            }
+            else if (typeof args.style === 'object') {
+                Object.entries(args.style).forEach(([key, value]) => {
+                    // convert camelCase keys to kebab-case for setProperty
+                    const propName = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+                    this.element.style.setProperty(propName, value);
+                });
+            }
         }
 
     }

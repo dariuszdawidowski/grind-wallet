@@ -6,6 +6,7 @@ import { Component } from '/src/utils/component.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
+import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { ListView } from '/src/chrome-extension/popup/widgets/list';
 
 class Contact {
@@ -236,6 +237,23 @@ export class AddressBook extends ListView {
             newMsg: 'New contact'
         });
 
+        // Add new group
+        this.append(new AddPlus({
+            text: 'Add new group',
+            classList: ['dark'],
+            click: () => {
+            }
+        }));
+
+        // Expand/collapse
+        this.append(new ButtLink({
+            text: 'Collapse groups',
+            style: 'color: #333',
+            classList: ['bottom'],
+            click: () => {
+            }
+        }));
+
     }
 
     /**
@@ -265,6 +283,10 @@ export class AddressBook extends ListView {
                     title: `Edit ${contact.name}`,
                     component: new SheetContact({ app: this.app, addressbook: this, group: groupId, contactId: contactId, contact })
                 });
+            },
+            onCollapse: () => {
+            },
+            onExpand: () => {
             }
         });
     }

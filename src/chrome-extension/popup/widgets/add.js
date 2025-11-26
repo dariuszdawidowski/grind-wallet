@@ -6,17 +6,17 @@ import { Component } from '/src/utils/component.js';
 
 export class AddPlus extends Component {
 
-    constructor({ text = null, click = null }) {
-        super();
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('add-circle');
         let html = '<div class="plus"><img src="assets/material-design-icons/plus.svg"></img></div>';
-        if (text) html += `<div class="label">${text}</div>`;
+        if ('text' in args) html += `<div class="label">${args.text}</div>`;
         this.element.innerHTML = html;
 
         // Events
-        this.element.addEventListener('click', click);
+        if ('click' in args) this.element.addEventListener('click', args.click);
     }
     
 }

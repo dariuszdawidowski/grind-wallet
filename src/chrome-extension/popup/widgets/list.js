@@ -21,7 +21,7 @@ export class ListView extends Component {
      * @param {string} name Group name
      */
 
-    renderList({ name, data, emptyMsg, onAdd = null, onSelect = null, onEdit = null}) {
+    renderList({ name, data, emptyMsg, onAdd = null, onSelect = null, onEdit = null, onCollapse = null, onExpand = null }) {
 
         // Header container
         const header = document.createElement('div');
@@ -37,6 +37,8 @@ export class ListView extends Component {
         const title = document.createElement('h1');
         title.innerText = name;
         title.addEventListener('click', () => {
+            if (container.classList.contains('collapsed')) if (onExpand) onExpand();
+            else if (onCollapse) onCollapse();
             this.toggleCollapse();
         });
         titleContainer.append(title);

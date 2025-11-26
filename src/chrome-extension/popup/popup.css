@@ -167,7 +167,7 @@ a, a:visited {
 
 /* Form */
 
-form {
+.form {
     text-align: center;
 }
 
@@ -217,10 +217,6 @@ button:not(:disabled):hover {
 button.dimed {
     background-color: var(--button-color-dimed);
     pointer-events: none;
-}
-
-button.bottom {
-    margin-top: auto;
 }
 
 button .icon {
@@ -722,6 +718,10 @@ hr {
 .add-circle .label {
     margin: 0 10px;
     font-size: 12px;
+}
+
+.add-circle.dark .label {
+    color: #333;
 }
 
 .token-balance {
@@ -1396,4 +1396,10 @@ hr {
     color: #333;
     font-size: 12px;
     margin: 4px 16px 20px 16px;
+}
+
+/* Overwrite other classes */
+
+.bottom {
+    margin-top: auto;
 }

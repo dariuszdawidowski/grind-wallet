@@ -43,7 +43,7 @@ export class SheetAccountSend extends Component {
             this.app.drawer.append(this.addressbook);
             this.addressbook.render();
             this.addressbook.callback = (address) => {
-                this.widget.address.set(address);
+                this.widget.address.set(address['icp:pid']);
                 this.app.drawer.close();
             };
         });

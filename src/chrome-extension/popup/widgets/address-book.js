@@ -21,6 +21,17 @@ class Contact {
         this.dynamic = dynamic;
     }
 
+    /**
+     * Custom JSON serialization
+     */
+
+    toJSON() {
+        return {
+            name: this.name,
+            address: this.address
+        };
+    }
+
 }
 
 export class AddressBook extends ListView {
@@ -43,7 +54,6 @@ export class AddressBook extends ListView {
         // Bottom sheet
         this.sheet = new Sheet({ app, id: '#contact-sheet', hidden: false });
         this.element.append(this.sheet.element);
-
     }
 
     /**
@@ -52,11 +62,8 @@ export class AddressBook extends ListView {
 
     async load() {
         const data = await chrome.storage.local.get(['address:groups', 'address:contacts']);
-        // console.log(data);
         this.deserializeGroups(('address:groups' in data) ? data['address:groups'] : {});
-        // console.log(this.groups);
         this.deserializeContacts(('address:contacts' in data) ? data['address:contacts'] : {});
-        // console.log(this.contacts);
     }
 
     /**
@@ -65,8 +72,8 @@ export class AddressBook extends ListView {
 
     async save() {
         await chrome.storage.local.set({
-            'address:groups': this.serializeGroups(this.groups),
-            'address:contacts': this.serializeContacts(this.contacts)
+            'address:groups': this.serializeGroups(),
+            'address:contacts': this.serializeContacts()
         });
     }
 
@@ -169,7 +176,7 @@ export class AddressBook extends ListView {
 
         // Add stored contacts
         Object.entries(data).forEach(([group, contacts]) => {
-            this.contacts[group] = {};
+            if (!(group in this.contacts)) this.contacts[group] = {};
             Object.entries(contacts).forEach(([id, contact]) => {
                 this.contacts[group][id] = new Contact({
                     id,
@@ -185,9 +192,9 @@ export class AddressBook extends ListView {
      * Delete dynamic wallets from contacts before saving
      */
 
-    serializeContacts(contacts) {
+    serializeContacts() {
         // Clone contacts
-        const updatedContacts = JSON.parse(JSON.stringify(contacts));
+        const updatedContacts = JSON.parse(JSON.stringify(this.contacts));
 
         // Remove dynamic wallets from 'My wallets' group
         Object.keys(updatedContacts['my']).forEach(id => {
@@ -203,8 +210,8 @@ export class AddressBook extends ListView {
      * Delete base groups before saving
      */
 
-    serializeGroups(groups) {
-        const updatedGroups = JSON.parse(JSON.stringify(groups));
+    serializeGroups() {
+        const updatedGroups = JSON.parse(JSON.stringify(this.groups));
         delete updatedGroups['my'];
         delete updatedGroups['contacts'];
         return updatedGroups;
@@ -253,7 +260,6 @@ export class AddressBook extends ListView {
                     title: newMsg,
                     component: new SheetContact({ app: this.app, addressbook: this, group: groupId })
                 });
-
             },
             onEdit: (contactId) => {
                 const contact = this.contacts[groupId][contactId];
@@ -264,7 +270,6 @@ export class AddressBook extends ListView {
                 });
             }
         });
-
     }
 
 }
@@ -292,14 +297,14 @@ export class SheetContact extends Component {
         const principalId = new InputAddress({
             placeholder: 'Principal ID',
         });
-        if (contact) principalId.set(contact.address[0]);
+        if (contact && contact.address['icp:pid']) principalId.set(contact.address['icp:pid']);
         this.append(principalId);
 
         // Account ID
         const accountId = new InputAddress({
             placeholder: 'Account ID (optional)',
         });
-        if (contact && contact.address.length > 1) accountId.set(contact.address[1]);
+        if (contact && contact.address['icp:acc0']) accountId.set(contact.address['icp:acc0']);
         this.append(accountId);
 
         // Save button
@@ -317,25 +322,28 @@ export class SheetContact extends Component {
                     alert('Invalid Account ID');
                 }
                 else {
+                    const address = { 'icp:pid': principalId.get() };
+                    if (accountId.get().length) address['icp:acc0'] = accountId.get();
                     if (contact) {
                         addressbook.setContact({
                             id: contactId,
                             name: name.get(),
-                            address: [principalId.get(), accountId.get()],
+                            address,
                             group
                         });
                     }
                     else {
                         addressbook.addContact({
                             name: name.get(),
-                            address: [principalId.get(), accountId.get()],
+                            address,
                             group
                         });
                     }
                     addressbook.save().then(() => {
                         addressbook.element.innerHTML = '';
+                        addressbook.element.append(addressbook.sheet.element);
                         addressbook.render();
-                        this.app.sheet.hide();
+                        addressbook.sheet.hide();
                     });
                 }
             }
@@ -351,8 +359,9 @@ export class SheetContact extends Component {
                         addressbook.delContact(contactId);
                         addressbook.save().then(() => {
                             addressbook.element.innerHTML = '';
+                            addressbook.element.append(addressbook.sheet.element);
                             addressbook.render();
-                            this.app.sheet.hide();
+                            addressbook.sheet.hide();
                         });
                     }
                 }

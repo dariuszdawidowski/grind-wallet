@@ -39,9 +39,6 @@ export class AddressBook extends ListView {
     constructor({ app }) {
         super({ app });
 
-        // CSS class
-        this.element.classList.add('address-book');
-
         // Contact groups
         this.groups = null;
 

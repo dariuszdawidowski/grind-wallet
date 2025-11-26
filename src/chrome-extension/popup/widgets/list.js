@@ -11,6 +11,9 @@ export class ListView extends Component {
 
     constructor({ app }) {
         super({ app });
+
+        // CSS class
+        this.element.classList.add('list-view');
     }
 
     /**
@@ -33,6 +36,9 @@ export class ListView extends Component {
         // Title
         const title = document.createElement('h1');
         title.innerText = name;
+        title.addEventListener('click', () => {
+            this.toggleCollapse();
+        });
         titleContainer.append(title);
 
         // Add new
@@ -41,7 +47,6 @@ export class ListView extends Component {
                 if (onAdd) onAdd();
             }
         });
-        plusButton.element.style.margin = '16px 16px 0 auto';
         titleContainer.append(plusButton.element);
 
         // Separator
@@ -51,6 +56,7 @@ export class ListView extends Component {
 
         // Contacts container
         const container = document.createElement('div');
+        container.classList.add('container');
         this.element.appendChild(container);
         container.addEventListener('click', (event) => {
 
@@ -92,6 +98,11 @@ export class ListView extends Component {
             noWallets.innerHTML = emptyMsg;
             container.append(noWallets);
         }
+
+        // Set initial height
+        this.element.querySelectorAll('.container').forEach(container => {
+            container.style.height = container.scrollHeight + 'px';
+        });
 
     }
 
@@ -139,6 +150,23 @@ export class ListView extends Component {
             right.innerHTML = `<img src="${icon}"></img>`;
         }
 
+    }
+
+    /**
+     * Toggle collapse
+     */
+
+    toggleCollapse() {
+        this.element.querySelectorAll('.container').forEach(container => {
+            if (container.classList.contains('collapsed')) {
+                container.style.height = container.scrollHeight + 'px';
+                container.classList.remove('collapsed');
+            }
+            else {
+                container.style.height = '0px';
+                container.classList.add('collapsed');
+            }
+        });
     }
 
 }

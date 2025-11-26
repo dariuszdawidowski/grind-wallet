@@ -1297,7 +1297,7 @@ hr {
 
 /* Address book widget */
 
-.address-book {
+.list-view {
     width: 100%;
     min-height: 100%;
     background-color: #fff;
@@ -1305,29 +1305,38 @@ hr {
     flex-direction: column;
 }
 
-.address-book .header {
+.list-view .header {
     background-color: #f5f5f5;
 }
 
-.address-book .header .header-row {
+.list-view .header .header-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.address-book .header .header-row h1 {
+.list-view .header .header-row h1 {
     color: #222;
-    margin: 32px 16px 20px 16px;
+    margin: 20px 16px;
 }
 
-.address-book .separator {
+.list-view .separator {
     background-color: #fff;
     border-radius: 16px 16px 0 0;
     padding: 8px 0;
 }
 
-.address-book .entry {
+.list-view .container {
+    overflow-y: hidden;
+    transition: height 0.3s ease;
+}
+
+.list-view .container.collapsed {
+    height: 0px;
+}
+
+.list-view .entry {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -1337,7 +1346,7 @@ hr {
     font-size: 14px;
 }
 
-.address-book .entry:first-child {
+.list-view .entry:first-child {
     padding-top: 0;
 }
 
@@ -1356,33 +1365,33 @@ hr {
     align-items: center;
 }
 
-.address-book .entry .avatar { 
+.list-view .entry .avatar { 
     margin: 0 16px 0 6px;
     font-size: 18px;
 }
 
-.address-book .entry .name {
+.list-view .entry .name {
     color: #444;
     font-size: 14px;
     font-weight: bold;
     line-height: 22px;
 }
 
-.address-book .entry .address {
+.list-view .entry .address {
     color: #444;
     font-size: 14px;
     font-weight: normal;
     line-height: 22px;
 }
 
-.address-book .entry .icon {
+.list-view .entry .icon {
     width: 26px;
     height: 26px;
     margin-left: auto;
     cursor: pointer;
 }
 
-.address-book .infotext {
+.list-view .infotext {
     text-align: center;
     color: #333;
     font-size: 12px;

@@ -21,7 +21,7 @@ export class ListView extends Component {
      * @param {string} name Group name
      */
 
-    renderList({ name, data, emptyMsg, onAdd = null, onSelect = null, onEdit = null, onCollapse = null, onExpand = null }) {
+    renderList({ id, name, data, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null }) {
 
         // Header container
         const header = document.createElement('div');
@@ -38,18 +38,32 @@ export class ListView extends Component {
         title.innerText = name;
         title.addEventListener('click', () => {
             const direction = this.toggleCollapse();
-            if (direction == 'collapsed') if (onCollapse) onCollapse();
-            else if (direction == 'expanded') if (onExpand) onExpand();
+            if (direction == 'collapsed') {
+                if (onCollapse) onCollapse();
+            }
+            else if (direction == 'expanded') {
+                if (onExpand) onExpand();
+            }
         });
         titleContainer.append(title);
 
         // Add new
         const plusButton = new AddPlus({
+            classList: ['add-group'],
             click: () => {
-                if (onAdd) onAdd();
+                if (onAddEntry) onAddEntry();
             }
         });
         titleContainer.append(plusButton.element);
+
+        // Edit icon
+        const editIcon = document.createElement('div');
+        editIcon.classList.add('icon', 'edit-group', 'hidden');
+        editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
+        titleContainer.append(editIcon);
+        editIcon.addEventListener('click', (event) => {
+            if (onEditGroup) onEditGroup(id);
+        });
 
         // Separator
         const separator = document.createElement('div');
@@ -62,22 +76,22 @@ export class ListView extends Component {
         this.element.appendChild(container);
         container.addEventListener('click', (event) => {
 
-            // Edit icon click
+            // Edit entry clicked
             const icon = event.target.closest('.icon');
             if (icon) {
                 const entry = icon.closest('.entry');
                 if (entry) {
                     const id = entry.dataset.value;
-                    if (onEdit) onEdit(id);
+                    if (onEditEntry) onEditEntry(id);
                     return;
                 }
             }
 
-            // Entry click
+            // Select entry clicked
             const entry = event.target.closest('.entry');
             if (entry) {
                 const id = entry.dataset.value;
-                if (onSelect) onSelect(id);
+                if (onSelectEntry) onSelectEntry(id);
             }
 
         });
@@ -148,8 +162,8 @@ export class ListView extends Component {
         if (icon) {
             const right = document.createElement('div');
             right.classList.add('icon');
-            entry.append(right);
             right.innerHTML = `<img src="${icon}"></img>`;
+            entry.append(right);
         }
 
     }

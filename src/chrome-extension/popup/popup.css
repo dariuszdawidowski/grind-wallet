@@ -1384,7 +1384,7 @@ hr {
     line-height: 22px;
 }
 
-.list-view .entry .icon {
+.list-view .icon {
     width: 26px;
     height: 26px;
     margin-left: auto;
@@ -1396,6 +1396,10 @@ hr {
     color: #333;
     font-size: 12px;
     margin: 4px 16px 20px 16px;
+}
+
+.list-view .icon.edit-group {
+    margin-right: 8px;
 }
 
 /* Overwrite other classes */

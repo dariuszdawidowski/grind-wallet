@@ -221,20 +221,24 @@ export class AddressBook extends ListView {
 
     render() {
 
-        // My wallets
-        this.renderGroup({
-            groupId: 'my',
-            data: this.contacts['my'],
-            emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
-            newMsg: 'New entry for my wallets'
-        });
-
-        // Contacts
-        this.renderGroup({
-            groupId: 'contacts',
-            data: this.contacts['contacts'],
-            emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
-            newMsg: 'New contact'
+        // Render groups with contacts
+        Object.entries(this.groups).forEach(([groupId, group]) => {
+            if (groupId == 'my') {
+                this.renderGroup({
+                    groupId: 'my',
+                    data: this.contacts['my'],
+                    emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
+                    newMsg: 'New entry for my wallets'
+                });
+            }
+            else {
+                this.renderGroup({
+                    groupId,
+                    data: this.contacts[groupId],
+                    emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
+                    newMsg: 'New contact'
+                });
+            }
         });
 
         // Add new group
@@ -242,29 +246,32 @@ export class AddressBook extends ListView {
             text: 'Add new group',
             classList: ['dark'],
             click: () => {
+                this.sheet.clear();
+                this.sheet.append({
+                    title: 'New group',
+                    component: new SheetGroup({ app: this.app, addressbook: this })
+                });
             }
         });
         this.addNewGroupButton.hide();
         this.append(this.addNewGroupButton);
 
         // Expand/collapse
-        const manualExpand = new ButtLink({
+        this.manualExpand = new ButtLink({
             text: 'Collapse and edit groups',
             style: 'color: #333; padding: 20px 0;',
             classList: ['bottom'],
             click: () => {
                 const direction = this.toggleCollapse();
                 if (direction == 'collapsed') {
-                    manualExpand.set('Expand groups');
-                    this.addNewGroupButton.show();
+                    this.onCollapseGroups();
                 }
                 else if (direction == 'expanded') {
-                    manualExpand.set('Collapse and edit groups');
-                    this.addNewGroupButton.hide();
+                    this.onExpandGroups();
                 }
             }
         });
-        this.append(manualExpand);
+        this.append(this.manualExpand);
 
     }
 
@@ -274,33 +281,134 @@ export class AddressBook extends ListView {
 
     renderGroup({ groupId, data, emptyMsg, newMsg }) {
         this.renderList({
+            id: groupId,
             name: this.groups[groupId].name,
             data,
             emptyMsg,
-            onSelect: (contactId) => {
+            onSelectEntry: (contactId) => {
                 const contact = this.contacts[groupId][contactId];
                 this.callback?.(contact.address);
             },
-            onAdd: () => {
+            onAddEntry: () => {
                 this.sheet.clear();
                 this.sheet.append({
                     title: newMsg,
                     component: new SheetContact({ app: this.app, addressbook: this, group: groupId })
                 });
             },
-            onEdit: (contactId) => {
+            onEditEntry: (contactId) => {
                 const contact = this.contacts[groupId][contactId];
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: groupId, contactId: contactId, contact })
+                    component: new SheetContact({ app: this.app, addressbook: this, groupId, contactId, contact })
                 });
             },
-            onCollapse: () => {
+            onEditGroup: (groupId) => {
+                const group = this.groups[groupId];
+                this.sheet.clear();
+                this.sheet.append({
+                    title: `Edit group`,
+                    component: new SheetGroup({ app: this.app, addressbook: this, groupId, group })
+                });
             },
-            onExpand: () => {
+            onCollapse: this.onCollapseGroups.bind(this),
+            onExpand: this.onExpandGroups.bind(this)
+        });
+    }
+
+    /**
+     * Collapse callback
+     */
+
+    onCollapseGroups() {
+        this.manualExpand.set('Expand groups');
+        this.addNewGroupButton.show();
+        this.element.querySelectorAll('.add-group').forEach(el => el.classList.add('hidden'));
+        this.element.querySelectorAll('.edit-group').forEach(el => el.classList.remove('hidden'));
+    }
+
+    /**
+     * Expand callback
+     */
+
+    onExpandGroups() {
+        this.manualExpand.set('Collapse and edit groups');
+        this.addNewGroupButton.hide();
+        this.element.querySelectorAll('.add-group').forEach(el => el.classList.remove('hidden'));
+        this.element.querySelectorAll('.edit-group').forEach(el => el.classList.add('hidden'));
+    }
+
+}
+
+/**
+ * Add/Edit group sheet
+ */
+
+export class SheetGroup extends Component {
+
+    constructor({ app, addressbook, groupId = null, group = null}) {
+        super({ app });
+
+        // Build
+        this.element.classList.add('form');
+
+        // Name
+        const name = new InputText({
+            placeholder: 'Group name'
+        });
+        if (group) name.set(group.name);
+        this.append(name);
+
+        // Save button
+        const buttonSave = new Button({
+            text: group ? 'Update group' : 'Save group',
+            classList: ['bottom'],
+            click: () => {
+                if (!name.valid()) {
+                    alert('Invalid name');
+                }
+                else {
+                    if (group) {
+                        addressbook.setGroup({
+                            id: groupId,
+                            name: name.get()
+                        });
+                    }
+                    else {
+                        addressbook.addGroup({
+                            name: name.get()
+                        });
+                    }
+                    addressbook.save().then(() => {
+                        addressbook.element.innerHTML = '';
+                        addressbook.element.append(addressbook.sheet.element);
+                        addressbook.render();
+                        addressbook.sheet.hide();
+                    });
+                }
             }
         });
+        this.append(buttonSave);
+
+        // Delete button
+        if (group) {
+            this.append(new ButtLink({
+                text: `Remove group`,
+                click: () => {
+                    if (confirm('Delete this group?')) {
+                        addressbook.delGroup(groupId);
+                        addressbook.save().then(() => {
+                            addressbook.element.innerHTML = '';
+                            addressbook.element.append(addressbook.sheet.element);
+                            addressbook.render();
+                            addressbook.sheet.hide();
+                        });
+                    }
+                }
+            }));            
+        }
+
     }
 
 }
@@ -311,7 +419,7 @@ export class AddressBook extends ListView {
 
 export class SheetContact extends Component {
 
-    constructor({ app, addressbook, group, contactId, contact = null }) {
+    constructor({ app, addressbook, groupId, contactId, contact = null }) {
         super({ app });
 
         // Build
@@ -360,14 +468,14 @@ export class SheetContact extends Component {
                             id: contactId,
                             name: name.get(),
                             address,
-                            group
+                            group: groupId
                         });
                     }
                     else {
                         addressbook.addContact({
                             name: name.get(),
                             address,
-                            group
+                            group: groupId
                         });
                     }
                     addressbook.save().then(() => {

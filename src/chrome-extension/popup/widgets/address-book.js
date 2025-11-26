@@ -238,21 +238,33 @@ export class AddressBook extends ListView {
         });
 
         // Add new group
-        this.append(new AddPlus({
+        this.addNewGroupButton = new AddPlus({
             text: 'Add new group',
             classList: ['dark'],
             click: () => {
             }
-        }));
+        });
+        this.addNewGroupButton.hide();
+        this.append(this.addNewGroupButton);
 
         // Expand/collapse
-        this.append(new ButtLink({
-            text: 'Collapse groups',
-            style: 'color: #333',
+        const manualExpand = new ButtLink({
+            text: 'Collapse and edit groups',
+            style: 'color: #333; padding: 20px 0;',
             classList: ['bottom'],
             click: () => {
+                const direction = this.toggleCollapse();
+                if (direction == 'collapsed') {
+                    manualExpand.set('Expand groups');
+                    this.addNewGroupButton.show();
+                }
+                else if (direction == 'expanded') {
+                    manualExpand.set('Collapse and edit groups');
+                    this.addNewGroupButton.hide();
+                }
             }
-        }));
+        });
+        this.append(manualExpand);
 
     }
 

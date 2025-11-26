@@ -1,5 +1,5 @@
 /**
- * Component v 0.9.0
+ * Component v 0.9.2
  * Minimalistic DOM component for JavaScript
  */
 
@@ -90,6 +90,32 @@ export class Component {
     replace(component) {
         this.element.innerHTML = '';
         this.element.append(component.element);
+    }
+
+    /**
+     * Show
+     */
+
+    show() {
+        this.element.classList.remove('hidden');
+    }
+
+    /**
+     * Hide
+     */
+
+    hide() {
+        this.element.classList.add('hidden');
+    }
+
+    /**
+     * Remove this component from DOM
+     */
+
+    remove() {
+        if (this.element.parentNode) {
+            this.element.parentNode.remove(this.element);
+        }
     }
 
 }

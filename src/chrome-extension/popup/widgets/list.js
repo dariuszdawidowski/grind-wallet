@@ -37,9 +37,9 @@ export class ListView extends Component {
         const title = document.createElement('h1');
         title.innerText = name;
         title.addEventListener('click', () => {
-            if (container.classList.contains('collapsed')) if (onExpand) onExpand();
-            else if (onCollapse) onCollapse();
-            this.toggleCollapse();
+            const direction = this.toggleCollapse();
+            if (direction == 'collapsed') if (onCollapse) onCollapse();
+            else if (direction == 'expanded') if (onExpand) onExpand();
         });
         titleContainer.append(title);
 
@@ -159,16 +159,20 @@ export class ListView extends Component {
      */
 
     toggleCollapse() {
+        let direction = null;
         this.element.querySelectorAll('.container').forEach(container => {
             if (container.classList.contains('collapsed')) {
                 container.style.height = container.scrollHeight + 'px';
                 container.classList.remove('collapsed');
+                direction = 'expanded';
             }
             else {
                 container.style.height = '0px';
                 container.classList.add('collapsed');
+                direction = 'collapsed';
             }
         });
+        return direction;
     }
 
 }

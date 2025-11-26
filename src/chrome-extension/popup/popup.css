@@ -1403,3 +1403,7 @@ hr {
 .bottom {
     margin-top: auto;
 }
+
+.hidden {
+    display: none;
+}

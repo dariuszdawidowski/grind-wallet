@@ -116,10 +116,17 @@ export class ButtIcon extends Button {
     constructor(args) {
         super({...args, type: 'button'});
 
+        // Icon
+        this.icon = args.icon;
+
         // Build
         this.element.classList.add('butticon');
-        this.element.innerHTML = args.icon + args.text;
+        this.set(args.text);
 
+    }
+
+    set(text) {
+        this.element.innerHTML = this.icon + text;
     }
 
 }
@@ -139,11 +146,15 @@ export class ButtLink extends Component {
 
         // Build
         this.element.classList.add('buttlink');
-        this.element.innerHTML = args.text + ' →';
+        this.set(args.text);
 
         // Events
         this.element.addEventListener('click', args.click);
 
+    }
+
+    set(text) {
+        this.element.innerHTML = text + ' →';
     }
 
 }
@@ -164,8 +175,12 @@ export class ButtonDescription extends Component {
 
         // Build
         this.element.classList.add('button-description');
-        this.element.innerHTML = args.text;
+        this.set(args.text);
 
+    }
+
+    set(text) {
+        this.element.innerHTML = text;
     }
 
 }

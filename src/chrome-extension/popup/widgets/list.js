@@ -14,6 +14,12 @@ export class ListView extends Component {
 
         // CSS class
         this.element.classList.add('list-view');
+
+        // Drag and drop state
+        this.dragState = {
+            draggedElement: null,
+            placeholder: null
+        };
     }
 
     /**
@@ -21,12 +27,17 @@ export class ListView extends Component {
      * @param {string} name Group name
      */
 
-    renderList({ id, name, data, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null }) {
+    renderList({ id, name, data, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
 
         // Header container
         const header = document.createElement('div');
         header.classList.add('header');
+        header.draggable = true;
+        header.dataset.id = id;
         this.element.append(header);
+
+        // Setup drag and drop
+        this.setupDragAndDrop(header, onReorder);
 
         // Header row
         const titleContainer = document.createElement('div');
@@ -123,6 +134,87 @@ export class ListView extends Component {
             container.style.height = container.scrollHeight + 'px';
         });
 
+    }
+
+    /**
+     * Setup drag and drop for header reordering
+     */
+
+    setupDragAndDrop(header, onReorder) {
+
+        // Drag start
+        header.addEventListener('dragstart', (event) => {
+            // Only allow dragging when collapsed
+            const container = header.nextElementSibling;
+            if (!container.classList.contains('collapsed')) {
+                event.preventDefault();
+                return;
+            }
+
+            this.dragState.draggedElement = header;
+            header.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', header.innerHTML);
+        });
+
+        // Drag over
+        header.addEventListener('dragover', (event) => {
+            if (!this.dragState.draggedElement) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+
+            const afterElement = this.getDragAfterElement(event.clientY);
+            const draggedContainer = this.dragState.draggedElement.nextElementSibling;
+            
+            if (afterElement == null) {
+                this.element.appendChild(this.dragState.draggedElement);
+                if (draggedContainer) {
+                    this.element.appendChild(draggedContainer);
+                }
+            }
+            else {
+                this.element.insertBefore(this.dragState.draggedElement, afterElement);
+                if (draggedContainer) {
+                    this.element.insertBefore(draggedContainer, afterElement);
+                }
+            }
+        });
+
+        // Drag end
+        header.addEventListener('dragend', (event) => {
+            header.classList.remove('dragging');
+            
+            // Get new order
+            const order = [];
+            this.element.querySelectorAll('.header').forEach(h => {
+                order.push(h.dataset.id);
+            });
+
+            this.dragState.draggedElement = null;
+
+            // Callback with new order
+            if (onReorder) onReorder(order);
+        });
+    }
+
+    /**
+     * Get element after which dragged element should be inserted
+     */
+
+    getDragAfterElement(y) {
+        const draggableElements = [...this.element.querySelectorAll('.header:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            }
+            else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     /**

@@ -153,13 +153,16 @@ export class AddressBook extends ListView {
      */
 
     deserializeGroups(data) {
-        // Default groups structure
-        this.groups = { 'my': { name: 'My wallets', order: 1 }, 'contacts': { name: 'Contacts', order: 2 } };
+        this.groups = {};
 
         // Add stored groups
         Object.entries(data).forEach(([id, group]) => {
             this.groups[id] = { name: group.name, order: group.order };
         });
+
+        // Add default groups if missing
+        if (!('my' in this.groups)) this.groups['my'] = { name: 'My wallets', order: 1 };
+        if (!('contacts' in this.groups)) this.groups['contacts'] = { name: 'Contacts', order: 2 };
     }
 
     /**
@@ -218,8 +221,8 @@ export class AddressBook extends ListView {
 
     serializeGroups() {
         const updatedGroups = JSON.parse(JSON.stringify(this.groups));
-        delete updatedGroups['my'];
-        delete updatedGroups['contacts'];
+        // delete updatedGroups['my'];
+        // delete updatedGroups['contacts'];
         return updatedGroups;
     }
 
@@ -263,6 +266,7 @@ export class AddressBook extends ListView {
         this.addNewGroupButton = new AddPlus({
             text: 'Add new group',
             classList: ['dark'],
+            style: 'margin-top: 20px;',
             click: () => {
                 this.sheet.clear();
                 this.sheet.append({
@@ -331,7 +335,13 @@ export class AddressBook extends ListView {
                 });
             } : null,
             onCollapse: this.onCollapseGroups.bind(this),
-            onExpand: this.onExpandGroups.bind(this)
+            onExpand: this.onExpandGroups.bind(this),
+            onReorder: (order) => {
+                order.forEach((groupId, index) => {
+                    this.setGroup({ id: groupId, order: index + 1 });
+                });
+                this.save();
+            }
         });
     }
 

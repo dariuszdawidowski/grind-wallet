@@ -228,10 +228,7 @@ export class AddressBook extends ListView {
      */
 
     serializeGroups() {
-        const updatedGroups = JSON.parse(JSON.stringify(this.groups));
-        // delete updatedGroups['my'];
-        // delete updatedGroups['contacts'];
-        return updatedGroups;
+        return JSON.parse(JSON.stringify(this.groups));
     }
 
     /**

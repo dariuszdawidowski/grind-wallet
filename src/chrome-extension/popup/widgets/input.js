@@ -17,6 +17,7 @@ const bip39 = require('bip39');
  *   focus: boolean (optional) - if true, set the autofocus attribute
  *   onKeypress: func (optional) - callback on key pressed
  *   onIconClick: func (optional) - callback when icon is clicked
+ *   onChange: func (optional) - callback on input change
  */
 
 export class InputText extends Component {
@@ -24,9 +25,12 @@ export class InputText extends Component {
     constructor(args) {
         super(args);
 
+        // Real value (used by impostor)
+        this.realValue = null;
+
         // Build
         this.element.classList.add('input-text');
-
+        
         this.input = document.createElement('input');
         if ('value' in args) {
             this.input.value = args.value;
@@ -44,7 +48,6 @@ export class InputText extends Component {
         }
 
         // Optional change callback
-        // Store onChange callback
         this.onChangeCallback = ('onChange' in args) ? args.onChange : null;
         if (this.onChangeCallback) {
             this.input.addEventListener('change', (event) => {
@@ -63,13 +66,40 @@ export class InputText extends Component {
 
     }
 
+    /**
+     * Set value
+     */
+
     set(value) {
         this.input.value = value;
         if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
     }
 
+    /**
+     * Impostor value (used to show different text than actual input value)
+     */
+
+    setImpostor(value) {
+        this.realValue = this.input.value;
+        this.input.value = value;
+    }
+
+    /**
+     * Reset impostor value
+     */
+
+    resetImpostor() {
+        if (this.realValue !== null) this.input.value = this.realValue;
+        this.realValue = null;
+    }
+
+    /**
+     * Get sanitized value
+     */
+
     get() {
-        const normalized = this.input.value.normalize('NFC');
+        const value = this.realValue ? this.realValue : this.input.value;
+        const normalized = value.normalize('NFC');
         const sanitized = Array.from(normalized).filter((char) => {
             const codePoint = char.codePointAt(0);
             if (codePoint === undefined) return false;
@@ -81,20 +111,36 @@ export class InputText extends Component {
         return sanitized.trim();
     }
 
+    /**
+     * Enable interaction
+     */
+
     enable() {
         this.input.disabled = false;
         this.element.classList.remove('dimed');
     }
+
+    /**
+     * Disable interaction
+     */
 
     disable() {
         this.input.disabled = true;
         this.element.classList.add('dimed');
     }
 
+    /**
+     * Set text color
+     */
+
     color(value = null) {
         if (value) this.input.style.color = value;
         else this.input.style.removeProperty('color');
     }
+
+    /**
+     * Validator
+     */
 
     valid() {
         return this.get().length > 0;
@@ -200,10 +246,18 @@ export class InputAddress extends InputText {
         this.element.classList.add('input-account');
     }
 
+    /**
+     * Detect type
+     */
+
     detect() {
         if (this.get().search('-') != -1) return 'principal';
         else return 'account';
     }
+
+    /**
+     * Validator
+     */
 
     valid() {
         const type = this.detect();
@@ -260,9 +314,17 @@ export class InputPhrase extends Component {
         if (('value' in args) && args.value != null) this.set(args.value);
     }
 
+    /**
+     * Set value
+     */
+
     set(value) {
         this.input.value = value;
     }
+
+    /**
+     * Get value
+     */
 
     get() {
         return this.input.value.trim();
@@ -324,6 +386,10 @@ export class RecoveryPhrase extends Component {
 
     }
 
+    /**
+     * Get phrase as array
+     */
+
     get() {
         const phrase = [];
         this.inputs.forEach(input => {
@@ -331,6 +397,10 @@ export class RecoveryPhrase extends Component {
         });
         return phrase;
     }
+
+    /**
+     * Validator
+     */
 
     valid() {
 

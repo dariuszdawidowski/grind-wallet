@@ -82,9 +82,8 @@ export class SheetAccountSend extends Component {
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onChange: ({ value }) => {
                 const contact = this.addressbook.getByAddress(value);
-                if (contact) {
-                    this.widget.address.input.value = contact.name;
-                }
+                if (contact) this.widget.address.setImpostor(contact.name);
+                
             },
             onIconClick: () => {
                 this.app.drawer.toggle();

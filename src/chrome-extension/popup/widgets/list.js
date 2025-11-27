@@ -57,13 +57,15 @@ export class ListView extends Component {
         titleContainer.append(plusButton.element);
 
         // Edit icon
-        const editIcon = document.createElement('div');
-        editIcon.classList.add('icon', 'edit-group', 'hidden');
-        editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
-        titleContainer.append(editIcon);
-        editIcon.addEventListener('click', (event) => {
-            if (onEditGroup) onEditGroup(id);
-        });
+        if (onEditGroup) {
+            const editIcon = document.createElement('div');
+            editIcon.classList.add('icon', 'edit-group', 'hidden');
+            editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
+            titleContainer.append(editIcon);
+            editIcon.addEventListener('click', (event) => {
+                onEditGroup(id);
+            });
+        }
 
         // Separator
         const separator = document.createElement('div');

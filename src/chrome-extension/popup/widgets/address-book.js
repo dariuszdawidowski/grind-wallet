@@ -228,7 +228,17 @@ export class AddressBook extends ListView {
                     groupId: 'my',
                     data: this.contacts['my'],
                     emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
-                    newMsg: 'New entry for my wallets'
+                    newMsg: 'New entry for my wallets',
+                    editGroup: false
+                });
+            }
+            else if (groupId == 'contacts') {
+                this.renderGroup({
+                    groupId,
+                    data: this.contacts[groupId],
+                    emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
+                    newMsg: 'New contact',
+                    editGroup: false
                 });
             }
             else {
@@ -279,7 +289,7 @@ export class AddressBook extends ListView {
      * Render group
      */
 
-    renderGroup({ groupId, data, emptyMsg, newMsg }) {
+    renderGroup({ groupId, data, emptyMsg, newMsg, editGroup = true }) {
         this.renderList({
             id: groupId,
             name: this.groups[groupId].name,
@@ -304,14 +314,14 @@ export class AddressBook extends ListView {
                     component: new SheetContact({ app: this.app, addressbook: this, groupId, contactId, contact })
                 });
             },
-            onEditGroup: (groupId) => {
+            onEditGroup: editGroup ? (groupId) => {
                 const group = this.groups[groupId];
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit group`,
                     component: new SheetGroup({ app: this.app, addressbook: this, groupId, group })
                 });
-            },
+            } : null,
             onCollapse: this.onCollapseGroups.bind(this),
             onExpand: this.onExpandGroups.bind(this)
         });

@@ -11,6 +11,16 @@ import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
 
 export class SheetTransactionHistory extends Component {
 
+    /**
+     * Constructor
+     * @param {App} args.app Application instance
+     * @param {Wallet} args.wallet Wallet instance
+     * @param {Object} args.canister { ledgerId: string, indexId: string }
+     * @param {Array} args.types List of log types to show
+     * @param {Array} args.tokens List of canister IDs of tokens to show
+     * @param {Array} args.nfts List of collectionId:id of NFTs to show
+     */
+
     constructor({ app, wallet, canister, types, tokens, nfts }) {
         super({ app });
 
@@ -143,7 +153,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send',
-            subtitle: `To: ${recipient.address}`,
+            subtitle: `To: ${recipient.name || recipient.address}`,
             amount: entry.token.amount,
             other: recipient.type,
             canisterId: entry.token.canister
@@ -156,7 +166,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Sending',
-            subtitle: `To: ${recipient.address}`,
+            subtitle: `To: ${recipient.name || recipient.address}`,
             amount: entry.token.amount,
             other: recipient.type,
             canisterId: entry.token.canister
@@ -173,7 +183,7 @@ export class SheetTransactionHistory extends Component {
                 parent: row,
                 icon: icon,
                 title: 'Receive',
-                subtitle: `From: ${recipient.address}`,
+                subtitle: `From: ${recipient.name || recipient.address}`,
                 amount: entry.token.amount,
                 other: recipient.type,
                 canisterId: entry.token.canister
@@ -210,7 +220,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/arrow-up-bold.svg',
             title: 'Send NFT',
-            subtitle: `To: ${recipient.address}`,
+            subtitle: `To: ${recipient.name || recipient.address}`,
             other: recipient.type,
             canisterId: entry.nft.canister,
             nftId: entry.nft.id
@@ -222,7 +232,7 @@ export class SheetTransactionHistory extends Component {
             parent: row,
             icon: 'assets/material-design-icons/bug.svg',
             title: 'Error Sending NFT',
-            subtitle: `To: ${recipient.address}`,
+            subtitle: `To: ${recipient.name || recipient.address}`,
             other: recipient.type,
             canisterId: entry.nft.canister,
             nftId: entry.nft.id
@@ -315,9 +325,10 @@ export class SheetTransactionHistory extends Component {
      */
 
     getRecipient(entry) {
-        const result = { type: 'unknown', address: null };
+        const result = { type: 'unknown', address: null, name: null };
         let principal = null;
         let account = null;
+
         // Determine which address to check
         if (entry.type.startsWith('send.')) {
             if ('principal' in entry.to) {
@@ -336,6 +347,7 @@ export class SheetTransactionHistory extends Component {
             }
             
         }
+
         if (principal) {
             // My principal
             const wallet = this.app.wallets.getByPrincipal(principal);
@@ -362,6 +374,11 @@ export class SheetTransactionHistory extends Component {
                 if (this.app.wallets.hasSimilarAccount(account)) result.type = 'suspicious';
             }
         }
+
+        // Try to find in address book
+        const contact = this.app.addressbook.getByAddress(principal || account);
+        if (contact) result.name = contact.name;
+
         return result;
     }
 

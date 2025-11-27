@@ -130,6 +130,11 @@ export class SheetTransactionHistory extends Component {
 
     renderRow(entry) {
 
+        // Skip NFT entries if not viewing ICP ledger
+        if ((entry.type.includes('.nft')) && !this.app.isICP(this.canister.ledgerId)) {
+            return;
+        }
+
         // New date header
         const date = entry.datetime.slice(0, 10);
         if (date != this.lastDate) {

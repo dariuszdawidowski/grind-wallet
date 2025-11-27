@@ -27,9 +27,6 @@ export class Card extends Component {
             </div>
         `;
 
-        // Events
-        if ('click' in args) this.element.addEventListener('click', args.click);
-
         // Fetch balance
         const token = this.wallet.tokens.get(this.app.ICP_LEDGER_CANISTER_ID);
         token.balance().then(balance => {

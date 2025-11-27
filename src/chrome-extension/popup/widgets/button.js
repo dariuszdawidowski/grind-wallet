@@ -44,9 +44,6 @@ export class Button extends Component {
         this.spinner.classList.add('spinner');
         this.text.append(this.spinner);
 
-        // Events
-        this.element.addEventListener('click', args.click);
-
         // Enter key to submit
         this.enterCallback = null;
         if (('enter' in args) && args.enter == true) {
@@ -136,7 +133,6 @@ export class ButtIcon extends Button {
  * Link-like button
  * args:
  *   text: display
- *   click: callback
  */
 
 export class ButtLink extends Component {
@@ -147,9 +143,6 @@ export class ButtLink extends Component {
         // Build
         this.element.classList.add('buttlink');
         this.set(args.text);
-
-        // Events
-        this.element.addEventListener('click', args.click);
 
     }
 

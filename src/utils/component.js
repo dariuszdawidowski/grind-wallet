@@ -1,5 +1,5 @@
 /**
- * Component v 0.9.2
+ * Component v 0.9.3
  * Minimalistic DOM component for JavaScript
  */
 
@@ -13,6 +13,8 @@ export class Component {
      * args.style: apply custom style (optional)
      * args.html: html string to render (optional)
      * args.selector: dont create new element but assign to selector (optional)
+     * args.classList: array of CSS classes to add (optional)
+     * args.click: click event handler (optional)
      */
 
     constructor(args = {}) {
@@ -72,6 +74,9 @@ export class Component {
                 });
             }
         }
+
+        // Click event
+        if ('click' in args) this.element.addEventListener('click', args.click);
 
     }
 

@@ -32,11 +32,7 @@ export class ListView extends Component {
         const titleContainer = document.createElement('div');
         titleContainer.classList.add('header-row');
         header.append(titleContainer);
-
-        // Title
-        const title = document.createElement('h1');
-        title.innerText = name;
-        title.addEventListener('click', () => {
+        titleContainer.addEventListener('click', () => {
             const direction = this.toggleCollapse();
             if (direction == 'collapsed') {
                 if (onCollapse) onCollapse();
@@ -45,12 +41,17 @@ export class ListView extends Component {
                 if (onExpand) onExpand();
             }
         });
+
+        // Title
+        const title = document.createElement('h1');
+        title.innerText = name;
         titleContainer.append(title);
 
         // Add new
         const plusButton = new AddPlus({
             classList: ['add-group'],
-            click: () => {
+            click: (event) => {
+                event.stopPropagation();
                 if (onAddEntry) onAddEntry();
             }
         });

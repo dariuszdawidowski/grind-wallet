@@ -14,9 +14,6 @@ export class AddPlus extends Component {
         let html = '<div class="plus"><img src="assets/material-design-icons/plus.svg"></img></div>';
         if ('text' in args) html += `<div class="label">${args.text}</div>`;
         this.element.innerHTML = html;
-
-        // Events
-        if ('click' in args) this.element.addEventListener('click', args.click);
     }
     
 }

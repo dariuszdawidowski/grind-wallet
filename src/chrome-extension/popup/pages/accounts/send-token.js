@@ -43,8 +43,19 @@ export class SheetAccountSend extends Component {
             this.app.drawer.append(this.addressbook);
             this.addressbook.render();
             this.addressbook.callback = (address) => {
-                this.widget.address.set(address['icp:pid']);
-                this.app.drawer.close();
+                let result = null;
+                if (this.app.isICP(this.canister.ledgerId)) {
+                    result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null
+                    if (!result) alert('Invalid address. Expecting ICP Principal ID or Account ID.');
+                }
+                else {
+                    result = ('icp:pid' in address) ? address['icp:pid'] : null
+                    if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
+                }
+                if (result) {
+                    this.widget.address.set(result);
+                    this.app.drawer.close();
+                }
             };
         });
 
@@ -60,7 +71,7 @@ export class SheetAccountSend extends Component {
 
         // Address
         this.widget.address = new InputAddress({
-            placeholder: this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID ? 'Principal ID or Account ID' : 'Principal ID',
+            placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onIconClick: () => {
                 this.app.drawer.toggle();

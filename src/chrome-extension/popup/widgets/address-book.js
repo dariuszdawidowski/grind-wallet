@@ -303,7 +303,7 @@ export class AddressBook extends ListView {
                 this.sheet.clear();
                 this.sheet.append({
                     title: newMsg,
-                    component: new SheetContact({ app: this.app, addressbook: this, group: groupId })
+                    component: new SheetContact({ app: this.app, addressbook: this, groupId })
                 });
             },
             onEditEntry: (contactId) => {
@@ -451,7 +451,7 @@ export class SheetContact extends Component {
 
         // Account ID
         const accountId = new InputAddress({
-            placeholder: 'Account ID (optional)',
+            placeholder: 'Account ID',
         });
         if (contact && contact.address['icp:acc0']) accountId.set(contact.address['icp:acc0']);
         this.append(accountId);
@@ -464,14 +464,15 @@ export class SheetContact extends Component {
                 if (!name.valid()) {
                     alert('Invalid name');
                 }
-                else if (!principalId.valid()) {
+                else if (principalId.get().length && !principalId.valid()) {
                     alert('Invalid Principal ID');
                 }
                 else if (accountId.get().length && !accountId.valid()) {
                     alert('Invalid Account ID');
                 }
                 else {
-                    const address = { 'icp:pid': principalId.get() };
+                    const address = {};
+                    if (principalId.get().length) address['icp:pid'] = principalId.get();
                     if (accountId.get().length) address['icp:acc0'] = accountId.get();
                     if (contact) {
                         addressbook.setContact({

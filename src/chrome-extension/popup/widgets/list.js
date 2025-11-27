@@ -105,7 +105,7 @@ export class ListView extends Component {
                     container,
                     id,
                     name: contact.name,
-                    value: contact.address['icp:pid'],
+                    value: (('address' in contact) && ('icp:pid' in contact.address)) ? contact.address['icp:pid'] : (('address' in contact) && ('icp:acc0' in contact.address)) ? contact.address['icp:acc0'] : null,
                     icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
                 });
             });
@@ -128,7 +128,7 @@ export class ListView extends Component {
      * Render single contact entry
      */
 
-    renderEntry({ container, id, name, value, icon = null }) {
+    renderEntry({ container, id, name, value = null, icon = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -155,10 +155,12 @@ export class ListView extends Component {
         middle.append(title);
 
         // Subtitle
-        const subtitle = document.createElement('div');
-        subtitle.classList.add('address');
-        subtitle.innerText = shortAddress(value);
-        middle.append(subtitle);
+        if (value) {
+            const subtitle = document.createElement('div');
+            subtitle.classList.add('address');
+            subtitle.innerText = shortAddress(value);
+            middle.append(subtitle);
+        }
 
         // Right icon
         if (icon) {

@@ -83,7 +83,10 @@ export class SheetAccountSend extends Component {
             onChange: ({ value }) => {
                 const contact = this.addressbook.getByAddress(value);
                 if (contact) this.widget.address.setImpostor(contact.name);
-                
+            },
+            onBlur: ({ value }) => {
+                const contact = this.addressbook.getByAddress(value);
+                if (contact) this.widget.address.setImpostor(contact.name);
             },
             onIconClick: () => {
                 this.app.drawer.toggle();

@@ -18,6 +18,8 @@ const bip39 = require('bip39');
  *   onKeypress: func (optional) - callback on key pressed
  *   onIconClick: func (optional) - callback when icon is clicked
  *   onChange: func (optional) - callback on input change
+ *   onFocus: func (optional) - callback on input focus
+ *   onBlur: func (optional) - callback on input blur
  */
 
 export class InputText extends Component {
@@ -63,6 +65,17 @@ export class InputText extends Component {
             this.element.append(this.icon);
             if ('onIconClick' in args) this.icon.addEventListener('click', args.onIconClick);
         }
+
+        // On focus input
+        this.input.addEventListener('focus', (event) => {
+            this.resetImpostor();
+            if ('onFocus' in args) args.onFocus({ value: this.input.value });
+        });
+
+        // On blur input
+        this.input.addEventListener('blur', (event) => {
+            if ('onBlur' in args) args.onBlur({ value: this.input.value });
+        });
 
     }
 

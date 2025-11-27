@@ -33,12 +33,20 @@ class Contact {
         };
     }
 
+    /**
+     * Get contact by address
+     */
+
+    hasAddress(address) {
+        return Object.values(this.address).includes(address);
+    }
+
 }
 
 export class AddressBook extends ListView {
 
-    constructor({ app }) {
-        super({ app });
+    constructor(args) {
+        super(args);
 
         // Contact groups
         this.groups = null;
@@ -224,6 +232,22 @@ export class AddressBook extends ListView {
         // delete updatedGroups['my'];
         // delete updatedGroups['contacts'];
         return updatedGroups;
+    }
+
+    /**
+     * Get contact by address
+     */
+
+    getByAddress(address) {
+        for (const group in this.contacts) {
+            for (const contactId in this.contacts[group]) {
+                const contact = this.contacts[group][contactId];
+                if (contact.hasAddress(address)) {
+                    return contact;
+                }
+            }
+        }
+        return null;
     }
 
     /**

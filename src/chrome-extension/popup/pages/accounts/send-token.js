@@ -12,11 +12,18 @@ import { AddressBook } from '/src/chrome-extension/popup/widgets/address-book.js
 
 export class SheetAccountSend extends Component {
 
-    constructor({ app, wallet, canister }) {
-        super({ app });
+    /**
+     * Constructor
+     * @param {App} args.app Application instance
+     * @param {Wallet} args.wallet Wallet instance
+     * @param {Canister} args.canister Canister instance
+     */
+
+    constructor(args) {
+        super(args);
 
         // Token
-        this.token = wallet.tokens.get(canister.ledgerId);
+        this.token = args.wallet.tokens.get(args.canister.ledgerId);
 
         // Token balance
         this.balance = null;
@@ -28,16 +35,16 @@ export class SheetAccountSend extends Component {
         this.widget = {};
 
         // Wallet reference
-        this.wallet = wallet;
+        this.wallet = args.wallet;
 
         // Canister ID
-        this.canister = canister;
+        this.canister = args.canister;
 
         // Sucessfuly sent
         this.sent = false;
 
         // Address book
-        this.addressbook = new AddressBook({ app });
+        this.addressbook = new AddressBook({ app: this.app });
         this.addressbook.load().then(() => {
             this.app.drawer.clear();
             this.app.drawer.append(this.addressbook);
@@ -73,6 +80,12 @@ export class SheetAccountSend extends Component {
         this.widget.address = new InputAddress({
             placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
+            onChange: ({ value }) => {
+                const contact = this.addressbook.getByAddress(value);
+                if (contact) {
+                    this.widget.address.input.value = contact.name;
+                }
+            },
             onIconClick: () => {
                 this.app.drawer.toggle();
             }

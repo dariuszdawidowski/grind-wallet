@@ -13,9 +13,9 @@ const bip39 = require('bip39');
  * Constructor args:
  *   value: string (optional) - initial value to populate the input
  *   placeholder: string (optional) - placeholder text shown when empty
+ *   icon: string (optional) - HTML for right-side icon
  *   focus: boolean (optional) - if true, set the autofocus attribute
  *   onKeypress: func (optional) - callback on key pressed
- *   icon: string (optional) - HTML for right-side icon
  *   onIconClick: func (optional) - callback when icon is clicked
  */
 
@@ -43,6 +43,15 @@ export class InputText extends Component {
             });
         }
 
+        // Optional change callback
+        // Store onChange callback
+        this.onChangeCallback = ('onChange' in args) ? args.onChange : null;
+        if (this.onChangeCallback) {
+            this.input.addEventListener('change', (event) => {
+                this.onChangeCallback({ value: this.input.value });
+            });
+        }
+
         // Optional right-side icon
         if ('icon' in args) {
             this.icon = document.createElement('div');
@@ -56,6 +65,7 @@ export class InputText extends Component {
 
     set(value) {
         this.input.value = value;
+        if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
     }
 
     get() {

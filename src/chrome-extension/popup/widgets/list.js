@@ -9,8 +9,8 @@ import { shortAddress } from '/src/utils/general.js';
 
 export class ListView extends Component {
 
-    constructor({ app }) {
-        super({ app });
+    constructor(args) {
+        super(args);
 
         // CSS class
         this.element.classList.add('list-view');
@@ -24,7 +24,17 @@ export class ListView extends Component {
 
     /**
      * Render group header & container
+     * @param {string} id Group ID
      * @param {string} name Group name
+     * @param {object} data Entries data
+     * @param {string} emptyMsg Message to show when no entries
+     * @param {function} onAddEntry Callback when add entry clicked
+     * @param {function} onSelectEntry Callback when entry selected
+     * @param {function} onEditEntry Callback when edit entry clicked
+     * @param {function} onEditGroup Callback when edit group clicked
+     * @param {function} onCollapse Callback when group collapsed
+     * @param {function} onExpand Callback when group expanded
+     * @param {function} onReorder Callback when group reordered
      */
 
     renderList({ id, name, data, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
@@ -138,6 +148,8 @@ export class ListView extends Component {
 
     /**
      * Setup drag and drop for header reordering
+     * @param {HTMLElement} header Header element
+     * @param {function} onReorder Callback when reordered
      */
 
     setupDragAndDrop(header, onReorder) {
@@ -201,6 +213,8 @@ export class ListView extends Component {
 
     /**
      * Get element after which dragged element should be inserted
+     * @param {number} y Y coordinate
+     * @returns {HTMLElement} Element after which to insert
      */
 
     getDragAfterElement(y) {
@@ -221,6 +235,11 @@ export class ListView extends Component {
 
     /**
      * Render single contact entry
+     * @param {HTMLElement} container Container to render entry in
+     * @param {string} id Entry ID
+     * @param {string} name Entry name
+     * @param {string} value Entry value (address)
+     * @param {string} icon Entry right icon
      */
 
     renderEntry({ container, id, name, value = null, icon = null }) {

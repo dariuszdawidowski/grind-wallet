@@ -81,7 +81,9 @@ export class AddressBook extends ListView {
 
     addGroup({ id = null, name }) {
         if (!id) id = crypto.randomUUID();
-        this.groups[id] = { name };
+        // Compute order based on current number of groups
+        const order = Object.keys(this.groups).length + 1;
+        this.groups[id] = { name, order };
         this.contacts[id] = {};
     }
 
@@ -105,6 +107,12 @@ export class AddressBook extends ListView {
             delete this.groups[id];
             delete this.contacts[id];
         }
+        // Recompute group orders to remove gaps after deletion
+        const groupsArr = Object.entries(this.groups);
+        groupsArr.sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+        groupsArr.forEach(([gid], index) => {
+            this.groups[gid].order = index + 1;
+        });
     }
 
     /**
@@ -150,7 +158,7 @@ export class AddressBook extends ListView {
 
         // Add stored groups
         Object.entries(data).forEach(([id, group]) => {
-            this.groups[id] = { name: group.name, order: group.order || 99 };
+            this.groups[id] = { name: group.name, order: group.order };
         });
     }
 
@@ -222,7 +230,7 @@ export class AddressBook extends ListView {
     render() {
 
         // Render groups with contacts
-        Object.entries(this.groups).forEach(([groupId, group]) => {
+        Object.entries(this.groups).sort(([, a], [, b]) => (a.order ?? 0) - (b.order ?? 0)).forEach(([groupId]) => {
             if (groupId == 'my') {
                 this.renderGroup({
                     groupId: 'my',

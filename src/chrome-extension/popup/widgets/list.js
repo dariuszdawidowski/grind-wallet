@@ -150,7 +150,6 @@ export class ListView extends Component {
                 event.preventDefault();
                 return;
             }
-
             this.dragState.draggedElement = header;
             header.classList.add('dragging');
             event.dataTransfer.effectAllowed = 'move';
@@ -167,9 +166,13 @@ export class ListView extends Component {
             const draggedContainer = this.dragState.draggedElement.nextElementSibling;
             
             if (afterElement == null) {
-                this.element.appendChild(this.dragState.draggedElement);
-                if (draggedContainer) {
-                    this.element.appendChild(draggedContainer);
+                // Find first button to insert before it
+                const firstButton = this.element.querySelector('button');
+                if (firstButton) {
+                    this.element.insertBefore(this.dragState.draggedElement, firstButton);
+                    if (draggedContainer) {
+                        this.element.insertBefore(draggedContainer, firstButton);
+                    }
                 }
             }
             else {
@@ -189,7 +192,6 @@ export class ListView extends Component {
             this.element.querySelectorAll('.header').forEach(h => {
                 order.push(h.dataset.id);
             });
-
             this.dragState.draggedElement = null;
 
             // Callback with new order

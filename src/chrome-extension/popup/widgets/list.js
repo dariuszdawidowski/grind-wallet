@@ -67,11 +67,6 @@ export class ListView extends Component {
             });
         }
 
-        // Separator
-        const separator = document.createElement('div');
-        separator.classList.add('separator');
-        header.append(separator);
-
         // Contacts container
         const container = document.createElement('div');
         container.classList.add('container');
@@ -97,6 +92,11 @@ export class ListView extends Component {
             }
 
         });
+
+        // Separator
+        const separator = document.createElement('div');
+        separator.classList.add('separator');
+        container.append(separator);
 
         // Render entries
         if (Object.values(data).length) {

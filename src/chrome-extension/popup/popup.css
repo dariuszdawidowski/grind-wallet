@@ -4,6 +4,7 @@
     --button-color: rgb(101, 37, 179);
     --button-color-dimed: rgba(101, 37, 179, 0.5);
     --button-hilit: rgb(135, 80, 199);
+    --button-ultralit: rgb(206, 162, 255);
 }
 
 /* Main structures */
@@ -1330,6 +1331,7 @@ hr {
 .list-view .container {
     overflow-y: hidden;
     transition: height 0.3s ease;
+    background-color: #f5f5f5;
 }
 
 .list-view .container.collapsed {
@@ -1342,12 +1344,21 @@ hr {
     justify-content: flex-start;
     align-items: center;
     padding: 10px;
-    color: #333;
     font-size: 14px;
+    color: #333;
+    background-color: #fff;
 }
 
-.list-view .entry:first-child {
+.list-view .entry:nth-child(2) {
     padding-top: 0;
+}
+
+.list-view .entry:hover {
+    background-color: var(--button-ultralit);
+}
+
+.list-view .separator:has(+ .entry:hover) {
+    background-color: var(--button-ultralit);
 }
 
 .avatar {
@@ -1395,7 +1406,8 @@ hr {
     text-align: center;
     color: #333;
     font-size: 12px;
-    margin: 4px 16px 20px 16px;
+    padding: 4px 16px 20px 16px;
+    background-color: #fff;
 }
 
 .list-view .icon.edit-group {

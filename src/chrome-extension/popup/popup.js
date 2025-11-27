@@ -17,6 +17,7 @@ import { DataCache } from '/src/utils/data-cache.js';
 import { ImageCache } from '/src/utils/image-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/chrome-extension/popup/widgets/tasks.js';
+import { AddressBook } from '/src/chrome-extension/popup/widgets/address-book.js';
 const { version } = require('/package.json');
 
 // Development mode
@@ -123,6 +124,10 @@ class GrindWalletPlugin {
             image: new ImageCache()
         };
         await this.cache.info.init();
+
+        // Address book
+        this.addressbook = new AddressBook({ app: this });
+        await this.addressbook.load();
 
         // Get storage session data
         const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);

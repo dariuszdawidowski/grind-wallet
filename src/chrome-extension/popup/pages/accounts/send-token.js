@@ -8,7 +8,6 @@ import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
 import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
-import { AddressBook } from '/src/chrome-extension/popup/widgets/address-book.js';
 
 export class SheetAccountSend extends Component {
 
@@ -44,27 +43,24 @@ export class SheetAccountSend extends Component {
         this.sent = false;
 
         // Address book
-        this.addressbook = new AddressBook({ app: this.app });
-        this.addressbook.load().then(() => {
-            this.app.drawer.clear();
-            this.app.drawer.append(this.addressbook);
-            this.addressbook.render();
-            this.addressbook.callback = (address) => {
-                let result = null;
-                if (this.app.isICP(this.canister.ledgerId)) {
-                    result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null
-                    if (!result) alert('Invalid address. Expecting ICP Principal ID or Account ID.');
-                }
-                else {
-                    result = ('icp:pid' in address) ? address['icp:pid'] : null
-                    if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
-                }
-                if (result) {
-                    this.widget.address.set(result);
-                    this.app.drawer.close();
-                }
-            };
-        });
+        this.app.drawer.clear();
+        this.app.drawer.append(this.app.addressbook);
+        this.app.addressbook.render();
+        this.app.addressbook.callback = (address) => {
+            let result = null;
+            if (this.app.isICP(this.canister.ledgerId)) {
+                result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null
+                if (!result) alert('Invalid address. Expecting ICP Principal ID or Account ID.');
+            }
+            else {
+                result = ('icp:pid' in address) ? address['icp:pid'] : null
+                if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
+            }
+            if (result) {
+                this.widget.address.set(result);
+                this.app.drawer.close();
+            }
+        };
 
         // Build
         this.element.classList.add('form');
@@ -81,11 +77,11 @@ export class SheetAccountSend extends Component {
             placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onChange: ({ value }) => {
-                const contact = this.addressbook.getByAddress(value);
+                const contact = this.app.addressbook.getByAddress(value);
                 if (contact) this.widget.address.setImpostor(contact.name);
             },
             onBlur: ({ value }) => {
-                const contact = this.addressbook.getByAddress(value);
+                const contact = this.app.addressbook.getByAddress(value);
                 if (contact) this.widget.address.setImpostor(contact.name);
             },
             onIconClick: () => {

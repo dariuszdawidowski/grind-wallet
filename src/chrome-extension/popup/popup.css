@@ -429,6 +429,7 @@ button.butticon img {
     right: 20px;
     bottom: 2px;
     background-color: #fff;
+    z-index: 2;
 }
 
 /* Separators */

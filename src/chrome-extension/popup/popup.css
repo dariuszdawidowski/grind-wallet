@@ -448,7 +448,7 @@ hr {
     height: 216px;
     background-size: cover;
     background-position: center;
-    border-radius: 20px;
+    border-radius: 16px;
     margin: 20px auto;
     position: relative;
     color: white;
@@ -861,7 +861,7 @@ hr {
     height: 75%;
     color: #222;
     background-color: white;
-    border-radius: 16px 16px 0 0;
+    border-radius: 36px 36px 0 0;
     transition: bottom 0.5s ease;
     overflow-y: auto;
     display: flex;
@@ -899,8 +899,8 @@ hr {
 
 .sheet .x {
     position: fixed;
-    right: 6px;
-    margin-top: 6px;
+    right: 16px;
+    margin-top: 14px;
     color: white;
     border-radius: 50%;
     width: 26px;

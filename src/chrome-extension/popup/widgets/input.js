@@ -15,6 +15,7 @@ const bip39 = require('bip39');
  *   placeholder: string (optional) - placeholder text shown when empty
  *   icon: string (optional) - HTML for right-side icon
  *   focus: boolean (optional) - if true, set the autofocus attribute
+ *   autocomplete: array (optional) - array of strings for autocomplete suggestions
  *   onKeypress: func (optional) - callback on key pressed
  *   onIconClick: func (optional) - callback when icon is clicked
  *   onChange: func (optional) - callback on input change
@@ -30,6 +31,10 @@ export class InputText extends Component {
         // Real value (used by impostor)
         this.realValue = null;
 
+        // Autocomplete suggestions
+        this.autocompleteList = ('autocomplete' in args) ? args.autocomplete : null;
+        this.suggestionBox = null;
+
         // Build
         this.element.classList.add('input-text');
         
@@ -41,6 +46,11 @@ export class InputText extends Component {
         if ('focus' in args) this.input.setAttribute('autofocus', 'true');
         if ('placeholder' in args) this.input.placeholder = args.placeholder;
         this.element.append(this.input);
+
+        // Setup autocomplete
+        if (this.autocompleteList) {
+            this.setupAutocomplete();
+        }
 
         // Optional keypress callback
         if ('onKeypress' in args) {
@@ -74,9 +84,66 @@ export class InputText extends Component {
 
         // On blur input
         this.input.addEventListener('blur', (event) => {
+            setTimeout(() => {
+                if (this.suggestionBox) this.suggestionBox.remove();
+            }, 200);
             if ('onBlur' in args) args.onBlur({ value: this.input.value });
         });
 
+    }
+
+    /**
+     * Setup autocomplete functionality
+     */
+
+    setupAutocomplete() {
+        // Create ghost input for inline suggestions
+        this.ghostInput = document.createElement('input');
+        this.ghostInput.classList.add('ghost-input');
+        this.ghostInput.setAttribute('readonly', 'true');
+        this.ghostInput.setAttribute('tabindex', '-1');
+        this.element.insertBefore(this.ghostInput, this.input.nextSibling);
+
+        // Handle input changes
+        this.input.addEventListener('input', () => {
+            const value = this.input.value.toLowerCase();
+            this.ghostInput.value = '';
+            
+            if (!value) return;
+            
+            // Find first matching suggestion
+            const match = this.autocompleteList.find(item => 
+                item.toLowerCase().startsWith(value) && item.toLowerCase() !== value
+            );
+            
+            if (match) {
+                this.ghostInput.value = match;
+            }
+        });
+
+        // Handle Tab key to accept suggestion
+        this.input.addEventListener('keydown', (event) => {
+            if (event.key === 'Tab' && this.ghostInput.value) {
+                event.preventDefault();
+                this.input.value = this.ghostInput.value;
+                this.ghostInput.value = '';
+                if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
+            }
+            // Handle Right Arrow key to accept suggestion
+            else if (event.key === 'ArrowRight' && this.input.selectionStart === this.input.value.length && this.ghostInput.value) {
+                event.preventDefault();
+                this.input.value = this.ghostInput.value;
+                this.ghostInput.value = '';
+                if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
+            }
+        });
+
+        // Clear ghost on blur
+        this.input.addEventListener('blur', () => {
+            setTimeout(() => {
+                this.ghostInput.value = '';
+            }, 100);
+        });
     }
 
     /**

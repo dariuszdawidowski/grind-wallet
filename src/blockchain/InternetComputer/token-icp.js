@@ -5,6 +5,7 @@
 import { Actor } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
 import { LedgerCanister } from '@dfinity/ledger-icp';
+import { hexStringToUint8Array } from '@dfinity/utils';
 import { idlFactory as idlICPIndex } from '/src/blockchain/InternetComputer/candid/icp-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ONE_MINUTE, timestampNanos2ISO } from '/src/utils/general.js';

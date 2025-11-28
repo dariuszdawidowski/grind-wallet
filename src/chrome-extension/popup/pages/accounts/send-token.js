@@ -79,11 +79,9 @@ export class SheetAccountSend extends Component {
             placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onFocus: ({ value }) => {
-                console.log('onFocus', value);
                 if (method == 'byAddress') this.widget.address.resetImpostor();
             },
             onBlur: ({ value }) => {
-                console.log('onBlur', value);
                 let contact = this.app.addressbook.getByAddress(value);
                 if (contact) {
                     method = 'byAddress';

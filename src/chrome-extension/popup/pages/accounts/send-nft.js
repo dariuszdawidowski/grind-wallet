@@ -24,15 +24,53 @@ export class SheetAccountSendNFT extends Component {
         // Build
         this.element.classList.add('form');
 
+        // Address book
+        this.app.drawer.clear();
+        this.app.drawer.append(this.app.addressbook);
+        if (!this.app.addressbook.isRendered()) this.app.addressbook.render();
+        this.app.addressbook.callback = (contact) => {
+            let result = ('icp:pid' in contact.address) ? contact.address['icp:pid'] : null;
+            if (result) {
+                this.widget.address.set({ impostor: contact.name, real: result });
+                this.app.drawer.close();
+            }
+            else {
+                alert('Invalid address. Expecting ICP Principal ID only.');
+            }
+        };
+
         // Address field
+        let method = null;
+        const acceptedAddresses = ['icp:pid'];
         this.widget.address = new InputAddress({
-            placeholder: 'Principal ID'
+            placeholder: 'Principal ID',
+            icon: '<img src="assets/material-design-icons/account-box.svg">',
+            onFocus: ({ value }) => {
+                if (method == 'byAddress') this.widget.address.resetImpostor();
+            },
+            onBlur: ({ value }) => {
+                let contact = this.app.addressbook.getByAddress(value);
+                if (contact) {
+                    method = 'byAddress';
+                    this.widget.address.set({ impostor: contact.name });
+                }
+                else {
+                    method = 'byName';
+                    contact = this.app.addressbook.getByName(value);
+                    if (contact) this.widget.address.set({ impostor: value, real: contact.getAddress(acceptedAddresses) });
+                }
+            },
+            onIconClick: () => {
+                this.app.drawer.toggle();
+            },
+            autocomplete: this.app.addressbook.getAllNames()
         });
         this.append(this.widget.address);
 
         // Button send
         this.widget.submit = new Button({
             text: 'Send NFT',
+            classList: ['bottom'],
             click: () => {
                 // Not sent yet
                 if (!this.sent) {

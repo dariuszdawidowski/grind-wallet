@@ -101,7 +101,9 @@ export class PageAccounts extends Component {
 
         // Get wallets and render
         this.app.wallets.load().then(() => {
-            document.body.dispatchEvent(new Event('render.all'));
+            this.app.addressbook.load().then(() => {
+                document.body.dispatchEvent(new Event('render.all'));
+            });
         });
 
     }

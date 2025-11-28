@@ -127,7 +127,6 @@ class GrindWalletPlugin {
 
         // Address book
         this.addressbook = new AddressBook({ app: this });
-        await this.addressbook.load();
 
         // Get storage session data
         const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);

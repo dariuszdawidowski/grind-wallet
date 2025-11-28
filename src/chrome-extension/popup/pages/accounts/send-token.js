@@ -49,11 +49,11 @@ export class SheetAccountSend extends Component {
         this.app.addressbook.callback = (address) => {
             let result = null;
             if (this.app.isICP(this.canister.ledgerId)) {
-                result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null
+                result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null;
                 if (!result) alert('Invalid address. Expecting ICP Principal ID or Account ID.');
             }
             else {
-                result = ('icp:pid' in address) ? address['icp:pid'] : null
+                result = ('icp:pid' in address) ? address['icp:pid'] : null;
                 if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
             }
             if (result) {

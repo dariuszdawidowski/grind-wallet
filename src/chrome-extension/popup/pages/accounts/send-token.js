@@ -99,7 +99,8 @@ export class SheetAccountSend extends Component {
             },
             onIconClick: () => {
                 this.app.drawer.toggle();
-            }
+            },
+            autocomplete: this.app.addressbook.getAllNames()
         });
         this.append(this.widget.address);
 

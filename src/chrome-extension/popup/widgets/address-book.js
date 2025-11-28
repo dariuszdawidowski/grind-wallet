@@ -246,6 +246,21 @@ export class AddressBook extends ListView {
     }
 
     /**
+     * Get all contact names
+     */
+
+    getAllNames() {
+        const names = [];
+        for (const group in this.contacts) {
+            for (const contactId in this.contacts[group]) {
+                const contact = this.contacts[group][contactId];
+                names.push(contact.name);
+            }
+        }
+        return names;
+    }
+
+    /**
      * Get contact by name (any case)
      */
 

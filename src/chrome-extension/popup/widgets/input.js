@@ -160,7 +160,6 @@ export class InputText extends Component {
      */
 
     set(value) {
-
         // Direct value
         if (typeof(value) == 'string') {
             this.input.value = value;
@@ -172,9 +171,6 @@ export class InputText extends Component {
             else this.realValue = this.input.value;
             if ('impostor' in value) this.input.value = value.impostor;
         }
-
-        // Change callback
-        // if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
     }
 
     /**

@@ -34,6 +34,20 @@ class Contact {
     }
 
     /**
+     * Get best address
+     * @param accept Array list of accepted addresses
+     */
+
+    getAddress(accept) {
+        for (const key of accept) {
+            if (key in this.address) {
+                return this.address[key];
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get contact by address
      */
 

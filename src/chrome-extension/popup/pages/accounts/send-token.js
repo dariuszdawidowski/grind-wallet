@@ -73,16 +73,29 @@ export class SheetAccountSend extends Component {
         this.append(this.widget.amount);
 
         // Address
+        const acceptedAddresses = this.app.isICP(this.canister.ledgerId) ? ['icp:pid', 'icp:acc0'] : ['icp:pid'];
         this.widget.address = new InputAddress({
             placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onChange: ({ value }) => {
-                const contact = this.app.addressbook.getByAddress(value);
-                if (contact) this.widget.address.set({ impostor: contact.name });
+                let contact = this.app.addressbook.getByAddress(value);
+                if (contact) {
+                    this.widget.address.set({ impostor: contact.name });
+                }
+                else {
+                    contact = this.app.addressbook.getByName(value);
+                    if (contact) this.widget.address.set({ impostor: value, real: contact.getAddress(acceptedAddresses) });
+                }
             },
             onBlur: ({ value }) => {
-                const contact = this.app.addressbook.getByAddress(value);
-                if (contact) this.widget.address.set({ impostor: contact.name });
+                let contact = this.app.addressbook.getByAddress(value);
+                if (contact) {
+                    this.widget.address.set({ impostor: contact.name });
+                }
+                else {
+                    contact = this.app.addressbook.getByName(value);
+                    if (contact) this.widget.address.set({ impostor: value, real: contact.getAddress(acceptedAddresses) });
+                }
             },
             onIconClick: () => {
                 this.app.drawer.toggle();

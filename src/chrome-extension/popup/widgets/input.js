@@ -168,7 +168,7 @@ export class InputText extends Component {
         }
 
         // Change callback
-        if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
+        // if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
     }
 
     /**

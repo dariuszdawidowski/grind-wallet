@@ -91,11 +91,13 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Exchange',
                 click: () => {
+                    chrome.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
+                    /*
                     this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Buy, swap, mint, bridge`,
                         component: new SheetAccountExchange({ app, wallet, canister })
-                    });
+                    });*/
                 }
             }),
             fiat: new ButtIcon({

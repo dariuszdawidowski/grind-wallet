@@ -307,4 +307,12 @@ export class ListView extends Component {
         return direction;
     }
 
+    /**
+     * Check whether list is already rendered
+     */
+
+    isRendered() {
+        return Array.from(this.element.children).some(child => child.classList.contains('header'));
+    }
+
 }

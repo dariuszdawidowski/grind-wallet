@@ -45,7 +45,7 @@ export class SheetAccountSend extends Component {
         // Address book
         this.app.drawer.clear();
         this.app.drawer.append(this.app.addressbook);
-        this.app.addressbook.render();
+        if (!this.app.addressbook.isRendered()) this.app.addressbook.render();
         this.app.addressbook.callback = (address) => {
             let result = null;
             if (this.app.isICP(this.canister.ledgerId)) {

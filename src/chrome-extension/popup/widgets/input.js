@@ -97,6 +97,7 @@ export class InputText extends Component {
      */
 
     setupAutocomplete() {
+
         // Create ghost input for inline suggestions
         this.ghostInput = document.createElement('input');
         this.ghostInput.classList.add('ghost-input');
@@ -104,36 +105,45 @@ export class InputText extends Component {
         this.ghostInput.setAttribute('tabindex', '-1');
         this.element.insertBefore(this.ghostInput, this.input.nextSibling);
 
+        // Store current match
+        this.currentMatch = null;
+
         // Handle input changes
         this.input.addEventListener('input', () => {
-            const value = this.input.value.toLowerCase();
+            const value = this.input.value;
             this.ghostInput.value = '';
+            this.currentMatch = null;
             
             if (!value) return;
             
-            // Find first matching suggestion
+            // Find first matching suggestion (case-insensitive)
             const match = this.autocompleteList.find(item => 
-                item.toLowerCase().startsWith(value) && item.toLowerCase() !== value
+                item.toLowerCase().startsWith(value.toLowerCase()) && item.toLowerCase() !== value.toLowerCase()
             );
             
             if (match) {
-                this.ghostInput.value = match;
+                // Keep the same case as user input for matching part
+                this.ghostInput.value = value + match.slice(value.length);
+                // Store original match for acceptance
+                this.currentMatch = match;
             }
         });
 
         // Handle Tab key to accept suggestion
         this.input.addEventListener('keydown', (event) => {
-            if (event.key === 'Tab' && this.ghostInput.value) {
+            if (event.key === 'Tab' && this.ghostInput.value && this.currentMatch) {
                 event.preventDefault();
-                this.input.value = this.ghostInput.value;
+                this.input.value = this.currentMatch;
                 this.ghostInput.value = '';
+                this.currentMatch = null;
                 if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
             }
             // Handle Right Arrow key to accept suggestion
-            else if (event.key === 'ArrowRight' && this.input.selectionStart === this.input.value.length && this.ghostInput.value) {
+            else if (event.key === 'ArrowRight' && this.input.selectionStart === this.input.value.length && this.ghostInput.value && this.currentMatch) {
                 event.preventDefault();
-                this.input.value = this.ghostInput.value;
+                this.input.value = this.currentMatch;
                 this.ghostInput.value = '';
+                this.currentMatch = null;
                 if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
             }
         });
@@ -142,6 +152,7 @@ export class InputText extends Component {
         this.input.addEventListener('blur', () => {
             setTimeout(() => {
                 this.ghostInput.value = '';
+                this.currentMatch = null;
             }, 100);
         });
     }

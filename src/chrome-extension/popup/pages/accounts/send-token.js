@@ -57,6 +57,7 @@ export class SheetAccountSend extends Component {
                 if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
             }
             if (result) {
+                method = 'byBook';
                 this.widget.address.set({ impostor: contact.name, real: result });
                 this.app.drawer.close();
             }
@@ -80,6 +81,7 @@ export class SheetAccountSend extends Component {
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onFocus: ({ value }) => {
                 if (method == 'byAddress') this.widget.address.resetImpostor();
+                else if (method == 'byBook') this.widget.address.realValue = null;
             },
             onBlur: ({ value }) => {
                 let contact = this.app.addressbook.getByAddress(value);

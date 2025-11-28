@@ -31,6 +31,7 @@ export class SheetAccountSendNFT extends Component {
         this.app.addressbook.callback = (contact) => {
             let result = ('icp:pid' in contact.address) ? contact.address['icp:pid'] : null;
             if (result) {
+                method = 'byBook';
                 this.widget.address.set({ impostor: contact.name, real: result });
                 this.app.drawer.close();
             }
@@ -47,6 +48,7 @@ export class SheetAccountSendNFT extends Component {
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onFocus: ({ value }) => {
                 if (method == 'byAddress') this.widget.address.resetImpostor();
+                else if (method == 'byBook') this.widget.address.realValue = null;
             },
             onBlur: ({ value }) => {
                 let contact = this.app.addressbook.getByAddress(value);

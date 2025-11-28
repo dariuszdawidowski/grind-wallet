@@ -325,13 +325,13 @@ button.butticon img {
     z-index: 0;
 }
 
-.input-text input:not(.ghost-input) {
+.form .input-text input:not(.ghost-input) {
     position: relative;
     background: transparent;
     z-index: 1;
 }
 
-.input-text input {
+.form .input-text input {
     color: #222;
     border-bottom: 1px solid #4f4f67;
     text-align: left;

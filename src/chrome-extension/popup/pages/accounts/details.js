@@ -122,7 +122,7 @@ export class SheetAccountDetails extends Component {
                         app,
                         wallet,
                         canister,
-                        types: ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft.begin', 'send.nft.error'],
+                        types: this.app.isICP(this.canister.ledgerId) ? ['send.token', 'send.token.error', 'recv.token', 'add.nft', 'del.nft', 'send.nft.begin', 'send.nft.error'] : ['send.token', 'send.token.error', 'recv.token'],
                         tokens: this.app.isICP(this.canister.ledgerId) ? Object.keys(this.wallet.tokens.get()) : [this.canister.ledgerId],
                         nfts: this.app.isICP(this.canister.ledgerId) ? Object.keys(this.wallet.nfts.get()) : []
                     })

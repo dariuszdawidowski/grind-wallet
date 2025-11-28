@@ -105,6 +105,7 @@ export class SheetTransactionHistory extends Component {
 
     /**
      * Render human readable and locale date header
+     * @param {string} isodate ISO date string
      */
 
     renderDate(isodate) {
@@ -126,14 +127,10 @@ export class SheetTransactionHistory extends Component {
 
     /**
      * Render one entry
+     * @param {object} entry log row
      */
 
     renderRow(entry) {
-
-        // Skip NFT entries if not viewing ICP ledger
-        if ((entry.type.includes('.nft')) && !this.app.isICP(this.canister.ledgerId)) {
-            return;
-        }
 
         // New date header
         const date = entry.datetime.slice(0, 10);
@@ -163,6 +160,7 @@ export class SheetTransactionHistory extends Component {
             other: recipient.type,
             canisterId: entry.token.canister
         });
+
         // Error send token
         else if (entry.type === 'send.token.error') this.renderEntry({
             type: entry.type,
@@ -176,6 +174,7 @@ export class SheetTransactionHistory extends Component {
             other: recipient.type,
             canisterId: entry.token.canister
         });
+
         // Receive Token
         else if (entry.type === 'recv.token') {
             const amount = parseFloat(entry.token.amount);
@@ -194,6 +193,7 @@ export class SheetTransactionHistory extends Component {
                 canisterId: entry.token.canister
             });
         }
+
         // Add NFT
         else if (entry.type === 'add.nft') this.renderEntry({
             type: entry.type,
@@ -206,6 +206,7 @@ export class SheetTransactionHistory extends Component {
             canisterId: entry.nft.canister,
             nftId: entry.nft.id
         });
+
         // Del NFT
         else if (entry.type === 'del.nft') this.renderEntry({
             type: entry.type,
@@ -218,6 +219,7 @@ export class SheetTransactionHistory extends Component {
             canisterId: entry.nft.canister,
             nftId: entry.nft.id
         });
+
         // Send NFT
         else if (entry.type === 'send.nft.begin') this.renderEntry({
             type: entry.type,
@@ -230,6 +232,7 @@ export class SheetTransactionHistory extends Component {
             canisterId: entry.nft.canister,
             nftId: entry.nft.id
         });
+
         // Error send NFT
         else if (entry.type === 'send.nft.error') this.renderEntry({
             type: entry.type,
@@ -247,6 +250,17 @@ export class SheetTransactionHistory extends Component {
 
     /**
      * Render entry template
+     * @param {string} type Entry type (e.g., 'send.token', 'recv.token', etc.)
+     * @param {string} [op] Operation sign (+ or -)
+     * @param {string} kind 'token' | 'nft'
+     * @param {HTMLElement} parent Parent element
+     * @param {string} icon Icon URL
+     * @param {string} title Title text
+     * @param {string} [subtitle] Subtitle text (address)
+     * @param {string} [amount] Amount value
+     * @param {string} [other] 'own' | 'suspicious' | null
+     * @param {string} canisterId Token ledger/NFT collection canister ID
+     * @param {string} [nftId] NFT ID
      */
 
     renderEntry({ type, op = null, kind, parent, icon, title, subtitle = null, amount = null, other, canisterId, nftId = null }) {

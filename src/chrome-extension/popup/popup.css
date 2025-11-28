@@ -331,6 +331,12 @@ button.butticon img {
     z-index: 1;
 }
 
+.input-text input {
+    color: #222;
+    border-bottom: 1px solid #4f4f67;
+    text-align: left;
+}
+
 .form .input-text .ghost-input {
     color: rgba(34, 34, 34, 0.3);
 }

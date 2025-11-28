@@ -232,6 +232,22 @@ export class AddressBook extends ListView {
     }
 
     /**
+     * Get contact by name (any case)
+     */
+
+    getByName(name) {
+        for (const group in this.contacts) {
+            for (const contactId in this.contacts[group]) {
+                const contact = this.contacts[group][contactId];
+                if (contact.name.toLowerCase() == name.trim().toLowerCase()) {
+                    return contact;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get contact by address
      */
 

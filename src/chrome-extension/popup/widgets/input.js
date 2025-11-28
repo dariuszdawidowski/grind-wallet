@@ -148,20 +148,27 @@ export class InputText extends Component {
 
     /**
      * Set value
+     * @param value - string
+     * or
+     * @param value - { real: string, impostor: string }
      */
 
     set(value) {
-        this.input.value = value;
+
+        // Direct value
+        if (typeof(value) == 'string') {
+            this.input.value = value;
+        }
+
+        // Impostor value (used to show different text than actual input value)
+        else if (typeof(value) == 'object') {
+            if ('real' in value) this.realValue = value.real;
+            else this.realValue = this.input.value;
+            if ('impostor' in value) this.input.value = value.impostor;
+        }
+
+        // Change callback
         if (this.onChangeCallback) this.onChangeCallback({ value: this.input.value });
-    }
-
-    /**
-     * Impostor value (used to show different text than actual input value)
-     */
-
-    setImpostor(value) {
-        this.realValue = this.input.value;
-        this.input.value = value;
     }
 
     /**

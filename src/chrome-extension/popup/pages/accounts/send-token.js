@@ -78,11 +78,11 @@ export class SheetAccountSend extends Component {
             icon: '<img src="assets/material-design-icons/account-box.svg">',
             onChange: ({ value }) => {
                 const contact = this.app.addressbook.getByAddress(value);
-                if (contact) this.widget.address.setImpostor(contact.name);
+                if (contact) this.widget.address.set({ impostor: contact.name });
             },
             onBlur: ({ value }) => {
                 const contact = this.app.addressbook.getByAddress(value);
-                if (contact) this.widget.address.setImpostor(contact.name);
+                if (contact) this.widget.address.set({ impostor: contact.name });
             },
             onIconClick: () => {
                 this.app.drawer.toggle();
@@ -163,7 +163,7 @@ export class SheetAccountSend extends Component {
         // Autodetect Account ID
         else {
             // ICP
-            if (this.canister.ledgerId === this.app.ICP_LEDGER_CANISTER_ID) {
+            if (this.app.isICP(this.canister.ledgerId)) {
                 try {
                     account = AccountIdentifier.fromHex(this.widget.address.get());
                     allow = true;

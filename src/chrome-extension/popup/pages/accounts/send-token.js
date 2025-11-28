@@ -46,18 +46,18 @@ export class SheetAccountSend extends Component {
         this.app.drawer.clear();
         this.app.drawer.append(this.app.addressbook);
         if (!this.app.addressbook.isRendered()) this.app.addressbook.render();
-        this.app.addressbook.callback = (address) => {
+        this.app.addressbook.callback = (contact) => {
             let result = null;
             if (this.app.isICP(this.canister.ledgerId)) {
-                result = ('icp:pid' in address) ? address['icp:pid'] : ('icp:acc0' in address) ? address['icp:acc0'] : null;
+                result = ('icp:pid' in contact.address) ? contact.address['icp:pid'] : ('icp:acc0' in contact.address) ? contact.address['icp:acc0'] : null;
                 if (!result) alert('Invalid address. Expecting ICP Principal ID or Account ID.');
             }
             else {
-                result = ('icp:pid' in address) ? address['icp:pid'] : null;
+                result = ('icp:pid' in contact.address) ? contact.address['icp:pid'] : null;
                 if (!result) alert('Invalid address. Expecting ICP Principal ID only.');
             }
             if (result) {
-                this.widget.address.set(result);
+                this.widget.address.set({ impostor: contact.name, real: result });
                 this.app.drawer.close();
             }
         };
@@ -73,32 +73,24 @@ export class SheetAccountSend extends Component {
         this.append(this.widget.amount);
 
         // Address
+        let method = null;
         const acceptedAddresses = this.app.isICP(this.canister.ledgerId) ? ['icp:pid', 'icp:acc0'] : ['icp:pid'];
         this.widget.address = new InputAddress({
             placeholder: this.app.isICP(this.canister.ledgerId) ? 'Principal ID or Account ID' : 'Principal ID',
             icon: '<img src="assets/material-design-icons/account-box.svg">',
-            // onChange: ({ value }) => {
-            //     console.log('onChange', value);
-            //     let contact = this.app.addressbook.getByAddress(value);
-            //     if (contact) {
-            //         this.widget.address.set({ impostor: contact.name });
-            //     }
-            //     else {
-            //         contact = this.app.addressbook.getByName(value);
-            //         if (contact) this.widget.address.set({ impostor: value, real: contact.getAddress(acceptedAddresses) });
-            //     }
-            // },
             onFocus: ({ value }) => {
                 console.log('onFocus', value);
-                this.widget.address.resetImpostor();
+                if (method == 'byAddress') this.widget.address.resetImpostor();
             },
             onBlur: ({ value }) => {
                 console.log('onBlur', value);
                 let contact = this.app.addressbook.getByAddress(value);
                 if (contact) {
+                    method = 'byAddress';
                     this.widget.address.set({ impostor: contact.name });
                 }
                 else {
+                    method = 'byName';
                     contact = this.app.addressbook.getByName(value);
                     if (contact) this.widget.address.set({ impostor: value, real: contact.getAddress(acceptedAddresses) });
                 }

@@ -375,7 +375,7 @@ export class AddressBook extends ListView {
             emptyMsg,
             onSelectEntry: (contactId) => {
                 const contact = this.contacts[groupId][contactId];
-                this.callback?.(contact.address);
+                this.callback?.(contact);
             },
             onAddEntry: () => {
                 this.sheet.clear();

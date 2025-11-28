@@ -29,7 +29,7 @@ module.exports = (env = {}, argv = {}) => {
                 'crypto': require.resolve('crypto-browserify'),
                 'process': require.resolve('process/browser'),
                 'stream': require.resolve('stream-browserify'),
-                'vm': require.resolve('vm-browserify'),
+                'vm': false,
             },
         },
 

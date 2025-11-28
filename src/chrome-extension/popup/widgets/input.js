@@ -33,7 +33,6 @@ export class InputText extends Component {
 
         // Autocomplete suggestions
         this.autocompleteList = ('autocomplete' in args) ? args.autocomplete : null;
-        this.suggestionBox = null;
 
         // Build
         this.element.classList.add('input-text');
@@ -78,15 +77,11 @@ export class InputText extends Component {
 
         // On focus input
         this.input.addEventListener('focus', (event) => {
-            this.resetImpostor();
             if ('onFocus' in args) args.onFocus({ value: this.input.value });
         });
 
         // On blur input
         this.input.addEventListener('blur', (event) => {
-            setTimeout(() => {
-                if (this.suggestionBox) this.suggestionBox.remove();
-            }, 200);
             if ('onBlur' in args) args.onBlur({ value: this.input.value });
         });
 

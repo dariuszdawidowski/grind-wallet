@@ -46,6 +46,7 @@ export class PageLogin extends Component {
         // Buttons
         this.widget.button = new Button({
             text: 'Unlock',
+            style: 'margin-top: 20px;',
             enter: false,
             click: () => {
                 this.verify(this.widget.password.get(), args.salt, args.hash);

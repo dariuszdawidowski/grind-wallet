@@ -388,15 +388,15 @@ button.butticon img {
     margin: 20px auto;
 }
 
-.input-currency input {
+.form .input-currency input {
     color: #222;
     text-align: right;
     width: 200px;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 400;
     border: none;
     outline: none;
-    margin-left: 9px;
+    margin-left: 30px;
     padding-right: 0;
     background-color: transparent;
 }

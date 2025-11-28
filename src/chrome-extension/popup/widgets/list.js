@@ -85,6 +85,7 @@ export class ListView extends Component {
             editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
             titleContainer.append(editIcon);
             editIcon.addEventListener('click', (event) => {
+                event.stopPropagation();
                 onEditGroup(id);
             });
         }

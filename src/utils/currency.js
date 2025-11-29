@@ -70,16 +70,3 @@ export function ICP2icpt(amount, decimals = 8) {
 export function icpt2ICP(amount, decimals = 8) {
     return Number(amount) / (10 ** decimals);
 }
-
-/**
- * Validate ICRC-1 metadata
- * metadata: dictionary
- */
-
-// export function validICRC1(metadata) {
-//     if (('icrc1:name' in metadata) && ('Text' in metadata['icrc1:name']) &&
-//         ('icrc1:symbol' in metadata) && ('Text' in metadata['icrc1:symbol']) &&
-//         ('icrc1:decimals' in metadata) && ('Nat' in metadata['icrc1:decimals']) &&
-//         ('icrc1:fee' in metadata) && ('Nat' in metadata['icrc1:fee'])) return true;
-//     return false;
-// }

@@ -8,7 +8,7 @@ import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
 import { AddPlus } from '/src/extension/popup/widgets/add.js';
-import { ListView } from '/src/extension/popup/widgets/list';
+import { ListView } from '/src/extension/popup/widgets/list.js';
 
 class Contact {
 

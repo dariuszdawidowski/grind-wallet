@@ -11,8 +11,7 @@ This is a source code repository, if you are looking for a ready-made plugin, in
 
 ## Compatibility
 
-Currently, it only works in Chrome and in browsers that support compatible extensions (like Opera).
-
+Works in Chrome, Firefox, and other browsers that support compatible extensions (like Opera, Edge).
 
 ## Installation
 
@@ -27,14 +26,25 @@ npm install
 ## Development build
 
 ```bash
+# Build for all browsers (Chrome and Firefox)
 npm run build:dev
+
+# Build only for Chrome
+npm run build:dev:chrome
+
+# Build only for Firefox
+npm run build:dev:firefox
 ```
 
 
 ## Development launch
 
+### Chrome
 To install open in Chrome extensions page [chrome://extensions/] -> Load unpacked -> Point to builded dist/chrome directory.
 You can launch from extension bar or better in the fulscreen mode [chrome-extension://fbalmoobdnjmfbhbgaiimcbolcpnmcjf/popup.html].
+
+### Firefox
+To install in Firefox, open about:debugging -> This Firefox -> Load Temporary Add-on -> Point to the dist/firefox/manifest.json file.
 
 
 ## E2E test build
@@ -51,8 +61,17 @@ npm run build:test
 ## Production build
 
 ```bash
-# Create .zip ready for Chrome Store -> dist/grind-wallet.zip
+# Create .zip for Chrome Store -> dist/grind-wallet.zip
 npm run deploy
+
+# Build for all browsers (Chrome and Firefox)
+npm run build:prod
+
+# Build only for Chrome
+npm run build:prod:chrome
+
+# Build only for Firefox
+npm run build:prod:firefox
 ```
 
 

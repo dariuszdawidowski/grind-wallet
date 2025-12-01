@@ -1,5 +1,7 @@
 /*** Biometric authorization helpers ***/
 
+import { browser } from '/src/utils/browser.js';
+
 /**
  * Register biometric user
  */
@@ -32,7 +34,7 @@ export async function registerBiometric() {
 
     try {
         const credential = await navigator.credentials.create({ publicKey });
-        await chrome.storage.local.set({ webauthn: JSON.stringify(credential) });
+        await browser.storage.local.set({ webauthn: JSON.stringify(credential) });
         console.log('Rejestracja zakończona:', credential);
     } catch (error) {
         console.error('Błąd rejestracji:', error);

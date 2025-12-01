@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
@@ -91,7 +92,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Exchange',
                 click: () => {
-                    chrome.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
+                    browser.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
                     /*
                     this.app.sheet.clear();
                     this.app.sheet.append({
@@ -104,7 +105,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/currency-usd.svg">',
                 text: 'Fiat',
                 click: () => {
-                    chrome.tabs.create({ url: 'https://www.coinbase.com' });
+                    browser.tabs.create({ url: 'https://www.coinbase.com' });
                 }
             })
         };
@@ -173,7 +174,7 @@ export class SheetAccountDetails extends Component {
             this.append(new ButtLink({
                 text: 'Show in ICP Dashboard',
                 click: () => {
-                    chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
+                    browser.tabs.create({ url: `https://dashboard.internetcomputer.org/account/${this.wallet.account}` });
                 }
             }));
 
@@ -202,7 +203,7 @@ export class SheetAccountDetails extends Component {
             this.append(new ButtLink({
                 text: `Show token's candid interface`,
                 click: () => {
-                    chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.canister.ledgerId}` });
+                    browser.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.canister.ledgerId}` });
                 }
             }));
 

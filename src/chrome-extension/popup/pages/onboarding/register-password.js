@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { isPasswordStrong, generateSalt, hashPassword } from '/src/utils/password.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { InputPassword } from '/src/chrome-extension/popup/widgets/input.js';
@@ -61,11 +62,11 @@ export class PageRegisterPassword extends Component {
                     if (isPasswordStrong(newPassword)) {
                         generateSalt().then(salt => {
                             hashPassword(newPassword, salt).then(hashed => {
-                                chrome.storage.local.set({ salt: salt, password: hashed }, () => {
+                                browser.storage.local.set({ salt: salt, password: hashed }, () => {
                                     // Store password
                                     this.app.user.password = newPassword;
                                     // Save session
-                                    chrome.storage.session.set({ active: true, password: newPassword });
+                                    browser.storage.session.set({ active: true, password: newPassword });
                                     // Activate main page
                                     this.app.page('accounts');
                                 });

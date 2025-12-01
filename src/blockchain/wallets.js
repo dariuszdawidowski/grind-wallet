@@ -2,6 +2,7 @@
  * Manages a collection of wallets.
  */
 
+import { browser } from '/src/utils/browser.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/wallet-icp.js';
 
 export class Wallets {
@@ -126,7 +127,7 @@ export class Wallets {
      */
 
     async load() {
-        const storageLocal = await chrome.storage.local.get('wallets');
+        const storageLocal = await browser.storage.local.get('wallets');
         // Load Wallets
         if (storageLocal.wallets) {
             for (const [_, w] of Object.entries(storageLocal.wallets)) {
@@ -175,7 +176,7 @@ export class Wallets {
         Object.values(this.list).forEach(wallet => {
             serializedWallets[wallet.public] = wallet.serialize();
         });
-        await chrome.storage.local.set({ 'wallets': serializedWallets });
+        await browser.storage.local.set({ 'wallets': serializedWallets });
     }
 
 }

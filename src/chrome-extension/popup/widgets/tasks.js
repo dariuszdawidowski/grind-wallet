@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
 import { Task } from '/src/chrome-extension/popup/tasks/task.js';
 import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
@@ -83,29 +84,21 @@ export class TaskManager extends Component {
             TaskMintCK: TaskMintCK
         };
 
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.storage.local.get('tasks', (result) => {
-                    if (chrome.runtime.lastError) {
-                        reject(new Error(chrome.runtime.lastError.message));
-                    }
-                    else {
-                        const tasksData = result.tasks || {};
-                        for (const [id, data] of Object.entries(tasksData)) {
-                            const TaskClass = classRegistry[data.class] || Task;
-                            const task = TaskClass.deserialize({ app: this.app, ...data });
-                            task.task.id = id;
-                            this.tasks[id] = task;
-                            this.list.append(task.html());
-                        }
-                        resolve(true);
-                    }
-                });
+        try {
+            const result = await browser.storage.local.get('tasks');
+            const tasksData = result.tasks || {};
+            for (const [id, data] of Object.entries(tasksData)) {
+                const TaskClass = classRegistry[data.class] || Task;
+                const task = TaskClass.deserialize({ app: this.app, ...data });
+                task.task.id = id;
+                this.tasks[id] = task;
+                this.list.append(task.html());
             }
-            catch (e) {
-                reject(e);
-            }
-        });
+            return true;
+        }
+        catch (e) {
+            throw e;
+        }
     }
 
     /**
@@ -120,22 +113,14 @@ export class TaskManager extends Component {
             payload[id] = data;
         }
 
-        // Save to chrome extension local storage
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.storage.local.set({ tasks: payload }, () => {
-                    if (chrome.runtime.lastError) {
-                        reject(new Error(chrome.runtime.lastError.message));
-                    }
-                    else {
-                        resolve(true);
-                    }
-                });
-            }
-            catch (e) {
-                reject(e);
-            }
-        });
+        // Save to browser extension local storage
+        try {
+            await browser.storage.local.set({ tasks: payload });
+            return true;
+        }
+        catch (e) {
+            throw e;
+        }
     }
 
     /**

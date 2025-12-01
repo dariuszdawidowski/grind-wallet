@@ -43,7 +43,7 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
 
 export function formatCurrency(value, fixed = 2) {
     let wasCutted = false;
-    if (Math.abs(value) < 1e-6) {
+    if (Math.abs(value) > 0 && Math.abs(value) < 1e-6) {
         value = 0;
         wasCutted = true;
     }

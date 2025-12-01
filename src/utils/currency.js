@@ -3,6 +3,10 @@
 
 /**
  * Group number to blocks separated by spaces e.g. 0000 0000 0000
+ * @param {string} inputString - string to format
+ * @param {number} everyNCharacters - group size
+ * @param {boolean} fromLeft - direction of grouping
+ * @returns {string} - formatted string
  */
 
 export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true) {
@@ -31,7 +35,10 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
 
 
 /**
- * Display number as currency
+ * Display number as human-readable currency formatted with spaces and fixed decimals, also .. suffix
+ * @param {number} value - value to format
+ * @param {number} fixed - number of decimal places to show
+ * @returns {string} - formatted currency string
  */
 
 export function formatCurrency(value, fixed = 2) {
@@ -39,32 +46,43 @@ export function formatCurrency(value, fixed = 2) {
     const [whole, fractional = ''] = value.toString().split('.');
     const displayedFraction = fractional.slice(0, fixed).padEnd(fixed, '0');
     const hasRemainder = fractional.length > fixed;
-    const allZeros = displayedFraction.split('').every(char => char === '0');
-    const suffix = hasRemainder && allZeros ? '..' : '';
+    const suffix = hasRemainder ? '..' : '';
     return formatWithSpaces(whole, 3, false) + '.' + displayedFraction + suffix;
 }
 
 
 /**
  * ICP -> ICPt
+ * @param {number|string} amount - amount in ICP
+ * @param {number} decimals - number of decimal places (default 8 for ICP)
+ * @returns {bigint} - amount in ICPt
  */
 
 export function ICP2icpt(amount, decimals = 8) {
-    const [integral, fractional] = `${amount}`.split('.');
-
-    if ((fractional ?? '0').length > decimals) {
+    // Validate decimal places before conversion
+    const amountStr = amount.toString();
+    const [, fractional] = amountStr.split('.');
+    
+    if (fractional && fractional.length > decimals) {
         throw new Error(`More than ${decimals} decimals not supported.`);
     }
 
+    // Convert to fixed notation to avoid scientific notation (1e-8)
+    const fixedStr = Number(amount).toFixed(decimals);
+    const [integral, fractionalPart] = fixedStr.split('.');
+
     return (
         BigInt(integral ?? 0) * BigInt(10 ** decimals) +
-        BigInt((fractional ?? '0').padEnd(decimals, '0'))
+        BigInt((fractionalPart ?? '0').padEnd(decimals, '0'))
     );
 };
 
 
 /**
  * ICPt -> ICP
+ * @param {number|string|bigint} amount - amount in ICPt
+ * @param {number} decimals - number of decimal places (default 8 for ICP)
+ * @returns {number} - amount in ICP
  */
 
 export function icpt2ICP(amount, decimals = 8) {

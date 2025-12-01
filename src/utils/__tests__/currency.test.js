@@ -45,7 +45,11 @@ describe('formatCurrency', () => {
     });
 
     test('formats with custom decimal places', () => {
-        expect(formatCurrency(100.123456, 4)).toBe('100.1234');
+        expect(formatCurrency(100.123456, 4)).toBe('100.1234..');
+    });
+
+    test('formats exactly with custom decimal places', () => {
+        expect(formatCurrency(100.1234, 4)).toBe('100.1234');
     });
 
     test('pads fractional part with zeros', () => {

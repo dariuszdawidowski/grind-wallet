@@ -7,17 +7,42 @@ Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. B
 ## Architecture
 
 ### Core Components
-- **`src/chrome-extension/popup/popup.js`** - Main entry point, initializes `GrindWalletPlugin` class
+- **`src/chrome-extension/popup/`** - Main UI part of the extension
+  - `popup.js` - Main entry point for UI, initializes `GrindWalletPlugin` class
+  - `popup.css` - Monolithic css file, pure css3, uses the latest methods, ignores old browsers
+  - `popup.html` - Main UI html
+  - `dev-mode.js` - Works only in the development mode with DEV_MODE=1 flag
+- **`src/chrome-extension/popup/pages/accounts`** - Views components
+- **`src/chrome-extension/popup/pages/onboarding`** - Views components related to onboarding procedure (setup password, accept terms etc.)
+- **`src/chrome-extension/popup/widgets/`** - Reusable UI components
+- **`src/chrome-extension/popup/tasks/`** - Handling and displaying long-running tasks
 - **`src/blockchain/`** - Blockchain abstraction layer:
-  - `wallet.js` - Abstract wallet with tokens/NFTs collections
   - `wallets.js` - Wallet manager (CRUD operations)
+  - `wallet.js` - Abstract wallet with tokens/NFTs collections
   - `InternetComputer/wallet-icp.js` - ICP wallet implementation
+  - `tokens.js` - Tokens manager (CRUD operations)
   - `token.js` - Abstract token class
-  - `InternetComputer/token-icp.js` - Native ICP token (uses `@dfinity/ledger-icp`)
-  - `InternetComputer/token-icrc.js` - ICRC standard tokens
-- **`src/utils/keys.js`** - Cryptography: key generation (BIP39/BIP32), encryption (AES-GCM), identity management
-- **`src/chrome-extension/popup/pages/`** - Page components (terms, login, accounts)
-- **`src/chrome-extension/popup/widgets/`** - Reusable UI components (buttons, cards, sheets)
+  - `InternetComputer/token-icp.js` - Native ICP token
+  - `InternetComputer/token-icrc.js` - ICRC standard tokens (ICP)
+  - `nfts.js` - NFTs manager (CRUD operations)
+  - `nft.js` - Abstract NFT class
+  - `InternetComputer/nft-ext.js` - NFT EXT implementation (ICP)
+  - `InternetComputer/nft-icrc7.js` - NFT ICRC-7 implementation (ICP)
+  - `InternetComputer/candid/*` - ICP canisters candid interfaces
+- **`src/utils/`** - Universal utils
+  - `biometric.js` - Biometric auth
+  - `component.js` - Base component for all UI widgets and views (pages)
+  - `currency.js` - Formating and converting currencies
+  - `data-cache.js` - Cache fetched data with overdue timestap
+  - `dictionary.js` - Name lookup tables
+  - `errors.js` - Rerouting errors to IndexedDB logs
+  - `general.js` - General purpose utils (convert, validation etc.)
+  - `image-cache.js` - Cache fetched images into IndexedDB
+  - `keys.js` - Cryptography: key generation (BIP39/BIP32), encryption (AES-GCM), identity management
+  - `logbase.js` - Logging system class to inherit
+  - `logger.js` - Logging events into IndexedDB
+  - `object-cache.js` - Caching JavaScript objects to avoid creating duplicates in other code spaces
+  - `password.js` - Handling password cryptography
 
 ### Data Flow
 1. User password → decrypt private keys (AES-GCM in `keys.js`)
@@ -56,6 +81,7 @@ npm run build:dev      # Development build with source maps
 npm run build:prod     # Production build (minified)
 npm run build:test     # E2E test build (requires secrets.local.json)
 npm run deploy         # Build + create .zip for Chrome Store
+npm run test           # Jest unit tests
 ```
 
 ### Testing Extension

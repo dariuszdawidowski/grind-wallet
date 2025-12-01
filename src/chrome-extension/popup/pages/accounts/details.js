@@ -9,7 +9,7 @@ import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { SheetAccountSend } from './send-token.js';
 import { SheetAccountReceive } from './receive-token.js';
-import { SheetAccountExchange } from './exchange.js';
+//import { SheetAccountExchange } from './exchange.js';
 import { SheetAddCustomToken } from './add-token.js';
 import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';

@@ -43,11 +43,21 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
 
 export function formatCurrency(value, fixed = 2) {
     let wasCutted = false;
-    if (Math.abs(value) > 0 && Math.abs(value) < 1e-6) {
+    let valueStr;
+    
+    if (fixed > 6) {
+        valueStr = value.toFixed(fixed);
+    }
+    else if (Math.abs(value) > 0 && Math.abs(value) < 1e-6) {
         value = 0;
         wasCutted = true;
+        valueStr = value.toString();
     }
-    const [whole, fractional = ''] = value.toString().split('.');
+    else {
+        valueStr = value.toString();
+    }
+    
+    const [whole, fractional = ''] = valueStr.split('.');
     const displayedFraction = fractional.slice(0, fixed).padEnd(fixed, '0');
     const hasRemainder = fractional.length > fixed;
     const suffix = hasRemainder || wasCutted ? '..' : '';

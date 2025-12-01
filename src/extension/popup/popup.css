@@ -1451,7 +1451,7 @@ hr {
     line-height: 22px;
 }
 
-.list-view .entry .address {
+.list-view .entry .value {
     color: #444;
     font-size: 14px;
     font-weight: normal;

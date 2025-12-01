@@ -8,19 +8,15 @@ import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
 import { AddPlus } from '/src/extension/popup/widgets/add.js';
-import { ListView } from '/src/extension/popup/widgets/list.js';
+import { ListView, ListEntry } from '/src/extension/popup/widgets/list.js';
+import { shortAddress } from '/src/utils/general.js';
 
-class Contact {
+class Contact extends ListEntry {
 
-    constructor({ id = null, name, address, dynamic = false }) {
-        // Contact ID
-        this.id = id;
-        // Contact name
-        this.name = name;
+    constructor({ id = null, name, value, address, editable = false }) {
+        super({ id, name, value, editable });
         // Contact address list { 'icp:pid': ..., 'icp:acc0': ..., 'btc:bech32': ... }
         this.address = address;
-        // Is dynamic (from wallets)
-        this.dynamic = dynamic;
     }
 
     /**
@@ -201,8 +197,9 @@ export class AddressBook extends ListView {
             this.contacts['my'][`mywallet-${wallet.principal}`] = new Contact({
                 id: `mywallet-${wallet.principal}`,
                 name: wallet.name,
+                value: shortAddress(wallet.principal),
                 address: { 'icp:pid': wallet.principal, 'icp:acc0': wallet.account },
-                dynamic: true
+                editable: false
             });
         });
 
@@ -213,8 +210,9 @@ export class AddressBook extends ListView {
                 this.contacts[group][id] = new Contact({
                     id,
                     name: contact.name,
+                    value: (('address' in contact) && ('icp:pid' in contact.address)) ? shortAddress(contact.address['icp:pid']) : (('address' in contact) && ('icp:acc0' in contact.address)) ? shortAddress(contact.address['icp:acc0']) : null,
                     address: contact.address,
-                    dynamic: contact.dynamic || false
+                    editable: true
                 });
             });
         });
@@ -302,7 +300,6 @@ export class AddressBook extends ListView {
 
         // Render groups with contacts
         Object.entries(this.groups).sort(([, a], [, b]) => (a.order ?? 0) - (b.order ?? 0)).forEach(([groupId]) => {
-            console.log(this.contacts['my'])
             if (groupId == 'my') {
                 this.renderGroup({
                     groupId: 'my',

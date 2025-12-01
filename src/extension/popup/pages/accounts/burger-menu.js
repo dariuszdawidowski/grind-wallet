@@ -19,9 +19,13 @@ export class BurgerMenu extends ListView {
             id: 'view',
             name: 'View',
             entries: {
-                'view-side': { id: 'view-side', name: 'Side View', address: { 'icp:pid': 'ysuep' }, dynamic: false },
-                'view-full': { id: 'view-full', name: 'Full Screen', address: { 'icp:pid': 'ysuep' }, dynamic: false }
-            }
+                'view-side': { name: 'Side View' },
+                'view-full': { name: 'Full Screen' }
+            },
+            onSelectEntry: (entryId) => {
+                console.log('Selected view mode:', entryId);
+            },
+
         });
     }
 }

@@ -5,7 +5,21 @@
 import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/extension/popup/widgets/avatar.js';
 import { AddPlus } from '/src/extension/popup/widgets/add.js';
-import { shortAddress } from '/src/utils/general.js';
+
+export class ListEntry {
+
+    constructor({ id = null, name, value = null, editable = false }) {
+        // Entry ID
+        this.id = id;
+        // Entry name
+        this.name = name;
+        // Entry value
+        this.value = value;
+        // Is editable
+        this.editable = editable;
+    }
+
+}
 
 export class ListView extends Component {
 
@@ -26,7 +40,7 @@ export class ListView extends Component {
      * Render group header & container
      * @param {string} id Group ID
      * @param {string} name Group name
-     * @param {object} entries Entries list {id: {name, address}}
+     * @param {object} entries Entries list {id: {name, value, editable}}
      * @param {string} emptyMsg Message to show when no entries
      * @param {function} onAddEntry Callback when add entry clicked
      * @param {function} onSelectEntry Callback when entry selected
@@ -47,7 +61,7 @@ export class ListView extends Component {
         this.element.append(header);
 
         // Setup drag and drop
-        this.setupDragAndDrop(header, onReorder);
+        if (onReorder) this.setupDragAndDrop(header, onReorder);
 
         // Header row
         const titleContainer = document.createElement('div');
@@ -68,15 +82,17 @@ export class ListView extends Component {
         title.innerText = name;
         titleContainer.append(title);
 
-        // Add new
-        const plusButton = new AddPlus({
-            classList: ['add-group'],
-            click: (event) => {
-                event.stopPropagation();
-                if (onAddEntry) onAddEntry();
-            }
-        });
-        titleContainer.append(plusButton.element);
+        // Add new entry
+        if (onAddEntry) {
+            const plusButton = new AddPlus({
+                classList: ['add-group'],
+                click: (event) => {
+                    event.stopPropagation();
+                    if (onAddEntry) onAddEntry();
+                }
+            });
+            titleContainer.append(plusButton.element);
+        }
 
         // Edit icon
         if (onEditGroup) {
@@ -128,8 +144,8 @@ export class ListView extends Component {
                     container,
                     id,
                     name: entry.name,
-                    value: (('address' in entry) && ('icp:pid' in entry.address)) ? entry.address['icp:pid'] : (('address' in entry) && ('icp:acc0' in entry.address)) ? entry.address['icp:acc0'] : null,
-                    icon: entry?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
+                    value: entry?.value || null,
+                    icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null
                 });
             });
         }
@@ -239,7 +255,7 @@ export class ListView extends Component {
      * @param {HTMLElement} container Container to render entry in
      * @param {string} id Entry ID
      * @param {string} name Entry name
-     * @param {string} value Entry value (address)
+     * @param {string} value Entry value
      * @param {string} icon Entry right icon
      */
 
@@ -272,8 +288,8 @@ export class ListView extends Component {
         // Subtitle
         if (value) {
             const subtitle = document.createElement('div');
-            subtitle.classList.add('address');
-            subtitle.innerText = shortAddress(value);
+            subtitle.classList.add('value');
+            subtitle.innerText = value;
             middle.append(subtitle);
         }
 

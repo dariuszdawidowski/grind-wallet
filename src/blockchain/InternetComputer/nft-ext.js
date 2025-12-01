@@ -3,8 +3,8 @@
  * GitHub for an EXT standard: https://github.com/Toniq-Labs/extendable-token
  */
 
-import { Actor } from '@dfinity/agent';
-import { Principal } from '@dfinity/principal';
+import { Actor } from '@icp-sdk/core/agent';
+import { Principal } from '@icp-sdk/core/principal';
 import { idlFactory } from '/src/blockchain/InternetComputer/candid/nft-ext.did.js';
 
 export class NFT_EXT {

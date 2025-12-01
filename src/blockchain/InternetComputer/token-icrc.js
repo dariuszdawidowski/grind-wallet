@@ -2,8 +2,8 @@
  * ICRC Token implementation
  */
 
-import { Actor } from '@dfinity/agent';
-import { Principal } from '@dfinity/principal';
+import { Actor } from '@icp-sdk/core/agent';
+import { Principal } from '@icp-sdk/core/principal';
 import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';

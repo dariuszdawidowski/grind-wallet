@@ -2,7 +2,7 @@
  * Send ICP/token form
  */
 
-import { Principal } from '@dfinity/principal';
+import { Principal } from '@icp-sdk/core/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';

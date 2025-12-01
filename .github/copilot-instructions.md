@@ -131,7 +131,7 @@ npm run test           # Jest unit tests
 
 ### Canister Communication
 - **Candid interfaces**: Pre-generated in `src/blockchain/InternetComputer/candid/`
-- **Actor creation**: Use `@dfinity/agent` Actor or specialized canisters (LedgerCanister)
+- **Actor creation**: Use `@icp-sdk/core/agent` Actor or specialized canisters (LedgerCanister)
 - **Caching**: `src/actor-cache.js` for actor instances
 
 ### UI Patterns

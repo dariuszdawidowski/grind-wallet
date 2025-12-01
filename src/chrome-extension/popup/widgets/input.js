@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { AccountIdentifier } from "@dfinity/ledger-icp";
 const bip39 = require('bip39');
 

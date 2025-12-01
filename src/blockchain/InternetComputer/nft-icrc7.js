@@ -4,8 +4,8 @@
  * Metadata: https://github.com/dfinity/ICRC/issues/76
  */
 
-import { Actor } from '@dfinity/agent';
-import { Principal } from '@dfinity/principal';
+import { Actor } from '@icp-sdk/core/agent';
+import { Principal } from '@icp-sdk/core/principal';
 import { idlFactory as idlFactoryMinter } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';
 
 export class NFT_ICRC7 {

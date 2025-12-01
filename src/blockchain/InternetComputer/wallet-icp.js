@@ -2,7 +2,7 @@
  * Wallet implementation for Internet Computer blockchain.
  */
 
-import { HttpAgent } from '@dfinity/agent';
+import { HttpAgent } from '@icp-sdk/core/agent';
 import { decryptKey, deserializeEncryptKey, identityFromPrivate } from '/src/utils/keys.js';
 import { Wallet } from '/src/blockchain/wallet.js';
 import { ICPToken } from '/src/blockchain/InternetComputer/token-icp.js';

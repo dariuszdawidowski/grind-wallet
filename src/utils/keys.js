@@ -2,7 +2,7 @@
 
 const bip39 = require('bip39');
 const hdkey = require('hdkey');
-import { Secp256k1KeyIdentity } from '@dfinity/identity-secp256k1';
+import { Secp256k1KeyIdentity } from '@icp-sdk/core/identity/secp256k1';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { hexStringToUint8Array } from '@dfinity/utils';
 

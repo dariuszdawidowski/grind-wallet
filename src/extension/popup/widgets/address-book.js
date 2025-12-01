@@ -302,10 +302,11 @@ export class AddressBook extends ListView {
 
         // Render groups with contacts
         Object.entries(this.groups).sort(([, a], [, b]) => (a.order ?? 0) - (b.order ?? 0)).forEach(([groupId]) => {
+            console.log(this.contacts['my'])
             if (groupId == 'my') {
                 this.renderGroup({
                     groupId: 'my',
-                    data: this.contacts['my'],
+                    entries: this.contacts['my'],
                     emptyMsg: 'Your wallets will appear here automatically.<br>You can also manually add your wallets from other applications.',
                     newMsg: 'New entry for my wallets',
                     editGroup: false
@@ -314,7 +315,7 @@ export class AddressBook extends ListView {
             else if (groupId == 'contacts') {
                 this.renderGroup({
                     groupId,
-                    data: this.contacts[groupId],
+                    entries: this.contacts[groupId],
                     emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
                     newMsg: 'New contact',
                     editGroup: false
@@ -323,7 +324,7 @@ export class AddressBook extends ListView {
             else {
                 this.renderGroup({
                     groupId,
-                    data: this.contacts[groupId],
+                    entries: this.contacts[groupId],
                     emptyMsg: 'You have no contacts saved yet.<br>Tap the + button to add a new contact.',
                     newMsg: 'New contact'
                 });
@@ -369,11 +370,11 @@ export class AddressBook extends ListView {
      * Render group
      */
 
-    renderGroup({ groupId, data, emptyMsg, newMsg, editGroup = true }) {
+    renderGroup({ groupId, entries, emptyMsg, newMsg, editGroup = true }) {
         this.renderList({
             id: groupId,
             name: this.groups[groupId].name,
-            data,
+            entries,
             emptyMsg,
             onSelectEntry: (contactId) => {
                 const contact = this.contacts[groupId][contactId];

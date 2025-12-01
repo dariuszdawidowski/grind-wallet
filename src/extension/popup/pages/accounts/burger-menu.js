@@ -15,5 +15,13 @@ export class BurgerMenu extends ListView {
      */
 
     render() {
+        this.renderList({
+            id: 'view',
+            name: 'View',
+            entries: {
+                'view-side': { id: 'view-side', name: 'Side View', address: { 'icp:pid': 'ysuep' }, dynamic: false },
+                'view-full': { id: 'view-full', name: 'Full Screen', address: { 'icp:pid': 'ysuep' }, dynamic: false }
+            }
+        });
     }
 }

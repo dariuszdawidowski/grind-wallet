@@ -26,7 +26,7 @@ export class ListView extends Component {
      * Render group header & container
      * @param {string} id Group ID
      * @param {string} name Group name
-     * @param {object} data Entries data
+     * @param {object} entries Entries list {id: {name, address}}
      * @param {string} emptyMsg Message to show when no entries
      * @param {function} onAddEntry Callback when add entry clicked
      * @param {function} onSelectEntry Callback when entry selected
@@ -37,7 +37,7 @@ export class ListView extends Component {
      * @param {function} onReorder Callback when group reordered
      */
 
-    renderList({ id, name, data, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
+    renderList({ id, name, entries, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
 
         // Header container
         const header = document.createElement('div');
@@ -122,14 +122,14 @@ export class ListView extends Component {
         container.append(separator);
 
         // Render entries
-        if (Object.values(data).length) {
-            Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, contact]) => {
+        if (Object.values(entries).length) {
+            Object.entries(entries).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, entry]) => {
                 this.renderEntry({
                     container,
                     id,
-                    name: contact.name,
-                    value: (('address' in contact) && ('icp:pid' in contact.address)) ? contact.address['icp:pid'] : (('address' in contact) && ('icp:acc0' in contact.address)) ? contact.address['icp:acc0'] : null,
-                    icon: contact?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
+                    name: entry.name,
+                    value: (('address' in entry) && ('icp:pid' in entry.address)) ? entry.address['icp:pid'] : (('address' in entry) && ('icp:acc0' in entry.address)) ? entry.address['icp:acc0'] : null,
+                    icon: entry?.dynamic ? null : 'assets/material-design-icons/pencil-box.svg'
                 });
             });
         }

@@ -77,9 +77,10 @@ class SheetNewAccountPhrase extends Component {
         this.append(this.phrase);
 
         // Button
-        this.append(new Button({
+        const addWallet = new Button({
             text: 'Add to my wallets',
             click: async () => {
+                addWallet.busy(true);
                 const newWallet = new ICPWallet({
                     app: this.app,
                     blockchain: 'Internet Computer',
@@ -91,11 +92,13 @@ class SheetNewAccountPhrase extends Component {
                 await this.app.wallets.add(newWallet, this.app.user.password);
                 this.app.wallets.save();
                 await this.app.log.reinit('Logs', this.app.wallets.get().map(wallet => wallet.principal));
+                addWallet.busy(false);
                 this.app.page('accounts');
                 this.app.sheet.clear();
                 this.app.sheet.hide();
             }
-        }));
+        });
+        this.append(addWallet);
     }
 
 }

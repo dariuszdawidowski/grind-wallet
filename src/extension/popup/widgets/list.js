@@ -3,8 +3,8 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Avatar } from '/src/chrome-extension/popup/widgets/avatar.js';
-import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
+import { Avatar } from '/src/extension/popup/widgets/avatar.js';
+import { AddPlus } from '/src/extension/popup/widgets/add.js';
 import { shortAddress } from '/src/utils/general.js';
 
 export class ListView extends Component {

@@ -1,6 +1,6 @@
 import { Component } from '/src/utils/component.js';
 import { registerBiometric } from '/src/utils/biometric.js';
-import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
+import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
 const { version } = require('/package.json');
 
 

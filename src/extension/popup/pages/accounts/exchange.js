@@ -4,12 +4,12 @@
 
 import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Component } from '/src/utils/component.js';
-import { TokenBox } from '/src/chrome-extension/popup/widgets/token-box.js';
-import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
-import { SummaryBox } from '/src/chrome-extension/popup/widgets/summary.js';
-import { Arrow } from '/src/chrome-extension/popup/widgets/arrow.js';
+import { TokenBox } from '/src/extension/popup/widgets/token-box.js';
+import { Button, ButtonDescription } from '/src/extension/popup/widgets/button.js';
+import { SummaryBox } from '/src/extension/popup/widgets/summary.js';
+import { Arrow } from '/src/extension/popup/widgets/arrow.js';
 import { icpt2ICP } from '/src/utils/currency.js';
-import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
+import { TaskMintCK } from '/src/extension/popup/tasks/task-mint-ck.js';
 import { ONE_DAY } from '/src/utils/general.js';
 
 export class SheetAccountExchange extends Component {

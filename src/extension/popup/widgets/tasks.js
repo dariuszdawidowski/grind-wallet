@@ -4,9 +4,9 @@
 
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
-import { Progress } from '/src/chrome-extension/popup/widgets/progress.js';
-import { Task } from '/src/chrome-extension/popup/tasks/task.js';
-import { TaskMintCK } from '/src/chrome-extension/popup/tasks/task-mint-ck.js';
+import { Progress } from '/src/extension/popup/widgets/progress.js';
+import { Task } from '/src/extension/popup/tasks/task.js';
+import { TaskMintCK } from '/src/extension/popup/tasks/task-mint-ck.js';
 
 export class TaskManager extends Component {
 

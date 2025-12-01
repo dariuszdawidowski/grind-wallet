@@ -5,9 +5,9 @@
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
-import { Button, ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
-import { AddPlus } from '/src/chrome-extension/popup/widgets/add.js';
-import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
+import { Button, ButtIcon, ButtLink } from '/src/extension/popup/widgets/button.js';
+import { AddPlus } from '/src/extension/popup/widgets/add.js';
+import { TokenImage } from '/src/extension/popup/widgets/token-image.js';
 import { SheetAccountSend } from './send-token.js';
 import { SheetAccountReceive } from './receive-token.js';
 //import { SheetAccountExchange } from './exchange.js';

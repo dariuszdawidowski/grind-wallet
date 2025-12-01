@@ -4,10 +4,10 @@
 
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
-import { ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
-import { SheetAccountSendNFT } from '/src/chrome-extension/popup/pages/accounts/send-nft.js';
-import { SheetAccountReceiveNFT } from '/src/chrome-extension/popup/pages/accounts/receive-nft.js';
-import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
+import { ButtIcon, ButtLink } from '/src/extension/popup/widgets/button.js';
+import { SheetAccountSendNFT } from '/src/extension/popup/pages/accounts/send-nft.js';
+import { SheetAccountReceiveNFT } from '/src/extension/popup/pages/accounts/receive-nft.js';
+import { Copy } from '/src/extension/popup/widgets/copy.js';
 
 export class SheetNFTDetails extends Component {
 

@@ -7,15 +7,15 @@ Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. B
 ## Architecture
 
 ### Core Components
-- **`src/chrome-extension/popup/`** - Main UI part of the extension
+- **`src/extension/popup/`** - Main UI part of the extension
   - `popup.js` - Main entry point for UI, initializes `GrindWalletPlugin` class
   - `popup.css` - Monolithic css file, pure css3, uses the latest methods, ignores old browsers
   - `popup.html` - Main UI html
   - `dev-mode.js` - Works only in the development mode with DEV_MODE=1 flag
-- **`src/chrome-extension/popup/pages/accounts`** - Views components
-- **`src/chrome-extension/popup/pages/onboarding`** - Views components related to onboarding procedure (setup password, accept terms etc.)
-- **`src/chrome-extension/popup/widgets/`** - Reusable UI components
-- **`src/chrome-extension/popup/tasks/`** - Handling and displaying long-running tasks
+- **`src/extension/popup/pages/accounts`** - Views components
+- **`src/extension/popup/pages/onboarding`** - Views components related to onboarding procedure (setup password, accept terms etc.)
+- **`src/extension/popup/widgets/`** - Reusable UI components
+- **`src/extension/popup/tasks/`** - Handling and displaying long-running tasks
 - **`src/blockchain/`** - Blockchain abstraction layer:
   - `wallets.js` - Wallet manager (CRUD operations)
   - `wallet.js` - Abstract wallet with tokens/NFTs collections
@@ -137,7 +137,7 @@ npm run test           # Jest unit tests
 ### UI Patterns
 - **Sheet navigation**: `app.sheet.append({ title, component })` for modals
 - **Drawer menu**: `app.drawer` for side panels (e.g., address book)
-- **Task manager**: `src/chrome-extension/popup/widgets/tasks.js` for background operations
+- **Task manager**: `src/extension/popup/widgets/tasks.js` for background operations
 - **Page lifecycle**: Each page destroyed/recreated on navigation (no SPA routing)
 
 ## Common Operations

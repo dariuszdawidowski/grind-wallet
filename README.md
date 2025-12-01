@@ -11,7 +11,7 @@ This is a source code repository, if you are looking for a ready-made plugin, in
 
 ## Compatibility
 
-Works in Chrome, Firefox, and other browsers that support compatible extensions (like Opera, Edge).
+Works in Chrome, Firefox, and other browsers that support compatible extensions (Opera, Edge and Brave).
 
 ## Installation
 

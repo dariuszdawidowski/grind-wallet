@@ -4,8 +4,8 @@
 
 import { Actor } from '@icp-sdk/core/agent';
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { InputAddress } from '/src/extension/popup/widgets/input.js';
 import { idlFactory as idlFactoryEXT } from '/src/blockchain/InternetComputer/candid/nft-ext.did.js';
 import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';

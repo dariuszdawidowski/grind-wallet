@@ -3,7 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { InputCurrency } from '/src/chrome-extension/popup/widgets/input.js';
+import { InputCurrency } from '/src/extension/popup/widgets/input.js';
 import { formatCurrency } from '/src/utils/currency.js';
 
 export class TokenBox extends Component {

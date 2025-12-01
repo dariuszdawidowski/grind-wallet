@@ -6,7 +6,7 @@
     "permissions": ["storage"],
     "browser_specific_settings": {
         "gecko": {
-            "id": "grind-wallet@grindwallet.com",
+            "id": "admin@grindwallet.com",
             "strict_min_version": "109.0"
         }
     },

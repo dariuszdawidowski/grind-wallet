@@ -3,8 +3,8 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
-import { NFTImage } from '/src/chrome-extension/popup/widgets/nft-image.js';
+import { TokenImage } from '/src/extension/popup/widgets/token-image.js';
+import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';

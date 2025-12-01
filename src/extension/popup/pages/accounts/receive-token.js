@@ -3,7 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
 
 export class SheetAccountReceive extends Component {
 

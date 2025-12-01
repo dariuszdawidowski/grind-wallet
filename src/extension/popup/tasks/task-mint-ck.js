@@ -4,9 +4,9 @@
 
 import { CkBTCMinterCanister } from "@dfinity/ckbtc";
 import { Task } from './task.js';
-import { StepsBox } from '/src/chrome-extension/popup/widgets/steps.js';
-import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
-import { Copy } from '/src/chrome-extension/popup/widgets/copy.js';
+import { StepsBox } from '/src/extension/popup/widgets/steps.js';
+import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
+import { Copy } from '/src/extension/popup/widgets/copy.js';
 import { shortAddress } from '/src/utils/general.js';
 import { dictionary } from '/src/utils/dictionary.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';

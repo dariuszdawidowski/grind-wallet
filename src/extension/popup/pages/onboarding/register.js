@@ -1,8 +1,8 @@
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
 import { isPasswordStrong, generateSalt, hashPassword } from '/src/utils/password.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { InputPassword } from '/src/chrome-extension/popup/widgets/input.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { InputPassword } from '/src/extension/popup/widgets/input.js';
 const { version } = require('/package.json');
 
 

@@ -3,26 +3,26 @@
  * (c) 2024-2025 by Dariusz Dawidowski
  */
 
-import '/src/chrome-extension/popup/popup.css';
+import '/src/extension/popup/popup.css';
 import { browser } from '/src/utils/browser.js';
 import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
-import { Drawer } from '/src/chrome-extension/popup/widgets/drawer.js';
-import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
-import { PageAccounts } from '/src/chrome-extension/popup/pages/accounts/index.js';
-import { PageAcceptTerms } from '/src/chrome-extension/popup/pages/onboarding/terms.js';
-import { PageRegisterPassword } from '/src/chrome-extension/popup/pages/onboarding/register-password.js';
-import { PageLogin } from '/src/chrome-extension/popup/pages/onboarding/login.js';
+import { Drawer } from '/src/extension/popup/widgets/drawer.js';
+import { Sheet } from '/src/extension/popup/widgets/sheet.js';
+import { PageAccounts } from '/src/extension/popup/pages/accounts/index.js';
+import { PageAcceptTerms } from '/src/extension/popup/pages/onboarding/terms.js';
+import { PageRegisterPassword } from '/src/extension/popup/pages/onboarding/register-password.js';
+import { PageLogin } from '/src/extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { DataCache } from '/src/utils/data-cache.js';
 import { ImageCache } from '/src/utils/image-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
-import { TaskManager } from '/src/chrome-extension/popup/widgets/tasks.js';
-import { AddressBook } from '/src/chrome-extension/popup/widgets/address-book.js';
+import { TaskManager } from '/src/extension/popup/widgets/tasks.js';
+import { AddressBook } from '/src/extension/popup/widgets/address-book.js';
 const { version } = require('/package.json');
 
 // Development mode
-if (process.env.DEV_MODE) import('/src/chrome-extension/popup/dev-mode.js');
+if (process.env.DEV_MODE) import('/src/extension/popup/dev-mode.js');
 // E2E tests
 if (process.env.TEST_MODE) import('/tests/start.js');
 

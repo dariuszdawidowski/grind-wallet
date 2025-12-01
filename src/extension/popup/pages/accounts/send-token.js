@@ -6,8 +6,8 @@ import { Principal } from '@icp-sdk/core/principal';
 import { AccountIdentifier } from '@dfinity/ledger-icp';
 import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
-import { Button, ButtonDescription } from '/src/chrome-extension/popup/widgets/button.js';
-import { InputCurrency, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { Button, ButtonDescription } from '/src/extension/popup/widgets/button.js';
+import { InputCurrency, InputAddress } from '/src/extension/popup/widgets/input.js';
 
 export class SheetAccountSend extends Component {
 

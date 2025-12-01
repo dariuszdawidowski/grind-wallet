@@ -3,8 +3,8 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { InputAddress } from '/src/extension/popup/widgets/input.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
 import { isValidCanisterId, ONE_WEEK } from '/src/utils/general.js';
 

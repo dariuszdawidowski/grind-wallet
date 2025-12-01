@@ -3,14 +3,14 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { Card } from '/src/chrome-extension/popup/widgets/card.js';
-import { TokenBalance } from '/src/chrome-extension/popup/widgets/token-balance.js';
-import { Cover } from '/src/chrome-extension/popup/widgets/cover.js';
-import { SheetNewAccount } from '/src/chrome-extension/popup/pages/accounts/new.js';
-import { SheetImportAccount } from '/src/chrome-extension/popup/pages/accounts/import.js';
-import { SheetAccountDetails } from '/src/chrome-extension/popup/pages/accounts/details.js';
-import { SheetNFTDetails } from '/src/chrome-extension/popup/pages/accounts/details-nft.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { Card } from '/src/extension/popup/widgets/card.js';
+import { TokenBalance } from '/src/extension/popup/widgets/token-balance.js';
+import { Cover } from '/src/extension/popup/widgets/cover.js';
+import { SheetNewAccount } from '/src/extension/popup/pages/accounts/new.js';
+import { SheetImportAccount } from '/src/extension/popup/pages/accounts/import.js';
+import { SheetAccountDetails } from '/src/extension/popup/pages/accounts/details.js';
+import { SheetNFTDetails } from '/src/extension/popup/pages/accounts/details-nft.js';
 
 export class PageAccounts extends Component {
 

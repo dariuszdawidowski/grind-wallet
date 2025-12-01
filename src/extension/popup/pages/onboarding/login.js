@@ -1,9 +1,9 @@
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
 import { verifyPassword } from '/src/utils/password.js';
-import { Form } from '/src/chrome-extension/popup/widgets/form.js';
-import { Button } from '/src/chrome-extension/popup/widgets/button.js';
-import { InputPassword } from '/src/chrome-extension/popup/widgets/input.js';
+import { Form } from '/src/extension/popup/widgets/form.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { InputPassword } from '/src/extension/popup/widgets/input.js';
 const { version } = require('/package.json');
 
 

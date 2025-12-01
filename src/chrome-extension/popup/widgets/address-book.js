@@ -285,6 +285,7 @@ export class AddressBook extends ListView {
             for (const contactId in this.contacts[group]) {
                 const contact = this.contacts[group][contactId];
                 if (contact.hasAddress(address)) {
+                    contact.group = group;
                     return contact;
                 }
             }

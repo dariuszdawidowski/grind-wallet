@@ -654,7 +654,13 @@ hr {
     margin-bottom: 6px;
 }
 
-.history .own {
+.history .subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history .subtitle .own {
     font-size: 10px;
     font-weight: 500;
     color: #a0a0a0;
@@ -662,6 +668,7 @@ hr {
     border: 1px solid #a0a0a0;
     padding: 0px 4px 2px 4px;
     border-radius: 4px;
+    display: inline-block;
 }
 
 .history .own.suspicious {
@@ -670,11 +677,10 @@ hr {
 }
 
 .history .token-image {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    margin-left: auto;
-    margin-right: 12px;
+    margin-right: 0px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -699,6 +705,9 @@ hr {
 .history .amount {
     font-size: 14px;
     font-weight: 500;
+    margin-left: auto;
+    margin-right: 8px;
+    text-align: right;
 }
 
 .add-circle {

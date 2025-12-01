@@ -6,7 +6,7 @@ import { Component } from '/src/utils/component.js';
 import { TokenImage } from '/src/chrome-extension/popup/widgets/token-image.js';
 import { NFTImage } from '/src/chrome-extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
-import { icpt2ICP } from '/src/utils/currency.js';
+import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
 
 export class SheetTransactionHistory extends Component {
@@ -299,6 +299,20 @@ export class SheetTransactionHistory extends Component {
             desc.append(subtitleElement);
         }
 
+        // Amount
+        if (amount) {
+            const amountElement = document.createElement('div');
+            if (type.endsWith('.error')) amountElement.style.textDecoration = 'line-through';
+            amountElement.classList.add('amount');
+            let text = '';
+            if (op) text = op;
+            text += formatCurrency(icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals), 4);
+            text += '<br>';
+            text += (kind === 'token') ? this.wallet.tokens.get(canisterId).symbol : '';
+            amountElement.innerHTML = text;
+            parent.append(amountElement);
+        }
+
         // Token image
         if (kind === 'token') {
             const coin = new TokenImage({
@@ -306,7 +320,10 @@ export class SheetTransactionHistory extends Component {
                 canisterId: canisterId,
                 symbol: this.wallet.tokens.get(canisterId).symbol
             });
-            coin.element.style.marginRight = '6px';
+            if (this.app.isICP(canisterId)) {
+                coin.element.style.backgroundColor = '#eee';
+                coin.element.style.backgroundSize = '20px';
+            }
             parent.append(coin.element);
         }
         // NFT miniature
@@ -317,19 +334,6 @@ export class SheetTransactionHistory extends Component {
                 nftId: nftId
             });
             parent.append(miniature.element);
-        }
-
-        // Amount
-        if (amount) {
-            const amountElement = document.createElement('div');
-            if (type.endsWith('.error')) amountElement.style.textDecoration = 'line-through';
-            amountElement.classList.add('amount');
-            let text = '';
-            if (op) text = op;
-            text += icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals);
-            text += (kind === 'token') ? ` ${this.wallet.tokens.get(canisterId).symbol}` : '';
-            amountElement.innerText = text;
-            parent.append(amountElement);
         }
 
     }
@@ -396,7 +400,10 @@ export class SheetTransactionHistory extends Component {
 
         // Try to find in address book
         const contact = this.app.addressbook.getByAddress(principal || account);
-        if (contact) result.name = contact.name;
+        if (contact) {
+            result.name = contact.name;
+            if (contact.group == 'my') result.type = 'own';
+        }
 
         return result;
     }

@@ -2,6 +2,8 @@
  * Custom in-app test runner for end-to-end tests.
  */
 
+import { browser } from '/src/utils/browser.js';
+
 const testBanner = document.createElement('div');
 testBanner.textContent = 'TEST MODE';
 Object.assign(testBanner.style, {
@@ -29,9 +31,9 @@ console.info(`🚀 E2E (in-app) tests started`);
 
 async function resetSession() {
     try {
-        const items = await chrome.storage.session.get(['active', 'password']);
+        const items = await browser.storage.session.get(['active', 'password']);
         if (items.hasOwnProperty('active') && items.hasOwnProperty('password')) {
-            await chrome.storage.session.remove(['active', 'password']);
+            await browser.storage.session.remove(['active', 'password']);
             console.info('♻️ Session reset');
             await wait(1000);
             window.location.reload();

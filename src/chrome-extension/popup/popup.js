@@ -4,6 +4,7 @@
  */
 
 import '/src/chrome-extension/popup/popup.css';
+import { browser } from '/src/utils/browser.js';
 import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
 import { Drawer } from '/src/chrome-extension/popup/widgets/drawer.js';
@@ -129,7 +130,7 @@ class GrindWalletPlugin {
         this.addressbook = new AddressBook({ app: this });
 
         // Get storage session data
-        const storageSession = await chrome.storage.session.get(['active', 'password', 'created']);
+        const storageSession = await browser.storage.session.get(['active', 'password', 'created']);
         if (storageSession.hasOwnProperty('active') && storageSession.active === true && storageSession.hasOwnProperty('created')) {
             await this.continueSession(storageSession);
         }
@@ -137,7 +138,7 @@ class GrindWalletPlugin {
         // No active session
         else {
             // Check that password exists
-            const storageLocal = await chrome.storage.local.get(['salt', 'password', 'terms']);
+            const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
 
             // Login
             if (storageLocal.salt && storageLocal.password) {
@@ -186,9 +187,9 @@ class GrindWalletPlugin {
         const ONE_HOUR = 60 * 60 * 1000;
         if (isNaN(createdTime) || (Date.now() - createdTime) > ONE_HOUR) {
             // Clear session storage
-            await chrome.storage.session.remove(['active', 'password', 'created']);
+            await browser.storage.session.remove(['active', 'password', 'created']);
             // Check that password exists
-            const storageLocal = await chrome.storage.local.get(['salt', 'password', 'terms']);
+            const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
             // Login
             if (storageLocal.salt && storageLocal.password) {
                 this.login(storageLocal)
@@ -280,9 +281,9 @@ class GrindWalletPlugin {
     async migrate() {
         try {
             // 0.6.2 -> 0.6.3: remove old timestamps
-            const storageLocal = await chrome.storage.local.get('timestamps');
+            const storageLocal = await browser.storage.local.get('timestamps');
             if (storageLocal && Object.prototype.hasOwnProperty.call(storageLocal, 'timestamps')) {
-                await chrome.storage.local.remove(['timestamps']);
+                await browser.storage.local.remove(['timestamps']);
             }
         }
         catch (_) {}

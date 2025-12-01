@@ -1,4 +1,5 @@
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { verifyPassword } from '/src/utils/password.js';
 import { Form } from '/src/chrome-extension/popup/widgets/form.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
@@ -66,7 +67,7 @@ export class PageLogin extends Component {
                 // Store password
                 this.app.user.password = password;
                 // Save session
-                chrome.storage.session.set({
+                browser.storage.session.set({
                     'active': true,
                     'password': this.app.user.password,
                     'created': Date.now()

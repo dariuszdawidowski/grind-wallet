@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { Button } from '/src/chrome-extension/popup/widgets/button.js';
 import { Checkbox } from '/src/chrome-extension/popup/widgets/checkbox.js';
 const { version } = require('/package.json');
@@ -54,7 +55,7 @@ export class PageAcceptTerms extends Component {
             disabled: true,
             click: () => {
                 if (agree.checked()) {
-                    chrome.storage.local.set({ terms: true }, () => {
+                    browser.storage.local.set({ terms: true }, () => {
                         this.app.page('register-password');
                     });
                 }

@@ -2,6 +2,8 @@
  * Stores data objects with expiration timestamps in Chrome local storage
  */
 
+import { browser } from '/src/utils/browser.js';
+
 export class DataCache {
 
     constructor(name) {
@@ -20,7 +22,7 @@ export class DataCache {
 
     async init() {
         // Load existing entries from storage
-        const stored = await chrome.storage.local.get(this.name);
+        const stored = await browser.storage.local.get(this.name);
         if (stored.hasOwnProperty(this.name)) {
             this.cache = stored[this.name];
         }
@@ -31,7 +33,7 @@ export class DataCache {
      */
 
     async save() {
-        await chrome.storage.local.set({ [this.name]: this.cache });
+        await browser.storage.local.set({ [this.name]: this.cache });
     }
 
     /**

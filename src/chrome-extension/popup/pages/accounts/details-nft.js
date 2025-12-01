@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { ButtIcon, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
 import { SheetAccountSendNFT } from '/src/chrome-extension/popup/pages/accounts/send-nft.js';
 import { SheetAccountReceiveNFT } from '/src/chrome-extension/popup/pages/accounts/receive-nft.js';
@@ -38,7 +39,7 @@ export class SheetNFTDetails extends Component {
         })();
         this.image.addEventListener('click', () => {
             this.nft.service.experience({ token: this.nft.id }).then(url => {
-                chrome.tabs.create({ url });
+                browser.tabs.create({ url });
             });
         });
 
@@ -105,7 +106,7 @@ export class SheetNFTDetails extends Component {
                 icon: '<img src="assets/material-design-icons/store.svg">',
                 text: 'Sell',
                 click: () => {
-                    chrome.tabs.create({ url: `https://dgdg.app` });
+                    browser.tabs.create({ url: `https://dgdg.app` });
                 }
             }),
             buy: new ButtIcon({
@@ -113,7 +114,7 @@ export class SheetNFTDetails extends Component {
                 icon: '<img src="assets/material-design-icons/cart.svg">',
                 text: 'Buy',
                 click: () => {
-                    chrome.tabs.create({ url: `https://dgdg.app` });
+                    browser.tabs.create({ url: `https://dgdg.app` });
                 }
             }),
         };
@@ -130,7 +131,7 @@ export class SheetNFTDetails extends Component {
         this.append(new ButtLink({
             text: 'Show NFT candid interface',
             click: () => {
-                chrome.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.nft.collection}` });
+                browser.tabs.create({ url: `https://dashboard.internetcomputer.org/canister/${this.nft.collection}` });
             }
         }));
 

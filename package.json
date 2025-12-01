@@ -4,9 +4,13 @@
   "description": "Internet Computer cryptocurrency wallet as a browser plugin.",
   "main": "src/chrome-extension/popup/popup.js",
   "scripts": {
-    "build:prod": "npx webpack",
-    "build:dev": "cross-env DEV_MODE=1 npx webpack --mode development",
-    "build:e2e": "cross-env TEST_MODE=1 npx webpack --mode development",
+    "build:prod": "npx webpack --env browser=all",
+    "build:prod:chrome": "npx webpack --env browser=chrome",
+    "build:prod:firefox": "npx webpack --env browser=firefox",
+    "build:dev": "cross-env DEV_MODE=1 npx webpack --mode development --env browser=all",
+    "build:dev:chrome": "cross-env DEV_MODE=1 npx webpack --mode development --env browser=chrome",
+    "build:dev:firefox": "cross-env DEV_MODE=1 npx webpack --mode development --env browser=firefox",
+    "build:e2e": "cross-env TEST_MODE=1 npx webpack --mode development --env browser=chrome",
     "deploy": "npm run build:prod && node deploy.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -49,6 +53,7 @@
     "crypto-browserify": "^3.12.1",
     "hdkey": "^2.1.0",
     "process": "^0.11.10",
-    "stream-browserify": "^3.0.0"
+    "stream-browserify": "^3.0.0",
+    "webextension-polyfill": "^0.12.0"
   }
 }

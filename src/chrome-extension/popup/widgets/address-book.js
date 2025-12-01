@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { browser } from '/src/utils/browser.js';
 import { Sheet } from '/src/chrome-extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/chrome-extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/chrome-extension/popup/widgets/button.js';
@@ -81,7 +82,7 @@ export class AddressBook extends ListView {
      */
 
     async load() {
-        const data = await chrome.storage.local.get(['address:groups', 'address:contacts']);
+        const data = await browser.storage.local.get(['address:groups', 'address:contacts']);
         this.deserializeGroups(('address:groups' in data) ? data['address:groups'] : {});
         this.deserializeContacts(('address:contacts' in data) ? data['address:contacts'] : {});
     }
@@ -91,7 +92,7 @@ export class AddressBook extends ListView {
      */
 
     async save() {
-        await chrome.storage.local.set({
+        await browser.storage.local.set({
             'address:groups': this.serializeGroups(),
             'address:contacts': this.serializeContacts()
         });

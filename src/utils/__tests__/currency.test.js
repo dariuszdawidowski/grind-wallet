@@ -64,8 +64,8 @@ describe('formatCurrency', () => {
         expect(formatCurrency(100.12, 2)).toBe('100.12');
     });
 
-    test('handles very small numbers as zero', () => {
-        expect(formatCurrency(0.0000001, 2)).toBe('0.00');
+    test('handles very small numbers as zero with remainder suffix', () => {
+        expect(formatCurrency(0.0000001, 2)).toBe('0.00..');
     });
 
     test('handles negative numbers', () => {

@@ -42,11 +42,15 @@ export function formatWithSpaces(inputString, everyNCharacters, fromLeft = true)
  */
 
 export function formatCurrency(value, fixed = 2) {
-    if (Math.abs(value) < 1e-6) value = 0;
+    let wasCutted = false;
+    if (Math.abs(value) < 1e-6) {
+        value = 0;
+        wasCutted = true;
+    }
     const [whole, fractional = ''] = value.toString().split('.');
     const displayedFraction = fractional.slice(0, fixed).padEnd(fixed, '0');
     const hasRemainder = fractional.length > fixed;
-    const suffix = hasRemainder ? '..' : '';
+    const suffix = hasRemainder || wasCutted ? '..' : '';
     return formatWithSpaces(whole, 3, false) + '.' + displayedFraction + suffix;
 }
 

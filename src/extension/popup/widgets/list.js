@@ -168,15 +168,14 @@ export class ListView extends Component {
      * @param {string} emptyMsg Message to show when no entries
      * @param {boolean} foldable Is it harmonica?
      * @param {function} onAddEntry Callback when add entry clicked
-     * @param {function} onSelectEntry Callback when entry selected
-     * @param {function} onEditEntry Callback when edit entry clicked
+     * @param {function} onClickEntry Callback when entry clicked returns { id: element id, clicked: 'middle|icon', input: value, switcher: 'on|off" }
      * @param {function} onEditGroup Callback when edit group clicked
      * @param {function} onCollapse Callback when group collapsed
      * @param {function} onExpand Callback when group expanded
      * @param {function} onReorder Callback when group reordered
      */
 
-    renderList({ id = null, name, entries, emptyMsg, foldable = false, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
+    renderList({ id = null, name, entries, emptyMsg, foldable = false, onAddEntry = null, onClickEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
 
         // Header container
         const header = document.createElement('div');
@@ -235,26 +234,24 @@ export class ListView extends Component {
         const container = document.createElement('div');
         container.classList.add('container');
         this.element.appendChild(container);
-        container.addEventListener('click', (event) => {
 
-            // Edit entry clicked
-            const icon = event.target.closest('.icon');
-            if (icon) {
-                const entry = icon.closest('.entry');
-                if (entry) {
-                    const id = entry.dataset.value;
-                    if (onEditEntry) onEditEntry(id);
-                    return;
-                }
-            }
-
-            // Select entry clicked
+        // Entry clicked
+        if (onClickEntry) container.addEventListener('click', (event) => {
             const entry = event.target.closest('.entry');
             if (entry) {
-                const id = entry.dataset.value;
-                if (onSelectEntry) onSelectEntry(id);
+                const info = { id: entry.dataset.value, clicked: 'middle' };
+                if (event.target.closest('.icon')) info.clicked = 'icon';
+                const inputWidget = event.target.closest('input');
+                if (inputWidget) {
+                    if (inputWidget.type === 'checkbox') {
+                        info.switcher = inputWidget.checked ? 'on' : 'off';
+                    }
+                    else if (inputWidget.type === 'number') {
+                        info.input = inputWidget.value;
+                    }
+                }
+                onClickEntry(info);
             }
-
         });
 
         // Separator

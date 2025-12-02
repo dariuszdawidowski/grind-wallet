@@ -68,6 +68,9 @@ class GrindWalletPlugin {
         // Launch
         document.addEventListener('DOMContentLoaded', () => { this.init(); }, { once: true });
 
+        // Hide balance
+        this.hideBalances = false;
+
     }
 
     /**

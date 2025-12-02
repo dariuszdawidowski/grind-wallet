@@ -24,8 +24,11 @@ export class BurgerMenu extends ListView {
                 'view-side': { name: 'Dock in Side Panel', order: 1, icon: 'assets/material-design-icons/dock-right.svg' },
                 'view-hide-balance': { name: 'Hide Balance', order: 2, switcher: 'off' },
             },
-            onSelectEntry: (entryId) => {
-                if (entryId == 'view-side') this.dockSidePanel();
+            onClickEntry: (info) => {
+                if (info.id == 'view-side') this.dockSidePanel();
+                else if (info.id == 'view-hide-balance') {
+                    console.log('Hide balance')
+                }
             },
         });
 
@@ -37,7 +40,8 @@ export class BurgerMenu extends ListView {
                 'cfg-session-time': { name: 'Session time', order: 2, input: { value: 15, unit: 'min' } },
                 'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: 'off' },
             },
-            onWidgetInteraction: (entryId) => {
+            onClickEntry: (info) => {
+                console.log(info)
             },
         });
 
@@ -48,7 +52,8 @@ export class BurgerMenu extends ListView {
                 'info-website': { name: 'Project website', order: 1, icon: 'assets/material-design-icons/open-in-new.svg' },
                 'info-dao': { name: 'Grind DAO', order: 2, icon: 'assets/material-design-icons/open-in-new.svg' },
             },
-            onSelectEntry: (entryId) => {
+            onClickEntry: (info) => {
+                console.log(info)
             },
         });
 
@@ -58,7 +63,8 @@ export class BurgerMenu extends ListView {
             entries: {
                 'acc-logout': { name: 'Logout', icon: 'assets/material-design-icons/power.svg' },
             },
-            onSelectEntry: (entryId) => {
+            onClickEntry: (info) => {
+                console.log(info)
             },
         });
 

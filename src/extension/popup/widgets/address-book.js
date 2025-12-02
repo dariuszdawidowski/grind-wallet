@@ -376,23 +376,36 @@ export class AddressBook extends ListView {
             entries,
             emptyMsg,
             foldable: true,
-            onSelectEntry: (contactId) => {
-                const contact = this.contacts[groupId][contactId];
-                this.callback?.(contact);
+            onClickEntry: (info) => {
+                const contact = this.contacts[groupId][info.id];
+                // Clicked on a bar
+                if (info.clicked == 'middle') {
+                    this.callback?.(contact);
+                }
+                // Clicked on an icon
+                else if (info.clicked == 'icon') {
+                    this.sheet.clear();
+                    this.sheet.append({
+                        title: `Edit ${contact.name}`,
+                        component: new SheetContact({
+                            app: this.app,
+                            addressbook: this,
+                            groupId,
+                            contactId: info.id,
+                            contact
+                        })
+                    });
+                }
             },
             onAddEntry: () => {
                 this.sheet.clear();
                 this.sheet.append({
                     title: newMsg,
-                    component: new SheetContact({ app: this.app, addressbook: this, groupId })
-                });
-            },
-            onEditEntry: (contactId) => {
-                const contact = this.contacts[groupId][contactId];
-                this.sheet.clear();
-                this.sheet.append({
-                    title: `Edit ${contact.name}`,
-                    component: new SheetContact({ app: this.app, addressbook: this, groupId, contactId, contact })
+                    component: new SheetContact({
+                        app: this.app,
+                        addressbook: this,
+                        groupId
+                    })
                 });
             },
             onEditGroup: editGroup ? (groupId) => {
@@ -400,7 +413,11 @@ export class AddressBook extends ListView {
                 this.sheet.clear();
                 this.sheet.append({
                     title: `Edit group`,
-                    component: new SheetGroup({ app: this.app, addressbook: this, groupId, group })
+                    component: new SheetGroup({
+                        app: this.app,
+                        addressbook: this,
+                        groupId, group
+                    })
                 });
             } : null,
             onCollapse: this.onCollapseGroups.bind(this),

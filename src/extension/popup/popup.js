@@ -69,7 +69,7 @@ class GrindWalletPlugin {
         document.addEventListener('DOMContentLoaded', () => { this.init(); }, { once: true });
 
         // Hide balance
-        this.hideBalances = false;
+        this.hidden = false;
 
     }
 
@@ -245,6 +245,26 @@ class GrindWalletPlugin {
                 break;
         }
 
+    }
+
+    /**
+     * Show balances
+     */
+
+    showBalances() {
+        this.hidden = false;
+        this.element.classList.remove('hide-balances');
+        this.sheet.element.classList.remove('hide-balances');
+    }
+
+    /**
+     * Hide balances
+     */
+
+    hideBalances() {
+        this.hidden = true;
+        this.element.classList.add('hide-balances');
+        this.sheet.element.classList.add('hide-balances');
     }
 
     /**

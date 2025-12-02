@@ -588,6 +588,10 @@ hr {
     font-size: 18px;
 }
 
+.hide-balances .card .amount {
+    filter: blur(4px);
+}    
+
 .card .account1 {
     position: absolute;
     left: 24px;
@@ -723,6 +727,10 @@ hr {
     text-align: right;
 }
 
+.hide-balances .history .amount {
+    filter: blur(4px);
+}
+
 .add-circle {
     display: flex;
     flex-direction: row;
@@ -829,6 +837,10 @@ hr {
 
 .token-balance:hover .label {
     text-shadow: 0 0 6px rgb(135, 80, 199);
+}
+
+.hide-balances .token-balance .amount {
+    filter: blur(4px);
 }
 
 /* Cover (NFT) */
@@ -959,6 +971,16 @@ hr {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+}
+
+.sheet .content .form .token-amount {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.hide-balances.sheet .content .form .token-amount span {
+    filter: blur(4px);
 }
 
 .sheet .content .form h3 {

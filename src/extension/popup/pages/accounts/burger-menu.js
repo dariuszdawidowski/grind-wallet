@@ -7,10 +7,6 @@ import { browser } from '/src/utils/browser.js';
 
 export class BurgerMenu extends ListView {
 
-    constructor(args) {
-        super(args);
-    }
-
     /**
      * Render main burger menu
      */
@@ -25,9 +21,14 @@ export class BurgerMenu extends ListView {
                 'view-hide-balance': { name: 'Hide Balance', order: 2, switcher: 'off' },
             },
             onClickEntry: (info) => {
-                if (info.id == 'view-side') this.dockSidePanel();
+                // Dock side panel
+                if (info.id == 'view-side') {
+                    this.dockSidePanel();
+                }
+                // Hide balance
                 else if (info.id == 'view-hide-balance') {
-                    console.log('Hide balance')
+                    if (info.switcher == 'on') this.app.hideBalances();
+                    else if (info.switcher == 'off') this.app.showBalances();
                 }
             },
         });

@@ -41,9 +41,7 @@ export class SheetAccountDetails extends Component {
 
         // Balance widget
         this.balance = document.createElement('h1');
-        this.balance.style.marginTop = '0';
-        this.balance.style.display = 'flex';
-        this.balance.style.alignItems = 'center';
+        this.balance.classList.add('token-amount');
         this.element.append(this.balance);
 
         // Balance token logo

@@ -1,5 +1,5 @@
 /**
- * Address Book
+ * Generic list widget
  */
 
 import { Component } from '/src/utils/component.js';
@@ -12,7 +12,7 @@ import { AddPlus } from '/src/extension/popup/widgets/add.js';
 
 export class ListEntry {
 
-    constructor({ id = null, avatar = null, name, value = null, editable = false, switcher = null }) {
+    constructor({ id = null, avatar = null, name, value = null, editable = false, switcher = null, input = null }) {
         // Entry ID
         this.id = id;
         // Entry avatar
@@ -25,6 +25,8 @@ export class ListEntry {
         this.editable = editable;
         // Switcher widget null | 'on' | 'off'
         this.switcher = switcher;
+        // Input widget null | {value, unit}
+        this.input = input;
     }
 
 }
@@ -275,7 +277,8 @@ export class ListView extends Component {
                     name: entry.name,
                     value: entry?.value || null,
                     icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null,
-                    switcher: entry?.switcher || null 
+                    switcher: entry?.switcher || null,
+                    input: entry?.input || null
                 });
             });
         }
@@ -304,7 +307,7 @@ export class ListView extends Component {
      * @param {'on'|'off'} stwitcher Switcher widget
      */
 
-    renderEntry({ container, avatar = null, id, name, value = null, icon = null, switcher = null }) {
+    renderEntry({ container, avatar = null, id, name, value = null, icon = null, switcher = null, input = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -345,6 +348,23 @@ export class ListView extends Component {
             checkbox.classList.add('toggle');
             if (switcher === 'on') checkbox.setAttribute('checked', 'checked');
             entry.append(checkbox);
+        }
+
+        // Input widget
+        if (input) {
+            const inputContainer = document.createElement('div');
+            inputContainer.classList.add('input-container');
+            const inputField = document.createElement('input');
+            inputField.type = 'number';
+            inputField.value = input.value;
+            inputContainer.append(inputField);
+            if (input.unit) {
+                const inputUnit = document.createElement('span');
+                inputUnit.classList.add('input-unit');
+                inputUnit.innerText = input.unit;
+                inputContainer.append(inputUnit);
+            }
+            entry.append(inputContainer);
         }
 
         // Right icon

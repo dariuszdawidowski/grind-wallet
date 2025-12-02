@@ -34,11 +34,12 @@ export class BurgerMenu extends ListView {
             name: 'Configuration',
             entries: {
                 'cfg-show-scrolls': { name: 'Show scrolls', order: 1, switcher: 'on' },
-                'cfg-session-time': { name: 'Session time', order: 2 },
+                'cfg-session-time': { name: 'Session time', order: 2, input: { value: 15, unit: 'min' } },
                 'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: 'off' },
             },
-            onSelectEntry: (entryId) => {
+            onWidgetInteraction: (entryId) => {
             },
+
 
         });
 

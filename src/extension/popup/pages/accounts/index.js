@@ -48,15 +48,11 @@ export class PageAccounts extends Component {
             else {
                 this.app.drawer.close();
             }
-        });        
+        });
         header.append(burger);
 
         // Burger menu
         this.burgerMenu = new BurgerMenu({ app: this.app });
-        this.burgerMenu.callback = (entry) => {
-            console.log('Menu entry clicked:', entry);
-            this.app.drawer.close();
-        };
 
         // Task manager
         this.append(this.app.tasks);

@@ -1482,7 +1482,7 @@ hr {
     margin-right: 8px;
 }
 
-/* Switcher <input type="checkbox" class="toggle" checked> */
+/* Switcher list widget <input type="checkbox" class="toggle" checked> */
 
 .list-view .entry input[type="checkbox"] {
     -webkit-appearance: none;
@@ -1528,7 +1528,32 @@ hr {
 .list-view .entry .toggle:checked::after {
     transform: translateX(20px);
 }
-    
+
+/* Input list widget */
+
+.list-view .entry .input-container {
+    margin-left: auto;
+}
+
+.list-view .entry input {
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: 400;
+    width: 60px;
+    padding: 0;
+}
+
+.list-view .entry .input-unit {
+    margin-left: 4px;
+    color: #444;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 22px;
+}
 
 /* Overwrite other classes */
 

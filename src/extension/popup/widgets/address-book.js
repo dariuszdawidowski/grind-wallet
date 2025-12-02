@@ -17,6 +17,8 @@ class Contact extends ListEntry {
         super({ id, name, value, editable });
         // Contact address list { 'icp:pid': ..., 'icp:acc0': ..., 'btc:bech32': ... }
         this.address = address;
+        // Render letter in a circle
+        this.avatar = true;
     }
 
     /**

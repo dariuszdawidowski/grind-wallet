@@ -8,9 +8,11 @@ import { AddPlus } from '/src/extension/popup/widgets/add.js';
 
 export class ListEntry {
 
-    constructor({ id = null, name, value = null, editable = false }) {
+    constructor({ id = null, avatar = null, name, value = null, editable = false }) {
         // Entry ID
         this.id = id;
+        // Entry avatar
+        this.avatar = avatar;
         // Entry name
         this.name = name;
         // Entry value
@@ -51,13 +53,13 @@ export class ListView extends Component {
      * @param {function} onReorder Callback when group reordered
      */
 
-    renderList({ id, name, entries, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
+    renderList({ id = null, name, entries, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
 
         // Header container
         const header = document.createElement('div');
         header.classList.add('header');
         header.draggable = true;
-        header.dataset.id = id;
+        header.dataset.id = id ? id : `list-${crypto.randomUUID()}`;
         this.element.append(header);
 
         // Setup drag and drop
@@ -150,6 +152,7 @@ export class ListView extends Component {
                 this.renderEntry({
                     container,
                     id,
+                    avatar: entry?.avatar || null,
                     name: entry.name,
                     value: entry?.value || null,
                     icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null
@@ -261,12 +264,13 @@ export class ListView extends Component {
      * Render single contact entry
      * @param {HTMLElement} container Container to render entry in
      * @param {string} id Entry ID
+     * @param {string} avatar Avatar URL | true for render letter in a circle
      * @param {string} name Entry name
      * @param {string} value Entry value
      * @param {string} icon Entry right icon
      */
 
-    renderEntry({ container, id, name, value = null, icon = null }) {
+    renderEntry({ container, avatar = null, id, name, value = null, icon = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -275,12 +279,11 @@ export class ListView extends Component {
         container.appendChild(entry);
 
         // Avatar
-        const avatar = new Avatar({
+        if (avatar) entry.append(new Avatar({
             app: this.app,
             id,
             name
-        });
-        entry.append(avatar.element);
+        }).element);
 
         // Middle section
         const middle = document.createElement('div');

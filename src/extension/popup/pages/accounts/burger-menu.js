@@ -16,16 +16,40 @@ export class BurgerMenu extends ListView {
      */
 
     render() {
+
+        // View
         this.renderList({
-            id: 'view',
             name: 'View',
             entries: {
-                'view-side': { name: 'Side View', order: 1 },
-                'view-full': { name: 'Full Screen', order: 2 }
+                'view-side': { name: 'Dock in Side Panel', order: 1 },
             },
             onSelectEntry: (entryId) => {
                 if (entryId == 'view-side') this.dockSidePanel();
-                console.log('Selected view mode:', entryId);
+            },
+
+        });
+
+        // Config
+        this.renderList({
+            name: 'Configuration',
+            entries: {
+                'cfg-show-scrolls': { name: 'Show scrolls', order: 1 },
+                'cfg-session-time': { name: 'Session time', order: 2 },
+                'cfg-send-errors': { name: 'Send errors to developer', order: 3 },
+            },
+            onSelectEntry: (entryId) => {
+            },
+
+        });
+
+        // Information
+        this.renderList({
+            name: 'Information',
+            entries: {
+                'info-website': { name: 'Project website', order: 1 },
+                'info-dao': { name: 'Grind DAO', order: 2 },
+            },
+            onSelectEntry: (entryId) => {
             },
 
         });

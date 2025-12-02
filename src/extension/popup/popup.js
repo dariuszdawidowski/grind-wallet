@@ -274,6 +274,24 @@ class GrindWalletPlugin {
     }
 
     /**
+     * Show scrollbars
+     */
+
+    showScrollbars() {
+        document.querySelector('#main-panel-content').classList.remove('hide-scrollbar');
+        this.sheet.element.classList.remove('hide-scrollbar');
+    }
+
+    /**
+     * Hide scrollbars
+     */
+
+    hideScrollbars() {
+        document.querySelector('#main-panel-content').classList.add('hide-scrollbar');
+        this.sheet.element.classList.add('hide-scrollbar');
+    }
+
+    /**
      * Determines if a canister ID corresponds to the ICP Ledger.
      * @param {string} canisterId - The canister ID to check.
      * @returns {boolean} - True if the canister ID is the ICP Ledger, false otherwise.

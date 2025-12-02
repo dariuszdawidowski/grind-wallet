@@ -13,7 +13,6 @@ export class Sheet extends Component {
         super({ app });
 
         this.element.id = id;
-        //this.element.classList.add('sheet', 'hide-scrollbar');
         this.element.classList.add('sheet');
         this.element.innerHTML = `
             <div class="handler"></div>

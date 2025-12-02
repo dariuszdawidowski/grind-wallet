@@ -39,12 +39,18 @@ export class BurgerMenu extends ListView {
         this.renderList({
             name: 'Configuration',
             entries: {
-                'cfg-show-scrolls': { name: 'Show scroll bars', order: 1, switcher: 'on' },
-                'cfg-session-time': { name: 'Session time', order: 2, input: { value: 15, unit: 'min' } },
-                'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: 'off' },
+                'cfg-show-scrolls': { name: 'Show scroll bars', order: 1, switcher: (this.app.config.showScrolls) ? 'on' : 'off' },
+                'cfg-session-time': { name: 'Session time', order: 2, input: { value: this.app.config.sessionTime, unit: 'min' } },
+                'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: (this.app.config.sendErrors) ? 'on' : 'off' },
             },
             onClickEntry: (info) => {
-                console.log(info)
+                // Show scrolls
+                if (info.id == 'cfg-show-scrolls') {
+                    this.app.config.showScrolls = (info.switcher == 'on');
+                    this.app.config.save();
+                    if (this.app.config.showScrolls) this.app.showScrollbars();
+                    else this.app.hideScrollbars();
+                }
             },
         });
 

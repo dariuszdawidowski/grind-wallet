@@ -49,6 +49,9 @@ export class Config {
         // Hide Balances
         if (this.hideBalances) this.app.hideBalances();
         else this.app.showBalances();
+        // Scrollbars
+        if (this.showScrolls) this.app.showScrollbars();
+        else this.app.hideScrollbars();
     }
 
 }

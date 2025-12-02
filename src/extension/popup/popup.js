@@ -5,6 +5,7 @@
 
 import '/src/extension/popup/popup.css';
 import { browser } from '/src/utils/browser.js';
+import { Config } from '/src/utils/config.js';
 import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
 import { Drawer } from '/src/extension/popup/widgets/drawer.js';
@@ -131,6 +132,11 @@ class GrindWalletPlugin {
 
         // Address book
         this.addressbook = new AddressBook({ app: this });
+
+        // Configuration manager
+        this.config = new Config({ app: this });
+        await this.config.load();
+        this.config.apply();
 
         // Get storage session data
         const storageSession = await browser.storage.session.get(['active', 'password', 'created']);

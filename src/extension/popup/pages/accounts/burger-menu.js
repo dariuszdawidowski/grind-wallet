@@ -2,8 +2,8 @@
  * Main burger menu for accounts page
  */
 
-import { ListView } from '/src/extension/popup/widgets/list.js';
 import { browser } from '/src/utils/browser.js';
+import { ListView } from '/src/extension/popup/widgets/list.js';
 
 export class BurgerMenu extends ListView {
 
@@ -18,7 +18,7 @@ export class BurgerMenu extends ListView {
             name: 'View',
             entries: {
                 'view-side': { name: 'Dock in Side Panel', order: 1, icon: 'assets/material-design-icons/dock-right.svg' },
-                'view-hide-balance': { name: 'Hide Balance', order: 2, switcher: 'off' },
+                'view-hide-balance': { name: 'Hide Balance', order: 2, switcher: (this.app.config.hideBalances) ? 'on' : 'off' },
             },
             onClickEntry: (info) => {
                 // Dock side panel
@@ -29,6 +29,8 @@ export class BurgerMenu extends ListView {
                 else if (info.id == 'view-hide-balance') {
                     if (info.switcher == 'on') this.app.hideBalances();
                     else if (info.switcher == 'off') this.app.showBalances();
+                    this.app.config.hideBalances = (info.switcher == 'on');
+                    this.app.config.save();
                 }
             },
         });
@@ -37,7 +39,7 @@ export class BurgerMenu extends ListView {
         this.renderList({
             name: 'Configuration',
             entries: {
-                'cfg-show-scrolls': { name: 'Show scrolls', order: 1, switcher: 'on' },
+                'cfg-show-scrolls': { name: 'Show scroll bars', order: 1, switcher: 'on' },
                 'cfg-session-time': { name: 'Session time', order: 2, input: { value: 15, unit: 'min' } },
                 'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: 'off' },
             },

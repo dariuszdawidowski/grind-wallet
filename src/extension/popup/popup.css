@@ -17,6 +17,7 @@ body {
     color: rgb(241, 230, 253);
     background-color: rgb(42, 26, 57);
     user-select: none;
+    overflow: hidden;
 }
 
 #app {

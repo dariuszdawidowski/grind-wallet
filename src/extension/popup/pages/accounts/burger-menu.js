@@ -21,12 +21,12 @@ export class BurgerMenu extends ListView {
         this.renderList({
             name: 'View',
             entries: {
-                'view-side': { name: 'Dock in Side Panel', order: 1 },
+                'view-side': { name: 'Dock in Side Panel', order: 1, icon: 'assets/material-design-icons/dock-right.svg' },
+                'view-hide-balance': { name: 'Hide Balance', order: 2, switcher: 'off' },
             },
             onSelectEntry: (entryId) => {
                 if (entryId == 'view-side') this.dockSidePanel();
             },
-
         });
 
         // Config
@@ -39,21 +39,29 @@ export class BurgerMenu extends ListView {
             },
             onWidgetInteraction: (entryId) => {
             },
-
-
         });
 
         // Information
         this.renderList({
             name: 'Information',
             entries: {
-                'info-website': { name: 'Project website', order: 1 },
-                'info-dao': { name: 'Grind DAO', order: 2 },
+                'info-website': { name: 'Project website', order: 1, icon: 'assets/material-design-icons/open-in-new.svg' },
+                'info-dao': { name: 'Grind DAO', order: 2, icon: 'assets/material-design-icons/open-in-new.svg' },
             },
             onSelectEntry: (entryId) => {
             },
-
         });
+
+        // Account
+        this.renderList({
+            name: 'Account',
+            entries: {
+                'acc-logout': { name: 'Logout', icon: 'assets/material-design-icons/power.svg' },
+            },
+            onSelectEntry: (entryId) => {
+            },
+        });
+
     }
 
     /**

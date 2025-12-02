@@ -12,7 +12,7 @@ import { AddPlus } from '/src/extension/popup/widgets/add.js';
 
 export class ListEntry {
 
-    constructor({ id = null, avatar = null, name, value = null, editable = false, switcher = null, input = null }) {
+    constructor({ id = null, avatar = null, name, value = null, editable = false, switcher = null, input = null, icon = null }) {
         // Entry ID
         this.id = id;
         // Entry avatar
@@ -27,6 +27,8 @@ export class ListEntry {
         this.switcher = switcher;
         // Input widget null | {value, unit}
         this.input = input;
+        // Right icon
+        this.icon = icon;
     }
 
 }
@@ -162,7 +164,7 @@ export class ListView extends Component {
      * Render group header & container
      * @param {string} id Group ID
      * @param {string} name Group name
-     * @param {object} entries Entries list {id: {name, value, editable, order}}
+     * @param {object} entries Entries list {id: {name, value, editable, order, icon, ...}}
      * @param {string} emptyMsg Message to show when no entries
      * @param {boolean} foldable Is it harmonica?
      * @param {function} onAddEntry Callback when add entry clicked
@@ -276,7 +278,7 @@ export class ListView extends Component {
                     avatar: entry?.avatar || null,
                     name: entry.name,
                     value: entry?.value || null,
-                    icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null,
+                    icon: entry?.icon || (entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null),
                     switcher: entry?.switcher || null,
                     input: entry?.input || null
                 });

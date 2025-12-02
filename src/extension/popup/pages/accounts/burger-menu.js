@@ -33,9 +33,9 @@ export class BurgerMenu extends ListView {
         this.renderList({
             name: 'Configuration',
             entries: {
-                'cfg-show-scrolls': { name: 'Show scrolls', order: 1 },
+                'cfg-show-scrolls': { name: 'Show scrolls', order: 1, switcher: 'on' },
                 'cfg-session-time': { name: 'Session time', order: 2 },
-                'cfg-send-errors': { name: 'Send errors to developer', order: 3 },
+                'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: 'off' },
             },
             onSelectEntry: (entryId) => {
             },

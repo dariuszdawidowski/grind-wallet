@@ -6,9 +6,13 @@ import { Component } from '/src/utils/component.js';
 import { Avatar } from '/src/extension/popup/widgets/avatar.js';
 import { AddPlus } from '/src/extension/popup/widgets/add.js';
 
+/**
+ * Single entry on a list base
+ */
+
 export class ListEntry {
 
-    constructor({ id = null, avatar = null, name, value = null, editable = false }) {
+    constructor({ id = null, avatar = null, name, value = null, editable = false, switcher = null }) {
         // Entry ID
         this.id = id;
         // Entry avatar
@@ -19,9 +23,15 @@ export class ListEntry {
         this.value = value;
         // Is editable
         this.editable = editable;
+        // Switcher widget null | 'on' | 'off'
+        this.switcher = switcher;
     }
 
 }
+
+/**
+ * List view base
+ */
 
 export class ListView extends Component {
 
@@ -36,141 +46,6 @@ export class ListView extends Component {
             draggedElement: null,
             placeholder: null
         };
-    }
-
-    /**
-     * Render group header & container
-     * @param {string} id Group ID
-     * @param {string} name Group name
-     * @param {object} entries Entries list {id: {name, value, editable, order}}
-     * @param {string} emptyMsg Message to show when no entries
-     * @param {function} onAddEntry Callback when add entry clicked
-     * @param {function} onSelectEntry Callback when entry selected
-     * @param {function} onEditEntry Callback when edit entry clicked
-     * @param {function} onEditGroup Callback when edit group clicked
-     * @param {function} onCollapse Callback when group collapsed
-     * @param {function} onExpand Callback when group expanded
-     * @param {function} onReorder Callback when group reordered
-     */
-
-    renderList({ id = null, name, entries, emptyMsg, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
-
-        // Header container
-        const header = document.createElement('div');
-        header.classList.add('header');
-        header.draggable = true;
-        header.dataset.id = id ? id : `list-${crypto.randomUUID()}`;
-        this.element.append(header);
-
-        // Setup drag and drop
-        if (onReorder) this.setupDragAndDrop(header, onReorder);
-
-        // Header row
-        const titleContainer = document.createElement('div');
-        titleContainer.classList.add('header-row');
-        header.append(titleContainer);
-        titleContainer.addEventListener('click', () => {
-            const direction = this.toggleCollapse();
-            if (direction == 'collapsed') {
-                if (onCollapse) onCollapse();
-            }
-            else if (direction == 'expanded') {
-                if (onExpand) onExpand();
-            }
-        });
-
-        // Title
-        const title = document.createElement('h1');
-        title.innerText = name;
-        titleContainer.append(title);
-
-        // Add new entry
-        if (onAddEntry) {
-            const plusButton = new AddPlus({
-                classList: ['add-group'],
-                click: (event) => {
-                    event.stopPropagation();
-                    if (onAddEntry) onAddEntry();
-                }
-            });
-            titleContainer.append(plusButton.element);
-        }
-
-        // Edit icon
-        if (onEditGroup) {
-            const editIcon = document.createElement('div');
-            editIcon.classList.add('icon', 'edit-group', 'hidden');
-            editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
-            titleContainer.append(editIcon);
-            editIcon.addEventListener('click', (event) => {
-                event.stopPropagation();
-                onEditGroup(id);
-            });
-        }
-
-        // Contacts container
-        const container = document.createElement('div');
-        container.classList.add('container');
-        this.element.appendChild(container);
-        container.addEventListener('click', (event) => {
-
-            // Edit entry clicked
-            const icon = event.target.closest('.icon');
-            if (icon) {
-                const entry = icon.closest('.entry');
-                if (entry) {
-                    const id = entry.dataset.value;
-                    if (onEditEntry) onEditEntry(id);
-                    return;
-                }
-            }
-
-            // Select entry clicked
-            const entry = event.target.closest('.entry');
-            if (entry) {
-                const id = entry.dataset.value;
-                if (onSelectEntry) onSelectEntry(id);
-            }
-
-        });
-
-        // Separator
-        const separator = document.createElement('div');
-        separator.classList.add('separator');
-        container.append(separator);
-
-        // Render entries
-        if (Object.values(entries).length) {
-            Object.entries(entries).sort((a, b) => {
-                // Sort by order if this field exists
-                if (a[1].order !== undefined && b[1].order !== undefined) {
-                    return a[1].order - b[1].order;
-                }
-                // Otherwise sort alphabetically by name field
-                return a[1].name.localeCompare(b[1].name);
-            }).forEach(([id, entry]) => {
-                this.renderEntry({
-                    container,
-                    id,
-                    avatar: entry?.avatar || null,
-                    name: entry.name,
-                    value: entry?.value || null,
-                    icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null
-                });
-            });
-        }
-        else {
-            const noWallets = document.createElement('div');
-            noWallets.classList.add('infotext');
-            noWallets.innerHTML = emptyMsg;
-            container.append(noWallets);
-        }
-
-        // Set initial height
-        this.element.querySelectorAll('.container').forEach(container => {
-            container.style.height = container.scrollHeight + 'px';
-        });
-
     }
 
     /**
@@ -260,6 +135,164 @@ export class ListView extends Component {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
+   /**
+     * Toggle collapse
+     */
+
+    toggleCollapse() {
+        let direction = null;
+        this.element.querySelectorAll('.container').forEach(container => {
+            if (container.classList.contains('collapsed')) {
+                container.style.height = container.scrollHeight + 'px';
+                container.classList.remove('collapsed');
+                direction = 'expanded';
+            }
+            else {
+                container.style.height = '0px';
+                container.classList.add('collapsed');
+                direction = 'collapsed';
+            }
+        });
+        return direction;
+    }
+
+    /**
+     * Render group header & container
+     * @param {string} id Group ID
+     * @param {string} name Group name
+     * @param {object} entries Entries list {id: {name, value, editable, order}}
+     * @param {string} emptyMsg Message to show when no entries
+     * @param {boolean} foldable Is it harmonica?
+     * @param {function} onAddEntry Callback when add entry clicked
+     * @param {function} onSelectEntry Callback when entry selected
+     * @param {function} onEditEntry Callback when edit entry clicked
+     * @param {function} onEditGroup Callback when edit group clicked
+     * @param {function} onCollapse Callback when group collapsed
+     * @param {function} onExpand Callback when group expanded
+     * @param {function} onReorder Callback when group reordered
+     */
+
+    renderList({ id = null, name, entries, emptyMsg, foldable = false, onAddEntry = null, onSelectEntry = null, onEditEntry = null, onEditGroup = null, onCollapse = null, onExpand = null, onReorder = null }) {
+
+        // Header container
+        const header = document.createElement('div');
+        header.classList.add('header');
+        header.draggable = true;
+        header.dataset.id = id ? id : `list-${crypto.randomUUID()}`;
+        this.element.append(header);
+
+        // Setup drag and drop
+        if (onReorder) this.setupDragAndDrop(header, onReorder);
+
+        // Header row
+        const titleContainer = document.createElement('div');
+        titleContainer.classList.add('header-row');
+        header.append(titleContainer);
+        if (foldable) titleContainer.addEventListener('click', () => {
+            const direction = this.toggleCollapse();
+            if (direction == 'collapsed') {
+                if (onCollapse) onCollapse();
+            }
+            else if (direction == 'expanded') {
+                if (onExpand) onExpand();
+            }
+        });
+
+        // Title
+        const title = document.createElement('h1');
+        title.innerText = name;
+        titleContainer.append(title);
+
+        // Add new entry
+        if (onAddEntry) {
+            const plusButton = new AddPlus({
+                classList: ['add-group'],
+                click: (event) => {
+                    event.stopPropagation();
+                    if (onAddEntry) onAddEntry();
+                }
+            });
+            titleContainer.append(plusButton.element);
+        }
+
+        // Edit icon
+        if (onEditGroup) {
+            const editIcon = document.createElement('div');
+            editIcon.classList.add('icon', 'edit-group', 'hidden');
+            editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
+            titleContainer.append(editIcon);
+            editIcon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                onEditGroup(id);
+            });
+        }
+
+        // Contacts container
+        const container = document.createElement('div');
+        container.classList.add('container');
+        this.element.appendChild(container);
+        container.addEventListener('click', (event) => {
+
+            // Edit entry clicked
+            const icon = event.target.closest('.icon');
+            if (icon) {
+                const entry = icon.closest('.entry');
+                if (entry) {
+                    const id = entry.dataset.value;
+                    if (onEditEntry) onEditEntry(id);
+                    return;
+                }
+            }
+
+            // Select entry clicked
+            const entry = event.target.closest('.entry');
+            if (entry) {
+                const id = entry.dataset.value;
+                if (onSelectEntry) onSelectEntry(id);
+            }
+
+        });
+
+        // Separator
+        const separator = document.createElement('div');
+        separator.classList.add('separator');
+        container.append(separator);
+
+        // Render entries
+        if (Object.values(entries).length) {
+            Object.entries(entries).sort((a, b) => {
+                // Sort by order if this field exists
+                if (a[1].order !== undefined && b[1].order !== undefined) {
+                    return a[1].order - b[1].order;
+                }
+                // Otherwise sort alphabetically by name field
+                return a[1].name.localeCompare(b[1].name);
+            }).forEach(([id, entry]) => {
+                this.renderEntry({
+                    container,
+                    id,
+                    avatar: entry?.avatar || null,
+                    name: entry.name,
+                    value: entry?.value || null,
+                    icon: entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null,
+                    switcher: entry?.switcher || null 
+                });
+            });
+        }
+        else {
+            const noWallets = document.createElement('div');
+            noWallets.classList.add('infotext');
+            noWallets.innerHTML = emptyMsg;
+            container.append(noWallets);
+        }
+
+        // Set initial height
+        this.element.querySelectorAll('.container').forEach(container => {
+            container.style.height = container.scrollHeight + 'px';
+        });
+
+    }
+
     /**
      * Render single contact entry
      * @param {HTMLElement} container Container to render entry in
@@ -268,9 +301,10 @@ export class ListView extends Component {
      * @param {string} name Entry name
      * @param {string} value Entry value
      * @param {string} icon Entry right icon
+     * @param {'on'|'off'} stwitcher Switcher widget
      */
 
-    renderEntry({ container, avatar = null, id, name, value = null, icon = null }) {
+    renderEntry({ container, avatar = null, id, name, value = null, icon = null, switcher = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -304,6 +338,15 @@ export class ListView extends Component {
             middle.append(subtitle);
         }
 
+        // Switcher widget
+        if (switcher) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.classList.add('toggle');
+            if (switcher === 'on') checkbox.setAttribute('checked', 'checked');
+            entry.append(checkbox);
+        }
+
         // Right icon
         if (icon) {
             const right = document.createElement('div');
@@ -312,27 +355,6 @@ export class ListView extends Component {
             entry.append(right);
         }
 
-    }
-
-    /**
-     * Toggle collapse
-     */
-
-    toggleCollapse() {
-        let direction = null;
-        this.element.querySelectorAll('.container').forEach(container => {
-            if (container.classList.contains('collapsed')) {
-                container.style.height = container.scrollHeight + 'px';
-                container.classList.remove('collapsed');
-                direction = 'expanded';
-            }
-            else {
-                container.style.height = '0px';
-                container.classList.add('collapsed');
-                direction = 'collapsed';
-            }
-        });
-        return direction;
     }
 
     /**

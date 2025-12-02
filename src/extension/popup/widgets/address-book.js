@@ -375,6 +375,7 @@ export class AddressBook extends ListView {
             name: this.groups[groupId].name,
             entries,
             emptyMsg,
+            foldable: true,
             onSelectEntry: (contactId) => {
                 const contact = this.contacts[groupId][contactId];
                 this.callback?.(contact);

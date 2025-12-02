@@ -51,6 +51,19 @@ export class BurgerMenu extends ListView {
                     if (this.app.config.showScrolls) this.app.showScrollbars();
                     else this.app.hideScrollbars();
                 }
+                // Session time
+                else if (info.id == 'cfg-session-time') {
+                    const newTime = parseInt(info.input);
+                    if (!isNaN(newTime) && newTime >= 1 && newTime <= 1440) {
+                        this.app.config.sessionTime = newTime;
+                        this.app.config.save();
+                    }
+                }
+                // Send errors
+                else if (info.id == 'cfg-send-errors') {
+                    this.app.config.sendErrors = (info.switcher == 'on');
+                    this.app.config.save();
+                }
             },
         });
 
@@ -62,7 +75,6 @@ export class BurgerMenu extends ListView {
                 'info-dao': { name: 'Grind DAO', order: 2, icon: 'assets/material-design-icons/open-in-new.svg' },
             },
             onClickEntry: (info) => {
-                console.log(info)
             },
         });
 

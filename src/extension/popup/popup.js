@@ -193,8 +193,7 @@ class GrindWalletPlugin {
 
         // Check if session expired
         const createdTime = new Date(storageSession.created).getTime();
-        const ONE_HOUR = 60 * 60 * 1000;
-        if (isNaN(createdTime) || (Date.now() - createdTime) > ONE_HOUR) {
+        if (isNaN(createdTime) || (Date.now() - createdTime) > (this.config.sessionTime * 60 * 1000)) {
             // Clear session storage
             await browser.storage.session.remove(['active', 'password', 'created']);
             // Check that password exists

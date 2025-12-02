@@ -277,7 +277,8 @@ export class ListView extends Component {
                     value: entry?.value || null,
                     icon: entry?.icon || (entry?.editable ? 'assets/material-design-icons/pencil-box.svg' : null),
                     switcher: entry?.switcher || null,
-                    input: entry?.input || null
+                    input: entry?.input || null,
+                    callback: onClickEntry
                 });
             });
         }
@@ -304,9 +305,11 @@ export class ListView extends Component {
      * @param {string} value Entry value
      * @param {string} icon Entry right icon
      * @param {'on'|'off'} stwitcher Switcher widget
+     * @param {object} input Input widget {value, unit}
+     * @param {function} callback Callback when entry clicked
      */
 
-    renderEntry({ container, avatar = null, id, name, value = null, icon = null, switcher = null, input = null }) {
+    renderEntry({ container, avatar = null, id, name, value = null, icon = null, switcher = null, input = null, callback = null }) {
 
         // Entry bar
         const entry = document.createElement('div');
@@ -364,6 +367,15 @@ export class ListView extends Component {
                 inputContainer.append(inputUnit);
             }
             entry.append(inputContainer);
+            inputField.addEventListener('change', (event) => {
+                if (callback) callback({ id, clicked: 'widget', input: inputField.value });
+            });
+            inputField.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    inputField.blur();
+                }
+            });
         }
 
         // Right icon

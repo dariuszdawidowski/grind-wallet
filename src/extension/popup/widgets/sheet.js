@@ -13,8 +13,9 @@ export class Sheet extends Component {
         super({ app });
 
         this.element.id = id;
-        this.element.classList.add('sheet', 'hide-scrollbar');
-         this.element.innerHTML = `
+        //this.element.classList.add('sheet', 'hide-scrollbar');
+        this.element.classList.add('sheet');
+        this.element.innerHTML = `
             <div class="handler"></div>
             <div class="x">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">

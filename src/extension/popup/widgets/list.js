@@ -287,6 +287,7 @@ export class ListView extends Component {
 
         // Middle section
         const middle = document.createElement('div');
+        middle.classList.add('middle');
         entry.append(middle);
 
         // Title

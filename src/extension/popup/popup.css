@@ -1441,8 +1441,12 @@ hr {
 }
 
 .list-view .entry .avatar { 
-    margin: 0 16px 0 6px;
+    margin: 0 10px 0 6px;
     font-size: 18px;
+}
+
+.list-view .entry .middle {
+    margin: 0 6px;
 }
 
 .list-view .entry .name {

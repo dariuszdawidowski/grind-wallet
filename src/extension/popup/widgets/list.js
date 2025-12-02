@@ -40,7 +40,7 @@ export class ListView extends Component {
      * Render group header & container
      * @param {string} id Group ID
      * @param {string} name Group name
-     * @param {object} entries Entries list {id: {name, value, editable}}
+     * @param {object} entries Entries list {id: {name, value, editable, order}}
      * @param {string} emptyMsg Message to show when no entries
      * @param {function} onAddEntry Callback when add entry clicked
      * @param {function} onSelectEntry Callback when entry selected
@@ -139,7 +139,14 @@ export class ListView extends Component {
 
         // Render entries
         if (Object.values(entries).length) {
-            Object.entries(entries).sort((a, b) => a[1].name.localeCompare(b[1].name)).forEach(([id, entry]) => {
+            Object.entries(entries).sort((a, b) => {
+                // Sort by order if this field exists
+                if (a[1].order !== undefined && b[1].order !== undefined) {
+                    return a[1].order - b[1].order;
+                }
+                // Otherwise sort alphabetically by name field
+                return a[1].name.localeCompare(b[1].name);
+            }).forEach(([id, entry]) => {
                 this.renderEntry({
                     container,
                     id,

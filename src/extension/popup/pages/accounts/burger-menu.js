@@ -20,8 +20,8 @@ export class BurgerMenu extends ListView {
             id: 'view',
             name: 'View',
             entries: {
-                'view-side': { name: 'Side View' },
-                'view-full': { name: 'Full Screen' }
+                'view-side': { name: 'Side View', order: 1 },
+                'view-full': { name: 'Full Screen', order: 2 }
             },
             onSelectEntry: (entryId) => {
                 if (entryId == 'view-side') this.dockSidePanel();

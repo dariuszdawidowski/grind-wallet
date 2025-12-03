@@ -8,6 +8,7 @@ import { browser } from '/src/utils/browser.js';
 import { Config } from '/src/utils/config.js';
 import { ErrorSystem } from '/src/utils/errors.js';
 import { LogSystem } from '/src/utils/logger.js';
+import { Session } from '/src/utils/session.js';
 import { Drawer } from '/src/extension/popup/widgets/drawer.js';
 import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { PageAccounts } from '/src/extension/popup/pages/accounts/index.js';
@@ -103,7 +104,7 @@ class GrindWalletPlugin {
         // Active page
         this.current = null;
 
-        // User credentials
+        // User credentials TODO: remove
         this.user = {
             password: null,
         };
@@ -138,80 +139,52 @@ class GrindWalletPlugin {
         await this.config.load();
         this.config.apply();
 
-        // Get storage session data
-        const storageSession = await browser.storage.session.get(['active', 'password', 'created']);
-        if (storageSession.hasOwnProperty('active') && storageSession.active === true && storageSession.hasOwnProperty('created')) {
-            await this.continueSession(storageSession);
-        }
+        // Session manager
+        this.session = new Session();
+        await this.session.init({
 
-        // No active session
-        else {
-            // Check that password exists
-            const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
+            time: this.config.sessionTime,
 
-            // Login
-            if (storageLocal.salt && storageLocal.password) {
-                this.login(storageLocal)
+            // New session
+            create: async () => {
+                // Login page if password registered
+                const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
+                if (storageLocal.salt && storageLocal.password) {
+                    this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+                }
+                // First-time page with terms acceptance and password creation
+                else {
+                    // Accept terms of use
+                    if (!storageLocal.hasOwnProperty('terms') || storageLocal.terms == false) {
+                        this.page('terms');
+                    }
+                    // Create password (should be created but just in case)
+                    else {
+                        this.page('register-password');
+                    }
+                }
+
+            },
+
+            // Continue session
+            continue: async () => {
+                const storageSession = await browser.storage.session.get(['password', 'created']); // remove
+                this.user.password = storageSession.password; // TODO: remove
+                // Show main page
+                this.page('accounts');
+            },
+
+            // Expired session
+            expired: async () => {
+                const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
+                // Show login page
+                if (storageLocal.salt && storageLocal.password) {
+                    this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+                }
             }
 
-            // First time
-            else {
-                this.firstTime(storageLocal);
-            }
-        }
+        });
 
-    }
-
-    /**
-     * First-time page with terms acceptance and password creation
-     */
-
-    firstTime(storageLocal) {
-        // Accept terms of use
-        if (!storageLocal.hasOwnProperty('terms') || storageLocal.terms == false) {
-            this.page('terms');
-        }
-        // Create password (should be created but just in case)
-        else {
-            this.page('register-password');
-        }
-    }
-
-    /**
-     * Login page
-     */
-
-    login(storageLocal) {
-        this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
-    }
-
-    /**
-     * Continue active session (if not expired)
-     */
-
-    async continueSession(storageSession) {
-
-        // Check if session expired
-        const createdTime = new Date(storageSession.created).getTime();
-        if (isNaN(createdTime) || (Date.now() - createdTime) > (this.config.sessionTime * 60 * 1000)) {
-            // Clear session storage
-            await browser.storage.session.remove(['active', 'password', 'created']);
-            // Check that password exists
-            const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
-            // Login
-            if (storageLocal.salt && storageLocal.password) {
-                this.login(storageLocal)
-            }
-        }
-
-        // Session valid - proceed to accounts
-        else {
-            // Password
-            this.user.password = storageSession.password;
-
-            // Show accounts list
-            this.page('accounts');
-        }
     }
 
     /**

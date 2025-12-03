@@ -1,11 +1,13 @@
+/**
+ * Login page
+ */
+
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
-import { verifyPassword } from '/src/utils/password.js';
 import { Form } from '/src/extension/popup/widgets/form.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
 import { InputPassword } from '/src/extension/popup/widgets/input.js';
 const { version } = require('/package.json');
-
 
 export class PageLogin extends Component {
 
@@ -60,15 +62,18 @@ export class PageLogin extends Component {
 
     }
 
+    /**
+     * Verify password
+     */
+
     verify(password, salt, hash) {
-        verifyPassword(password, salt, hash).then((valid) => {
+        this.app.session.verifyPassword(password, salt, hash).then((valid) => {
             if (valid) {
                 this.widget.button.set('Logging in...');
                 // Store password
                 this.app.user.password = password;
                 // Save session
                 browser.storage.session.set({
-                    'active': true,
                     'password': this.app.user.password,
                     'created': Date.now()
                 });

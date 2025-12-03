@@ -1,6 +1,5 @@
 import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
-import { isPasswordStrong, generateSalt, hashPassword } from '/src/utils/password.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
 import { InputPassword } from '/src/extension/popup/widgets/input.js';
 const { version } = require('/package.json');
@@ -55,9 +54,9 @@ export class PageRegister extends Component {
             text: 'Confirm',
             click: () => {
                 if (password.get() === passwordConfirm.get()) {
-                    if (isPasswordStrong(password.get())) {
-                        generateSalt().then(salt => {
-                            hashPassword(password.get(), salt).then(hashed => {
+                    if (this.app.session.isPasswordStrong(password.get())) {
+                        this.app.session.generateSalt().then(salt => {
+                            this.app.session.hashPassword(password.get(), salt).then(hashed => {
                                 browser.storage.local.set({ salt: salt, password: hashed }, () => {
                                     this.app.page('login', {salt: salt, hash: hashed});
                                 });

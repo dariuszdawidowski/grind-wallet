@@ -42,7 +42,7 @@ Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. B
   - `logbase.js` - Logging system class to inherit
   - `logger.js` - Logging events into IndexedDB
   - `object-cache.js` - Caching JavaScript objects to avoid creating duplicates in other code spaces
-  - `password.js` - Handling password cryptography
+  - `session.js` - Handling session and password cryptography
 
 ### Data Flow
 1. User password → decrypt private keys (AES-GCM in `keys.js`)

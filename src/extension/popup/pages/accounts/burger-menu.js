@@ -75,6 +75,13 @@ export class BurgerMenu extends ListView {
                 'info-dao': { name: 'Grind DAO', order: 2, icon: 'assets/material-design-icons/open-in-new.svg' },
             },
             onClickEntry: (info) => {
+                // Show scrolls
+                if (info.id == 'info-website') {
+                    browser.tabs.create({ url: 'https://www.grindwallet.com' });
+                }
+                else if (info.id == 'info-dao') {
+                    browser.tabs.create({ url: 'https://huptf-mqaaa-aaaao-qj4wa-cai.icp0.io' });
+                }
             },
         });
 

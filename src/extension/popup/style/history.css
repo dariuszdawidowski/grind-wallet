@@ -1,0 +1,187 @@
+/* History */
+
+.history .entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.history .title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.history .subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history .subtitle .own {
+    font-size: 10px;
+    font-weight: 500;
+    color: #a0a0a0;
+    margin-left: 6px;
+    border: 1px solid #a0a0a0;
+    padding: 0px 4px 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.history .own.suspicious {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
+.history .token-image {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    margin-right: 0px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.history .nft-image {
+    width: 36px;
+    height: 36px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: auto;
+}
+
+.history .token-image svg, .history .token-image svg image,
+.history .nft-image svg, .history .nft-image svg image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.history .amount {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: auto;
+    margin-right: 8px;
+    text-align: right;
+}
+
+.hide-balances .history .amount {
+    filter: blur(4px);
+}
+
+.add-circle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+    margin: 10px;
+}
+
+.add-circle:hover {
+    cursor: pointer;
+}
+
+.macos .add-circle:hover {
+    transform: scale(1.03);
+}
+
+.add-circle .plus,
+.history .entry .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--button-color);
+    transition: background-color 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.history .entry .circle.recv {
+    background-color: #25b371;
+}
+
+.history .entry .circle.error {
+    background-color: #b33925;
+}
+
+.add-circle .plus img,
+.history .entry .circle img {
+    width: 30px;
+    height: 30px;
+}
+
+.add-circle:hover .plus {
+    background-color: var(--button-hilit);
+}
+
+.add-circle .label {
+    margin: 0 10px;
+    font-size: 12px;
+}
+
+.add-circle.dark .label {
+    color: #333;
+}
+
+.token-balance {
+    flex: 0 0 113px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.token-balance:hover {
+    cursor: pointer;
+}
+
+.macos .token-balance:hover,
+.macos .cover:hover {
+    transform: scale(1.11);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.token-balance .token-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: black;
+    font-weight: 500;
+    background-color: #e4990e;
+    font-size: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.token-balance .label {
+    margin: 0 10px;
+    font-size: 12px;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.token-balance:hover .label {
+    text-shadow: 0 0 6px rgb(135, 80, 199);
+}
+
+.hide-balances .token-balance .amount {
+    filter: blur(4px);
+}

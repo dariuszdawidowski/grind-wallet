@@ -1,0 +1,24 @@
+/* Coins */
+
+.coins {
+    display: flex;
+    flex-direction: row;
+    overflow: auto clip;
+    white-space: nowrap;
+    scrollbar-width: none;
+    height: 44px;
+    margin-bottom: 20px;
+}
+
+.coins > :first-child {
+    margin-left: 10px;
+}
+
+.coins::-webkit-scrollbar {
+    display: none;
+}
+
+.coins:empty {
+    height: 0;
+    margin-bottom: 0;
+}

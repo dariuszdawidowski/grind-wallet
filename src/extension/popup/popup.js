@@ -3,7 +3,16 @@
  * (c) 2024-2025 by Dariusz Dawidowski
  */
 
-import '/src/extension/popup/popup.css';
+import '/src/extension/popup/style/base.css';
+import '/src/extension/popup/style/card.css';
+import '/src/extension/popup/style/coins.css';
+import '/src/extension/popup/style/nft.css';
+import '/src/extension/popup/style/history.css';
+import '/src/extension/popup/style/sheet.css';
+import '/src/extension/popup/style/exchange.css';
+import '/src/extension/popup/style/tasks.css';
+import '/src/extension/popup/style/list.css';
+import '/src/extension/popup/style/overload.css';
 import { browser } from '/src/utils/browser.js';
 import { Config } from '/src/utils/config.js';
 import { ErrorSystem } from '/src/utils/errors.js';

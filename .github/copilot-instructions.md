@@ -9,9 +9,9 @@ Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. B
 ### Core Components
 - **`src/extension/popup/`** - Main UI part of the extension
   - `popup.js` - Main entry point for UI, initializes `GrindWalletPlugin` class
-  - `popup.css` - Monolithic css file, pure css3, uses the latest methods, ignores old browsers
   - `popup.html` - Main UI html
   - `dev-mode.js` - Works only in the development mode with DEV_MODE=1 flag
+- **`src/extension/popup/style`** - Css stylesheets, pure css3, uses the latest methods, ignores old browsers
 - **`src/extension/popup/pages/accounts`** - Views components
 - **`src/extension/popup/pages/onboarding`** - Views components related to onboarding procedure (setup password, accept terms etc.)
 - **`src/extension/popup/widgets/`** - Reusable UI components

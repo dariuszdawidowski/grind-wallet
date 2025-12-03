@@ -1,0 +1,171 @@
+/* Credit card */
+
+.card {
+    width: 343px;
+    height: 216px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    margin: 20px auto;
+    position: relative;
+    color: white;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    cursor: pointer;
+    box-shadow: 0 0 6px rgb(135, 80, 199);
+}
+
+.macos .card:hover {
+    transform: scale(1.02);
+}
+
+.card .name {
+    position: absolute;
+    left: 24px;
+    top: 14px;
+    font-size: 18px;
+}
+
+.card .subname {
+    position: absolute;
+    left: 24px;
+    top: 44px;
+    font-size: 10px;
+}
+
+.card .loader {
+    position: absolute;
+    right: 24px;
+    top: 18px;
+}
+
+.loader {
+    width: 24px;
+    height: 24px;
+    transform: rotateZ(45deg);
+    perspective: 1000px;
+    border-radius: 50%;
+}
+
+.loader.light {
+    color: white;
+}
+
+.loader.dark {
+    color: black;
+}
+
+.loader:before,
+.loader:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    transform: rotateX(70deg);
+    animation: 1s loader-spin linear infinite;
+}
+
+.loader:after {
+    transform: rotateY(70deg);
+    animation-delay: .4s;
+}
+
+.loader.light:after {
+    color: white;
+}
+
+.loader.dark:after {
+    color: black;
+}
+
+@keyframes loader-spin {
+    0%,
+    100% {
+        box-shadow: .2em 0px 0 0px currentcolor;
+    }
+    12% {
+        box-shadow: .2em .2em 0 0 currentcolor;
+    }
+    25% {
+        box-shadow: 0 .2em 0 0px currentcolor;
+    }
+    37% {
+        box-shadow: -.2em .2em 0 0 currentcolor;
+    }
+    50% {
+        box-shadow: -.2em 0 0 0 currentcolor;
+    }
+    62% {
+        box-shadow: -.2em -.2em 0 0 currentcolor;
+    }
+    75% {
+        box-shadow: 0px -.2em 0 0 currentcolor;
+    }
+    87% {
+        box-shadow: .2em -.2em 0 0 currentcolor;
+    }
+}
+   
+.card .currency {
+    position: absolute;
+    right: 24px;
+    top: 70px;
+    font-size: 10px;
+}
+
+.card .amount {
+    position: absolute;
+    right: 24px;
+    top: 85px;
+    font-size: 18px;
+}
+
+.hide-balances .card .amount {
+    filter: blur(4px);
+}    
+
+.card .account1 {
+    position: absolute;
+    left: 24px;
+    bottom: 74px;
+    font-size: 17px;
+    font-family: "Courier New";
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;
+}
+
+.card .account2 {
+    position: absolute;
+    left: 24px;
+    bottom: 58px;
+    font-size: 10px;
+    font-family: "Courier New";
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;
+}
+
+.card img.logo {
+    position: absolute;
+    left: 24px;
+    bottom: 14px;
+    width: 120px;
+}
+
+.card .open {
+    position: absolute;
+    right: 18px;
+    bottom: 10px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.card .open img {
+    margin-bottom: -1px;
+}

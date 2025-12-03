@@ -1,0 +1,214 @@
+
+/* Bottom sheet */
+
+.sheet {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    height: 75%;
+    color: #222;
+    background-color: white;
+    border-radius: 36px 36px 0 0;
+    transition: bottom 0.5s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    clip-path: inset(0 0 0 0 round 36px 36px 0 0);
+    -webkit-clip-path: inset(0 0 0 0 round 36px 36px 0 0);
+}
+
+.sheet.visible {
+    bottom: 0;
+}
+
+.sheet .handler {
+    position: fixed;
+    width: 10%;
+    height: 4px;
+    margin: 14px calc(50% - 20px);
+    font-size: 20px;
+    border-radius: 2px;
+    background-color: #555;
+    transition: background-color 0.3s ease-in-out;
+    z-index: 20;
+}
+
+.sheet .handler:hover {
+    background-color: #888;
+    cursor: grab;
+}
+
+.sheet h1 {
+    color: #222;
+    text-align: center;
+    margin: 38px auto 20px auto;
+}
+
+.sheet .x {
+    position: fixed;
+    right: 16px;
+    margin-top: 14px;
+    color: white;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    background-color: #333;
+    transition: background-color 0.3s ease-in-out;
+    z-index: 20;
+}
+
+.sheet .x:hover {
+    background-color: #888;
+    cursor: pointer;
+}
+
+.sheet .content {
+    font-size: 12px;
+    padding: 0px 25px 25px 25px;
+    min-height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sheet .content .form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.sheet .content .form .token-amount {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.hide-balances.sheet .content .form .token-amount span {
+    filter: blur(4px);
+}
+
+.sheet .content .form h3 {
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.sheet .content .form .line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sheet .content .form .button-description {
+    font-size: 10px;
+    text-align: center;
+    color: rgb(136, 136, 136);
+}
+
+.sheet .content .form h1 .token-image {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.sheet .content .form h1 .token-image svg {
+    width: 40px;
+    height: 40px;
+}
+
+.sheet .content .form h1 span {
+    font-size: 20px;
+}
+
+.sheet .content .form .preview-token {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px auto;
+}
+
+.sheet .content .form .preview-nft {
+    width: 80px;
+    height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px auto;
+}
+
+.sheet .content .form .info-token,
+.sheet .content .form .info-nft {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.sheet .content .form .preview-nft svg,
+.sheet .content .form .preview-nft image,
+.sheet .content .form .nft svg,
+.sheet .content .form .nft image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sheet .content .form .nft {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.sheet .content .form .address {
+    text-align: center;
+    width: 80%;
+    margin: 0 auto 20px auto;
+}
+
+.sheet .content .form .address.account {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.sheet .content .form .address.principal {
+    hyphens: manual;
+    -webkit-hyphens: manual;
+}
+
+.end {
+    padding-bottom: 30px;
+}
+
+/* Summary box widget */
+
+.summary-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: #d7d7d7;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 2px auto;
+    width: calc(300px - 32px);
+    min-height: 50px;
+    font-size: 12px;
+}
+
+.summary-box .summary-row {
+    margin: 2px 0;
+}

@@ -1,0 +1,9 @@
+/* Overload other classes at the end */
+
+.bottom {
+    margin-top: auto;
+}
+
+.hidden {
+    display: none;
+}

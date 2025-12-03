@@ -1,0 +1,204 @@
+/* List view widget */
+
+.list-view {
+    width: 100%;
+    min-height: 100%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-view .header {
+    background-color: #f5f5f5;
+    cursor: move;
+    transition: opacity 0.2s;
+}
+
+.list-view .header.dragging {
+    opacity: 0.5;
+}
+
+.list-view .header:not(.collapsed) {
+    cursor: default;
+}
+
+.list-view .header .header-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-view .header .header-row h1 {
+    color: #222;
+    margin: 20px 16px;
+}
+
+.list-view .separator {
+    background-color: #fff;
+    border-radius: 16px 16px 0 0;
+    padding: 8px 0;
+}
+
+.list-view .container {
+    overflow-y: hidden;
+    transition: height 0.3s ease;
+    background-color: #f5f5f5;
+}
+
+.list-view .container.collapsed {
+    height: 0px;
+}
+
+.list-view .entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+}
+
+.list-view .entry:nth-child(2) {
+    padding-top: 0;
+}
+
+.list-view .entry:hover {
+    background-color: var(--button-ultralit);
+}
+
+.list-view .separator:has(+ .entry:hover) {
+    background-color: var(--button-ultralit);
+}
+
+.avatar {
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--button-color);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-view .entry .avatar { 
+    margin: 0 10px 0 6px;
+    font-size: 18px;
+}
+
+.list-view .entry .middle {
+    margin: 0 6px;
+}
+
+.list-view .entry .name {
+    color: #444;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+}
+
+.list-view .entry .value {
+    color: #444;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 22px;
+}
+
+.list-view .icon {
+    width: 26px;
+    height: 26px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.list-view .infotext {
+    text-align: center;
+    color: #333;
+    font-size: 12px;
+    padding: 4px 16px 20px 16px;
+    background-color: #fff;
+}
+
+.list-view .icon.edit-group {
+    margin-right: 8px;
+}
+
+/* Switcher list widget <input type="checkbox" class="toggle" checked> */
+
+.list-view .entry input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+}
+
+.list-view .entry input[type="checkbox"]:focus {
+    outline: 0;
+}
+
+.list-view .entry .toggle {
+    height: 24px;
+    width: 44px;
+    border-radius: 16px;
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    background: linear-gradient(180deg, #b3b7c9 0%, #e1e1e1 100%);
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.list-view .entry .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 2px rgba(44, 44, 44, 0.2);
+    transition: all 0.2s cubic-bezier(0.5, 0.1, 0.75, 1.35);
+}
+
+.list-view .entry .toggle:checked {
+    background: rgb(101, 37, 179);
+}
+
+.list-view .entry .toggle:checked::after {
+    transform: translateX(20px);
+}
+
+/* Input list widget */
+
+.list-view .entry .input-container {
+    margin-left: auto;
+}
+
+.list-view .entry input {
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: 400;
+    width: 60px;
+    padding: 0;
+}
+
+.list-view .entry .input-unit {
+    margin-left: 4px;
+    color: #444;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 22px;
+}

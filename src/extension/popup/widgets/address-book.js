@@ -141,8 +141,13 @@ export class AddressBook extends ListView {
      */
 
     addContact({ id = null, name, address, group }) {
-        if (!id) id = crypto.randomUUID();
-        this.contacts[group][id] = new Contact({ id, name, address });
+        this.contacts[group][id] = new Contact({
+            id: id ? id : crypto.randomUUID(),
+            name,
+            value: (('icp:pid' in address) ? shortAddress(address['icp:pid']) : (('icp:acc0' in address) ? shortAddress(address['icp:acc0']) : null)),
+            address,
+            editable: true
+        });
     }
 
     /**

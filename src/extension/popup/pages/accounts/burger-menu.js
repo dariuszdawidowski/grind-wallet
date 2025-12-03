@@ -41,7 +41,7 @@ export class BurgerMenu extends ListView {
             entries: {
                 'cfg-show-scrolls': { name: 'Show scroll bars', order: 1, switcher: (this.app.config.showScrolls) ? 'on' : 'off' },
                 'cfg-session-time': { name: 'Session timeout', order: 2, input: { value: this.app.config.sessionTimeout, unit: 'min' } },
-                'cfg-send-errors': { name: 'Send anonymous errors to developer', order: 3, switcher: (this.app.config.sendErrors) ? 'on' : 'off' },
+                'cfg-send-errors': { name: 'Send errors to developer', order: 3, switcher: (this.app.config.sendErrors) ? 'on' : 'off' },
             },
             onClickEntry: (info) => {
                 // Show scrolls

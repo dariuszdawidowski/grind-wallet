@@ -10,5 +10,8 @@ module.exports = {
         '!src/**/*.test.js',
         '!src/**/*.spec.js'
     ],
-    coverageDirectory: 'coverage'
+    coverageDirectory: 'coverage',
+    moduleNameMapper: {
+        '^webextension-polyfill$': '<rootDir>/src/__mocks__/webextension-polyfill.js',
+    }
 };

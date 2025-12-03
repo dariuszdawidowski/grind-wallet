@@ -138,7 +138,7 @@ class GrindWalletPlugin {
         this.session = new Session();
         await this.session.init({
 
-            time: this.config.sessionTime,
+            timeout: this.config.sessionTimeout,
 
             // New session
             create: async () => {

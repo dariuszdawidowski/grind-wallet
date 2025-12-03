@@ -11,37 +11,70 @@ export class Session {
      * @param {object} args.create - async callback for creating new session
      * @param {object} args.continue - async callback for continuing old session
      * @param {object} args.expired - async callback for expired old session
-     * @param {Number} args.time - session expiration time in minutes
+     * @param {Number} args.timeout - session expiration time in minutes
      */
 
     async init(args) {
-        // Get storage session data
-        const storageSession = await browser.storage.session.get(['password', 'created']);
+
+        this.timeout = args.timeout;
+
+        // Get session status
+        const status = await this.status();
 
         // No active session (create new)
-        if (!storageSession.hasOwnProperty('created')) {
+        if (status == 'none') {
+            // Callback
             await args.create();
         }
 
-        // Continue session
-        else {
+        // Session expired
+        else if (status == 'expired') {
+            // Clear session storage
+            await this.clear();
+            // Callback
+            await args.expired();
+        }
 
+        // Session valid - continue
+        else if (status == 'valid') {
+            // Callback
+            await args.continue();
+        }
+
+    }
+
+    /**
+     * Check that session is expired or not created yet
+     * @returns {string} status - 'none' for not created, 'expired' for overdue, 'valid' for continue
+     */
+
+    async status() {
+        // Get storage session data
+        const storageSession = await browser.storage.session.get(['password', 'created']);
+        // No active session (create new)
+        if (!storageSession.hasOwnProperty('created')) {
+            return 'none';
+        }
+        else {
             // Session expired
             const createdTime = new Date(storageSession.created).getTime();
-            if (isNaN(createdTime) || (Date.now() - createdTime) > (args.time * 60 * 1000)) {
-                // Clear session storage
-                await browser.storage.session.remove(['password', 'created']);
-                // Callback
-                await args.expired();
+            if (isNaN(createdTime) || (Date.now() - createdTime) > (this.timeout * 60 * 1000)) {
+                return 'expired';
             }
-
             // Session valid - continue
             else {
-                // Callback
-                await args.continue();
+                return 'valid';
             }
-
         }
+        return 'unknown';
+    }
+
+    /**
+     * Reset session
+     */
+
+    async clear() {
+        await browser.storage.session.remove(['password', 'created']);
     }
 
     /*** Password helpers ***/

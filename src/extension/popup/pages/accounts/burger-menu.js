@@ -40,7 +40,7 @@ export class BurgerMenu extends ListView {
             name: 'Configuration',
             entries: {
                 'cfg-show-scrolls': { name: 'Show scroll bars', order: 1, switcher: (this.app.config.showScrolls) ? 'on' : 'off' },
-                'cfg-session-time': { name: 'Session time', order: 2, input: { value: this.app.config.sessionTime, unit: 'min' } },
+                'cfg-session-time': { name: 'Session timeout', order: 2, input: { value: this.app.config.sessionTimeout, unit: 'min' } },
                 'cfg-send-errors': { name: 'Send anonymous errors to developer', order: 3, switcher: (this.app.config.sendErrors) ? 'on' : 'off' },
             },
             onClickEntry: (info) => {
@@ -55,7 +55,7 @@ export class BurgerMenu extends ListView {
                 else if (info.id == 'cfg-session-time') {
                     const newTime = parseInt(info.input);
                     if (!isNaN(newTime) && newTime >= 1 && newTime <= 1440) {
-                        this.app.config.sessionTime = newTime;
+                        this.app.config.sessionTimeout = newTime;
                         this.app.config.save();
                     }
                 }

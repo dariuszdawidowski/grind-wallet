@@ -114,4 +114,15 @@ export class Session {
         return hashedPassword === hash;
     }
 
+    /**
+     * Get raw password from session
+     */
+
+    async getPassword() {
+        const storageSession = await browser.storage.session.get('password');
+        if (storageSession.hasOwnProperty('password')) {
+            return storageSession.password;
+        }
+        return null;
+    }
 }

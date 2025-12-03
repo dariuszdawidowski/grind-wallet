@@ -30,7 +30,7 @@ export class SheetNewAccount extends Component {
 
     async createNewWallet() {
         const wallet = keysRecoverFromPhraseSecp256k1();
-        const encrypted = await encryptKey(wallet.private, this.app.user.password);
+        const encrypted = await encryptKey(wallet.private, await this.app.session.getPassword());
         const secret = serializeEncryptKey(encrypted);
         this.app.sheet.clear();
         this.app.sheet.append({
@@ -88,8 +88,9 @@ class SheetNewAccountPhrase extends Component {
                     publicKey: args.wallet.public,
                     secret: args.secret
                 });
-                await newWallet.build(this.app.user.password);
-                await this.app.wallets.add(newWallet, this.app.user.password);
+                const password = await this.app.session.getPassword();
+                await newWallet.build(password);
+                await this.app.wallets.add(newWallet, password);
                 this.app.wallets.save();
                 await this.app.log.reinit('Logs', this.app.wallets.get().map(wallet => wallet.principal));
                 addWallet.busy(false);

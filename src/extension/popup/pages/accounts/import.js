@@ -61,8 +61,9 @@ export class SheetImportAccount extends Component {
     }
 
     async importNewWallet() {
+        const password = await this.app.session.getPassword();
         const wallet = keysRecoverFromPhraseSecp256k1(this.phrase.get().join(' '));
-        const encrypted = await encryptKey(wallet.private, this.app.user.password);
+        const encrypted = await encryptKey(wallet.private, password);
         const secret = serializeEncryptKey(encrypted);
         const newWallet = new ICPWallet({
             app: this.app,
@@ -71,7 +72,7 @@ export class SheetImportAccount extends Component {
             publicKey: wallet.public,
             secret: secret
         });
-        await newWallet.build(this.app.user.password);
+        await newWallet.build(password);
         this.app.wallets.add(newWallet);
         await this.app.wallets.save();
         await this.app.log.reinit('Logs', this.app.wallets.get().map(wallet => wallet.principal));

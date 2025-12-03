@@ -62,10 +62,8 @@ export class PageRegisterPassword extends Component {
                         this.app.session.generateSalt().then(salt => {
                             this.app.session.hashPassword(newPassword, salt).then(hashed => {
                                 browser.storage.local.set({ salt: salt, password: hashed }, () => {
-                                    // Store password
-                                    this.app.user.password = newPassword;
                                     // Save session
-                                    browser.storage.session.set({ active: true, password: newPassword });
+                                    browser.storage.session.set({ password: newPassword });
                                     // Activate main page
                                     this.app.page('accounts');
                                 });

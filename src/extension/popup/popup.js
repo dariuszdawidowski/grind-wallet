@@ -104,11 +104,6 @@ class GrindWalletPlugin {
         // Active page
         this.current = null;
 
-        // User credentials TODO: remove
-        this.user = {
-            password: null,
-        };
-
         // Drawer menu
         this.drawer = new Drawer();
 
@@ -168,8 +163,6 @@ class GrindWalletPlugin {
 
             // Continue session
             continue: async () => {
-                const storageSession = await browser.storage.session.get(['password', 'created']); // remove
-                this.user.password = storageSession.password; // TODO: remove
                 // Show main page
                 this.page('accounts');
             },

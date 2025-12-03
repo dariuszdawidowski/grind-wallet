@@ -141,7 +141,7 @@ export class Wallets {
                     publicKey: walletData.public,
                     secret: walletData.secret
                 });
-                await newWallet.build(this.app.user.password);
+                await newWallet.build(await this.app.session.getPassword());
                 this.add(newWallet);
                 // Load tokens
                 if (Object.keys(walletData.tokens).length) newWallet.tokens.load(walletData.tokens);

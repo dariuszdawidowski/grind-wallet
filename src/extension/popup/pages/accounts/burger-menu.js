@@ -92,7 +92,8 @@ export class BurgerMenu extends ListView {
                 'acc-logout': { name: 'Logout', icon: 'assets/material-design-icons/power.svg' },
             },
             onClickEntry: (info) => {
-                console.log(info)
+                this.app.session.clear();
+                window.location.reload();
             },
         });
 

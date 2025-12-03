@@ -18,6 +18,10 @@ export class PageAccounts extends Component {
     constructor(args) {
         super(args);
 
+        // Check valid session at each return to extension
+        this.boundCheckSession = this.checkSession.bind(this);
+        document.addEventListener('visibilitychange', this.boundCheckSession);
+
         // Build
         this.element.classList.add('page');
 
@@ -127,6 +131,14 @@ export class PageAccounts extends Component {
             });
         });
 
+    }
+
+    /**
+     * Destructor
+     */
+
+    destructor() {
+        document.removeEventListener('visibilitychange', this.boundCheckSession);
     }
 
     /**
@@ -300,6 +312,21 @@ export class PageAccounts extends Component {
                 component: sheetNFTDetails
             });
             sheetNFTDetails.update();
+        }
+    }
+
+    /**
+     * Check session
+     */
+
+    checkSession() {
+        if (document.visibilityState === 'visible') {
+            this.app.session.status().then(status => {
+                if (status != 'valid') {
+                    this.app.session.clear();
+                    window.location.reload();
+                }
+            });
         }
     }
 

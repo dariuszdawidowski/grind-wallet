@@ -309,7 +309,7 @@ describe('Wallets', () => {
         });
 
         test('returns true when similar account exists (first 4 chars match)', () => {
-            const similarAccount = '646dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+            const similarAccount = '646dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
             expect(wallets.hasSimilarAccount(similarAccount)).toBe(true);
         });
 
@@ -319,7 +319,7 @@ describe('Wallets', () => {
         });
 
         test('checks all wallets for similarity', () => {
-            const similarToWallet2 = 'b085xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+            const similarToWallet2 = 'b085xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
             expect(wallets.hasSimilarAccount(similarToWallet2)).toBe(true);
         });
 

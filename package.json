@@ -43,10 +43,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@dfinity/ckbtc": "^4.0.6",
-    "@dfinity/ledger-icp": "^6.1.2",
-    "@dfinity/ledger-icrc": "^4.1.2",
-    "@dfinity/utils": "^3.2.0",
+    "@icp-sdk/canisters": "^2.0.1",
     "@icp-sdk/core": "^4.2.3",
     "assert": "^2.1.0",
     "bip39": "^3.1.0",

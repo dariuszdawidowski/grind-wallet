@@ -2,7 +2,7 @@
  * Task: mint Chain-key token
  */
 
-import { CkBTCMinterCanister } from "@dfinity/ckbtc";
+import { CkBTCMinterCanister } from "@icp-sdk/canisters/ckbtc";
 import { Task } from './task.js';
 import { StepsBox } from '/src/extension/popup/widgets/steps.js';
 import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';

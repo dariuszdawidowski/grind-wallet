@@ -4,7 +4,7 @@
 
 import { Actor } from '@icp-sdk/core/agent';
 import { Principal } from '@icp-sdk/core/principal';
-import { IcrcLedgerCanister } from "@dfinity/ledger-icrc";
+import { IcrcLedgerCanister } from "@icp-sdk/canisters/ledger/icrc";
 import { idlFactory as idlICRCIndex } from '/src/blockchain/InternetComputer/candid/icrc-index.did.js';
 import { Token } from '/src/blockchain/token.js';
 import { ICP2icpt } from '/src/utils/currency.js';

@@ -2,7 +2,7 @@
  * Exchange sheet
  */
 
-import { CkBTCMinterCanister } from "@dfinity/ckbtc";
+import { CkBTCMinterCanister } from "@icp-sdk/canisters/ckbtc";
 import { Component } from '/src/utils/component.js';
 import { TokenBox } from '/src/extension/popup/widgets/token-box.js';
 import { Button, ButtonDescription } from '/src/extension/popup/widgets/button.js';

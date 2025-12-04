@@ -3,7 +3,7 @@
  * (c) 2024-2025 by Dariusz Dawidowski
  */
 
-import { HttpAgent, Actor } from '@dfinity/agent';
+import { HttpAgent, Actor } from '@icp-sdk/core/agent';
 import '/src/extension/popup/style/base.css';
 import '/src/extension/popup/style/card.css';
 import '/src/extension/popup/style/coins.css';

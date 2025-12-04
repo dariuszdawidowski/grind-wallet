@@ -3,7 +3,7 @@
  */
 
 import { Principal } from '@icp-sdk/core/principal';
-import { AccountIdentifier } from '@dfinity/ledger-icp';
+import { AccountIdentifier } from '@icp-sdk/canisters/ledger/icp';
 import { Component } from '/src/utils/component.js';
 import { formatCurrency, icpt2ICP, ICP2icpt } from '/src/utils/currency.js';
 import { Button, ButtonDescription } from '/src/extension/popup/widgets/button.js';

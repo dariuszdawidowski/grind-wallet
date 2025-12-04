@@ -291,6 +291,41 @@ describe('Wallets', () => {
         test('returns true when exact match exists', () => {
             expect(wallets.hasSimilarPrincipal(mockWallet1.principal)).toBe(true);
         });
+
+        describe('wallet poisoning attack examples', () => {
+            test('detects attack with similar prefix (mockWallet1: qio7v-...)', () => {
+                // Real: qio7v-m7jbv-huagd-pd6l4-s7x2z-wg73b-ltj44-2h42x-23qfx-ryouz-hae
+                // Attack: same prefix, different suffix
+                const attackPrincipal = 'qio7v-aaaaa-bbbbb-ccccc-ddddd-eeeee-fffff-ggggg-hhhhh-iiiii-jjj';
+                expect(wallets.hasSimilarPrincipal(attackPrincipal)).toBe(true);
+            });
+
+            test('detects attack with similar suffix (mockWallet1: ...-hae)', () => {
+                // Real: qio7v-m7jbv-huagd-pd6l4-s7x2z-wg73b-ltj44-2h42x-23qfx-ryouz-hae
+                // Attack: different prefix, same suffix
+                const attackPrincipal = 'zzzzz-aaaaa-bbbbb-ccccc-ddddd-eeeee-fffff-ggggg-hhhhh-iiiii-hae';
+                expect(wallets.hasSimilarPrincipal(attackPrincipal)).toBe(true);
+            });
+
+            test('detects attack with visually similar characters in prefix (0/O, 1/I/l)', () => {
+                // Real: qio7v-... (contains 'o' and '7')
+                // Attack: qi07v with 0 instead of o
+                const attackPrincipal = 'qi07v-aaaaa-bbbbb-ccccc-ddddd-eeeee-fffff-ggggg-hhhhh-iiiii-zzz';
+                expect(wallets.hasSimilarPrincipal(attackPrincipal)).toBe(true);
+            });
+
+            test('detects attack with visually similar characters in suffix', () => {
+                // Real: ...-hae (contains 'h' and 'a')
+                // Attack: same normalized suffix
+                const attackPrincipal = 'zzzzz-aaaaa-bbbbb-ccccc-ddddd-eeeee-fffff-ggggg-hhhhh-iiiii-hae';
+                expect(wallets.hasSimilarPrincipal(attackPrincipal)).toBe(true);
+            });
+
+            test('does not flag completely different addresses', () => {
+                const differentPrincipal = 'aaaaa-bbbbb-ccccc-ddddd-eeeee-fffff-ggggg-hhhhh-iiiii-jjjjj-kkk';
+                expect(wallets.hasSimilarPrincipal(differentPrincipal)).toBe(false);
+            });
+        });
     });
 
     describe('hasSimilarAccount', () => {
@@ -316,6 +351,55 @@ describe('Wallets', () => {
 
         test('returns true when exact match exists', () => {
             expect(wallets.hasSimilarAccount(mockWallet1.account)).toBe(true);
+        });
+
+        describe('wallet poisoning attack examples', () => {
+            test('detects attack with similar prefix (mockWallet1: 646d...)', () => {
+                // Real: 646de1a56f94f85a08d01b63a55e8871b86b0014adb76abc78c5f5d29c0f6edf
+                // Attack: same prefix, different suffix
+                const attackAccount = '646daaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnoooopppp';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('detects attack with similar suffix (mockWallet1: ...6edf)', () => {
+                // Real: 646de1a56f94f85a08d01b63a55e8871b86b0014adb76abc78c5f5d29c0f6edf
+                // Attack: different prefix, same suffix
+                const attackAccount = 'aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooopp6edf';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('detects attack with visually similar characters in prefix (6/G)', () => {
+                // Real: 646d... (contains '6' and 'd')
+                // Attack: G46d with G instead of 6
+                const attackAccount = 'G46daaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooqqqq';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('detects attack with visually similar characters in suffix (e/E)', () => {
+                // Real: ...6edf
+                // Attack: 6Edf with capital E
+                const attackAccount = 'aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooopp6Edf';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('detects attack on mockWallet2 with prefix (b085...)', () => {
+                // Real: b0853272f56c83ba64d67a6affbfeb5be4e348462ec393949e9e6bac9922e05f
+                // Attack: same prefix, different suffix
+                const attackAccount = 'b085aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnoooopppp';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('detects attack on mockWallet2 with suffix (...e05f)', () => {
+                // Real: b0853272f56c83ba64d67a6affbfeb5be4e348462ec393949e9e6bac9922e05f
+                // Attack: different prefix, same suffix
+                const attackAccount = 'aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnoooppe05f';
+                expect(wallets.hasSimilarAccount(attackAccount)).toBe(true);
+            });
+
+            test('does not flag completely different addresses', () => {
+                const differentAccount = 'aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkkllllmmmmnnnnooooppppqqqq';
+                expect(wallets.hasSimilarAccount(differentAccount)).toBe(false);
+            });
         });
     });
 });

@@ -105,12 +105,31 @@ export class Wallets {
     }
 
     /**
-     * Check if there is a similar wallet by principal ID in the collection.
-     * @returns {boolean}
+     * Normalize characters for visual similarity comparison
+     * @param {string} str - String to normalize
+     * @returns {string} Normalized string
      */
 
-    hasSimilarPrincipal(principal) {
-        return Object.values(this.list).some(wallet => wallet.principal.startsWith(principal.slice(0, 4)));
+    normalizeSimilarChars(str) {
+        const similarChars = {
+            '0': 'O',
+            'O': 'O',
+            '1': 'I',
+            'I': 'I',
+            'l': 'I',
+            '5': 'S',
+            'S': 'S',
+            '8': 'B',
+            'B': 'B',
+            '2': 'Z',
+            'Z': 'Z',
+            '6': 'G',
+            'G': 'G',
+            '9': 'g',
+            'g': 'g',
+            'q': 'g',
+        };
+        return str.toUpperCase().split('').map(char => similarChars[char] || char).join('');
     }
 
     /**
@@ -118,8 +137,43 @@ export class Wallets {
      * @returns {boolean}
      */
 
+    hasSimilarPrincipal(principal) {
+        const prefix = this.normalizeSimilarChars(principal.slice(0, 4));
+        // Count characters after last hyphen (or take last 4 if no hyphen)
+        const lastHyphenIndex = principal.lastIndexOf('-');
+        const suffix = this.normalizeSimilarChars(
+            lastHyphenIndex !== -1 
+                ? principal.slice(lastHyphenIndex + 1) 
+                : principal.slice(-4)
+        );
+        
+        return Object.values(this.list).some(wallet => {
+            const walletPrefix = this.normalizeSimilarChars(wallet.principal.slice(0, 4));
+            const walletLastHyphenIndex = wallet.principal.lastIndexOf('-');
+            const walletSuffix = this.normalizeSimilarChars(
+                walletLastHyphenIndex !== -1
+                    ? wallet.principal.slice(walletLastHyphenIndex + 1)
+                    : wallet.principal.slice(-4)
+            );
+            
+            return walletPrefix === prefix || walletSuffix === suffix;
+        });
+    }
+
+    /**
+     * Check if there is a similar wallet by account ID in the collection.
+     * @returns {boolean}
+     */
+
     hasSimilarAccount(account) {
-        return Object.values(this.list).some(wallet => wallet.account.startsWith(account.slice(0, 4)));
+        const prefix = this.normalizeSimilarChars(account.slice(0, 4));
+        const suffix = this.normalizeSimilarChars(account.slice(-4));
+        
+        return Object.values(this.list).some(wallet => {
+            const walletPrefix = this.normalizeSimilarChars(wallet.account.slice(0, 4));
+            const walletSuffix = this.normalizeSimilarChars(wallet.account.slice(-4));
+            return walletPrefix === prefix || walletSuffix === suffix;
+        });
     }
 
     /**

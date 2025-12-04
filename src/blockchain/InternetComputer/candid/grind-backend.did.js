@@ -37,7 +37,11 @@ export const idlFactory = ({ IDL }) => {
     'getNFTs' : IDL.Func([], [IDL.Vec(NFT)], ['query']),
     'getTokens' : IDL.Func([], [IDL.Vec(Token)], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
-    'writeErrorLog' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'writeErrorLog' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Opt(IDL.Int)],
+        [IDL.Bool],
+        [],
+      ),
   });
 };
 export const init = ({ IDL }) => { return []; };

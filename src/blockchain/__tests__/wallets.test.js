@@ -1,14 +1,5 @@
 // Mock browser module before importing Wallets
-jest.mock('/src/utils/browser.js', () => ({
-    browser: {
-        storage: {
-            local: {
-                get: jest.fn(),
-                set: jest.fn()
-            }
-        }
-    }
-}));
+jest.mock('/src/utils/browser.js', () => require('../../__mocks__/browser.js'));
 
 // Mock ICPWallet to avoid deep dependencies
 jest.mock('/src/blockchain/InternetComputer/wallet-icp.js', () => ({

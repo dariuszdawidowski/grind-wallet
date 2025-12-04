@@ -12,31 +12,16 @@ import {
     deserializeEncryptKey
 } from '../keys.js';
 
-// Jest mock dependencies
+// Mock external libraries
 jest.mock('bip39');
 jest.mock('hdkey');
 jest.mock('@icp-sdk/core/identity/secp256k1');
 jest.mock('@dfinity/ledger-icp');
 jest.mock('@dfinity/utils');
 
-// Mock Web Crypto API
-const mockCrypto = {
-    subtle: {
-        importKey: jest.fn(),
-        deriveKey: jest.fn(),
-        encrypt: jest.fn(),
-        decrypt: jest.fn()
-    },
-    getRandomValues: jest.fn()
-};
-
-global.crypto = mockCrypto;
-
-// Mock window.btoa and window.atob
-global.window = {
-    btoa: jest.fn((str) => Buffer.from(str, 'binary').toString('base64')),
-    atob: jest.fn((str) => Buffer.from(str, 'base64').toString('binary'))
-};
+// Mock Web Crypto API and browser globals
+const { mockCrypto } = require('../../__mocks__/crypto.js');
+require('../../__mocks__/globals.js');
 
 describe('keysRecoverFromPhraseSecp256k1', () => {
     const mockMnemonic = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';

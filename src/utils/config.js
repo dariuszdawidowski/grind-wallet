@@ -9,6 +9,9 @@ export class Config {
     constructor({ app }) {
         this.app = app;
 
+        // Generete anonymous client ID for this installation
+        this.clientId = null;
+
         // Properties
         this.hideBalances = false;
         this.showScrolls = true;
@@ -21,7 +24,12 @@ export class Config {
      */
 
     async load() {
-        const storage = await browser.storage.local.get(['cfg:hide', 'cfg:scroll', 'cfg:session', 'cfg:errors']);
+        const storage = await browser.storage.local.get(['cfg:cid', 'cfg:hide', 'cfg:scroll', 'cfg:session', 'cfg:errors']);
+        if (storage.hasOwnProperty('cfg:cid')) this.clientId = storage['cfg:cid'];
+        else {
+            this.clientId = crypto.randomUUID();
+            await browser.storage.local.set({ 'cfg:cid': this.clientId });
+        }
         if (storage.hasOwnProperty('cfg:hide')) this.hideBalances = storage['cfg:hide'];
         if (storage.hasOwnProperty('cfg:scroll')) this.showScrolls = storage['cfg:scroll'];
         if (storage.hasOwnProperty('cfg:session')) this.sessionTimeout = storage['cfg:session'];

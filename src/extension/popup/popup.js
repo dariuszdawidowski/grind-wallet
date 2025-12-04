@@ -3,6 +3,7 @@
  * (c) 2024-2025 by Dariusz Dawidowski
  */
 
+import { HttpAgent, Actor } from '@dfinity/agent';
 import '/src/extension/popup/style/base.css';
 import '/src/extension/popup/style/card.css';
 import '/src/extension/popup/style/coins.css';
@@ -31,6 +32,7 @@ import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/extension/popup/widgets/tasks.js';
 import { AddressBook } from '/src/extension/popup/widgets/address-book.js';
 const { version } = require('/package.json');
+import { idlFactory as idlFactoryBackend } from '/src/blockchain/InternetComputer/candid/grind-backend.did.js';
 
 // Development mode
 if (process.env.DEV_MODE) import('/src/extension/popup/dev-mode.js');
@@ -152,6 +154,15 @@ class GrindWalletPlugin {
         this.config = new Config({ app: this });
         await this.config.load();
         this.config.apply();
+
+        // Anonymous agent
+        this.anonymous = new HttpAgent();
+
+        // Backend canister actor
+        this.backend = Actor.createActor(idlFactoryBackend, {
+            agent: this.anonymous,
+            canisterId: this.ENV.backend
+        });
 
         // Session manager
         this.session = new Session();

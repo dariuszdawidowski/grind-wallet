@@ -4,6 +4,7 @@
  */
 
 import { HttpAgent, Actor } from '@icp-sdk/core/agent';
+import '/src/extension/popup/style/variables.css';
 import '/src/extension/popup/style/base.css';
 import '/src/extension/popup/style/card.css';
 import '/src/extension/popup/style/coins.css';
@@ -13,6 +14,7 @@ import '/src/extension/popup/style/sheet.css';
 import '/src/extension/popup/style/exchange.css';
 import '/src/extension/popup/style/tasks.css';
 import '/src/extension/popup/style/list.css';
+import '/src/extension/popup/style/tab-bar.css';
 import '/src/extension/popup/style/overload.css';
 import { browser } from '/src/utils/browser.js';
 import { Config } from '/src/utils/config.js';
@@ -31,6 +33,7 @@ import { ImageCache } from '/src/utils/image-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/extension/popup/widgets/tasks.js';
 import { AddressBook } from '/src/extension/popup/widgets/address-book.js';
+import { TabBar } from '/src/extension/popup/widgets/tab-bar.js';
 const { version } = require('/package.json');
 import { idlFactory as idlFactoryBackend } from '/src/blockchain/InternetComputer/candid/grind-backend.did.js';
 
@@ -163,6 +166,10 @@ class GrindWalletPlugin {
             agent: this.anonymous,
             canisterId: this.ENV.backend
         });
+
+        // Tab bar
+        this.tabbar = new TabBar({ app: this });
+        this.append(this.tabbar);
 
         // Session manager
         this.session = new Session();

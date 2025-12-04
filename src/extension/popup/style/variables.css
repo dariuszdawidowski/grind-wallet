@@ -1,0 +1,8 @@
+/* Variables */
+
+:root {
+    --button-color: rgb(101, 37, 179);
+    --button-color-dimed: rgba(101, 37, 179, 0.5);
+    --button-hilit: rgb(135, 80, 199);
+    --button-ultralit: rgb(206, 162, 255);
+}

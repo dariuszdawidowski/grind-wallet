@@ -35,9 +35,9 @@ const { version } = require('/package.json');
 import { idlFactory as idlFactoryBackend } from '/src/blockchain/InternetComputer/candid/grind-backend.did.js';
 
 // Development mode
-if (process.env.DEV_MODE) import('/src/extension/popup/dev-mode.js');
+if (process.env.DEV_MODE === '1') import('/src/extension/popup/dev-mode.js');
 // E2E tests
-if (process.env.TEST_MODE) import('/e2e/start.js');
+if (process.env.TEST_MODE === '1') import('/e2e/start.js');
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -175,7 +175,7 @@ class GrindWalletPlugin {
                 // Login page if password registered
                 const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
                 if (storageLocal.salt && storageLocal.password) {
-                    this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+                    this.page('login', { salt: storageLocal.salt, hash: storageLocal.password });
                 }
                 // First-time page with terms acceptance and password creation
                 else {
@@ -202,7 +202,7 @@ class GrindWalletPlugin {
                 const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
                 // Show login page
                 if (storageLocal.salt && storageLocal.password) {
-                    this.page('login', {salt: storageLocal.salt, hash: storageLocal.password});
+                    this.page('login', { salt: storageLocal.salt, hash: storageLocal.password });
                 }
             }
 

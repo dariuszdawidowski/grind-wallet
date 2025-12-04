@@ -10,7 +10,7 @@ import { AddPlus } from '/src/extension/popup/widgets/add.js';
 import { TokenImage } from '/src/extension/popup/widgets/token-image.js';
 import { SheetAccountSend } from './send-token.js';
 import { SheetAccountReceive } from './receive-token.js';
-//import { SheetAccountExchange } from './exchange.js';
+import { SheetAccountExchange } from './exchange.js';
 import { SheetAddCustomToken } from './add-token.js';
 import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';
@@ -90,13 +90,16 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/swap-horizontal-bold.svg">',
                 text: 'Exchange',
                 click: () => {
-                    browser.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
-                    /*
-                    this.app.sheet.clear();
-                    this.app.sheet.append({
-                        title: `Buy, swap, mint, bridge`,
-                        component: new SheetAccountExchange({ app, wallet, canister })
-                    });*/
+                    if (process.env.DEV_MODE === '1') {
+                        this.app.sheet.clear();
+                        this.app.sheet.append({
+                            title: `Buy, swap, mint, bridge`,
+                            component: new SheetAccountExchange({ app, wallet, canister })
+                        });
+                    }
+                    else {
+                        browser.tabs.create({ url: `https://app.icpswap.com/swap?input=${this.canister.ledgerId}&output=ryjl3-tyaaa-aaaaa-aaaba-cai` });
+                    }
                 }
             }),
             fiat: new ButtIcon({

@@ -35,7 +35,7 @@ const { version } = require('/package.json');
 // Development mode
 if (process.env.DEV_MODE) import('/src/extension/popup/dev-mode.js');
 // E2E tests
-if (process.env.TEST_MODE) import('/tests/start.js');
+if (process.env.TEST_MODE) import('/e2e/start.js');
 
 /**
  * Persistent data map @ chrome.storage.local
@@ -98,6 +98,16 @@ class GrindWalletPlugin {
      */
 
     async init() {
+
+        // Local environment config
+        this.ENV = null;
+        try {
+            const imported = await import('/env.local.json', { assert: { type: 'json' } });
+            this.ENV = imported.default || {};
+        }
+        catch (_) {
+            console.error('Could not find env.local.json');
+        }
 
         // Migrate old data if needed
         await this.migrate();

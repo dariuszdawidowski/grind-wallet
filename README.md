@@ -22,6 +22,14 @@ Manually copy all graphics to the assets/ directory as they are not part of the 
 npm install
 ```
 
+Manually create env.local.json file in the root directory.
+
+```json
+{
+    "backend": "... backend canister id ..."
+}
+```
+
 
 ## Development build
 

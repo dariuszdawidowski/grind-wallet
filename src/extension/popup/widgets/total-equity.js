@@ -16,7 +16,7 @@ export class TotalEquity extends Component {
         super(args);
 
         // Build
-        this.element.classList.add('tile', 'total-equity');
+        this.element.classList.add('tile', 'big', 'total-equity');
 
         const title = document.createElement('div');
         title.classList.add('title');

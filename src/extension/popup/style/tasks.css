@@ -78,7 +78,6 @@
 
 .tile.tasks {
     flex-direction: row;
-    height: 108px;
 }
 
 .tasks .tasks-left {

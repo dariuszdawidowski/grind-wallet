@@ -2,7 +2,6 @@
 
 .tile.total-equity {
     flex-direction: column;
-    height: 216px;
 }
 
 .total-equity .equity-value {

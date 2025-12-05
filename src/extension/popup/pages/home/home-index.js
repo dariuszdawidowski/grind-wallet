@@ -5,6 +5,7 @@
 import { Component } from '/src/utils/component.js';
 import { BurgerMenu } from '/src/extension/popup/pages/accounts/burger-menu.js';
 import { TotalEquity } from '/src/extension/popup/widgets/total-equity.js';
+import { GameletMiner } from '/src/extension/popup/widgets/gamelet-miner.js';
 
 export class PageHome extends Component {
 
@@ -52,6 +53,16 @@ export class PageHome extends Component {
         
         // Task manager
         if (process.env.DEV_MODE === '1') this.append(this.app.tasks);
+
+        const row = document.createElement('div');
+        row.classList.add('tile-row');
+        this.element.append(row);
+
+        // Miner gamelet
+        row.append(new GameletMiner({ app: this.app }).element);
+
+        // Miner gamelet
+        row.append(new GameletMiner({ app: this.app }).element);
 
         // Title
         const header1 = document.createElement('h3');

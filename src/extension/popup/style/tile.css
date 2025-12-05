@@ -12,6 +12,20 @@
     display: flex;
 }
 
+.tile.square {
+    width: calc(var(--main-width) / 2 - 10px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+}
+
+.tile.full {
+    height: 108px;
+}
+
+.tile.big {
+    height: 216px;
+}
+
 .tile:hover {
     cursor: pointer;
     box-shadow: 0 0 20px #a30bbf;
@@ -26,4 +40,13 @@
     font-size: 14px;
     font-weight: 500;
     text-align: left;
+}
+
+.tile-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: var(--main-width);
+    margin: 0 auto;
 }

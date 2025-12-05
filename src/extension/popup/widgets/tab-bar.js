@@ -20,16 +20,25 @@ export class TabBar extends Component {
         // Icons
         this.home = new TabBarIcon({
             icon: 'assets/material-design-icons/home.svg',
-            title: 'Home'
+            title: 'Home',
+            onClick: () => {
+                console.log('Home clicked');
+            }
         });
         this.append(this.home);
         this.accounts = new TabBarIcon({
-            icon: 'assets/material-design-icons/wallet-black.svg'
+            icon: 'assets/material-design-icons/wallet-black.svg',
+            onClick: () => {
+                console.log('Accounts clicked');
+            }
         });
         this.append(this.accounts);
         this.settings = new TabBarIcon({
             icon: 'assets/material-design-icons/cog.svg',
-            title: 'Settings'
+            title: 'Settings',
+            onClick: () => {
+                console.log('Settings clicked');
+            }
         });
         this.append(this.settings);
 
@@ -63,6 +72,13 @@ export class TabBarIcon extends Component {
             this.element.appendChild(this.titleElement);
             this.iconElement.classList.add('with-title');
         }
+
+        // Events
+        this.element.addEventListener('click', () => {
+            if (args.onClick) {
+                args.onClick();
+            }
+        });
 
     }
 

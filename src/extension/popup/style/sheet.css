@@ -71,8 +71,8 @@
 
 .sheet .content {
     font-size: 12px;
-    padding: 0px 25px 25px 25px;
-    min-height: calc(80% - 25px);
+    padding: 0px 25px 50px 25px;
+    min-height: calc(80% - 50px);
     display: flex;
     flex-direction: column;
 }

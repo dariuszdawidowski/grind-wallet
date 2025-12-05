@@ -177,6 +177,23 @@ h2 {
     text-align: center;
 }
 
+h3 {
+    width: 343px;
+    font-size: 25px;
+    font-weight: 500;
+    text-align: left;
+    margin: 50px auto 0 auto;
+    /* margin: 50px var(--layout-margin) 0 var(--layout-margin); */
+}
+
+h4 {
+    width: 343px;
+    font-size: 14px;
+    font-weight: 200;
+    text-align: left;
+    margin: 8px auto;
+}
+
 /* Header Link */
 
 a, a:visited {

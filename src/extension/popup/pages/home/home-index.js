@@ -65,10 +65,10 @@ export class PageHome extends Component {
         row.append(new GameletMiner({ app: this.app }).element);
 
         // Title
-        const header1 = document.createElement('h3');
+        const header1 = document.createElement('h4');
         header1.textContent = 'Home Page';
         this.element.append(header1);
-        const header1sub = document.createElement('h4');
+        const header1sub = document.createElement('h5');
         header1sub.textContent = 'Welcome to the Home Page!';
         this.element.append(header1sub);
     }

@@ -177,7 +177,7 @@ h2 {
     text-align: center;
 }
 
-h3 {
+h4 {
     width: var(--main-width);
     font-size: 25px;
     font-weight: 500;
@@ -185,7 +185,7 @@ h3 {
     margin: 40px auto 0 auto;
 }
 
-h4 {
+h5 {
     width: var(--main-width);
     font-size: 14px;
     font-weight: 200;

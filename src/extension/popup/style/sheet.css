@@ -212,3 +212,13 @@
 .summary-box .summary-row {
     margin: 2px 0;
 }
+
+/* Form */
+
+.form {
+    text-align: center;
+}
+
+.form a, .form a:visited {
+    color: var(--button-color);
+}

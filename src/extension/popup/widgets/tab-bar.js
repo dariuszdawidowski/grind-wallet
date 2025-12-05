@@ -22,14 +22,14 @@ export class TabBar extends Component {
             icon: 'assets/material-design-icons/home.svg',
             title: 'Home',
             onClick: () => {
-                console.log('Home clicked');
+                this.app.page('home');
             }
         });
         this.append(this.home);
         this.accounts = new TabBarIcon({
             icon: 'assets/material-design-icons/wallet-black.svg',
             onClick: () => {
-                console.log('Accounts clicked');
+                this.app.page('accounts');
             }
         });
         this.append(this.accounts);
@@ -37,7 +37,7 @@ export class TabBar extends Component {
             icon: 'assets/material-design-icons/cog.svg',
             title: 'Settings',
             onClick: () => {
-                console.log('Settings clicked');
+                this.app.page('settings');
             }
         });
         this.append(this.settings);

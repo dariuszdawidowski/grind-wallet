@@ -6,6 +6,7 @@
 import { HttpAgent, Actor } from '@icp-sdk/core/agent';
 import '/src/extension/popup/style/variables.css';
 import '/src/extension/popup/style/base.css';
+import '/src/extension/popup/style/controls.css';
 import '/src/extension/popup/style/card.css';
 import '/src/extension/popup/style/coins.css';
 import '/src/extension/popup/style/nft.css';
@@ -23,9 +24,11 @@ import { LogSystem } from '/src/utils/logger.js';
 import { Session } from '/src/utils/session.js';
 import { Drawer } from '/src/extension/popup/widgets/drawer.js';
 import { Sheet } from '/src/extension/popup/widgets/sheet.js';
-import { PageAccounts } from '/src/extension/popup/pages/accounts/index.js';
 import { PageAcceptTerms } from '/src/extension/popup/pages/onboarding/terms.js';
 import { PageRegisterPassword } from '/src/extension/popup/pages/onboarding/register-password.js';
+import { PageHome } from '/src/extension/popup/pages/home/home-index.js';
+import { PageAccounts } from '/src/extension/popup/pages/accounts/accounts-index.js';
+import { PageSettings } from '/src/extension/popup/pages/settings/settings-index.js';
 import { PageLogin } from '/src/extension/popup/pages/onboarding/login.js';
 import { ObjectCache } from '/src/utils/object-cache.js';
 import { DataCache } from '/src/utils/data-cache.js';
@@ -249,8 +252,16 @@ class GrindWalletPlugin {
                 this.current = new PageLogin({ app: this, ...args });
                 this.append(this.current);
                 break;
+            case 'home':
+                this.current = new PageHome({ app: this });
+                this.append(this.current);
+                break;
             case 'accounts':
                 this.current = new PageAccounts({ app: this });
+                this.append(this.current);
+                break;
+            case 'settings':
+                this.current = new PageSettings({ app: this });
                 this.append(this.current);
                 break;
         }

@@ -159,7 +159,7 @@ class GrindWalletPlugin {
         this.config.apply();
 
         // Anonymous agent
-        this.anonymous = new HttpAgent();
+        this.anonymous = HttpAgent.create();
 
         // Backend canister actor
         this.backend = Actor.createActor(idlFactoryBackend, {
@@ -168,8 +168,10 @@ class GrindWalletPlugin {
         });
 
         // Tab bar
-        this.tabbar = new TabBar({ app: this });
-        this.append(this.tabbar);
+        if (process.env.DEV_MODE === '1') {
+            this.tabbar = new TabBar({ app: this });
+            this.append(this.tabbar);
+        }
 
         // Session manager
         this.session = new Session();

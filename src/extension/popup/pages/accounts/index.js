@@ -149,7 +149,7 @@ export class PageAccounts extends Component {
         this.content.innerHTML = `
             <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 40px;"></div>
             <h2>
-                <img src="assets/material-design-icons/wallet.svg">
+                <img src="assets/material-design-icons/wallet-white.svg">
                 <br>
                 You don't have any wallet account,<br>
                 create a new one or import an existing one<br>

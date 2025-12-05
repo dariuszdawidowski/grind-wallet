@@ -1,0 +1,14 @@
+/* Total Equity Styles */
+
+.tile.total-equity {
+    flex-direction: column;
+    height: 216px;
+}
+
+.total-equity .equity-value {
+    margin: 0px 24px 8px 24px;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: left;
+    letter-spacing: -0.5px;
+}

@@ -10,6 +10,7 @@ import '/src/extension/popup/style/controls.css';
 import '/src/extension/popup/style/card.css';
 import '/src/extension/popup/style/coins.css';
 import '/src/extension/popup/style/nft.css';
+import '/src/extension/popup/style/tile.css';
 import '/src/extension/popup/style/history.css';
 import '/src/extension/popup/style/sheet.css';
 import '/src/extension/popup/style/exchange.css';

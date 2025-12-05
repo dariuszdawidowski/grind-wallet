@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { BurgerMenu } from '/src/extension/popup/pages/accounts/burger-menu.js';
+import { TotalEquity } from '/src/extension/popup/widgets/total-equity.js';
 
 export class PageHome extends Component {
 
@@ -46,6 +47,9 @@ export class PageHome extends Component {
         // Burger menu
         this.burgerMenu = new BurgerMenu({ app: this.app });
 
+        // Asset summary
+        this.append(new TotalEquity({ app: this.app }));
+        
         // Task manager
         if (process.env.DEV_MODE === '1') this.append(this.app.tasks);
 

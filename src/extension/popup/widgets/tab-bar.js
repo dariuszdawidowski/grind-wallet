@@ -50,7 +50,7 @@ export class TabBar extends Component {
                 selected: 'assets/material-design-icons/cog.svg',
                 deselected: 'assets/material-design-icons/cog-outline.svg'
             },
-            title: 'Settings',
+            title: 'Options',
             onClick: () => {
                 this.home.deselect();
                 this.accounts.deselect();

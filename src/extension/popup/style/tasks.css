@@ -76,27 +76,9 @@
 
 /* Task manager widget */
 
-.tasks {
-    width: var(--main-width);
-    height: 108px;
-    border-radius: 20px;
-    margin: 20px auto;
-    position: relative;
-    color: #2a1a39;
-    background-color: #eff8ff;
-    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-    box-shadow: 0 0 16px #a30bbf;
-    display: flex;
+.tile.tasks {
     flex-direction: row;
-}
-
-.tasks:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px #a30bbf;
-}
-
-.macos .tasks:hover {
-    transform: scale(1.02);
+    height: 108px;
 }
 
 .tasks .tasks-left {

@@ -22,7 +22,7 @@ export class TaskManager extends Component {
         this.tasks = {};
 
         // Style
-        this.element.classList.add('tasks');
+        this.element.classList.add('tile', 'tasks');
 
         // Left
         const left = document.createElement('div');

@@ -77,7 +77,7 @@
 /* Task manager widget */
 
 .tasks {
-    width: 343px;
+    width: var(--main-width);
     height: 108px;
     border-radius: 20px;
     margin: 20px auto;

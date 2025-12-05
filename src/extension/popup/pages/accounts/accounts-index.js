@@ -19,7 +19,7 @@ export class PageAccounts extends Component {
         super(args);
 
         // Check valid session at each return to extension
-        this.boundCheckSession = this.checkSession.bind(this);
+        this.boundCheckSession = this.app.checkSession.bind(this.app);
         document.addEventListener('visibilitychange', this.boundCheckSession);
 
         // Build
@@ -27,16 +27,15 @@ export class PageAccounts extends Component {
 
         // Header
         const header = document.createElement('h1');
-        header.style.textAlign = 'center';
-        header.style.marginBottom = '25px';
-        this.element.append(header);
+        header.classList.add('product-title');
         const img = document.createElement('img');
+        img.classList.add('product-logo');
         img.src = 'assets/icon16.png';
         header.append(img);
         const title = document.createElement('span');
-        title.style.marginLeft = '8px';
         title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${this.app.version}</span>`;
         header.append(title);
+        this.element.append(header);
         
         // Burger menu icon
         const burger = document.createElement('img');
@@ -59,7 +58,7 @@ export class PageAccounts extends Component {
         this.burgerMenu = new BurgerMenu({ app: this.app });
 
         // Task manager
-        this.append(this.app.tasks);
+        if (process.env.DEV_MODE !== '1') this.append(this.app.tasks);
 
         // Separator
         const taskSeparator = document.createElement('hr');
@@ -312,21 +311,6 @@ export class PageAccounts extends Component {
                 component: sheetNFTDetails
             });
             sheetNFTDetails.update();
-        }
-    }
-
-    /**
-     * Check session
-     */
-
-    checkSession() {
-        if (document.visibilityState === 'visible') {
-            this.app.session.status().then(status => {
-                if (status != 'valid') {
-                    this.app.session.clear();
-                    window.location.reload();
-                }
-            });
         }
     }
 

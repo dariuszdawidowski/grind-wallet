@@ -1,8 +1,15 @@
 /* Variables */
 
 :root {
+    /* Colors */
+    --light-color: rgb(241, 230, 253);
+    --background-color: rgb(42, 26, 57);
+
     --button-color: rgb(101, 37, 179);
     --button-color-dimed: rgba(101, 37, 179, 0.5);
     --button-hilit: rgb(135, 80, 199);
     --button-ultralit: rgb(206, 162, 255);
+
+    /* Dimensions */
+    --main-width: 343px;
 }

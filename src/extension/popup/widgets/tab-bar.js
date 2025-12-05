@@ -19,24 +19,42 @@ export class TabBar extends Component {
 
         // Icons
         this.home = new TabBarIcon({
-            icon: 'assets/material-design-icons/home.svg',
+            icon: {
+                selected: 'assets/material-design-icons/home.svg',
+                deselected: 'assets/material-design-icons/home-outline.svg'
+            },
             title: 'Home',
             onClick: () => {
+                this.home.select();
+                this.accounts.deselect();
+                this.settings.deselect();
                 this.app.page('home');
             }
         });
         this.append(this.home);
         this.accounts = new TabBarIcon({
-            icon: 'assets/material-design-icons/wallet-black.svg',
+            icon: {
+                selected: 'assets/material-design-icons/wallet-black.svg',
+                deselected: 'assets/material-design-icons/wallet-outline-black.svg'
+            },
             onClick: () => {
+                this.home.deselect();
+                this.accounts.select();
+                this.settings.deselect();
                 this.app.page('accounts');
             }
         });
         this.append(this.accounts);
         this.settings = new TabBarIcon({
-            icon: 'assets/material-design-icons/cog.svg',
+            icon: {
+                selected: 'assets/material-design-icons/cog.svg',
+                deselected: 'assets/material-design-icons/cog-outline.svg'
+            },
             title: 'Settings',
             onClick: () => {
+                this.home.deselect();
+                this.accounts.deselect();
+                this.settings.select();
                 this.app.page('settings');
             }
         });
@@ -57,12 +75,18 @@ export class TabBarIcon extends Component {
     constructor(args) {
         super(args);
 
+        // State
+        this.selected = false;
+
+        // Icon
+        this.icon = args.icon;
+
         // Build
         this.element.classList.add('tab-bar-icon');
 
         // Icon
         this.iconElement = document.createElement('img');
-        this.iconElement.src = args.icon;
+        this.iconElement.src = args.icon.deselected;
         this.element.appendChild(this.iconElement);
 
         // Title
@@ -80,6 +104,26 @@ export class TabBarIcon extends Component {
             }
         });
 
+    }
+
+    /**
+     * Set selected
+     */
+
+    select() {
+        this.selected = true;
+        this.element.classList.add('selected');
+        this.iconElement.src = this.icon.selected;
+    }
+
+    /**
+     * Set deselected
+     */
+
+    deselect() {
+        this.selected = false;
+        this.element.classList.remove('selected');
+        this.iconElement.src = this.icon.deselected;
     }
 
 }

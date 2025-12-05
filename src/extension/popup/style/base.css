@@ -5,8 +5,8 @@ body {
     min-height: 583px;
     font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    color: rgb(241, 230, 253);
-    background-color: rgb(42, 26, 57);
+    color: var(--light-color);
+    background-color: var(--background-color);
     user-select: none;
     overflow: hidden;
 }
@@ -178,19 +178,30 @@ h2 {
 }
 
 h3 {
-    width: 343px;
+    width: var(--main-width);
     font-size: 25px;
     font-weight: 500;
     text-align: left;
-    margin: 50px auto 0 auto;
+    margin: 40px auto 0 auto;
 }
 
 h4 {
-    width: 343px;
+    width: var(--main-width);
     font-size: 14px;
     font-weight: 200;
     text-align: left;
     margin: 8px auto;
+}
+
+.product-title {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.product-title .product-logo {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
 }
 
 /* Header Link */

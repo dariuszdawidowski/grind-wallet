@@ -173,6 +173,7 @@ class GrindWalletPlugin {
         // Tab bar
         if (process.env.DEV_MODE === '1') {
             this.tabbar = new TabBar({ app: this });
+            this.tabbar.accounts.select();
             this.append(this.tabbar);
         }
 
@@ -304,6 +305,21 @@ class GrindWalletPlugin {
     hideScrollbars() {
         document.querySelector('#main-panel-content').classList.add('hide-scrollbar');
         this.sheet.element.classList.add('hide-scrollbar');
+    }
+
+    /**
+     * Check session
+     */
+
+    checkSession() {
+        if (document.visibilityState === 'visible') {
+            this.session.status().then(status => {
+                if (status != 'valid') {
+                    this.session.clear();
+                    window.location.reload();
+                }
+            });
+        }
     }
 
     /**

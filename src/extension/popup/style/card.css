@@ -1,7 +1,7 @@
 /* Credit card */
 
 .card {
-    width: 343px;
+    width: var(--main-width);
     height: 216px;
     background-size: cover;
     background-position: center;

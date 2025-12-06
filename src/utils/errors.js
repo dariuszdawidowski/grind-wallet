@@ -24,17 +24,20 @@ export class ErrorSystem extends LogBase {
 
         // Global error handler
         window.addEventListener('error', (ev) => {
+            // Catch is intentionally empty to prevent infinite error loops if error logging itself fails
             this.error(ev?.error?.stack || ev.message || 'Unknown error').catch(() => {});
         });
 
         // Global promise rejection handler
         window.addEventListener('unhandledrejection', (ev) => {
+            // Catch is intentionally empty to prevent infinite error loops if error logging itself fails
             this.error(ev?.reason?.stack || 'Unknown error').catch(() => {});
         });
 
         // Console error override
         const origConsoleError = console.error;
         console.error = (...errorArgs) => {
+            // Catch is intentionally empty to prevent infinite error loops if error logging itself fails
             this.error(errorArgs.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg)).join(' ')).catch(() => {});
             origConsoleError.apply(console, errorArgs);
         }

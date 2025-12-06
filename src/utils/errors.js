@@ -24,18 +24,18 @@ export class ErrorSystem extends LogBase {
 
         // Global error handler
         window.addEventListener('error', (ev) => {
-            this.error(ev?.error?.stack || ev.message || 'Unknown error');
+            this.error(ev?.error?.stack || ev.message || 'Unknown error').catch(() => {});
         });
 
         // Global promise rejection handler
         window.addEventListener('unhandledrejection', (ev) => {
-            this.error(ev?.reason?.stack || 'Unknown error');
+            this.error(ev?.reason?.stack || 'Unknown error').catch(() => {});
         });
 
         // Console error override
         const origConsoleError = console.error;
         console.error = (...errorArgs) => {
-            this.error(errorArgs.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg)).join(' '));
+            this.error(errorArgs.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg)).join(' ')).catch(() => {});
             origConsoleError.apply(console, errorArgs);
         }
         

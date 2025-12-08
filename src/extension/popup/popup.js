@@ -162,13 +162,15 @@ class GrindWalletPlugin {
         await this.config.load();
         this.config.apply();
 
-        // Anonymous agent
-        this.anonymous = HttpAgent.create();
-
-        // Backend canister actor
-        this.backend = Actor.createActor(idlFactoryBackend, {
-            agent: this.anonymous,
-            canisterId: this.ENV.backend
+        // Anonymous agent and backend canister actor
+        this.anonymous = null;
+        this.backend = null;
+        HttpAgent.create().then(agent => {
+            this.anonymous = agent;
+            this.backend = Actor.createActor(idlFactoryBackend, {
+                agent: this.anonymous,
+                canisterId: this.ENV.backend
+            });
         });
 
         // Tab bar

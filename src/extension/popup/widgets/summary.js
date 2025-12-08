@@ -17,15 +17,41 @@ export class SummaryBox extends Component {
 
     /**
      * Add or update row value
+     * @param {string} title - Row title
+     * @param {string|HTMLElement} content - Content as HTML string or DOM element
      */
 
-    row(title, text) {
+    row(title, content) {
         const rowElement = this.element.querySelector(`[data-title="${title}"]`);
+        
         if (rowElement) {
-            rowElement.innerHTML = `<b>${title}</b>: ${text}`;
+            // Clear existing content
+            rowElement.innerHTML = `<b>${title}</b>: `;
+            
+            // Append content
+            if (content instanceof HTMLElement) {
+                rowElement.appendChild(content);
+            }
+            else {
+                rowElement.innerHTML += content;
+            }
         }
         else {
-            this.element.innerHTML += `<div data-title="${title}" class="summary-row"><b>${title}</b>: ${text}</div>`;
+            // Create new row
+            const newRow = document.createElement('div');
+            newRow.setAttribute('data-title', title);
+            newRow.classList.add('summary-row');
+            newRow.innerHTML = `<b>${title}</b>: `;
+            
+            // Append content
+            if (content instanceof HTMLElement) {
+                newRow.appendChild(content);
+            }
+            else {
+                newRow.innerHTML += content;
+            }
+            
+            this.element.appendChild(newRow);
         }
     }
 

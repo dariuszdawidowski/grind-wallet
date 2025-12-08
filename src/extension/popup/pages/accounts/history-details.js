@@ -100,8 +100,8 @@ export class SheetHistoryDetails extends Component {
         // Contractor summary box
         this.contractorBox = new SummaryBox();
         if (recipient.type == 'own' || recipient.type == 'known') this.contractorBox.row('Name', recipient.name);
-        if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from).outerHTML);
-        else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to).outerHTML);
+        if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from));
+        else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to));
         this.contractorBox.row(
             'Trusted',
             recipient.type == 'own' ? 'Yes (own wallet)' :

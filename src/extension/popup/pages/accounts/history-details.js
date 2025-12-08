@@ -7,11 +7,12 @@ import { Component } from '/src/utils/component.js';
 import { shortAddress } from '/src/utils/general.js';
 import { SummaryBox } from '/src/extension/popup/widgets/summary.js';
 import { ButtLink } from '/src/extension/popup/widgets/button.js';
+import { Copy } from '/src/extension/popup/widgets/copy.js';
 import { icpt2ICP } from '/src/utils/currency.js';
 
 export class SheetHistoryDetails extends Component {
 
-    constructor({ app, transaction, wallet }) {
+    constructor({ app, transaction, wallet, recipient }) {
         super({ app });
         
         // Element
@@ -33,7 +34,7 @@ export class SheetHistoryDetails extends Component {
         else if (transaction.type.includes('nft')) this.renderNftInfo(transaction);
 
         // Contractor info
-        if (transaction.type.includes('send') || transaction.type.includes('recv')) this.renderContractorInfo(transaction);
+        if (transaction.type.includes('send') || transaction.type.includes('recv')) this.renderContractorInfo(transaction, recipient);
 
         // Show in dashboard link
         if ('id' in transaction) {
@@ -90,16 +91,24 @@ export class SheetHistoryDetails extends Component {
      * Render contactor info
      */
 
-    renderContractorInfo(transaction) {
+    renderContractorInfo(transaction, recipient) {
         // Contractor header
         const contractorHeader = document.createElement('h2');
-        contractorHeader.textContent = 'Contractor information';
+        contractorHeader.textContent = `${transaction.type.includes('recv') ? 'Sender' : transaction.type.includes('send') ? 'Recipient' : 'Contractor'} information`;
         this.element.append(contractorHeader);
 
         // Contractor summary box
         this.contractorBox = new SummaryBox();
-        if (transaction.type.startsWith('recv')) this.contractorBox.row('From', this.renderAddressLink(transaction.from));
-        else if (transaction.type.startsWith('send')) this.contractorBox.row('To', this.renderAddressLink(transaction.to));
+        if (recipient.type == 'own' || recipient.type == 'known') this.contractorBox.row('Name', recipient.name);
+        if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from));
+        else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to));
+        this.contractorBox.row(
+            'Trusted',
+            recipient.type == 'own' ? 'Yes (own wallet)' :
+            recipient.type == 'known' ? 'Yes (from address book)' :
+            recipient.type == 'suspicious' ? 'No! Wallet address poisoning suspected (<a href="https://www.google.com/search?q=wallet+poisoning" target="_blank">learn more</a>)' :
+            'Unknown'
+        );
         this.append(this.contractorBox);
     }
 
@@ -143,11 +152,11 @@ export class SheetHistoryDetails extends Component {
         if (token) {
             buffer += `${token.name} (${token.symbol}) `;
             buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
-            buffer += `[${shortAddress(canisterId)}]`;
+            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
             buffer += '</a>';
         } else {
             buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
-            buffer += shortAddress(canisterId);
+            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
             buffer += '</a>';
         }
         return buffer;

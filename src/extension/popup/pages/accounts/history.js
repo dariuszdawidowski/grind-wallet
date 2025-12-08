@@ -134,6 +134,9 @@ export class SheetTransactionHistory extends Component {
 
     renderRow(entry) {
 
+        // Determine recipient (is it own wallet? or suspicious?)
+        const recipient = this.getRecipient(entry);
+
         // New date header
         const date = entry.datetime.slice(0, 10);
         if (date != this.lastDate) {
@@ -148,12 +151,9 @@ export class SheetTransactionHistory extends Component {
         row.addEventListener('click', () => {
             this.app.sheet.append({
                 title: transactionNames[entry.type] || 'Transaction details',
-                component: new SheetHistoryDetails({ app: this.app, transaction: entry, wallet: this.wallet })
+                component: new SheetHistoryDetails({ app: this.app, transaction: entry, wallet: this.wallet, recipient })
             });
         });
-
-        // Determine recipient (is it own wallet? or suspicious?)
-        const recipient = this.getRecipient(entry);
 
         // Send Token
         if (entry.type === 'send.token') this.renderEntry({
@@ -411,6 +411,7 @@ export class SheetTransactionHistory extends Component {
         if (contact) {
             result.name = contact.name;
             if (contact.group == 'my') result.type = 'own';
+            else result.type = 'known';
         }
 
         return result;

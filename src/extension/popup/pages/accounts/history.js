@@ -143,6 +143,9 @@ export class SheetTransactionHistory extends Component {
         const row = document.createElement('div');
         row.classList.add('entry');
         this.element.append(row);
+        row.addEventListener('click', () => {
+            this.renderTransactionDetails(this.wallet, entry);
+        });
 
         // Determine recipient (is it own wallet? or suspicious?)
         const recipient = this.getRecipient(entry);
@@ -336,6 +339,17 @@ export class SheetTransactionHistory extends Component {
             parent.append(miniature.element);
         }
 
+    }
+
+    /**
+     * Transaction details sheet
+     * @param {Wallet} wallet Wallet instance
+     * @param {object} entry Log entry
+     */
+
+    renderTransactionDetails(wallet, entry) {
+        console.log('Render transaction details sheet', wallet, entry);
+        // this.app.sheet.next();
     }
 
     /**

@@ -12,38 +12,45 @@ export class Sheet extends Component {
     constructor({ app, id, hidden = true }) {
         super({ app });
 
+        // Element
         this.element.id = id;
         this.element.classList.add('sheet');
-        this.element.innerHTML = `
-            <div class="handler"></div>
-            <div class="x">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </div>
-            <h1 class="title"></h1>
-            <div class="content"></div>
-        `;
 
         // State open/close
         this.open = false;
 
+        // Handler
+        this.handler = document.createElement('div');
+        this.handler.classList.add('handler');
+        this.element.append(this.handler);
+
         // X close button
-        this.x = this.element.querySelector('.x');
+        this.x = document.createElement('div');
+        this.x.classList.add('x');
+        this.x.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        `;
+        this.element.append(this.x);
         this.x.addEventListener('click', () => {
             this.clear();
             this.hide();
         });
 
         // Title
-        this.title = this.element.querySelector('h1.title');
+        this.title = document.createElement('h1');
+        this.title.classList.add('title');
+        this.element.append(this.title);
 
-        // Children components
+        // Children components (to call 'destructor' on clear)
         this.children = [];
 
         // Content
-        this.content = this.element.querySelector('.content');
+        this.content = document.createElement('div');
+        this.content.classList.add('content');
+        this.element.append(this.content);
 
         // Hide
         if (hidden) this.hide();

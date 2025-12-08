@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. Built with vanilla JavaScript, webpack, and DFINITY SDK.
+Browser extension cryptocurrency wallet for Internet Computer (ICP) blockchain. Built with vanilla JavaScript, webpack, and DFINITY SDK. Cross-browser compatible (Chrome, Firefox, Edge).
 
 ## Architecture
 
@@ -48,14 +48,24 @@ Chrome extension cryptocurrency wallet for Internet Computer (ICP) blockchain. B
 1. User password → decrypt private keys (AES-GCM in `keys.js`)
 2. Private key → Secp256k1 Identity → Principal ID → Account ID
 3. HttpAgent (`https://icp-api.io`) → Ledger/Index canisters → token balances/transactions
-4. All persistent data stored in `chrome.storage.local` (encrypted private keys)
-5. Session data in `chrome.storage.session` (expires after inactivity)
+4. All persistent data stored in `browser.storage.local` (encrypted private keys)
+5. Session data in `browser.storage.session` (expires after inactivity)
+
+### Browser Extension API
+- **ALWAYS use `browser.*` API** instead of `chrome.*` for cross-browser compatibility
+- Use universal WebExtension API from `src/utils/browser.js`
+- Supported browsers: Chrome, Firefox, Edge (via webextension-polyfill)
+- Examples:
+  - ✅ `browser.storage.local.get()` - correct
+  - ❌ `chrome.storage.local.get()` - incorrect (Chrome-specific)
+  - ✅ `browser.runtime.sendMessage()` - correct
+  - ❌ `chrome.runtime.sendMessage()` - incorrect
 
 ### Key Patterns
 - **Component-based UI**: All UI elements extend `Component` class from `src/utils/component.js`
 - **Sheet system**: Modal overlays managed by `Sheet` class (main bottom sheet at `#sheet`)
 - **Page switching**: `app.page('name')` destroys current page, creates new
-- **Storage structure** in `chrome.storage.local`:
+- **Storage structure** in `browser.storage.local`:
   ```javascript
   {
     salt: string,           // Password salt
@@ -86,8 +96,17 @@ npm run test           # Jest unit tests
 
 ### Testing Extension
 1. Build: `npm run build:dev`
-2. Chrome → `chrome://extensions/` → "Load unpacked" → `dist/chrome/`
-3. Fullscreen mode: `chrome-extension://[id]/popup.html`
+2. **Chrome**: `chrome://extensions/` → "Load unpacked" → `dist/chrome/`
+3. **Firefox**: `about:debugging#/runtime/this-firefox` → "Load Temporary Add-on" → `dist/firefox/manifest.json`
+4. Fullscreen mode: `chrome-extension://[id]/popup.html` (or `moz-extension://[id]/popup.html`)
+
+### Unit Testing
+- **Framework**: Jest with Babel transformation
+- **Mocks location**: `src/__mocks__/` - reusable mocks for browser APIs
+- **Run tests**: `npm test`
+- **Test files**: `src/**/__tests__/*.test.js`
+- **Coverage**: `npm test -- --coverage`
+- **Mock browser APIs**: Use existing mocks from `src/__mocks__/` (browser.js, window.js, indexeddb.js, etc.)
 
 ### Security & Dependencies
 - **Native Web Crypto API** used in `keys.js` (AES-GCM encryption, PBKDF2 key derivation)
@@ -147,7 +166,7 @@ npm run test           # Jest unit tests
 2. Call `token.metadata()` to fetch name/symbol/decimals
 3. Validate ICRC standards support
 4. Store in `wallet.tokens`
-5. Save to `chrome.storage.local`
+5. Save to `browser.storage.local`
 
 ### Sending tokens
 1. Decrypt wallet private key

@@ -64,8 +64,8 @@ export class SheetHistoryDetails extends Component {
         this.tokenBox = new SummaryBox();
         this.tokenBox.row('Transaction', transaction.type.startsWith('recv') ? 'Receive' : transaction.type.startsWith('send') ? 'Send' : 'Approve');
         this.tokenBox.row('Token', this.renderTokenInfoLink(transaction.token.canister, wallet));
-        this.tokenBox.row('Amount', `${transaction.type.startsWith('recv') ? '+' : '-'}${icpt2ICP(transaction.token.amount)}`);
-        this.tokenBox.row('Network fee', icpt2ICP(transaction.token.fee));
+        this.tokenBox.row('Amount', `${transaction.type.startsWith('recv') ? '+' : '-'}${icpt2ICP(transaction.token.amount)}${transaction.type.includes('error') ? ' (not sent)' : ''}`);
+        this.tokenBox.row('Network fee', transaction.token?.fee ? icpt2ICP(transaction.token.fee) : 'N/A');
         this.append(this.tokenBox);
     }
 
@@ -81,7 +81,7 @@ export class SheetHistoryDetails extends Component {
 
         // NFT summary box
         this.nftBox = new SummaryBox();
-        this.nftBox.row('Type', transaction.type.startsWith('add') ? 'Add NFT' : transaction.type.startsWith('del') ? 'Remove NFT' : 'Unknown');
+        this.nftBox.row('Type', transaction.type.startsWith('add') ? 'Add NFT' : transaction.type.startsWith('del') ? 'Remove NFT' : transaction.type.startsWith('recv') ? 'Receive NFT' : transaction.type.startsWith('send') ? 'Send NFT' : 'Unknown');
         this.nftBox.row('Collection canister ID', this.renderCanisterLink(transaction.nft.canister));
         this.nftBox.row('NFT token ID', shortAddress(transaction.nft.id));
         this.append(this.nftBox);

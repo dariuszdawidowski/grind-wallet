@@ -12,12 +12,23 @@ export class Sheet extends Component {
     constructor({ app, id, hidden = true }) {
         super({ app });
 
+        // State open/close
+        this.open = false;
+
+        // Children components (to call 'destructor' on clear)
+        this.children = [];
+
         // Element
         this.element.id = id;
         this.element.classList.add('sheet');
 
-        // State open/close
-        this.open = false;
+        // Prev chevron
+        this.prevButton = document.createElement('img');
+        this.prevButton.classList.add('prev');
+        this.prevButton.src = 'assets/material-design-icons/chevron-left-black.svg';
+        this.prevButton.style.display = 'none';
+        this.prevButton.addEventListener('click', this.prev.bind(this));
+        this.element.append(this.prevButton);
 
         // Handler
         this.handler = document.createElement('div');
@@ -39,18 +50,10 @@ export class Sheet extends Component {
             this.hide();
         });
 
-        // Title
-        this.title = document.createElement('h1');
-        this.title.classList.add('title');
-        this.element.append(this.title);
-
-        // Children components (to call 'destructor' on clear)
-        this.children = [];
-
-        // Content
-        this.content = document.createElement('div');
-        this.content.classList.add('content');
-        this.element.append(this.content);
+        // Pages prev/next
+        this.pages = document.createElement('div');
+        this.pages.classList.add('pages');
+        this.element.append(this.pages);
 
         // Hide
         if (hidden) this.hide();
@@ -58,21 +61,59 @@ export class Sheet extends Component {
 
     /**
      * Append content and show sheet
-     * args (different than regular component):
-     *   title: string - title of the sheet
-     *   component: Component - component to attach
+     * title: string - title of the sheet
+     * component: Component - component to attach
      */
 
-    append(args) {
+    append({ title, component } = {}) {
+
+        // Hide previous pages
+        const prevPages = this.pages.querySelectorAll('.page');
+        prevPages.forEach(child => {
+            child.style.display = 'none';
+        });
+
+        // Append page
+        const page = document.createElement('div');
+        page.classList.add('page');
+        this.pages.append(page);
 
         // Title
-        this.title.innerHTML = args.title;
+        const titleElement = document.createElement('h1');
+        titleElement.classList.add('title');
+        titleElement.innerHTML = title;
+        page.append(titleElement);
 
-        // Append
-        this.children.push(args.component);
-        this.content.append(args.component.element);
+        // Content
+        const content = document.createElement('div');
+        content.classList.add('content');
+        page.append(content);
 
+        // Component
+        this.children.push(component);
+        content.append(component.element);
+
+        // Show prev button if more than 1 page
+        if (prevPages.length > 1) this.prevButton.style.display = 'block';
+        else this.prevButton.style.display = 'none';
+
+        // Show sheet
         this.show();
+    }
+
+    /**
+     * Go to previous page
+     */
+
+    prev() {
+        const pages = this.pages.querySelectorAll('.page');
+        if (pages.length > 1) {
+            pages[pages.length - 1].remove();
+            pages[pages.length - 2].style.display = 'block';
+        }
+        if (pages.length <= 2) {
+            this.prevButton.style.display = 'none';
+        }
     }
 
     /**
@@ -93,8 +134,8 @@ export class Sheet extends Component {
         this.children.forEach(child => child.destructor?.());
         this.children = [];
 
-        // Clear DOM
-        this.content.innerHTML = '';
+        // Clear pages
+        this.pages.innerHTML = '';
     }
 
     /**
@@ -102,14 +143,15 @@ export class Sheet extends Component {
      */
 
     show() {
-        // Change state
-        this.open = true;
-
-        // Show animation
-        this.element.style.display = 'flex';
-        setTimeout(() => {
-            this.element.classList.add('visible');
-        }, 10);
+        if (!this.open) {
+            // Change state
+            this.open = true;
+            // Show animation
+            this.element.style.display = 'flex';
+            setTimeout(() => {
+                this.element.classList.add('visible');
+            }, 10);
+        }
     }
 
     /**
@@ -117,13 +159,15 @@ export class Sheet extends Component {
      */
 
     hide() {
-        // Hide animation
-        this.element.classList.remove('visible');
-        setTimeout(() => {
-            this.element.style.display = 'none';
+        if (this.open) {
             // Change state
             this.open = false;
-        }, 500);
+            // Hide animation
+            this.element.classList.remove('visible');
+            setTimeout(() => {
+                this.element.style.display = 'none';
+            }, 500);
+        }
     }
 
     /**

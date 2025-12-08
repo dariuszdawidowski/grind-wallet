@@ -68,7 +68,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
-                    this.app.sheet.clear();
+                    // this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Send ${this.app.isICP(this.canister.ledgerId) ? 'ICP' : 'tokens'} from ${this.wallet.name}`,
                         component: new SheetAccountSend({ app, wallet, canister })
@@ -79,7 +79,7 @@ export class SheetAccountDetails extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
-                    this.app.sheet.clear();
+                    // this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Receive ${this.app.isICP(this.canister.ledgerId) ? 'ICP' : 'tokens'} to ${this.wallet.name}`,
                         component: new SheetAccountReceive({ app, wallet, canister })
@@ -91,7 +91,7 @@ export class SheetAccountDetails extends Component {
                 text: 'Exchange',
                 click: () => {
                     if (process.env.DEV_MODE === '1') {
-                        this.app.sheet.clear();
+                        // this.app.sheet.clear();
                         this.app.sheet.append({
                             title: `Buy, swap, mint, bridge`,
                             component: new SheetAccountExchange({ app, wallet, canister })

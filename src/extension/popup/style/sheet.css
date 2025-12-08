@@ -47,6 +47,21 @@
     margin: 38px auto 20px auto;
 }
 
+.sheet .prev {
+    position: fixed;
+    left: 16px;
+    margin-top: 14px;
+    width: 26px;
+    height: 26px;
+    transition: background-color 0.3s ease-in-out;
+    z-index: 20;
+}
+
+.sheet .prev:hover {
+    background-color: #888;
+    cursor: pointer;
+}
+
 .sheet .x {
     position: fixed;
     right: 16px;

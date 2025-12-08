@@ -8,7 +8,8 @@ import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
-import { SheetTransactionHistoryDetails } from '/src/extension/popup/pages/accounts/history-details.js';
+import { SheetHistoryDetails } from '/src/extension/popup/pages/accounts/history-details.js';
+import { transactionNames } from '/src/utils/dictionary.js';
 
 export class SheetTransactionHistory extends Component {
 
@@ -146,8 +147,8 @@ export class SheetTransactionHistory extends Component {
         this.element.append(row);
         row.addEventListener('click', () => {
             this.app.sheet.append({
-                title: 'Transaction details',
-                component: new SheetTransactionHistoryDetails({ app: this.app, transaction: entry })
+                title: transactionNames[entry.type] || 'Transaction details',
+                component: new SheetHistoryDetails({ app: this.app, transaction: entry })
             });
         });
 

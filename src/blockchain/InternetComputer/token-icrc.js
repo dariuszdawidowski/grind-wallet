@@ -160,7 +160,9 @@ export class ICRCToken extends Token {
      * Get transaction history
      * @param results: Number - number of results to fetch
      * @param types: Array - types of transactions to fetch or null for all
-     * @return { id: {
+     * @return { 'tokenCanisterId:transactionId': {
+     *     id: ICP transaction id,
+     *     datetime: ISO String,
      *     type: 'send.token' | 'recv.token' | 'aprv.token',
      *     pid: 'my principal id',
      *     to|from: { account: string },
@@ -226,6 +228,7 @@ export class ICRCToken extends Token {
 
                             // Compose data
                             const data = {
+                                id: transactionId,
                                 datetime,
                                 type: `${direction}.token`,
                                 token: {

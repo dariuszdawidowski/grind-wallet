@@ -5,35 +5,10 @@
 const { ErrorSystem } = require('../errors.js');
 const { hashString } = require('../general.js');
 
-// Mock window object
-global.window = {
-    addEventListener: jest.fn(),
-};
-
-// Mock console.error
-global.console = {
-    ...console,
-    error: jest.fn()
-};
-
-// Mock chrome.storage API
-global.chrome = {
-    storage: {
-        local: {
-            get: jest.fn(),
-            set: jest.fn()
-        }
-    }
-};
-
-// Mock IndexedDB
-global.indexedDB = {
-    open: jest.fn(() => ({
-        onsuccess: null,
-        onerror: null,
-        onupgradeneeded: null
-    }))
-};
+// Import universal mocks
+require('../../__mocks__/window.js');
+require('../../__mocks__/console.js');
+require('../../__mocks__/indexeddb.js');
 
 describe('ErrorSystem Anti-Flood Mechanism', () => {
     let errorSystem;

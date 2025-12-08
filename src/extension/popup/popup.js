@@ -47,7 +47,7 @@ if (process.env.DEV_MODE === '1') import('/src/extension/popup/dev-mode.js');
 if (process.env.TEST_MODE === '1') import('/e2e/start.js');
 
 /**
- * Persistent data map @ chrome.storage.local
+ * Persistent data map @ browser.storage.local
  *
  * salt: <string> generated salt for password
  * password: <string> hash of the main password to this extension

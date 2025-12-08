@@ -4,48 +4,26 @@ This directory contains reusable mock modules for Jest tests.
 
 ## Available Mocks
 
-### `browser.js`
-Mock for browser extension API (`chrome.storage`, `chrome.runtime`).
+### Browser Environment
+
+#### `window.js`
+Complete window object mock with event listeners, storage APIs, location, navigator, and Base64 functions.
 
 **Usage:**
 ```javascript
-jest.mock('/src/utils/browser.js', () => require('../../__mocks__/browser.js'));
+require('../../__mocks__/window.js');
 ```
 
-**Used in:**
-- `src/blockchain/__tests__/wallets.test.js`
-
 **Provides:**
-- `browser.storage.local.get/set/remove`
-- `browser.storage.session.get/set/remove`
-- `browser.runtime.sendMessage`
-- `browser.runtime.onMessage.addListener`
+- `window.addEventListener/removeEventListener/dispatchEvent`
+- `window.localStorage` (getItem, setItem, removeItem, clear)
+- `window.sessionStorage` (getItem, setItem, removeItem, clear)
+- `window.location` (href, pathname, search, hash)
+- `window.navigator` (userAgent, language)
+- `window.btoa/atob` - Base64 encoding/decoding
 
----
-
-### `crypto.js`
-Mock for Web Crypto API (`crypto.subtle`).
-
-**Usage:**
-```javascript
-const { mockCrypto } = require('../../__mocks__/crypto.js');
-```
-
-**Used in:**
-- `src/utils/__tests__/keys.test.js`
-
-**Provides:**
-- `crypto.subtle.importKey`
-- `crypto.subtle.deriveKey`
-- `crypto.subtle.encrypt`
-- `crypto.subtle.decrypt`
-- `crypto.subtle.digest`
-- `crypto.getRandomValues`
-
----
-
-### `globals.js`
-Mock for browser globals (`btoa`, `atob`).
+#### `globals.js`
+Minimal global functions mock (btoa, atob only). Use `window.js` for more complete mock.
 
 **Usage:**
 ```javascript
@@ -59,18 +37,142 @@ require('../../__mocks__/globals.js');
 - `window.btoa` - Base64 encoding
 - `window.atob` - Base64 decoding
 
----
-
-### `webextension-polyfill.js`
-Mock for webextension-polyfill library.
+#### `console.js`
+Console object mock for suppressing output and tracking calls.
 
 **Usage:**
-Automatically used by Jest when `webextension-polyfill` is imported.
+```javascript
+require('../../__mocks__/console.js');
+```
+
+**Used in:**
+- `src/utils/__tests__/errors.test.js`
 
 **Provides:**
-- `runtime.sendMessage`
-- `runtime.onMessage.addListener`
-- `storage.local.get/set/remove`
+- All console methods: log, warn, error, info, debug, trace, table, group, time, count, etc.
+
+---
+
+### Browser Extensions
+
+#### `browser.js`
+Mock for browser extension API (browser.storage, browser.runtime) - universal WebExtension API.
+
+**Usage:**
+```javascript
+jest.mock('/src/utils/browser.js', () => require('../../__mocks__/browser.js'));
+```
+
+**Used in:**
+- `src/blockchain/__tests__/wallets.test.js`
+
+**Provides:**
+- `browser.storage.local/session.get/set/remove`
+- `browser.runtime.sendMessage`
+- `browser.runtime.onMessage.addListener`
+
+**Note:** Use `browser` API instead of `chrome` API for cross-browser compatibility.
+
+#### `webextension-polyfill.js`
+Mock for webextension-polyfill library (automatically used by Jest).
+
+---
+
+### Storage & Database
+
+#### `indexeddb.js`
+IndexedDB API mock with database operations and transactions.
+
+**Usage:**
+```javascript
+require('../../__mocks__/indexeddb.js');
+```
+
+**Used in:**
+- `src/utils/__tests__/errors.test.js`
+
+**Provides:**
+- `indexedDB.open/deleteDatabase`
+- Database transactions and object stores
+- CRUD operations (add, put, get, delete, clear)
+- Cursor operations
+
+---
+
+### Cryptography
+
+#### `crypto.js`
+Web Crypto API mock for encryption, hashing, and key derivation.
+
+**Usage:**
+```javascript
+const { mockCrypto } = require('../../__mocks__/crypto.js');
+```
+
+**Used in:**
+- `src/utils/__tests__/keys.test.js`
+
+**Provides:**
+- `crypto.subtle.importKey/deriveKey/encrypt/decrypt/digest`
+- `crypto.getRandomValues`
+
+---
+
+### External Libraries
+
+#### `@dfinity/utils.js`
+DFINITY utilities mock for hex string conversion.
+
+**Usage:**
+Automatically used via jest.config.js moduleNameMapper.
+
+**Used in:**
+- `src/utils/__tests__/keys.test.js`
+
+**Provides:**
+- `hexStringToUint8Array`
+
+#### `@icp-sdk/canisters/ledger/icp.js`
+ICP Ledger canister mock for account identifier operations.
+
+**Usage:**
+Automatically used via jest.config.js moduleNameMapper.
+
+**Used in:**
+- `src/utils/__tests__/keys.test.js`
+
+**Provides:**
+- `AccountIdentifier.fromPrincipal`
+
+---
+
+## Usage Examples
+
+### Multiple mocks in one test:
+```javascript
+// Import all required mocks
+require('../../__mocks__/window.js');
+require('../../__mocks__/console.js');
+require('../../__mocks__/chrome.js');
+require('../../__mocks__/indexeddb.js');
+
+// Now all globals are mocked
+test('example test', () => {
+    expect(global.window).toBeDefined();
+    expect(global.chrome).toBeDefined();
+    expect(global.indexedDB).toBeDefined();
+});
+```
+
+### Using crypto mock:
+```javascript
+const { mockCrypto } = require('../../__mocks__/crypto.js');
+
+test('encrypts data', async () => {
+    mockCrypto.subtle.encrypt.mockResolvedValue(new ArrayBuffer(16));
+    // ... test code
+});
+```
 
 ---
 
@@ -86,32 +188,10 @@ Automatically used by Jest when `webextension-polyfill` is imported.
 - ❌ Mock represents **internal module** that changes frequently
 - ❌ Different tests need **different mock implementations**
 
-## Examples
-
-### Using browser mock:
-```javascript
-jest.mock('/src/utils/browser.js', () => require('../../__mocks__/browser.js'));
-import { Wallets } from '../wallets.js';
-
-// browser.storage.local.get/set are now mocked
-```
-
-### Using crypto mock:
-```javascript
-const { mockCrypto } = require('../../__mocks__/crypto.js');
-
-test('encrypts data', async () => {
-    mockCrypto.subtle.encrypt.mockResolvedValue(new ArrayBuffer(16));
-    // ... test code
-});
-```
-
-### Using globals mock:
-```javascript
-require('../../__mocks__/globals.js');
-
-test('encodes base64', () => {
-    expect(window.btoa).toBeDefined();
-    // ... test code
-});
-```
+### Adding New Mocks:
+1. Use descriptive file names (lowercase, kebab-case)
+2. Add JSDoc comments explaining purpose
+3. Export the mock object
+4. Set global variables if needed
+5. Use `jest.fn()` for all functions
+6. Update this README with usage examples

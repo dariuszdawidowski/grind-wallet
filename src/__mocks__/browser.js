@@ -1,6 +1,6 @@
 /**
- * Mock for browser extension API (chrome.storage)
- * Used in blockchain tests that require storage access
+ * Mock for browser extension API (browser.storage, browser.runtime)
+ * Used in tests that require browser extension functionality
  */
 
 module.exports = {

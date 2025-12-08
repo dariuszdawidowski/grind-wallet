@@ -211,3 +211,8 @@
     margin-top: -2px;
     margin-left: 4px;
 }
+
+.history-details .summary-box .summary-row .copy {
+    margin-top: 1px;
+    margin-bottom: -3px;
+}

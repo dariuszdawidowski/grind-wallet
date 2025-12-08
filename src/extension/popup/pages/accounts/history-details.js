@@ -100,8 +100,8 @@ export class SheetHistoryDetails extends Component {
         // Contractor summary box
         this.contractorBox = new SummaryBox();
         if (recipient.type == 'own' || recipient.type == 'known') this.contractorBox.row('Name', recipient.name);
-        if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from));
-        else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to));
+        if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from).outerHTML);
+        else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to).outerHTML);
         this.contractorBox.row(
             'Trusted',
             recipient.type == 'own' ? 'Yes (own wallet)' :
@@ -117,17 +117,29 @@ export class SheetHistoryDetails extends Component {
      */
 
     renderAddressLink(address) {
-        let buffer = '';
+        const container = document.createElement('span');
+
         if ('account' in address) {
-            buffer += `<a href="https://dashboard.internetcomputer.org/account/${address.account}" target="_blank">`;
-            buffer += shortAddress(address.account);
-            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
-            buffer += '</a>';
+            const accountLink = document.createElement('a');
+            accountLink.href = `https://dashboard.internetcomputer.org/account/${address.account}`;
+            accountLink.target = '_blank';
+            accountLink.textContent = shortAddress(address.account);
+
+            const icon = document.createElement('img');
+            icon.src = 'assets/material-design-icons/open-in-new.svg';
+            icon.alt = '';
+
+            accountLink.append(icon);
+            container.append(accountLink);
         }
         else if ('principal' in address) {
-            buffer += shortAddress(address.principal);
+            container.append(shortAddress(address.principal));
         }
-        return buffer;
+
+        const copyAddr = new Copy({ text: address?.account || address?.principal });
+        container.append(copyAddr.element);
+
+        return container;
     }
 
     /**

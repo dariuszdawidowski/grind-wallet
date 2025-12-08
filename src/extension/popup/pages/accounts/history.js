@@ -8,17 +8,18 @@ import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 import { shortAddress, hashString } from '/src/utils/general.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { ONE_MINUTE, ONE_WEEK } from '/src/utils/general.js';
+import { SheetTransactionHistoryDetails } from '/src/extension/popup/pages/accounts/history-details.js';
 
 export class SheetTransactionHistory extends Component {
 
     /**
      * Constructor
-     * @param {App} args.app Application instance
-     * @param {Wallet} args.wallet Wallet instance
-     * @param {Object} args.canister { ledgerId: string, indexId: string }
-     * @param {Array} args.types List of log types to show
-     * @param {Array} args.tokens List of canister IDs of tokens to show
-     * @param {Array} args.nfts List of collectionId:id of NFTs to show
+     * @param {App} app Application instance
+     * @param {Wallet} wallet Wallet instance
+     * @param {Object} canister { ledgerId: string, indexId: string }
+     * @param {Array} types List of log types to show
+     * @param {Array} tokens List of canister IDs of tokens to show
+     * @param {Array} nfts List of collectionId:id of NFTs to show
      */
 
     constructor({ app, wallet, canister, types, tokens, nfts }) {
@@ -144,7 +145,10 @@ export class SheetTransactionHistory extends Component {
         row.classList.add('entry');
         this.element.append(row);
         row.addEventListener('click', () => {
-            this.renderTransactionDetails(this.wallet, entry);
+            this.app.sheet.append({
+                title: 'Transaction details',
+                component: new SheetTransactionHistoryDetails({ app: this.app, transaction: entry })
+            });
         });
 
         // Determine recipient (is it own wallet? or suspicious?)
@@ -339,17 +343,6 @@ export class SheetTransactionHistory extends Component {
             parent.append(miniature.element);
         }
 
-    }
-
-    /**
-     * Transaction details sheet
-     * @param {Wallet} wallet Wallet instance
-     * @param {object} entry Log entry
-     */
-
-    renderTransactionDetails(wallet, entry) {
-        console.log('Render transaction details sheet', wallet, entry);
-        // this.app.sheet.append();
     }
 
     /**

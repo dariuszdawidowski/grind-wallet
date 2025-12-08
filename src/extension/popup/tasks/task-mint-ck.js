@@ -8,7 +8,7 @@ import { StepsBox } from '/src/extension/popup/widgets/steps.js';
 import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
 import { Copy } from '/src/extension/popup/widgets/copy.js';
 import { shortAddress } from '/src/utils/general.js';
-import { dictionary } from '/src/utils/dictionary.js';
+import { tokenNames } from '/src/utils/dictionary.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 
 export class TaskMintCK extends Task {
@@ -34,7 +34,7 @@ export class TaskMintCK extends Task {
         this.task.principal = principal;
         const symbols = this.getSymbol(symbol);
         this.task.description = `Bridge ${symbols.from} &rarr; ${symbols.to}`;
-        const token = dictionary[this.task.symbol];
+        const token = tokenNames[this.task.symbol];
         this.task.steps = ['transfer', 'wait', 'claim'];
 
         // Build

@@ -13,5 +13,7 @@ module.exports = {
     coverageDirectory: 'coverage',
     moduleNameMapper: {
         '^webextension-polyfill$': '<rootDir>/src/__mocks__/webextension-polyfill.js',
+        '^@icp-sdk/canisters/ledger/icp$': '<rootDir>/src/__mocks__/@icp-sdk/canisters/ledger/icp.js',
+        '^@dfinity/utils$': '<rootDir>/src/__mocks__/@dfinity/utils.js'
     }
 };

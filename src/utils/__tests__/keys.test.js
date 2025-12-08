@@ -1,23 +1,21 @@
+// Mock external libraries
+jest.mock('bip39');
+jest.mock('hdkey');
+jest.mock('@icp-sdk/core/identity/secp256k1');
+
 const bip39 = require('bip39');
 const hdkey = require('hdkey');
-import { Secp256k1KeyIdentity } from '@icp-sdk/core/identity/secp256k1';
-import { AccountIdentifier } from '@icp-sdk/canisters/ledger/icp';
-import { hexStringToUint8Array } from '@dfinity/utils';
-import {
+const { Secp256k1KeyIdentity } = require('@icp-sdk/core/identity/secp256k1');
+const { AccountIdentifier } = require('@icp-sdk/canisters/ledger/icp');
+const { hexStringToUint8Array } = require('@dfinity/utils');
+const {
     keysRecoverFromPhraseSecp256k1,
     identityFromPrivate,
     encryptKey,
     decryptKey,
     serializeEncryptKey,
     deserializeEncryptKey
-} from '../keys.js';
-
-// Mock external libraries
-jest.mock('bip39');
-jest.mock('hdkey');
-jest.mock('@icp-sdk/core/identity/secp256k1');
-jest.mock('@icp-sdk/canisters/ledger/icp');
-jest.mock('@dfinity/utils');
+} = require('../keys.js');
 
 // Mock Web Crypto API and browser globals
 const { mockCrypto } = require('../../__mocks__/crypto.js');

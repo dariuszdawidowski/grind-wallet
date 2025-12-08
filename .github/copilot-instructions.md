@@ -12,7 +12,9 @@ Browser extension cryptocurrency wallet for Internet Computer (ICP) blockchain. 
   - `popup.html` - Main UI html
   - `dev-mode.js` - Works only in the development mode with DEV_MODE=1 flag
 - **`src/extension/popup/style`** - Css stylesheets, pure css3, uses the latest methods, ignores old browsers
-- **`src/extension/popup/pages/accounts`** - Views components
+- **`src/extension/popup/pages/accounts`** - Views components related to accounts management (list, details, send token/nft etc.)
+- **`src/extension/popup/pages/home`** - Views components related to home/dashboard
+- **`src/extension/popup/pages/settings`** - Views components related to settings (preferences, security, about etc.)
 - **`src/extension/popup/pages/onboarding`** - Views components related to onboarding procedure (setup password, accept terms etc.)
 - **`src/extension/popup/widgets/`** - Reusable UI components
 - **`src/extension/popup/tasks/`** - Handling and displaying long-running tasks
@@ -30,12 +32,13 @@ Browser extension cryptocurrency wallet for Internet Computer (ICP) blockchain. 
   - `InternetComputer/nft-icrc7.js` - NFT ICRC-7 implementation (ICP)
   - `InternetComputer/candid/*` - ICP canisters candid interfaces
 - **`src/utils/`** - Universal utils
-  - `biometric.js` - Biometric auth
+  - `biometric.js` - Biometric auth (disabled at the moment - work in progress)
+  - `browser.js` - Universal WebExtension browser API wrapper
   - `component.js` - Base component for all UI widgets and views (pages)
   - `currency.js` - Formating and converting currencies
   - `data-cache.js` - Cache fetched data with overdue timestap
   - `dictionary.js` - Name lookup tables
-  - `errors.js` - Rerouting errors to IndexedDB logs
+  - `errors.js` - Rerouting errors to IndexedDB logs + optional backend logger
   - `general.js` - General purpose utils (convert, validation etc.)
   - `image-cache.js` - Cache fetched images into IndexedDB
   - `keys.js` - Cryptography: key generation (BIP39/BIP32), encryption (AES-GCM), identity management
@@ -176,7 +179,7 @@ npm run test           # Jest unit tests
 
 ### Transaction history
 - **ICP**: Via ICP Index canister (`qhbym-qaaaa-aaaaa-aaafq-cai`)
-- **ICRC**: Via ICRC Index if available (ICRC-106 standard)
+- **ICRC**: Via ICRC Index if available (id obtained from ICRC-106 method)
 - Cached in RAM with 1-minute TTL (`src/actor-cache.js`)
 
 ## AI Chat Guidelines

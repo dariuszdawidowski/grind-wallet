@@ -148,7 +148,7 @@ export class SheetTransactionHistory extends Component {
         row.addEventListener('click', () => {
             this.app.sheet.append({
                 title: transactionNames[entry.type] || 'Transaction details',
-                component: new SheetHistoryDetails({ app: this.app, transaction: entry })
+                component: new SheetHistoryDetails({ app: this.app, transaction: entry, wallet: this.wallet })
             });
         });
 

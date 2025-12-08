@@ -185,3 +185,29 @@
 .hide-balances .token-balance .amount {
     filter: blur(4px);
 }
+
+/* History details sheet */
+
+.history-details .summary-box {
+    color: #333;
+    background-color: #e3e3e3;
+    width: calc(100% - 32px);
+}
+
+.history-details .summary-box .summary-row a,
+.history-details .summary-box .summary-row a:visited {
+    color: #333;
+    text-decoration: none;
+}
+
+.history-details .summary-box .summary-row a:hover {
+    text-decoration: underline;
+}
+
+.history-details .summary-box .summary-row a img {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-left: 4px;
+}

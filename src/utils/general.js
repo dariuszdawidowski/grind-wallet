@@ -74,6 +74,7 @@ export function shortAccountId(accountId) {
  */
 
 export function shortAddress(address) {
+    if (!address || address.length < 10) return address;
     if (address.includes('-')) return shortPrincipalId(address);
     return shortAccountId(address);
 }

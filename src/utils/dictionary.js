@@ -8,6 +8,6 @@ export const transactionNames = {
     'send.token.error': 'Error sending token',
     'recv.token': 'Receive token',
     'add.nft': 'Add NFT',
-    'del.nft': 'Delete NFT',
+    'del.nft': 'Remove NFT',
     'send.nft.error': 'Error sending NFT',
 };

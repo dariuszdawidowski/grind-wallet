@@ -11,11 +11,9 @@ import { icpt2ICP } from '/src/utils/currency.js';
 
 export class SheetHistoryDetails extends Component {
 
-    constructor({ app, transaction }) {
+    constructor({ app, transaction, wallet }) {
         super({ app });
         
-        console.log('Transaction details:', transaction);
-
         // Element
         this.element.classList.add('history-details');
 
@@ -24,21 +22,23 @@ export class SheetHistoryDetails extends Component {
         const humanDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
         const humanTime = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-        // Summary box
-        this.summary = new SummaryBox();
-        this.summary.element.style.width = 'calc(100% - 32px)';
-        this.summary.row('Date', humanDate);
-        this.summary.row('Time', humanTime);
-        this.summary.row('Amount', `${transaction.type.startsWith('recv') ? '+' : '-'}${icpt2ICP(transaction.token.amount)} ICP`);
-        this.summary.row('Fee', `${icpt2ICP(transaction.token.fee)} ICP`);
-        if (transaction.type.startsWith('recv')) this.summary.row('From', this.renderAddressLink(transaction.from.account));
-        else if (transaction.type.startsWith('send')) this.summary.row('To', this.renderAddressLink(transaction.to.account));
-        this.append(this.summary);
+        // Date summary box
+        this.dateBox = new SummaryBox();
+        this.dateBox.row('Date', humanDate);
+        this.dateBox.row('Time', humanTime);
+        this.append(this.dateBox);
+
+        // Reckognize transaction type
+        if (transaction.type.includes('token')) this.renderTokenInfo(transaction, wallet);
+        else if (transaction.type.includes('nft')) this.renderNftInfo(transaction);
+
+        // Contractor info
+        if (transaction.type.includes('send') || transaction.type.includes('recv')) this.renderContractorInfo(transaction);
 
         // Show in dashboard link
         if ('id' in transaction) {
             const transactionLink = new ButtLink({
-                text: 'Show in Internet Computer Dashboard',
+                text: 'Show in the Internet Computer Dashboard',
                 click: () => {
                     browser.tabs.create({ url: `https://dashboard.internetcomputer.org/transaction/${transaction.id}` });
                 }
@@ -50,14 +50,106 @@ export class SheetHistoryDetails extends Component {
     }
 
     /**
-     * Render address with link
+     * Render token transaction info
+     */
+
+    renderTokenInfo(transaction, wallet) {
+        // Token header
+        const tokenHeader = document.createElement('h2');
+        tokenHeader.textContent = 'Token transaction';
+        this.element.append(tokenHeader);
+
+        // Token summary box
+        this.tokenBox = new SummaryBox();
+        this.tokenBox.row('Transaction', transaction.type.startsWith('recv') ? 'Receive' : transaction.type.startsWith('send') ? 'Send' : 'Approve');
+        this.tokenBox.row('Token', this.renderTokenInfoLink(transaction.token.canister, wallet));
+        this.tokenBox.row('Amount', `${transaction.type.startsWith('recv') ? '+' : '-'}${icpt2ICP(transaction.token.amount)}`);
+        this.tokenBox.row('Network fee', icpt2ICP(transaction.token.fee));
+        this.append(this.tokenBox);
+    }
+
+    /**
+     * Render NFT info
+     */
+
+    renderNftInfo(transaction) {
+        // NFT header
+        const nftHeader = document.createElement('h2');
+        nftHeader.textContent = 'NFT information';
+        this.element.append(nftHeader);
+
+        // NFT summary box
+        this.nftBox = new SummaryBox();
+        this.nftBox.row('Type', transaction.type.startsWith('add') ? 'Add NFT' : transaction.type.startsWith('del') ? 'Remove NFT' : 'Unknown');
+        this.nftBox.row('Collection canister ID', this.renderCanisterLink(transaction.nft.canister));
+        this.nftBox.row('NFT token ID', shortAddress(transaction.nft.id));
+        this.append(this.nftBox);
+    }
+
+    /**
+     * Render contactor info
+     */
+
+    renderContractorInfo(transaction) {
+        // Contractor header
+        const contractorHeader = document.createElement('h2');
+        contractorHeader.textContent = 'Contractor information';
+        this.element.append(contractorHeader);
+
+        // Contractor summary box
+        this.contractorBox = new SummaryBox();
+        if (transaction.type.startsWith('recv')) this.contractorBox.row('From', this.renderAddressLink(transaction.from));
+        else if (transaction.type.startsWith('send')) this.contractorBox.row('To', this.renderAddressLink(transaction.to));
+        this.append(this.contractorBox);
+    }
+
+    /**
+     * Render address link
      */
 
     renderAddressLink(address) {
-        let buffer = '<a href="https://dashboard.internetcomputer.org/account/' + address + '" target="_blank" style="color: #fff; text-decoration:none;">';
-        buffer += shortAddress(address);
-        buffer += '<img src="assets/material-design-icons/open-in-new-white.svg" style="width:12px; height:12px; vertical-align:middle; margin-left:4px;"></img>';
+        let buffer = '';
+        if ('account' in address) {
+            buffer += `<a href="https://dashboard.internetcomputer.org/account/${address.account}" target="_blank">`;
+            buffer += shortAddress(address.account);
+            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
+            buffer += '</a>';
+        }
+        else if ('principal' in address) {
+            buffer += shortAddress(address.principal);
+        }
+        return buffer;
+    }
+
+    /**
+     * Render canister link
+     */
+
+    renderCanisterLink(canisterId) {
+        let buffer = '<a href="https://dashboard.internetcomputer.org/canister/' + canisterId + '" target="_blank">';
+        buffer += shortAddress(canisterId);
+        buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
         buffer += '</a>';
+        return buffer;
+    }
+
+    /**
+     * Render token info link
+     */
+
+    renderTokenInfoLink(canisterId, wallet) {
+        const token = wallet.tokens.get(canisterId);
+        let buffer = '';
+        if (token) {
+            buffer += `${token.name} (${token.symbol}) `;
+            buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
+            buffer += `[${shortAddress(canisterId)}]`;
+            buffer += '</a>';
+        } else {
+            buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
+            buffer += shortAddress(canisterId);
+            buffer += '</a>';
+        }
         return buffer;
     }
 

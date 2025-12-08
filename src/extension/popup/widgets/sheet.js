@@ -93,8 +93,8 @@ export class Sheet extends Component {
         this.children.push(component);
         content.append(component.element);
 
-        // Show prev button if more than 1 page
-        if (prevPages.length > 1) this.prevButton.style.display = 'block';
+        // Show prev button if more than 1 page (0 because called before appending new page)
+        if (prevPages.length > 0) this.prevButton.style.display = 'block';
         else this.prevButton.style.display = 'none';
 
         // Show sheet

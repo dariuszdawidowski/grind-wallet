@@ -349,7 +349,7 @@ export class SheetTransactionHistory extends Component {
 
     renderTransactionDetails(wallet, entry) {
         console.log('Render transaction details sheet', wallet, entry);
-        // this.app.sheet.next();
+        // this.app.sheet.append();
     }
 
     /**

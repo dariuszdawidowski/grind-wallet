@@ -84,7 +84,6 @@ export class SheetNFTDetails extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-up-bold.svg">',
                 text: 'Send',
                 click: () => {
-                    this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Send NFT from ${this.wallet.name}`,
                         component: new SheetAccountSendNFT({ app, wallet, nft })
@@ -95,7 +94,6 @@ export class SheetNFTDetails extends Component {
                 icon: '<img src="assets/material-design-icons/arrow-down-bold.svg">',
                 text: 'Receive',
                 click: () => {
-                    this.app.sheet.clear();
                     this.app.sheet.append({
                         title: `Receive NFT to ${this.wallet.name}`,
                         component: new SheetAccountReceiveNFT({ app, wallet, nft })

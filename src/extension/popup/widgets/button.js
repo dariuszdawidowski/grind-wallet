@@ -140,6 +140,8 @@ export class ButtLink extends Component {
     constructor(args) {
         super(args);
 
+        this.icon = ('icon' in args) ? args.icon : '→';
+
         // Build
         this.element.classList.add('buttlink');
         this.set(args.text);
@@ -147,7 +149,7 @@ export class ButtLink extends Component {
     }
 
     set(text) {
-        this.element.innerHTML = text + ' →';
+        this.element.innerHTML = text + ' ' + this.icon;
     }
 
 }

@@ -40,6 +40,7 @@ export class SheetImportAccount extends Component {
         // Button
         this.append(new Button({
             text: 'Proceed',
+            classList: ['bottom'],
             click: () => {
                 if (this.phrase.valid()) {
                     this.importNewWallet().then(() => {

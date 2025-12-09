@@ -136,7 +136,7 @@ export class SheetHistoryDetails extends Component {
             container.append(shortAddress(address.principal));
         }
 
-        const copyAddr = new Copy({ text: address?.account || address?.principal });
+        const copyAddr = new Copy({ buffer: address?.account || address?.principal });
         container.append(copyAddr.element);
 
         return container;

@@ -56,7 +56,7 @@ export class SheetNFTDetails extends Component {
         this.element.append(canisterElement);
 
         // Canister ID copy icon
-        const canisterCopy = new Copy({ text: this.nft.collection });
+        const canisterCopy = new Copy({ buffer: this.nft.collection });
         canisterElement.append(canisterCopy.element);
 
         // Token ID
@@ -71,7 +71,7 @@ export class SheetNFTDetails extends Component {
         this.element.append(tokenElement);
 
         // Token ID copy icon
-        const tokenCopy = new Copy({ text: this.nft.id });
+        const tokenCopy = new Copy({ buffer: this.nft.id });
         tokenElement.append(tokenCopy.element);
 
         // Buttons

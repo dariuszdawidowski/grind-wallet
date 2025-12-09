@@ -169,7 +169,7 @@ button.butticon img {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 20px auto 30px auto;
+    margin: 20px auto;
 }
 
 .input-phrase {

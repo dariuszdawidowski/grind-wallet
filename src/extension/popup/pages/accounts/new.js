@@ -1,5 +1,6 @@
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
+import { Copy } from '/src/extension/popup/widgets/copy.js';
 import { InputText, RecoveryPhrase } from '/src/extension/popup/widgets/input.js';
 import { keysRecoverFromPhraseSecp256k1, encryptKey, serializeEncryptKey } from '/src/utils/keys.js';
 import { ICPWallet } from '/src/blockchain/InternetComputer/wallet-icp.js';
@@ -76,9 +77,19 @@ class SheetNewAccountPhrase extends Component {
         });
         this.append(this.phrase);
 
+        console.log('men', args.wallet.mnemonic)
+
+        // Copy to clipboard
+        this.append(new Copy({
+            style: 'margin: 0 auto;',
+            text: 'Copy to clipboard',
+            buffer: args.wallet.mnemonic
+        }));
+
         // Button
         const addWallet = new Button({
             text: 'Add to my wallets',
+            classList: ['bottom'],
             click: async () => {
                 addWallet.busy(true);
                 const newWallet = new ICPWallet({

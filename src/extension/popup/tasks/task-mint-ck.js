@@ -78,7 +78,7 @@ export class TaskMintCK extends Task {
         qr.append(showAddr);
 
         // Copy to clipboard icon
-        const copyAddr = new Copy({ text: this.task.address });
+        const copyAddr = new Copy({ buffer: this.task.address });
         qr.append(copyAddr.element);
 
         // Button sent

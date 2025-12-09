@@ -227,6 +227,8 @@
 
 .summary-box .summary-row {
     margin: 2px 0;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Form */

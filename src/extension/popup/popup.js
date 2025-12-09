@@ -356,6 +356,14 @@ class GrindWalletPlugin {
     }
 
     /**
+     * Is in offline mode
+     */
+
+    isOffline() {
+        return this._offline;
+    }
+
+    /**
      * Migrate old data if needed
      */
 

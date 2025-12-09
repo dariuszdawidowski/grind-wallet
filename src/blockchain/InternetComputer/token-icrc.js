@@ -33,6 +33,7 @@ export class ICRCToken extends Token {
      */
 
     async metadata() {
+        if (this.app.isOffline()) return {};
         let data = {};
 
         // ICRC-1 metadata
@@ -113,6 +114,7 @@ export class ICRCToken extends Token {
      */
 
     async balance() {
+        if (this.app.isOffline()) return null;
         try {
             const balance = await this.app.cache.ram.get({
                 id: `balance.${this.wallet.account}.${this.canister.ledgerId}`,
@@ -125,7 +127,7 @@ export class ICRCToken extends Token {
         }
         catch (error) {
             if (error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') this.app.offline(true);
-            console.error(error);
+            else console.error(error);
         }
         return null;
     }
@@ -137,6 +139,7 @@ export class ICRCToken extends Token {
      */
 
     async transfer({ principal, amount }) {
+        if (this.app.isOffline()) return {'ERROR': 'offline'};
         if (typeof(principal) == 'string') principal = Principal.fromText(principal);
 
         try {
@@ -171,6 +174,7 @@ export class ICRCToken extends Token {
      */
 
     async transactions({ results = 100, types = null } = {}) {
+        if (this.app.isOffline()) return {};
 
         // Get from ICRC Index canister
         if (this.actor.index) {

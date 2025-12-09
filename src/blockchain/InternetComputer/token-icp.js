@@ -48,7 +48,7 @@ export class ICPToken extends Token {
      */
 
     async balance() {
-
+        if (this.app.isOffline()) return null;
         try {
             const balance = await this.app.cache.ram.get({
                 id: `balance.${this.wallet.account}.${this.canister.ledgerId}`,
@@ -61,9 +61,8 @@ export class ICPToken extends Token {
         }
         catch (error) {
             if (error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') this.app.offline(true);
-            console.error(error);
+            else console.error(error);
         }
-
         return null;
     }
 
@@ -74,7 +73,7 @@ export class ICPToken extends Token {
      */
 
     async transfer({ account, amount }) {
-
+        if (this.app.isOffline()) return {'ERROR': 'offline'};
         if (typeof(account) == 'string') account = hexStringToUint8Array(account);
 
         try {
@@ -105,6 +104,8 @@ export class ICPToken extends Token {
      */
 
     async transactions({ results = 100, types = null } = {}) {
+        if (this.app.isOffline()) return {};
+
         const history = {};
 
         // Fetch transactions from ICP Index canister

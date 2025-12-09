@@ -66,7 +66,7 @@ export class TokenBalance extends Component {
         // Fetch balance
         if (token.ready) {
             token.balance().then(balance => {
-                if (balance) this.amount.innerText = formatCurrency(icpt2ICP(balance, token.decimals), 4);
+                if (balance !== null) this.amount.innerText = formatCurrency(icpt2ICP(balance, token.decimals), 4);
                 else this.amount.innerText = '?';
             });
         }

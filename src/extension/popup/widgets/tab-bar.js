@@ -25,6 +25,7 @@ export class TabBar extends Component {
             },
             title: 'Home',
             onClick: () => {
+                this.app.sheet.hide();
                 this.home.select();
                 this.accounts.deselect();
                 this.settings.deselect();
@@ -38,6 +39,7 @@ export class TabBar extends Component {
                 deselected: 'assets/material-design-icons/wallet-outline-black.svg'
             },
             onClick: () => {
+                this.app.sheet.hide();
                 this.home.deselect();
                 this.accounts.select();
                 this.settings.deselect();
@@ -52,6 +54,7 @@ export class TabBar extends Component {
             },
             title: 'Options',
             onClick: () => {
+                this.app.sheet.hide();
                 this.home.deselect();
                 this.accounts.deselect();
                 this.settings.select();

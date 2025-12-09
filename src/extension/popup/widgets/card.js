@@ -30,8 +30,13 @@ export class Card extends Component {
         // Fetch balance
         const token = this.wallet.tokens.get(this.app.ICP_LEDGER_CANISTER_ID);
         token.balance().then(balance => {
-            this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
-            document.body.dispatchEvent(new Event('update.balance'));
+            if (balance) {
+                this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
+                document.body.dispatchEvent(new Event('update.balance'));
+            }
+            else {
+                this.element.querySelector('.amount').innerHTML = '?';
+            }
             this.showLoader(false);
         });
 

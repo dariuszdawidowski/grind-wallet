@@ -148,7 +148,7 @@ export class SheetNFTDetails extends Component {
         }));
 
         // Check ownership
-        this.nft.cache().then(() => {
+        if (!this.app.isOffline()) this.nft.cache().then(() => {
             this.nft.service.amIOwner({ token: this.nft.id }).then(own => {
                 if (!own) {
                     if (confirm('You are not the owner of this NFT anymore. Do you want to remove it from the list?')) {

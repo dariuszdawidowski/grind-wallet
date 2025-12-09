@@ -51,6 +51,7 @@ export class NFT_ICRC7 {
      */
 
     async transfer({ token, to }) {
+        if (this.app.isOffline()) return {'ERROR': 'offline'};
 
         let result = null;
         try {
@@ -80,6 +81,7 @@ export class NFT_ICRC7 {
      */
 
     async getMetadata({ token, type }) {
+        if (this.app.isOffline()) return null;
 
         const result = await this.actor.icrc7_token_metadata([BigInt(token)]);
 
@@ -156,8 +158,7 @@ export class NFT_ICRC7 {
      */
 
     async experience({ token }) {
-        const data = await this.getMetadata({ token, type: 'image' });
-        return data;
+        return await this.getMetadata({ token, type: 'image' });
     }
 
     /**

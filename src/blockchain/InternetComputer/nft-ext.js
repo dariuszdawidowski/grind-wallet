@@ -50,6 +50,7 @@ export class NFT_EXT {
      */
 
     async transfer({ token, to }) {
+        if (this.app.isOffline()) return {'ERROR': 'offline'};
 
         let result = null;
         try {
@@ -82,6 +83,7 @@ export class NFT_EXT {
      */
 
     async getMetadata({ token, type }) {
+        if (this.app.isOffline()) return null;
 
         const response = await fetch(`https://${this.collection}.raw.icp0.io/?tokenid=${token}`);
 
@@ -130,14 +132,6 @@ export class NFT_EXT {
 
     async getThumbnail(args) {
         return await this.getImage(args);
-    }
-
-    /**
-     * Verify if the NFT follows the EXT standard
-     */
-
-    isValid() {
-        return true;
     }
 
     /**

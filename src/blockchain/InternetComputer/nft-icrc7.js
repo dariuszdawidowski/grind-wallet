@@ -16,7 +16,9 @@ export class NFT_ICRC7 {
      * @param collection: NFT collection canister id
      */
 
-    constructor({ agent, collection }) {
+    constructor({ app, agent, collection }) {
+
+        this.app = app;
 
         // Agent
         this.agent = agent;
@@ -34,10 +36,19 @@ export class NFT_ICRC7 {
      */
 
     async amIOwner({ token }) {
-        const principal = await this.agent.getPrincipal();
-        const result = await this.actor.icrc7_owner_of([BigInt(token)]);
+        let principal = null;
+        let result = null;
+        try {
+            principal = await this.agent.getPrincipal();
+            result = await this.actor.icrc7_owner_of([BigInt(token)]);
+        }
+        catch (error) {
+            if ((error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') || (error?.name === 'TrustError' && error?.cause?.code?.name === 'MissingSignatureErrorCode')) this.app.offline(true);
+            else console.error(error);
+            return null;
+        }
 
-        if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0) {
+        if (result && Array.isArray(result) && result.length > 0 && Array.isArray(result[0]) && result[0].length > 0) {
             if (result[0][0].owner.toString() === principal.toString()) return true;
         }
 

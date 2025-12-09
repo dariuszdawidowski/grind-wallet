@@ -16,7 +16,9 @@ export class NFT_EXT {
      * @param collection: string - NFT collection canister id
      */
 
-    constructor({ agent, actor = null, collection }) {
+    constructor({ app, agent, actor = null, collection }) {
+
+        this.app = app;
 
         // Agent
         this.agent = agent;
@@ -35,10 +37,18 @@ export class NFT_EXT {
      */
 
     async amIOwner({ token }) {
-        const principal = await this.agent.getPrincipal();
-        const result = await this.actor.balance({ token: token, user: { principal } });
+        let principal = null;
+        let result = null;
+        try {
+            principal = await this.agent.getPrincipal();
+            result = await this.actor.balance({ token: token, user: { principal } });
+        }
+        catch (error) {
+            if (error?.name === 'TransportError' && error?.cause?.code?.name === 'HttpFetchErrorCode') this.app.offline(true);
+            return null;
+        }
 
-        if ('ok' in result && result.ok > 0) return true;
+        if (result && ('ok' in result) && result.ok > 0) return true;
 
         return false;
     }

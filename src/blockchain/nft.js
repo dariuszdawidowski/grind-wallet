@@ -49,10 +49,10 @@ export class NFT {
             id: `${this.wallet.principal}:nft:${this.collection}`,
             create: () => {
                 if (this.standard == 'EXT') {
-                    return new NFT_EXT({ agent: this.wallet.agent, collection: this.collection });
+                    return new NFT_EXT({ app: this.app, agent: this.wallet.agent, collection: this.collection });
                 }
                 else if (this.standard == 'ICRC-7') {
-                    return new NFT_ICRC7({ agent: this.wallet.agent, collection: this.collection });
+                    return new NFT_ICRC7({ app: this.app, agent: this.wallet.agent, collection: this.collection });
                 }
                 return null;
             }

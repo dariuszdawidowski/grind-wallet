@@ -65,6 +65,30 @@ export class TabBar extends Component {
 
     }
 
+    /**
+     * Show
+     */
+
+    show() {
+        this.element.style.display = 'flex';
+    }
+
+    /**
+     * Hide
+     */
+
+    hide() {
+        this.element.style.display = 'none';
+    }
+
+    /**
+     * Is hidden
+     */
+
+    isHidden() {
+        return this.element.style.display === 'none';
+    }
+
 }
 
 export class TabBarIcon extends Component {

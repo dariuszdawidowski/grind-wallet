@@ -29,8 +29,8 @@ export class PageLogin extends Component {
             <p style="text-align: center; margin-top:0; margin-bottom: 32px; color: #ffe36c;">
                 This is an alpha version. Use with caution.
             </p>
-            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 120px;"></div>
-            <h2>
+            <div class="biglogo backlight" style="background-image: url(assets/icon728.png);"></div>
+            <h2 class="bottom">
                 Please enter your password
             </h2>
         `;
@@ -49,7 +49,7 @@ export class PageLogin extends Component {
         // Buttons
         this.widget.button = new Button({
             text: 'Unlock',
-            style: 'margin-top: 20px;',
+            style: 'margin-top: 20px; margin-bottom: 20px;',
             enter: false,
             click: () => {
                 this.verify(this.widget.password.get(), args.salt, args.hash);

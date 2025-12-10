@@ -22,6 +22,12 @@ export class PageAccounts extends Component {
         this.boundCheckSession = this.app.checkSession.bind(this.app);
         document.addEventListener('visibilitychange', this.boundCheckSession);
 
+        // Show tab bar
+        if (process.env.DEV_MODE === '1' && this.app.tabbar.isHidden()) {
+            this.app.tabbar.show();
+            this.app.tabbar.accounts.select();
+        }
+
         // Build
         this.element.classList.add('page');
 

@@ -176,7 +176,7 @@ class GrindWalletPlugin {
         // Tab bar
         if (process.env.DEV_MODE === '1') {
             this.tabbar = new TabBar({ app: this });
-            this.tabbar.accounts.select();
+            this.tabbar.hide();
             this.append(this.tabbar);
         }
 

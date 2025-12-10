@@ -52,6 +52,26 @@
     image-rendering: pixelated;
 }
 
+.particle-ckbtc {
+    width: 20px;
+    height: 20px;
+    background-image: url('/assets/tokens/ckbtc.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.particle-icp {
+    width: 20px;
+    height: 20px;
+    background-color: #ddd;
+    background-image: url('/assets/tokens/icp.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
 @keyframes shakeYlo {
     0% { transform: translateY(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateY(-1px); }

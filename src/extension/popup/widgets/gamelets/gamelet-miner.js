@@ -83,6 +83,11 @@ export class GameletMiner extends Gamelet {
             this.pick.style.left = '0px';
             this.pick.style.top = '0px';
         }, 100);
+        const remainder = this.counter % 10;
+        if (remainder === 0) {
+            const tokens = ['particle-icp', 'particle-ckbtc'];
+            this.particles(this.rock, { class: tokens[Math.floor(Math.random() * tokens.length)], count: 1, duration: 800, spread: 120, offsetY: -20 });
+        }
         if (this.counter <= 40) {
             this.anim(this.rock, 'shakeYlo', 0.5, 500);
             this.points.style.color = '#333';

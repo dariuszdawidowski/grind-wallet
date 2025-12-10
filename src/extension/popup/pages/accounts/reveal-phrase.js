@@ -6,6 +6,7 @@ import { browser } from '/src/utils/browser.js';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
 import { InputPassword } from '/src/extension/popup/widgets/input.js';
+import { decryptKey, deserializeEncryptKey } from '/src/utils/keys.js';
 
 export class SheetRevealPhrase extends Component {
 
@@ -33,6 +34,12 @@ export class SheetRevealPhrase extends Component {
 
     }
 
+    /**
+     * Unlock reveal phrase by password
+     * @param {string} salt 
+     * @param {string} hash
+     */
+
     unlockRevealPhrase(salt, hash) {
 
         // Header
@@ -53,9 +60,10 @@ export class SheetRevealPhrase extends Component {
             style: 'margin-top: 20px; margin-bottom: 20px;',
             enter: false,
             click: () => {
-                this.app.session.verifyPassword(password.get(), salt, hash).then((valid) => {
+                const passwordValue = password.get();
+                this.app.session.verifyPassword(passwordValue, salt, hash).then((valid) => {
                     if (valid) {
-                        console.log('VALID');
+                        this.revealPhrase(passwordValue);
                     }
                     else {
                         password.set('');
@@ -64,13 +72,22 @@ export class SheetRevealPhrase extends Component {
                         alert('Incorrect password. Please try again.');
                     }
                 });
-
                 password.set('');
                 password.input.placeholder = 'Password sent';
                 button.disable();
             }
         });
         this.append(button);
+    }
+
+    /**
+     * Decode and reveal seed phrase
+     */
+
+    async revealPhrase(password) {
+        const deserialized = deserializeEncryptKey(this.wallet.secret.mnemonic);
+        const mnemonic = await decryptKey(deserialized, password);
+        console.log(mnemonic);
     }
 }
 

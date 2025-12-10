@@ -76,6 +76,7 @@ class SheetNewAccountPhrase extends Component {
 
         // Recovery pharse
         this.phrase = new RecoveryPhrase({
+            style: 'margin-bottom: 10px;',
             number: 12,
             phrase: args.wallet.mnemonic,
             readonly: true
@@ -105,7 +106,7 @@ class SheetNewAccountPhrase extends Component {
                 const password = await this.app.session.getPassword();
                 await newWallet.build(password);
                 await this.app.wallets.add(newWallet, password);
-                this.app.wallets.save();
+                await this.app.wallets.save();
                 await this.app.log.reinit('Logs', this.app.wallets.get().map(wallet => wallet.principal));
                 addWallet.busy(false);
                 this.app.page('accounts');

@@ -60,7 +60,6 @@ export class Wallet {
         return {
             blockchain: this.blockchain,
             name: this.name,
-            public: this.public,
             secret: this.secret,
             tokens: this.tokens.serialize(),
             nfts: this.nfts.serialize()

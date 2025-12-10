@@ -442,7 +442,7 @@ export class SheetTransactionHistory extends Component {
                         const newImageHash = metadata.logo ? await hashString(metadata.logo) : null;
                         // Token data has changed
                         if (JSON.stringify(oldData) !== JSON.stringify(newData)) {
-                            this.app.wallets.save();
+                            await this.app.wallets.save();
                             changed = true;
                         }
                         // Image logo has changed

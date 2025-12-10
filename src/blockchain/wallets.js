@@ -184,7 +184,7 @@ export class Wallets {
         const storageLocal = await browser.storage.local.get('wallets');
         // Load Wallets
         if (storageLocal.wallets) {
-            for (const [_, w] of Object.entries(storageLocal.wallets)) {
+            for (const [key, w] of Object.entries(storageLocal.wallets)) {
                 // Migrate wallet data
                 const walletData = this.migrate(w);
                 // Create wallet
@@ -192,7 +192,7 @@ export class Wallets {
                     app: this.app,
                     blockchain: walletData.blockchain,
                     name: walletData.name,
-                    publicKey: walletData.public,
+                    publicKey: key,
                     secret: walletData.secret
                 });
                 await newWallet.build(await this.app.session.getPassword());

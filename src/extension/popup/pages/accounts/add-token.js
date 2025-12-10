@@ -143,7 +143,7 @@ export class SheetAddCustomToken extends Component {
                 // Create counter to refresh token info after a week
                 this.app.cache.info.get({ id: `token:${this.token.canister.ledgerId}`, overdue: ONE_WEEK });
                 // Save wallets
-                this.app.wallets.save();
+                await this.app.wallets.save();
                 this.widget.submit.busy(false);
                 // Back to accounts page
                 this.app.page('accounts');

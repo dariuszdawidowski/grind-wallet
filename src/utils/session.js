@@ -44,6 +44,17 @@ export class Session {
     }
 
     /**
+     * Start a new session
+     */
+
+    async start(password) {
+        await browser.storage.session.set({
+            'password': password,
+            'created': Date.now()
+        });
+    }
+
+    /**
      * Check that session is expired or not created yet
      * @returns {string} status - 'none' for not created, 'expired' for overdue, 'valid' for continue
      */

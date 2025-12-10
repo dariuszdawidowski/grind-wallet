@@ -70,11 +70,8 @@ export class PageLogin extends Component {
         this.app.session.verifyPassword(password, salt, hash).then((valid) => {
             if (valid) {
                 this.widget.button.set('Logging in...');
-                // Save session
-                browser.storage.session.set({
-                    'password': password,
-                    'created': Date.now()
-                });
+                // Start session
+                this.app.session.start(password);
                 // Proceed to accounts page
                 this.app.page('accounts');
             }

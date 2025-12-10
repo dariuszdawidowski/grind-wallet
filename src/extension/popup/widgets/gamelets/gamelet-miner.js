@@ -64,6 +64,7 @@ export class GameletMiner extends Gamelet {
         this.pick.style.transform = 'rotate(45deg)';
         this.pick.style.left = '20px';
         this.pick.style.top = '20px';
+        this.particles(this.rock, { count: 4, size: 3, duration: 500, spread: 80, offsetY: -20 });
         setTimeout(() => {
             this.pick.style.transform = 'rotate(0deg)';
             this.pick.style.left = '0px';

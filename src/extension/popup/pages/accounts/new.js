@@ -82,11 +82,9 @@ class SheetNewAccountPhrase extends Component {
         });
         this.append(this.phrase);
 
-        console.log('men', args.wallet.mnemonic)
-
         // Copy to clipboard
         this.append(new Copy({
-            style: 'margin: 0 auto;',
+            style: 'margin: 10px auto;',
             text: 'Copy to clipboard',
             buffer: args.wallet.mnemonic
         }));

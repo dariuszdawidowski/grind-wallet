@@ -36,6 +36,22 @@
     image-rendering: pixelated;
 }
 
+.large-pebble-1 {
+    width: 8px;
+    height: 8px;
+    background-image: url('/assets/sprites/pebble-1.png');
+    background-size: cover;
+    image-rendering: pixelated;
+}
+
+.large-pebble-2 {
+    width: 12px;
+    height: 12px;
+    background-image: url('/assets/sprites/pebble-2.png');
+    background-size: cover;
+    image-rendering: pixelated;
+}
+
 @keyframes shakeYlo {
     0% { transform: translateY(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateY(-1px); }

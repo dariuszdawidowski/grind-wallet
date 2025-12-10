@@ -31,8 +31,13 @@ export class SheetNewAccount extends Component {
 
     async createNewWallet() {
         const wallet = keysRecoverFromPhraseSecp256k1();
-        const encrypted = await encryptKey(wallet.private, await this.app.session.getPassword());
-        const secret = serializeEncryptKey(encrypted);
+        const password = await this.app.session.getPassword();
+        const encryptedPrivate = await encryptKey(wallet.private, password);
+        const encryptedMnemonic = await encryptKey(wallet.mnemonic, password);
+        const secret = {
+            ...serializeEncryptKey(encryptedPrivate),
+            mnemonic: serializeEncryptKey(encryptedMnemonic)
+        };
         this.app.sheet.clear();
         this.app.sheet.append({
             title: 'New account created',

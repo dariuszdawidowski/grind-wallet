@@ -17,11 +17,13 @@ describe('Wallet', () => {
     const mockApp = {};
     
     describe('constructor with encrypted mnemonic', () => {
-        test('stores secret with mnemonic field', () => {
+        test('stores secret with nested private and mnemonic fields', () => {
             const secretWithMnemonic = {
-                ciphertext: 'encryptedPrivateKey',
-                iv: 'ivValue',
-                salt: 'saltValue',
+                private: {
+                    ciphertext: 'encryptedPrivateKey',
+                    iv: 'ivValue',
+                    salt: 'saltValue'
+                },
                 mnemonic: {
                     ciphertext: 'encryptedMnemonic',
                     iv: 'mnemonicIv',
@@ -40,12 +42,13 @@ describe('Wallet', () => {
             });
             
             expect(wallet.secret).toEqual(secretWithMnemonic);
+            expect(wallet.secret.private).toBeDefined();
             expect(wallet.secret.mnemonic).toBeDefined();
             expect(wallet.secret.mnemonic.ciphertext).toBe('encryptedMnemonic');
         });
         
-        test('works without mnemonic field for backward compatibility', () => {
-            const secretWithoutMnemonic = {
+        test('works with old flat structure for backward compatibility', () => {
+            const secretOldFormat = {
                 ciphertext: 'encryptedPrivateKey',
                 iv: 'ivValue',
                 salt: 'saltValue'
@@ -56,22 +59,24 @@ describe('Wallet', () => {
                 blockchain: 'Internet Computer',
                 name: 'Test Wallet',
                 publicKey: 'testPublicKey',
-                secret: secretWithoutMnemonic,
+                secret: secretOldFormat,
                 tokens: {},
                 nfts: {}
             });
             
-            expect(wallet.secret).toEqual(secretWithoutMnemonic);
-            expect(wallet.secret.mnemonic).toBeUndefined();
+            expect(wallet.secret).toEqual(secretOldFormat);
+            expect(wallet.secret.ciphertext).toBe('encryptedPrivateKey');
         });
     });
     
     describe('serialize', () => {
-        test('includes mnemonic in serialized secret', () => {
+        test('includes nested private and mnemonic in serialized secret', () => {
             const secretWithMnemonic = {
-                ciphertext: 'encryptedPrivateKey',
-                iv: 'ivValue',
-                salt: 'saltValue',
+                private: {
+                    ciphertext: 'encryptedPrivateKey',
+                    iv: 'ivValue',
+                    salt: 'saltValue'
+                },
                 mnemonic: {
                     ciphertext: 'encryptedMnemonic',
                     iv: 'mnemonicIv',
@@ -92,11 +97,12 @@ describe('Wallet', () => {
             const serialized = wallet.serialize();
             
             expect(serialized.secret).toEqual(secretWithMnemonic);
+            expect(serialized.secret.private).toBeDefined();
             expect(serialized.secret.mnemonic).toBeDefined();
         });
         
-        test('serializes wallet without mnemonic correctly', () => {
-            const secretWithoutMnemonic = {
+        test('serializes wallet with old format correctly', () => {
+            const secretOldFormat = {
                 ciphertext: 'encryptedPrivateKey',
                 iv: 'ivValue',
                 salt: 'saltValue'
@@ -107,15 +113,15 @@ describe('Wallet', () => {
                 blockchain: 'Internet Computer',
                 name: 'Test Wallet',
                 publicKey: 'testPublicKey',
-                secret: secretWithoutMnemonic,
+                secret: secretOldFormat,
                 tokens: {},
                 nfts: {}
             });
             
             const serialized = wallet.serialize();
             
-            expect(serialized.secret).toEqual(secretWithoutMnemonic);
-            expect(serialized.secret.mnemonic).toBeUndefined();
+            expect(serialized.secret).toEqual(secretOldFormat);
+            expect(serialized.secret.private).toBeUndefined();
         });
     });
 });

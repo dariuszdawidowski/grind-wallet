@@ -67,7 +67,7 @@ export class SheetImportAccount extends Component {
         const encryptedPrivate = await encryptKey(wallet.private, password);
         const encryptedMnemonic = await encryptKey(wallet.mnemonic, password);
         const secret = {
-            ...serializeEncryptKey(encryptedPrivate),
+            private: serializeEncryptKey(encryptedPrivate),
             mnemonic: serializeEncryptKey(encryptedMnemonic)
         };
         const newWallet = new ICPWallet({

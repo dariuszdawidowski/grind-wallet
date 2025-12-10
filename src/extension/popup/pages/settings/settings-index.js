@@ -3,7 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { BurgerMenu } from '/src/extension/popup/pages/accounts/burger-menu.js';
+import { BurgerMenu } from '/src/extension/popup/menus/burger-menu.js';
 
 export class PageSettings extends Component {
 

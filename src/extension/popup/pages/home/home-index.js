@@ -3,7 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
-import { BurgerMenu } from '/src/extension/popup/pages/accounts/burger-menu.js';
+import { BurgerMenu } from '/src/extension/popup/menus/burger-menu.js';
 import { TotalEquity } from '/src/extension/popup/widgets/total-equity.js';
 import { GameletMiner } from '/src/extension/popup/widgets/gamelets/gamelet-miner.js';
 

@@ -37,7 +37,7 @@ import { DataCache } from '/src/utils/data-cache.js';
 import { ImageCache } from '/src/utils/image-cache.js';
 import { Wallets } from '/src/blockchain/wallets.js';
 import { TaskManager } from '/src/extension/popup/widgets/tasks.js';
-import { AddressBook } from '/src/extension/popup/widgets/address-book.js';
+import { AddressBook } from '/src/extension/popup/menus/address-book.js';
 import { TabBar } from '/src/extension/popup/widgets/tab-bar.js';
 const { version } = require('/package.json');
 import { idlFactory as idlFactoryBackend } from '/src/blockchain/InternetComputer/candid/grind-backend.did.js';

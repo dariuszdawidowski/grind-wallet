@@ -11,7 +11,7 @@ import { SheetNewAccount } from '/src/extension/popup/pages/accounts/new.js';
 import { SheetImportAccount } from '/src/extension/popup/pages/accounts/import.js';
 import { SheetAccountDetails } from '/src/extension/popup/pages/accounts/details.js';
 import { SheetNFTDetails } from '/src/extension/popup/pages/accounts/details-nft.js';
-import { BurgerMenu } from '/src/extension/popup/pages/accounts/burger-menu.js';
+import { BurgerMenu } from '/src/extension/popup/menus/burger-menu.js';
 
 export class PageAccounts extends Component {
 

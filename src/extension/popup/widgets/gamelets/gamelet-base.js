@@ -34,9 +34,9 @@ export class Gamelet extends Component {
     /**
      * Create particle fountain effect
      * @param {HTMLElement} sourceElement - element from which particles emerge
-     * @param {object} options - particle configuration
      * @param {number} options.count - number of particles (default: 20)
      * @param {string} options.color - particle color (default: '#ffd700')
+     * @param {string} options.class - particle CSS class instead of color (default: null)
      * @param {number} options.size - particle size in px (default: 8)
      * @param {number} options.duration - animation duration in ms (default: 1000)
      * @param {number} options.spread - horizontal spread angle in degrees (default: 60)
@@ -45,6 +45,7 @@ export class Gamelet extends Component {
     particles(sourceElement, options = {}) {
         const config = {
             count: options.count || 20,
+            class: options.class || null,
             color: options.color || '#ffd700',
             size: options.size || 8,
             duration: options.duration || 1000,
@@ -61,15 +62,22 @@ export class Gamelet extends Component {
         // Create particles
         for (let i = 0; i < config.count; i++) {
             const particle = document.createElement('div');
-            particle.style.position = 'fixed';
+            if (config.class) {
+                particle.classList.add('particle', config.class);
+            }
+            else {
+                particle.style.position = 'fixed';
+                particle.style.width = `${config.size}px`;
+                particle.style.height = `${config.size}px`;
+                particle.style.backgroundColor = config.color;
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '10000';
+            }
+
+            // Initial position
             particle.style.left = `${sourceX}px`;
             particle.style.top = `${sourceY}px`;
-            particle.style.width = `${config.size}px`;
-            particle.style.height = `${config.size}px`;
-            particle.style.backgroundColor = config.color;
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '10000';
 
             // Random angle within spread
             const angle = -90 + (Math.random() - 0.5) * config.spread;

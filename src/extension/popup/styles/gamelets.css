@@ -13,6 +13,29 @@
     image-rendering: pixelated;
 }
 
+.points {
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.pebble {
+    width: 1px;
+    height: 1px;
+    border: 1px solid #555;
+    background-color: #888;
+    image-rendering: pixelated;
+}
+
 @keyframes shakeYlo {
     0% { transform: translateY(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateY(-1px); }

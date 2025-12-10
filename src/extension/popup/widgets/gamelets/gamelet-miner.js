@@ -18,11 +18,11 @@ export class GameletMiner extends Gamelet {
         this.counter = 0;
         this.lastClick = 0;
 
-        // Title
-        // const title = document.createElement('div');
-        // title.classList.add('title');
-        // title.textContent = 'Miner';
-        // this.element.append(title);
+        // Points
+        this.points = document.createElement('div');
+        this.points.classList.add('points');
+        this.points.textContent = '100';
+        this.element.append(this.points);
 
         // Rock image
         this.rock = document.createElement('img');
@@ -64,16 +64,26 @@ export class GameletMiner extends Gamelet {
         this.pick.style.transform = 'rotate(45deg)';
         this.pick.style.left = '20px';
         this.pick.style.top = '20px';
-        this.particles(this.rock, { count: 4, size: 3, duration: 500, spread: 80, offsetY: -20 });
+        this.particles(this.rock, { class: 'pebble', count: 3, size: 4, duration: 500, spread: 80, offsetY: -20 });
         setTimeout(() => {
             this.pick.style.transform = 'rotate(0deg)';
             this.pick.style.left = '0px';
             this.pick.style.top = '0px';
         }, 100);
-        if (this.counter <= 50) this.anim(this.rock, 'shakeYlo', 0.5, 500);
-        else if (this.counter > 50 && this.counter <= 100) this.anim(this.rock, 'shakeYmd', 0.5, 500);
-        else if (this.counter > 100) this.anim(this.rock, 'shakeYhi', 0.5, 500);
-        if (this.counter == 200) {
+        if (this.counter <= 40) {
+            this.anim(this.rock, 'shakeYlo', 0.5, 500);
+            this.points.style.color = '#333';
+        }
+        else if (this.counter > 40 && this.counter <= 80) {
+            this.anim(this.rock, 'shakeYmd', 0.5, 500);
+            this.points.style.color = '#da8f05ff';
+        }
+        else if (this.counter > 80) {
+            this.anim(this.rock, 'shakeYhi', 0.5, 500);
+            this.points.style.color = '#ff0000';
+        }
+        this.points.textContent = `${100 - this.counter}`;
+        if (this.counter == 100) {
             console.log('crashed');
             this.counter = 0;
         }

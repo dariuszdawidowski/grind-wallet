@@ -18,4 +18,15 @@ export class Gamelet extends Component {
         this.element.classList.add('tile', 'square', 'gamelet');
     }
 
+    /**
+     * Shake fx
+     */
+
+    shake() {
+        this.element.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            this.element.style.animation = '';
+        }, 500);
+    }
+
 }

@@ -4,20 +4,21 @@
  */
 
 import { HttpAgent, Actor } from '@icp-sdk/core/agent';
-import '/src/extension/popup/style/variables.css';
-import '/src/extension/popup/style/base.css';
-import '/src/extension/popup/style/controls.css';
-import '/src/extension/popup/style/card.css';
-import '/src/extension/popup/style/coins.css';
-import '/src/extension/popup/style/nft.css';
-import '/src/extension/popup/style/tile.css';
-import '/src/extension/popup/style/history.css';
-import '/src/extension/popup/style/sheet.css';
-import '/src/extension/popup/style/exchange.css';
-import '/src/extension/popup/style/tasks.css';
-import '/src/extension/popup/style/list.css';
-import '/src/extension/popup/style/tab-bar.css';
-import '/src/extension/popup/style/overload.css';
+import '/src/extension/popup/styles/variables.css';
+import '/src/extension/popup/styles/base.css';
+import '/src/extension/popup/styles/controls.css';
+import '/src/extension/popup/styles/card.css';
+import '/src/extension/popup/styles/coins.css';
+import '/src/extension/popup/styles/nft.css';
+import '/src/extension/popup/styles/tile.css';
+import '/src/extension/popup/styles/history.css';
+import '/src/extension/popup/styles/sheet.css';
+import '/src/extension/popup/styles/exchange.css';
+import '/src/extension/popup/styles/tasks.css';
+import '/src/extension/popup/styles/list.css';
+import '/src/extension/popup/styles/gamelets.css';
+import '/src/extension/popup/styles/tab-bar.css';
+import '/src/extension/popup/styles/overload.css';
 import { browser } from '/src/utils/browser.js';
 import { Config } from '/src/utils/config.js';
 import { ErrorSystem } from '/src/utils/errors.js';

@@ -2,7 +2,7 @@
  * Total Equity Widget
  */
 
-import '/src/extension/popup/style/total-equity.css';
+import '/src/extension/popup/styles/total-equity.css';
 import { Component } from '/src/utils/component.js';
 
 export class TotalEquity extends Component {

@@ -1,0 +1,10 @@
+/* Gamelets styles */
+
+.gamelet {
+    position: relative;
+}
+
+.sprite {
+    position: absolute;
+    image-rendering: pixelated;
+}

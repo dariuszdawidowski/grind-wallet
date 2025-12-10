@@ -130,6 +130,17 @@ class GrindWalletPlugin {
             document.body.classList.add('macos');
         }
 
+        // Generate anonymous client ID for this installation
+        this.clientId = null;
+        const storage = await browser.storage.local.get('cid');
+        if (storage.hasOwnProperty('cid')) {
+            this.clientId = storage['cid'];
+        }
+        else {
+            this.clientId = crypto.randomUUID();
+            await browser.storage.local.set({ 'cid': this.clientId });
+        }
+
         // Active page
         this.current = null;
 

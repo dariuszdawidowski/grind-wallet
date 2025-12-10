@@ -90,7 +90,7 @@ export class ErrorSystem extends LogBase {
         
         const timestamp = new Date().getTime();
         this.add(this.app.version, timestamp, msg);
-        if (this.app.config.sendErrors) this.app.backend?.writeErrorLog(this.app.config.clientId, msg, [timestamp]);
+        if (this.app.config.sendErrors) this.app.backend?.writeErrorLog(this.app.clientId, msg, [timestamp]);
     }
 
     /**

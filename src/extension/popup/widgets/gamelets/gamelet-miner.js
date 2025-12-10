@@ -14,6 +14,10 @@ export class GameletMiner extends Gamelet {
     constructor(args) {
         super(args);
 
+        // Accumulate counter
+        this.counter = 0;
+        this.lastClick = 0;
+
         // Title
         // const title = document.createElement('div');
         // title.classList.add('title');
@@ -53,16 +57,25 @@ export class GameletMiner extends Gamelet {
      */
 
     dig() {
-        // this.pick.src = 'assets/sprites/pick-angle.png';
+        const now = Date.now();
+        if (now - this.lastClick < 200) this.counter++;
+        else this.counter = 0;
+        this.lastClick = now;
         this.pick.style.transform = 'rotate(45deg)';
         this.pick.style.left = '20px';
         this.pick.style.top = '20px';
         setTimeout(() => {
-            // this.pick.src = 'assets/sprites/pick-up.png';
             this.pick.style.transform = 'rotate(0deg)';
             this.pick.style.left = '0px';
             this.pick.style.top = '0px';
         }, 100);
+        if (this.counter <= 50) this.anim(this.rock, 'shakeYlo', 0.5, 500);
+        else if (this.counter > 50 && this.counter <= 100) this.anim(this.rock, 'shakeYmd', 0.5, 500);
+        else if (this.counter > 100) this.anim(this.rock, 'shakeYhi', 0.5, 500);
+        if (this.counter == 200) {
+            console.log('crashed');
+            this.counter = 0;
+        }
     }
 
 }

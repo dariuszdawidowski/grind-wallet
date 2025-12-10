@@ -2,9 +2,34 @@
 
 .gamelet {
     position: relative;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .sprite {
     position: absolute;
     image-rendering: pixelated;
+}
+
+@keyframes shakeYlo {
+    0% { transform: translateY(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateY(-1px); }
+    20%, 40%, 60%, 80% { transform: translateY(1px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes shakeYmd {
+    0% { transform: translateY(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateY(-2px); }
+    20%, 40%, 60%, 80% { transform: translateY(2px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes shakeYhi {
+    0% { transform: translateY(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateY(-3px); }
+    20%, 40%, 60%, 80% { transform: translateY(3px); }
+    100% { transform: translateY(0); }
 }

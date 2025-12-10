@@ -21,11 +21,14 @@ export class Config {
      */
 
     async load() {
-        const storage = await browser.storage.local.get(['cfg:hide', 'cfg:scroll', 'cfg:session', 'cfg:errors']);
-        if (storage.hasOwnProperty('cfg:hide')) this.hideBalances = storage['cfg:hide'];
-        if (storage.hasOwnProperty('cfg:scroll')) this.showScrolls = storage['cfg:scroll'];
-        if (storage.hasOwnProperty('cfg:session')) this.sessionTimeout = storage['cfg:session'];
-        if (storage.hasOwnProperty('cfg:errors')) this.sendErrors = storage['cfg:errors'];
+        const storageCfg = await browser.storage.local.get('cfg');
+        if (storageCfg.hasOwnProperty('cfg')) {
+            const cfg = storageCfg.cfg;
+            this.hideBalances = cfg.hasOwnProperty('hide') ? cfg.hide : this.hideBalances;
+            this.showScrolls = cfg.hasOwnProperty('scroll') ? cfg.scroll : this.showScrolls;
+            this.sessionTimeout = cfg.hasOwnProperty('session') ? cfg.session : this.sessionTimeout;
+            this.sendErrors = cfg.hasOwnProperty('errors') ? cfg.errors : this.sendErrors;
+        }
     }
 
     /**
@@ -33,12 +36,12 @@ export class Config {
      */
 
     async save() {
-        await browser.storage.local.set({
-            'cfg:hide': this.hideBalances,
-            'cfg:scroll': this.showScrolls,
-            'cfg:session': this.sessionTimeout,
-            'cfg:errors': this.sendErrors,
-        });
+        await browser.storage.local.set({ 'cfg': {
+            'hide': this.hideBalances,
+            'scroll': this.showScrolls,
+            'session': this.sessionTimeout,
+            'errors': this.sendErrors,
+        } });
     }
 
     /**

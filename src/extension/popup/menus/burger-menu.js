@@ -3,18 +3,9 @@
  */
 
 import { browser } from '/src/utils/browser.js';
-import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { ListView } from '/src/extension/popup/widgets/list.js';
 
 export class BurgerMenu extends ListView {
-
-    constructor(args) {
-        super(args);
-
-        // Extra bottom sheet
-        this.sheet = new Sheet({ app, id: '#burger-sheet', hidden: false });
-        this.element.append(this.sheet.element);
-    }
 
     /**
      * Render main burger menu

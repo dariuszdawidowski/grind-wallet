@@ -5,7 +5,8 @@
 import { browser } from '/src/utils/browser.js';
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
-import { InputPassword } from '/src/extension/popup/widgets/input.js';
+import { InputPassword, RecoveryPhrase } from '/src/extension/popup/widgets/input.js';
+import { Copy } from '/src/extension/popup/widgets/copy.js';
 import { decryptKey, deserializeEncryptKey } from '/src/utils/keys.js';
 
 export class SheetRevealPhrase extends Component {
@@ -87,7 +88,32 @@ export class SheetRevealPhrase extends Component {
     async revealPhrase(password) {
         const deserialized = deserializeEncryptKey(this.wallet.secret.mnemonic);
         const mnemonic = await decryptKey(deserialized, password);
-        console.log(mnemonic);
+
+        // Clear element
+        this.element.innerHTML = '';
+
+        // Header
+        const header = document.createElement('h2');
+        header.textContent = 'Your seed phrase:';
+        this.element.append(header);
+
+        // Display recovery pharse
+        this.phrase = new RecoveryPhrase({
+            style: 'margin-bottom: 10px;',
+            number: 12,
+            phrase: mnemonic,
+            readonly: true
+        });
+        this.append(this.phrase);
+
+        // Copy to clipboard
+        this.append(new Copy({
+            style: 'margin: 10px auto;',
+            text: 'Copy to clipboard',
+            buffer: mnemonic
+        }));
+
     }
+
 }
 

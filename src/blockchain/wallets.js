@@ -218,6 +218,18 @@ export class Wallets {
             wallet.blockchain = 'Internet Computer';
         }
 
+        // Migrate secret structure from flat to nested
+        if (wallet.secret && 'ciphertext' in wallet.secret && !('private' in wallet.secret)) {
+            wallet.secret = {
+                private: {
+                    ciphertext: wallet.secret.ciphertext,
+                    iv: wallet.secret.iv,
+                    salt: wallet.secret.salt
+                },
+                mnemonic: wallet.secret.mnemonic
+            };
+        }
+
         return wallet;
     }
 

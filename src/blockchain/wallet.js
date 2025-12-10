@@ -28,7 +28,8 @@ export class Wallet {
         // Public key: string
         this.public = publicKey;
 
-        // Encrypted private key {ciphertext: 'string', iv: 'string', salt: 'string'}
+        // Encrypted private key and mnemonic
+        // {private: {ciphertext: 'string', iv: 'string', salt: 'string'}, mnemonic: {ciphertext: 'string', iv: 'string', salt: 'string'}}
         this.secret = secret;
 
         /*** Partially persistent attributes ***/

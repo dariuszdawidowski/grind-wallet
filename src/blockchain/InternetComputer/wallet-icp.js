@@ -27,7 +27,7 @@ export class ICPWallet extends Wallet {
         if (!this.crypto) this.crypto = 'ICP';
 
         // Decode keys
-        const deserialized = deserializeEncryptKey(this.secret);
+        const deserialized = deserializeEncryptKey(this.secret.private);
         const privateKey = await decryptKey(deserialized, password);
         const info = identityFromPrivate(privateKey);
 

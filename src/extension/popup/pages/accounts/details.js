@@ -2,8 +2,8 @@
  * ICP/ICRC token details sheet
  */
 
-import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
+import { Component } from '/src/utils/component.js';
 import { icpt2ICP, formatCurrency } from '/src/utils/currency.js';
 import { Button, ButtIcon, ButtLink } from '/src/extension/popup/widgets/button.js';
 import { AddPlus } from '/src/extension/popup/widgets/add.js';
@@ -14,6 +14,7 @@ import { SheetAccountExchange } from './exchange.js';
 import { SheetAddCustomToken } from './add-token.js';
 import { SheetAddCustomNFT } from './add-nft.js';
 import { SheetTransactionHistory } from './history.js';
+import { SheetRevealPhrase } from './reveal-phrase.js';
 
 export class SheetAccountDetails extends Component {
     
@@ -175,6 +176,16 @@ export class SheetAccountDetails extends Component {
 
             // Edit name
             if (this.app.isICP(this.canister.ledgerId)) {
+                this.append(new ButtLink({
+                    text: `Reveal seed phrase`,
+                    icon: 'assets/material-design-icons/lock-alert.svg',
+                    click: () => {
+                        this.app.sheet.append({
+                            title: `Reveal seed phrase for ${this.wallet.name}`,
+                            component: new SheetRevealPhrase({ app: this.app, wallet: this.wallet })
+                        });
+                    }
+                }));
                 this.append(new ButtLink({
                     text: `Change wallet name`,
                     click: () => {

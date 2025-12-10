@@ -107,6 +107,12 @@ button.butticon img {
     transform: scale(1.03);
 }
 
+.buttlink img {
+    height: 16px;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
 /* Inputs */
 
 .input-text {

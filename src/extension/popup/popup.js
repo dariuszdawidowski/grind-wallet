@@ -192,6 +192,7 @@ class GrindWalletPlugin {
                 // Login page if password registered
                 const storageLocal = await browser.storage.local.get(['salt', 'password', 'terms']);
                 if (storageLocal.salt && storageLocal.password) {
+                    // Show login page, send salt and already hashed password
                     this.page('login', { salt: storageLocal.salt, hash: storageLocal.password });
                 }
                 // First-time page with terms acceptance and password creation

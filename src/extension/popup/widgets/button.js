@@ -140,7 +140,7 @@ export class ButtLink extends Component {
     constructor(args) {
         super(args);
 
-        this.icon = ('icon' in args) ? args.icon : '→';
+        this.icon = ('icon' in args) ? `<img src="${args.icon}">` : '→';
 
         // Build
         this.element.classList.add('buttlink');

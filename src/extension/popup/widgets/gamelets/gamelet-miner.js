@@ -72,7 +72,7 @@ export class GameletMiner extends Gamelet {
 
     dig() {
         const now = Date.now();
-        if (now - this.lastClick < 250) this.counter++;
+        if (now - this.lastClick < 200) this.counter++;
         else this.counter = 0;
         this.lastClick = now;
         this.pick.style.transform = 'rotate(45deg)';

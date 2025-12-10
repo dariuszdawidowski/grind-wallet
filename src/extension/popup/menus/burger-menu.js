@@ -3,9 +3,21 @@
  */
 
 import { browser } from '/src/utils/browser.js';
+import { Component } from '/src/utils/component.js';
+import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { ListView } from '/src/extension/popup/widgets/list.js';
+import { Button } from '/src/extension/popup/widgets/button.js';
+import { InputPassword } from '/src/extension/popup/widgets/input.js';
 
 export class BurgerMenu extends ListView {
+
+    constructor(args) {
+        super(args);
+
+        // Extra bottom sheet
+        this.sheet = new Sheet({ app, id: '#burger-sheet', hidden: false });
+        this.element.append(this.sheet.element);
+    }
 
     /**
      * Render main burger menu
@@ -89,11 +101,25 @@ export class BurgerMenu extends ListView {
         this.renderList({
             name: 'Account',
             entries: {
-                'acc-logout': { name: 'Logout', icon: 'assets/material-design-icons/power.svg' },
+                'acc-phrase': { name: 'Reveal seed phrase', icon: 'assets/material-design-icons/lock-alert.svg', order: 1 },
+                'acc-logout': { name: 'Logout', icon: 'assets/material-design-icons/power.svg', order: 2 },
             },
             onClickEntry: (info) => {
-                this.app.session.clear();
-                window.location.reload();
+                // Reveal seed phrase
+                if (info.id == 'acc-phrase') {
+                    this.sheet.clear();
+                    this.sheet.append({
+                        title: 'Reveal Seed Phrase',
+                        component: new SheetRevealPhrase({
+                            app: this.app,
+                        })
+                    });
+                }
+                // Logout
+                else if (info.id == 'acc-logout') {
+                    this.app.session.clear();
+                    window.location.reload();
+                }
             },
         });
 
@@ -126,3 +152,57 @@ export class BurgerMenu extends ListView {
         }
     }
 }
+
+/**
+ * Extra sheet
+ */
+
+export class SheetRevealPhrase extends Component {
+
+    constructor({ app }) {
+        super({ app });
+
+        // Build
+        this.element.classList.add('form');
+
+        // Header
+        const header = document.createElement('h2');
+        header.textContent = 'Please enter your password to reveal your seed phrase.';
+        this.element.append(header);
+
+        // Inputs
+        this.password = new InputPassword({
+            placeholder: 'Password',
+            focus: true
+        });
+        this.append(this.password);
+
+        // Buttons
+        this.button = new Button({
+            text: 'Unlock',
+            style: 'margin-top: 20px; margin-bottom: 20px;',
+            enter: false,
+            click: () => {
+                this.app.session.verifyPassword(this.password.get(), salt, hash).then((valid) => {
+                    if (valid) {
+                        console.log('VALID');
+                    }
+                    else {
+                        this.password.set('');
+                        this.password.input.placeholder = 'Password';
+                        this.button.enable();
+                        alert('Incorrect password. Please try again.');
+                    }
+                });
+
+                this.password.set('');
+                this.password.input.placeholder = 'Password sent';
+                this.button.disable();
+            }
+        });
+        this.append(this.button);
+
+    }
+
+}
+

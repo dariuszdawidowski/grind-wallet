@@ -2,8 +2,8 @@
  * Address Book
  */
 
-import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
+import { Component } from '/src/utils/component.js';
 import { Sheet } from '/src/extension/popup/widgets/sheet.js';
 import { InputText, InputAddress } from '/src/extension/popup/widgets/input.js';
 import { Button, ButtLink } from '/src/extension/popup/widgets/button.js';
@@ -624,7 +624,7 @@ export class SheetContact extends Component {
                         });
                     }
                 }
-            }));            
+            }));
         }
 
     }

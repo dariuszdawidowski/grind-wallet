@@ -25,7 +25,7 @@ body {
     font-weight: bold;
     text-align: center;
     padding: 4px 0;
-    z-index: 9999;
+    z-index: var(--z-top-banner);
 
 }
 
@@ -90,10 +90,10 @@ body {
     cursor: pointer;
     width: 32px;
     height: 32px;
-    z-index: 10;
+    z-index: var(--z-burger);
 }
 
-/* Drawer menu */
+/* Two sliding panels main<->drawer */
 
 #main-panel {
     position: fixed;
@@ -102,7 +102,6 @@ body {
     width: 100%;
     height: 100%;
     transition: transform 0.3s ease;
-    z-index: 1;
     overflow: hidden;
 }
 
@@ -124,7 +123,6 @@ body {
     width: 85%;
     height: 100%;
     transition: right 0.3s ease;
-    z-index: 2;
     overflow-y: auto;
 }
 
@@ -248,7 +246,7 @@ hr {
     background: inherit;
     filter: blur(20px) brightness(110%);
     transform: scale(1.0);
-    z-index: -1;
+    z-index: var(--z-shadow);
     transition: transform 1.5s ease;
 }
 

@@ -9,7 +9,7 @@
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    z-index: var(--z-tab-bar);
 }
 
 .tab-bar .tab-bar-icon {

@@ -12,4 +12,17 @@
 
     /* Dimensions */
     --main-width: 343px;
+
+    /* Z-mapping */
+    --z-shadow: -1;
+    --z-ghost-input: 0;
+    --z-input: 1;
+    --z-input-icon: 2;
+    --z-step-bg: 3;
+    --z-step-fg: 4;
+    --z-burger: 9;
+    --z-tab-bar: 20;
+    --z-sheet: 30;
+    --z-sheet-cover: 35;
+    --z-top-banner: 110;
 }

@@ -111,6 +111,7 @@ button.butticon img {
     height: 16px;
     vertical-align: middle;
     margin-left: 4px;
+    margin-top: -2px;
 }
 
 /* Inputs */

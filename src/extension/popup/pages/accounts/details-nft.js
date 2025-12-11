@@ -134,6 +134,7 @@ export class SheetNFTDetails extends Component {
         // Remove
         this.append(new ButtLink({
             text: `Remove this NFT from the list`,
+            icon: 'assets/material-design-icons/delete.svg',
             classList: ['end'],
             click: () => {
                 if (confirm('Delete this NFT?\nIt will only be removed from this list not from the blockchain - you can always add it again.')) {

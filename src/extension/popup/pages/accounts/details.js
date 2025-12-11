@@ -218,6 +218,7 @@ export class SheetAccountDetails extends Component {
         // Remove
         this.append(new ButtLink({
             text: `Remove this ${(this.app.isICP(this.canister.ledgerId)) ? 'account' : 'token'} from the list`,
+            icon: 'assets/material-design-icons/delete.svg',
             classList: ['last'],
             click: () => {
 

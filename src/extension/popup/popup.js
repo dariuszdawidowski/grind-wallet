@@ -311,6 +311,7 @@ class GrindWalletPlugin {
 
     showScrollbars() {
         document.querySelector('#main-panel-content').classList.remove('hide-scrollbar');
+        document.querySelector('#drawer-panel').classList.remove('hide-scrollbar');
         this.sheet.element.classList.remove('hide-scrollbar');
     }
 
@@ -320,6 +321,7 @@ class GrindWalletPlugin {
 
     hideScrollbars() {
         document.querySelector('#main-panel-content').classList.add('hide-scrollbar');
+        document.querySelector('#drawer-panel').classList.add('hide-scrollbar');
         this.sheet.element.classList.add('hide-scrollbar');
     }
 

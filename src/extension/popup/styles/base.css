@@ -81,6 +81,14 @@ body {
     display: none;  /* Chrome, Safari, Edge */
 }
 
+.hide-scrollbar .sheet {
+    scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar .sheet {
+    display: none;  /* Chrome, Safari, Edge */
+}
+
 /* Burger menu */
 
 .burger {

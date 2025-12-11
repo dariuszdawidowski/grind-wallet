@@ -208,10 +208,5 @@
     width: 18px;
     height: 18px;
     vertical-align: middle;
-    margin-top: -2px;
     margin-left: 4px;
-}
-
-.history-details .summary-box .summary-row .copy img {
-    margin-bottom: -3px;
 }

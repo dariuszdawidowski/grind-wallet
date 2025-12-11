@@ -118,6 +118,9 @@ export class SheetHistoryDetails extends Component {
 
     renderAddressLink(address) {
         const container = document.createElement('span');
+        container.style.display = 'flex';
+        container.style.flexDirection = 'row';
+        container.style.alignItems = 'center';
 
         if ('account' in address) {
             const accountLink = document.createElement('a');
@@ -162,7 +165,7 @@ export class SheetHistoryDetails extends Component {
         const token = wallet.tokens.get(canisterId);
         let buffer = '';
         if (token) {
-            buffer += `${token.name} (${token.symbol}) `;
+            buffer += `<span>${token.name} (${token.symbol})</span>`;
             buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
             buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
             buffer += '</a>';

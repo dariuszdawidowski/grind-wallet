@@ -24,35 +24,48 @@ export class SummaryBox extends Component {
     row(title, content) {
         const rowElement = this.element.querySelector(`[data-title="${title}"]`);
         
-        if (rowElement) {
-            // Clear existing content
-            rowElement.innerHTML = `<b>${title}</b>: `;
-            
-            // Append content
-            if (content instanceof HTMLElement) {
-                rowElement.appendChild(content);
-            }
-            else {
-                rowElement.innerHTML += content;
-            }
-        }
-        else {
-            // Create new row
+        // Create new
+        if (!rowElement) {
             const newRow = document.createElement('div');
             newRow.setAttribute('data-title', title);
             newRow.classList.add('summary-row');
-            newRow.innerHTML = `<b>${title}</b>: `;
+
+            // Title
+            const titleElement = document.createElement('span');
+            titleElement.classList.add('summary-row-title');
+            titleElement.innerText = `${title}:`;
+            newRow.appendChild(titleElement);
             
             // Append content
+            const contentElement = document.createElement('span');
+            contentElement.classList.add('summary-row-content');
+            newRow.appendChild(contentElement);
             if (content instanceof HTMLElement) {
-                newRow.appendChild(content);
+                contentElement.appendChild(content);
             }
             else {
-                newRow.innerHTML += content;
+                contentElement.innerHTML = content;
             }
             
             this.element.appendChild(newRow);
         }
+
+        // Update existing content
+        else {
+            const titleElement = rowElement.querySelector('.summary-row-title');
+            titleElement.innerText = `${title}:`;
+            
+            // Append content
+            const contentElement = rowElement.querySelector('.summary-row-content');
+            contentElement.innerHTML = '';
+            if (content instanceof HTMLElement) {
+                contentElement.appendChild(content);
+            }
+            else {
+                contentElement.innerHTML = content;
+            }
+        }
+
     }
 
 }

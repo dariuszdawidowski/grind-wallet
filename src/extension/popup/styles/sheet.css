@@ -241,9 +241,21 @@
 }
 
 .summary-box .summary-row {
+    height: 14px;
     margin: 2px 0;
     display: flex;
     flex-direction: row;
+}
+
+.summary-box .summary-row .summary-row-title {
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.summary-box .summary-row .summary-row-content {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
 }
 
 /* Form */

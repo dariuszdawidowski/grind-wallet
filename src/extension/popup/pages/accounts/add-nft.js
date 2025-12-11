@@ -11,6 +11,7 @@ import { NFT_EXT } from '/src/blockchain/InternetComputer/nft-ext.js';
 import { idlFactory as idlFactoryICRC37 } from '/src/blockchain/InternetComputer/candid/nft-icrc37.did.js';
 import { NFT_ICRC7 } from '/src/blockchain/InternetComputer/nft-icrc7.js';
 import { NFT } from '/src/blockchain/nft.js';
+import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 import { isValidCanisterId } from '/src/utils/general.js';
 
 export class SheetAddCustomNFT extends Component {
@@ -99,11 +100,15 @@ export class SheetAddCustomNFT extends Component {
             if (info.valid) {
                 this.actor = info.actor;
                 this.standard = info.standard;
-                if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ agent: this.wallet.agent, collection: canisterId });
-                else if (this.standard == 'EXT') this.nft = new NFT_EXT({ agent: this.wallet.agent, actor: this.actor, collection: canisterId });
+                if (this.standard == 'ICRC-7') this.nft = new NFT_ICRC7({ app: this.app, agent: this.wallet.agent, collection: canisterId });
+                else if (this.standard == 'EXT') this.nft = new NFT_EXT({ app: this.app, agent: this.wallet.agent, actor: this.actor, collection: canisterId });
                 // Display preview
                 const thumb = await this.nft.getThumbnail({ token: tokenId });
-                this.widget.preview.innerHTML = thumb;
+                this.image = new NFTImage({
+                    app: this.app,
+                    image: thumb,
+                });
+                this.widget.preview.append(this.image.element);
                 this.widget.preview.style.height = '80px';
                 this.widget.info.innerHTML = `${info.collection.name ? info.collection.name : ''}${info.collection.symbol ? ` (${info.collection.symbol})` : ''}${info.standard ? ` [${info.standard}]` : ''}`;
                 // Check ownership

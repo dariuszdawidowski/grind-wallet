@@ -10,6 +10,8 @@ export class NFTImage extends Component {
     /**
      * Constructor
      * All Component params supported
+     * @param {string} image Image in buffer (optional)
+     * or:
      * @param {string} canisterId NFT collection canister ID
      * @param {string} nftId NFT ID
      */
@@ -19,22 +21,17 @@ export class NFTImage extends Component {
 
         // Coin shape
         this.element.classList.add('nft-image');
+      
+        // Image in buffer
+        if ('image' in args) {
+            this.render(args.image);
+        }
 
         // Load cached NFT image
-        (async () => {
+        else (async () => {
             try {
                 const image = await this.app.cache.image.load(`nft:${args.canisterId}:${args.nftId}`);
-                this.element.innerHTML = sanitizeSVG(image);
-                /*
-                // SVG
-                if (image.startsWith('<svg') || image.startsWith('<?xml')) {
-                    const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
-                    this.element.style.backgroundImage = `url('${dataUrl}')`;
-                }
-                // Raster
-                else {
-                    this.element.style.backgroundImage = `url('${image}')`;
-                }*/
+                this.render(image);
             }
 
             // Fallback icon
@@ -43,6 +40,24 @@ export class NFTImage extends Component {
             }
         })();
 
+    }
+
+    /**
+     * Render image
+     */
+
+    render(image) {
+        this.element.innerHTML = sanitizeSVG(image);
+        /* TODO: use after resolve links
+        // SVG
+        if (image.startsWith('<svg') || image.startsWith('<?xml')) {
+            const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
+            this.element.style.backgroundImage = `url('${dataUrl}')`;
+        }
+        // Raster
+        else {
+            this.element.style.backgroundImage = `url('${image}')`;
+        }*/
     }
 
 }

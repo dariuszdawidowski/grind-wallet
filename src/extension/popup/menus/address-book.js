@@ -500,7 +500,7 @@ export class SheetGroup extends Component {
                         });
                     }
                     addressbook.save().then(() => {
-                        addressbook.element.innerHTML = '';
+                        addressbook.element.replaceChildren();
                         addressbook.element.append(addressbook.sheet.element);
                         addressbook.render();
                         addressbook.sheet.hide();
@@ -518,7 +518,7 @@ export class SheetGroup extends Component {
                     if (confirm('Delete this group?')) {
                         addressbook.delGroup(groupId);
                         addressbook.save().then(() => {
-                            addressbook.element.innerHTML = '';
+                            addressbook.element.replaceChildren();
                             addressbook.element.append(addressbook.sheet.element);
                             addressbook.render();
                             addressbook.sheet.hide();
@@ -599,7 +599,7 @@ export class SheetContact extends Component {
                         });
                     }
                     addressbook.save().then(() => {
-                        addressbook.element.innerHTML = '';
+                        addressbook.element.replaceChildren();
                         addressbook.element.append(addressbook.sheet.element);
                         addressbook.render();
                         addressbook.sheet.hide();
@@ -617,7 +617,7 @@ export class SheetContact extends Component {
                     if (confirm('Delete this contact?')) {
                         addressbook.delContact(contactId);
                         addressbook.save().then(() => {
-                            addressbook.element.innerHTML = '';
+                            addressbook.element.replaceChildren();
                             addressbook.element.append(addressbook.sheet.element);
                             addressbook.render();
                             addressbook.sheet.hide();

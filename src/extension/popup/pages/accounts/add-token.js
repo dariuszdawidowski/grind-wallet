@@ -125,7 +125,7 @@ export class SheetAddCustomToken extends Component {
                         this.widget.preview.append(coin.element);
                     }
                     // Info
-                    this.widget.info.innerHTML = `${this.metadata['name']} (${this.metadata['symbol']})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;
+                    this.widget.info.textContent = `${this.metadata['name']} (${this.metadata['symbol']})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;
                     // Prepare to accept
                     this.widget.submit.set('Add to my wallet');
                 }

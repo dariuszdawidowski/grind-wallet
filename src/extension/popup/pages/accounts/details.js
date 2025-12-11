@@ -53,7 +53,7 @@ export class SheetAccountDetails extends Component {
         this.balance.append(coin.element);
         // Balance amount and symbol
         this.amount = document.createElement('span');
-        this.amount.innerHTML = 'Fetching...';
+        this.amount.textContent = 'Fetching...';
         this.balance.append(this.amount);
         // Listener
         this.handleBalanceUpdate = () => this.updateBalance();

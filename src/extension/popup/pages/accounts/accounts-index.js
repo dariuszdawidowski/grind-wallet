@@ -115,7 +115,7 @@ export class PageAccounts extends Component {
 
         // Render wallets
         document.body.addEventListener('render.all', () => {
-            this.content.innerHTML = '';
+            this.content.replaceChildren();
             // No wallets
             if (this.app.wallets.count() === 0) {
                 this.renderNoWallets();
@@ -175,7 +175,7 @@ export class PageAccounts extends Component {
         });
 
         // Info
-        this.buttonsInfo.innerHTML = 'Create next one or import an existing one';
+        this.buttonsInfo.innerText = 'Create next one or import an existing one';
     }
 
     /**

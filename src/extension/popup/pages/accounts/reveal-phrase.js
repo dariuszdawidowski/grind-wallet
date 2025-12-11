@@ -43,6 +43,11 @@ export class SheetRevealPhrase extends Component {
 
     unlockRevealPhrase(salt, hash) {
 
+        // Info
+        const info = document.createElement('p');
+        info.textContent = `Always keep the recovery phrase secret and never share it with anyone asking for it—if someone requests it, it’s a 100% guaranteed SCAM. If they claim to be our technical support employee - it is a 200% guaranteed SCAM.`;
+        this.element.append(info);
+
         // Header
         const header = document.createElement('h2');
         header.textContent = 'Please enter your password to reveal your seed phrase.';
@@ -79,6 +84,7 @@ export class SheetRevealPhrase extends Component {
             }
         });
         this.append(button);
+
     }
 
     /**

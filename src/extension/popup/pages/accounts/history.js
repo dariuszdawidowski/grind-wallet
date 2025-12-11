@@ -473,7 +473,7 @@ export class SheetTransactionHistory extends Component {
      */
 
     clear() {
-        this.element.innerHTML = '';
+        this.element.replaceChildren();
         this.lastDate = null;
     }
 

@@ -6,13 +6,11 @@ import { Component } from '/src/utils/component.js';
 
 export class SummaryBox extends Component {
 
-    constructor({ app = null, text = null } = {}) {
-        super({ app });
+    constructor(args) {
+        super(args);
 
         // Build
         this.element.classList.add('summary-box');
-        if (text) this.element.innerHTML = text;
-
     }
 
     /**

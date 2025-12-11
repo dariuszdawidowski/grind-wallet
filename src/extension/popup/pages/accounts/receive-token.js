@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
+import { formatWithSpaces } from '/src/utils/currency.js';
 
 export class SheetAccountReceive extends Component {
 
@@ -51,12 +52,26 @@ export class SheetAccountReceive extends Component {
         this.element.append(h3);
 
         // Show address
-        const addr = document.createElement('div');
-        addr.classList.add('address');
-        if (name === 'Account ID') addr.classList.add('account');
-        else if (name === 'Principal ID') addr.classList.add('principal');
-        addr.innerText = address;
-        this.element.append(addr);
+        const addr1 = document.createElement('div');
+        addr1.style.marginBottom = '2px';
+        addr1.classList.add('address');
+        const addr2 = document.createElement('div');
+        addr2.classList.add('address');
+        if (name === 'Account ID') {
+            addr1.classList.add('account');
+            addr1.textContent = formatWithSpaces(address.substring(0, 32), 4);
+            addr2.classList.add('account');
+            addr2.textContent = formatWithSpaces(address.substring(32), 4);
+
+        }
+        else if (name === 'Principal ID') {
+            addr1.classList.add('principal');
+            addr1.textContent = address.substring(0, 24);
+            addr2.classList.add('principal');
+            addr2.textContent = address.substring(24);
+        }
+        this.element.append(addr1);
+        this.element.append(addr2);
 
         // QR Code
         const qr = document.createElement('div');

@@ -96,7 +96,7 @@ export class SheetRevealPhrase extends Component {
         const mnemonic = await decryptKey(deserialized, password);
 
         // Clear element
-        this.element.innerHTML = '';
+        this.element.replaceChildren();
 
         // Header
         const header = document.createElement('h2');

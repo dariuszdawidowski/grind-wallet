@@ -39,7 +39,14 @@ export class PageAccounts extends Component {
         img.src = 'assets/icon16.png';
         header.append(img);
         const title = document.createElement('span');
-        title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${this.app.version}</span>`;
+        const titleText = document.createElement('span');
+        titleText.textContent = 'Grind Wallet';
+        title.append(titleText);
+        const versionText = document.createElement('span');
+        versionText.style.marginLeft = '4px';
+        versionText.style.fontSize = '12px';
+        versionText.textContent = `v${this.app.version}`;
+        title.append(versionText);
         header.append(title);
         this.element.append(header);
         

@@ -66,12 +66,12 @@ class SheetNewAccountPhrase extends Component {
         // Info
         const info1 = document.createElement('p');
         info1.style.textAlign = 'center';
-        info1.innerHTML = 'Your 12-words recovery phrase is the only way to recover your account if you lose access to your wallet.';
+        info1.textContent = 'Your 12-words recovery phrase is the only way to recover your account if you lose access to your wallet.';
         this.element.append(info1);
         const info2 = document.createElement('p');
         info2.style.textAlign = 'center';
         info2.style.fontWeight = 'bold';
-        info2.innerHTML = '&rarr; Write it down &rarr; Never share it &rarr; Do not lose it';
+        info2.textContent = '→ Write it down → Never share it → Do not lose it';
         this.element.append(info2);
 
         // Recovery pharse

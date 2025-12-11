@@ -1,5 +1,5 @@
 import { Component } from '/src/utils/component.js';
-import { formatWithSpaces, formatCurrency, icpt2ICP } from '/src/utils/currency.js';
+import { formatCurrency, icpt2ICP } from '/src/utils/currency.js';
 
 export class Card extends Component {
 
@@ -32,11 +32,11 @@ export class Card extends Component {
         const token = this.wallet.tokens.get(this.app.ICP_LEDGER_CANISTER_ID);
         token.balance().then(balance => {
             if (balance !== null) {
-                this.element.querySelector('.amount').innerHTML = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
+                this.element.querySelector('.amount').textContent = formatCurrency(icpt2ICP(balance, token.decimals), token.decimals);
                 document.body.dispatchEvent(new Event('update.balance'));
             }
             else {
-                this.element.querySelector('.amount').innerHTML = '?';
+                this.element.querySelector('.amount').textContent = '?';
             }
             this.showLoader(false);
         });

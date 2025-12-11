@@ -382,7 +382,9 @@ export class ListView extends Component {
         if (icon) {
             const right = document.createElement('div');
             right.classList.add('icon');
-            right.innerHTML = `<img src="${icon}"></img>`;
+            const iconImg = document.createElement('img');
+            iconImg.src = icon;
+            right.appendChild(iconImg);
             entry.append(right);
         }
 

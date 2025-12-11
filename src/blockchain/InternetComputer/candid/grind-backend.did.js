@@ -1,4 +1,11 @@
 export const idlFactory = ({ IDL }) => {
+  const RewardToken = IDL.Record({
+    'name' : IDL.Text,
+    'probabilityPercent' : IDL.Nat,
+    'symbol' : IDL.Text,
+    'canisterId' : IDL.Principal,
+  });
+  const PrizeResult = IDL.Record({ 'token' : RewardToken, 'amount' : IDL.Nat });
   const ErrorLog = IDL.Record({
     'clientId' : IDL.Text,
     'message' : IDL.Text,
@@ -15,28 +22,43 @@ export const idlFactory = ({ IDL }) => {
     'ledger_canister_id' : IDL.Principal,
     'symbol' : IDL.Text,
   });
-  const HeaderField = IDL.Tuple(IDL.Text, IDL.Text);
-  const HttpRequest = IDL.Record({
-    'url' : IDL.Text,
-    'method' : IDL.Text,
-    'body' : IDL.Vec(IDL.Nat8),
-    'headers' : IDL.Vec(HeaderField),
-  });
-  const HttpResponse = IDL.Record({
-    'body' : IDL.Vec(IDL.Nat8),
-    'headers' : IDL.Vec(HeaderField),
-    'status_code' : IDL.Nat16,
-  });
   return IDL.Service({
+    'clearErrorLogs' : IDL.Func([IDL.Opt(IDL.Int)], [IDL.Bool], []),
     'cyclesBalance' : IDL.Func([], [IDL.Nat], []),
+    'drawPrize' : IDL.Func([], [IDL.Opt(PrizeResult)], []),
+    'getCallerActivity' : IDL.Func(
+        [],
+        [
+          IDL.Opt(
+            IDL.Record({
+              'canDrawAgainAt' : IDL.Int,
+              'lastDrawTime' : IDL.Int,
+              'totalDraws' : IDL.Nat,
+            })
+          ),
+        ],
+        ['query'],
+      ),
     'getErrorLogs' : IDL.Func(
         [IDL.Opt(IDL.Text), IDL.Opt(IDL.Int), IDL.Opt(IDL.Int)],
         [IDL.Vec(ErrorLog)],
         ['query'],
       ),
     'getNFTs' : IDL.Func([], [IDL.Vec(NFT)], ['query']),
+    'getRateLimitConfig' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'minDrawIntervalNanos' : IDL.Int,
+            'maxDrawsPerCaller' : IDL.Nat,
+          }),
+        ],
+        ['query'],
+      ),
+    'getRewardTokens' : IDL.Func([], [IDL.Vec(RewardToken)], ['query']),
     'getTokens' : IDL.Func([], [IDL.Vec(Token)], ['query']),
-    'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
+    'setMaxDrawsPerCaller' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+    'setMinDrawInterval' : IDL.Func([IDL.Int], [IDL.Bool], []),
     'writeErrorLog' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Opt(IDL.Int)],
         [IDL.Bool],

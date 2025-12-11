@@ -10,7 +10,9 @@ export class TokenImage extends Component {
     /**
      * Constructor
      * All Component params supported
-     * @param {string} canisterId Token Ledger canister ID
+     * @param {string} image Image in buffer (optional)
+     * or:
+     * @param {string} canisterId Token Ledger canister ID (optional)
      * @param {string} symbol Token symbol (optional)
      */
 
@@ -20,25 +22,22 @@ export class TokenImage extends Component {
         // Coin shape
         this.element.classList.add('token-image');
 
+        // Image in buffer
+        if ('image' in args) {
+            this.render(args.image);
+        }
+
         // ICP logo
-        if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+        else if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
             this.element.style.backgroundImage = `url('assets/tokens/icp.svg')`;
         }
+
         // Load cached token image
         else (async () => {
             try {
                 const image = await this.app.cache.image.load(`token:${args.canisterId}`);
                 if (image) {
-                    this.element.style.backgroundColor = 'transparent';
-                    // SVG
-                    if (image.startsWith('<svg') || image.startsWith('<?xml')) {
-                        const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
-                        this.element.style.backgroundImage = `url('${dataUrl}')`;
-                    }
-                    // Raster
-                    else {
-                        this.element.style.backgroundImage = `url('${image}')`;
-                    }
+                    this.render(image);
                 }
                 // Fallback placeholder
                 else {
@@ -52,6 +51,23 @@ export class TokenImage extends Component {
             }
         })();
 
+    }
+
+    /**
+     * Render image
+     */
+
+    render(image) {
+        // SVG
+        if (image.startsWith('<svg') || image.startsWith('<?xml')) {
+            this.element.style.backgroundColor = 'transparent';
+            const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
+            this.element.style.backgroundImage = `url('${dataUrl}')`;
+        }
+        // Raster
+        else {
+            this.element.style.backgroundImage = `url('${image}')`;
+        }
     }
 
 }

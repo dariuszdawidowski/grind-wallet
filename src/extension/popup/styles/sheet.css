@@ -154,6 +154,13 @@
     margin: 0 auto 12px auto;
 }
 
+.sheet .content .form .preview-token .token-image {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+    background-size: cover;
+}
+
 .sheet .content .form .preview-nft {
     width: 80px;
     height: 0;

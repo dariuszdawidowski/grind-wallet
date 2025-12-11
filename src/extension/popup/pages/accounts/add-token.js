@@ -4,6 +4,7 @@
 
 import { Component } from '/src/utils/component.js';
 import { Button } from '/src/extension/popup/widgets/button.js';
+import { TokenImage } from '/src/extension/popup/widgets/token-image.js';
 import { InputAddress } from '/src/extension/popup/widgets/input.js';
 import { ICRCToken } from '/src/blockchain/InternetComputer/token-icrc.js';
 import { isValidCanisterId, ONE_WEEK } from '/src/utils/general.js';
@@ -116,7 +117,12 @@ export class SheetAddCustomToken extends Component {
                     if (this.metadata.index_principal) this.widget.index.set(this.metadata.index_principal);
                     // Logo
                     if ('logo' in this.metadata) {
-                        this.widget.preview.innerHTML = `<img src="${this.metadata['logo']}" style="width: 80px; margin: 10px">`;
+                        const coin = new TokenImage({
+                            app: this.app,
+                            image: this.metadata['logo'],
+                            symbol: this.metadata['symbol']
+                        });
+                        this.widget.preview.append(coin.element);
                     }
                     // Info
                     this.widget.info.innerHTML = `${this.metadata['name']} (${this.metadata['symbol']})${this.metadata['standards'].includes('ICRC-2') ? ' [ICRC-2]' : ' [ICRC-1]'}`;

@@ -14,6 +14,7 @@ export class ICRCToken extends Token {
 
     /**
      * Rebuild ICRC token with actors (quicker method for registered tokens)
+     * @param {Object} agent - ICP SDK Agent instance
      */
 
     build({ agent }) {
@@ -48,7 +49,7 @@ export class ICRCToken extends Token {
                 return [key, value];
             });
             data = Object.fromEntries(normalizedEntries);
-            if (('name' in data) && ('symbol' in data) && ('decimals' in data) && ('fee' in data)){
+            if (('name' in data) && ('symbol' in data) && ('decimals' in data) && ('fee' in data)) {
                 this.name = data['name'];
                 this.symbol = data['symbol'];
                 this.decimals = Number(data['decimals']);
@@ -56,7 +57,6 @@ export class ICRCToken extends Token {
                 this.valid = true;
                 data['standards'] = ['ICRC-1'];
             }
-
         }
 
         // ICRC-10 supported standards

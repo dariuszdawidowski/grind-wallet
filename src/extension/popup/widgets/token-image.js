@@ -3,6 +3,7 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { sanitizeSVG } from '/src/utils/general.js';
 
 export class TokenImage extends Component {
 
@@ -30,8 +31,8 @@ export class TokenImage extends Component {
                 if (image) {
                     this.element.style.backgroundColor = 'transparent';
                     // SVG
-                    if (image.startsWith('<svg')) {
-                        this.element.innerHTML = image;
+                    if (image.startsWith('<svg') || image.startsWith('<?xml')) {
+                        this.element.innerHTML = sanitizeSVG(image);
                     }
                     // Raster
                     else {

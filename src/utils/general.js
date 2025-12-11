@@ -115,3 +115,46 @@ export async function hashString(str) {
     const buffer = new TextEncoder().encode(str);
     return await hashBuffer(buffer);
 }
+
+/**
+ * Sanitize SVG
+ * @param {string} svg SVG string
+ * @returns {string|null} Sanitized SVG or null if invalid
+ */
+
+export function sanitizeSVG(svg) {
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svg, 'image/svg+xml');
+        
+        // Check for parsing errors
+        if (doc.querySelector('parsererror')) {
+            return null;
+        }
+        
+        const svgElement = doc.documentElement;
+        
+        // Remove dangerous elements
+        const dangerousTags = ['script', 'foreignObject', 'iframe', 'embed', 'object'];
+        dangerousTags.forEach(tag => {
+            const elements = svgElement.querySelectorAll(tag);
+            elements.forEach(el => el.remove());
+        });
+        
+        // Remove event handler attributes
+        const allElements = svgElement.querySelectorAll('*');
+        allElements.forEach(el => {
+            Array.from(el.attributes).forEach(attr => {
+                if (attr.name.startsWith('on') || attr.value.includes('javascript:')) {
+                    el.removeAttribute(attr.name);
+                }
+            });
+        });
+        
+        return new XMLSerializer().serializeToString(svgElement);
+    }
+    catch (error) {
+        console.error('SVG sanitization failed', error);
+        return null;
+    }
+}

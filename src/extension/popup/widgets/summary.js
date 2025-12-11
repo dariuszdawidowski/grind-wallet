@@ -57,7 +57,7 @@ export class SummaryBox extends Component {
             
             // Append content
             const contentElement = rowElement.querySelector('.summary-row-content');
-            contentElement.innerHTML = '';
+            contentElement.replaceChildren();
             if (content instanceof HTMLElement) {
                 contentElement.appendChild(content);
             }

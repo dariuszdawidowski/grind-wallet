@@ -60,7 +60,7 @@ export class Drawer {
         this.children = [];
 
         // Clear DOM
-        this.drawerPanel.innerHTML = '';
+        this.drawerPanel.replaceChildren();
     }
 
 }

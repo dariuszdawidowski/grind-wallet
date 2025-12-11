@@ -12,14 +12,15 @@ export class Card extends Component {
         // Build
         this.element.classList.add('card');
         this.element.style.backgroundImage = `url('assets/card-ICP-01.png')`;
+        const splittedPrincipal = this.wallet.principal.split('-');
         this.element.innerHTML = `
             <div class="name">${this.wallet.name}</div>
             <div class="subname">CRYPTOCURRENCY WALLET</div>
             <div class="loader light"></div>
             <div class="currency">ICP</div>
             <div id="balance_${this.wallet.principal}_ICP"><div class="amount">Fetching...</div></div>
-            <div class="account1">${formatWithSpaces(this.wallet.account.substring(0, 24), 4)}</div>
-            <div class="account2">${formatWithSpaces(this.wallet.account.substring(24), 4)}</div>
+            <div class="account1">${splittedPrincipal[0]} ${splittedPrincipal[1]} ${splittedPrincipal[2]} ${splittedPrincipal[3]}</div>
+            <div class="account2">${splittedPrincipal[4]} ${splittedPrincipal[5]} ${splittedPrincipal[6]} ${splittedPrincipal[7]} ${splittedPrincipal[8]} ${splittedPrincipal[9]} ${splittedPrincipal[10]}</div>
             <img class="logo" src="${this.wallet.crypto == 'ICP' ? 'assets/IC_logo_horizontal.svg' : ''}">
             <div class="open">
                 <div>Click to open</div>

@@ -93,7 +93,7 @@ export class Component {
      */
 
     replace(component) {
-        this.element.innerHTML = '';
+        this.element.replaceChildren();
         this.element.append(component.element);
     }
 

@@ -15,7 +15,7 @@ export class Checkbox extends Component {
 
         // Text
         const text = document.createElement('span');
-        text.innerHTML = args.text;
+        text.textContent = args.text;
         this.element.append(text);
 
         // Callabck

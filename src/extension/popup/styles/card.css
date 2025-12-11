@@ -115,14 +115,14 @@
 .card .currency {
     position: absolute;
     right: 24px;
-    top: 70px;
+    top: 65px;
     font-size: 10px;
 }
 
 .card .amount {
     position: absolute;
     right: 24px;
-    top: 85px;
+    top: 80px;
     font-size: 18px;
 }
 
@@ -134,7 +134,7 @@
     position: absolute;
     left: 24px;
     bottom: 74px;
-    font-size: 17px;
+    font-size: 18.1px;
     font-family: "Courier New";
     font-weight: bold;
     text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;
@@ -144,7 +144,7 @@
     position: absolute;
     left: 24px;
     bottom: 58px;
-    font-size: 10px;
+    font-size: 10.6px;
     font-family: "Courier New";
     font-weight: bold;
     text-shadow: rgba(0, 0, 0, 0.3) -1px 1px 2px;

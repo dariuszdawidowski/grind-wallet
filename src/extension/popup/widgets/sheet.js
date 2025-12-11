@@ -154,7 +154,7 @@ export class Sheet extends Component {
         this.children = [];
 
         // Clear pages
-        this.pages.innerHTML = '';
+        this.pages.replaceChildren();
     }
 
     /**

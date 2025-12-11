@@ -278,7 +278,7 @@ export class InputCurrency extends InputText {
 
         if ('symbol' in args) {
             const symbol = document.createElement('div');
-            symbol.innerHTML = args.symbol;
+            symbol.textContent = args.symbol;
             this.element.append(symbol);
         }
 
@@ -296,7 +296,7 @@ export class InputCurrency extends InputText {
             this.annotation.classList.add('note');
             this.element.append(this.annotation);
         }
-        this.annotation.innerHTML = text;
+        this.annotation.textContent = text;
     }
 
     /**

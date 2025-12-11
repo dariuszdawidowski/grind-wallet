@@ -274,6 +274,15 @@ export class PageAccounts extends Component {
         if (!this.app.sheet.isOpen()) {
             this.app.sheet.append({
                 title: `ICP wallet ${wallet.name}`,
+                onTitleEdit: () => {
+                    const newName = prompt('Enter new wallet name:', wallet.name);
+                    if (newName !== null) {
+                        this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
+                        wallet.name = newName.trim();
+                        this.app.wallets.save();
+                        document.body.dispatchEvent(new Event('update.name'));
+                    }
+                },
                 component: new SheetAccountDetails({
                     app: this.app,
                     wallet,

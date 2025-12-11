@@ -47,6 +47,14 @@
     margin: 38px auto 20px auto;
 }
 
+.sheet h1 .edit-title {
+    width: 26px;
+    height: 26px;
+    margin-left: 8px;
+    cursor: pointer;
+    vertical-align: text-bottom;
+}
+
 .sheet .prev {
     position: fixed;
     left: 16px;

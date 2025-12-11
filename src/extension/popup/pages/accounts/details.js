@@ -186,18 +186,6 @@ export class SheetAccountDetails extends Component {
                         });
                     }
                 }));
-                this.append(new ButtLink({
-                    text: `Change wallet name`,
-                    click: () => {
-                        const newName = prompt('Enter new wallet name:', this.wallet.name);
-                        if (newName !== null) {
-                            this.app.sheet.update({ title: `ICP wallet ${newName.trim()}` });
-                            this.wallet.name = newName.trim();
-                            this.app.wallets.save();
-                            document.body.dispatchEvent(new Event('update.name'));
-                        }
-                    }
-                }));
             }
 
         } // ICP only

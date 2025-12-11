@@ -1,16 +1,21 @@
 /**
- * Grind sheet card
- * args:
- *   id: unique identifier
- *   hidden: hide at start
+ * Bottom sheet card
  */
 
 import { Component } from '/src/utils/component.js';
 
 export class Sheet extends Component {
 
-    constructor({ app, id, hidden = true }) {
-        super({ app });
+    /**
+     * Constructor
+     * @param {string} args.id - Unique identifier for the sheet element.
+     * @param {boolean} [args.hidden=true] - Whether the sheet should be hidden at start.
+     */
+
+    constructor(args) {
+        super(args);
+        
+        const { id, hidden = true } = args;
 
         // State open/close
         this.open = false;
@@ -61,11 +66,12 @@ export class Sheet extends Component {
 
     /**
      * Append content and show sheet
-     * title: string - title of the sheet
-     * component: Component - component to attach
+     * @param {string} title - title of the sheet
+     * @param {object} [onTitleEdit] - Callback function when title is edited.
+     * @param {Component} component - component to attach
      */
 
-    append({ title, component } = {}) {
+    append({ title, component, onTitleEdit = null } = {}) {
 
         // Hide previous pages
         const prevPages = this.pages.querySelectorAll('.page');
@@ -81,8 +87,21 @@ export class Sheet extends Component {
         // Title
         const titleElement = document.createElement('h1');
         titleElement.classList.add('title');
-        titleElement.innerHTML = title;
         page.append(titleElement);
+
+        // Title text
+        this.title = document.createElement('span');
+        this.title.innerText = title;
+        titleElement.append(this.title);
+
+        // Editable title
+        if (onTitleEdit) {
+            const editButton = document.createElement('img');
+            editButton.classList.add('edit-title');
+            editButton.src = 'assets/material-design-icons/pencil-box.svg';
+            editButton.addEventListener('click', onTitleEdit);
+            titleElement.append(editButton);
+        }
 
         // Content
         const content = document.createElement('div');

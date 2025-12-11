@@ -226,6 +226,7 @@ button.butticon img {
     border: none;
     outline: none;
     margin-left: 30px;
+    margin-right: 4px;
     padding-right: 0;
     background-color: transparent;
 }

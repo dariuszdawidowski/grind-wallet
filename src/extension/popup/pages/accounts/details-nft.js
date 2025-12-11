@@ -2,9 +2,10 @@
  * NFT details sheet
  */
 
-import { Component } from '/src/utils/component.js';
 import { browser } from '/src/utils/browser.js';
+import { Component } from '/src/utils/component.js';
 import { ButtIcon, ButtLink } from '/src/extension/popup/widgets/button.js';
+import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 import { SheetAccountSendNFT } from '/src/extension/popup/pages/accounts/send-nft.js';
 import { SheetAccountReceiveNFT } from '/src/extension/popup/pages/accounts/receive-nft.js';
 import { Copy } from '/src/extension/popup/widgets/copy.js';
@@ -27,17 +28,14 @@ export class SheetNFTDetails extends Component {
         this.element.classList.add('form');
 
         // Image
-        this.image = document.createElement('div');
-        this.image.classList.add('nft');
-        this.element.append(this.image);
-        (async () => {
-            try {
-                const thumbnail = await this.app.cache.image.load(this.nft.thumbnail);
-                this.image.innerHTML = thumbnail;
-            }
-            catch(error) {}
-        })();
-        this.image.addEventListener('click', () => {
+        this.image = new NFTImage({
+            app: this.app,
+            classList: ['nft'],
+            canisterId: this.nft.collection,
+            nftId: this.nft.id
+        });
+        this.append(this.image);
+        this.image.element.addEventListener('click', () => {
             this.nft.service.experience({ token: this.nft.id }).then(url => {
                 browser.tabs.create({ url });
             });

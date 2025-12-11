@@ -3,14 +3,12 @@
  */
 
 import { Component } from '/src/utils/component.js';
+import { NFTImage } from '/src/extension/popup/widgets/nft-image.js';
 
 export class Cover extends Component {
 
-    constructor({ app, wallet, nft, click = null }) {
+    constructor({ app, nft, click = null }) {
         super({ app });
-
-        // Wallet reference
-        this.wallet = wallet;
 
         // NFT info
         this.nft = nft;
@@ -39,18 +37,12 @@ export class Cover extends Component {
         }
 
         // Load cached image
-        (async () => {
-            try {
-                const image = await this.app.cache.image.load(`nft:${this.nft.collection}:${this.nft.id}`);
-                this.element.style.backgroundColor = 'transparent';
-                this.element.innerHTML = `${image}`;
-            }
-
-            // Fallback box
-            catch(error) {
-                console.error(error);
-            }
-        })();
+        const miniature = new NFTImage({
+            app: this.app,
+            canisterId: this.nft.collection,
+            nftId: this.nft.id
+        });
+        this.element.append(miniature.element);
 
     }
 

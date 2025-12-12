@@ -22,7 +22,11 @@ export class PageSettings extends Component {
         img.src = 'assets/icon16.png';
         header.append(img);
         const title = document.createElement('span');
-        title.innerHTML = `Grind Wallet <span style="font-size: 12px;">v${this.app.version}</span>`;
+        title.textContent = 'Grind Wallet ';
+        const version = document.createElement('span');
+        version.textContent = `v${this.app.version}`;
+        version.style.fontSize = '12px';
+        title.append(version);
         header.append(title);
         this.element.append(header);
         

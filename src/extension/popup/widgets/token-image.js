@@ -58,11 +58,13 @@ export class TokenImage extends Component {
      */
 
     render(image) {
+        // Clear placeholder for non-square and non-cicular images
+        this.element.style.backgroundColor = 'transparent';
         // SVG
         if (image.startsWith('<svg') || image.startsWith('<?xml')) {
-            this.element.style.backgroundColor = 'transparent';
             const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
             this.element.style.backgroundImage = `url('${dataUrl}')`;
+            console.log('SVG token image rendered');
         }
         // Raster
         else {

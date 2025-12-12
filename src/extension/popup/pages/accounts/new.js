@@ -12,12 +12,11 @@ export class SheetNewAccount extends Component {
 
         // Build
         this.element.classList.add('form');
-        this.element.innerHTML = `
-            <h3>
-                This action will create a new free account<br>
-                for the Internet Computer blockchain.
-            </h3>
-        `;
+        const heading = document.createElement('h3');
+        heading.append('This action will create a new free account');
+        heading.append(document.createElement('br'));
+        heading.append('for the Internet Computer blockchain.');
+        this.element.append(heading);
 
         // Buttons
         this.append(new Button({

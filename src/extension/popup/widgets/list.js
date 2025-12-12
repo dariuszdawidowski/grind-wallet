@@ -222,7 +222,9 @@ export class ListView extends Component {
         if (onEditGroup) {
             const editIcon = document.createElement('div');
             editIcon.classList.add('icon', 'edit-group', 'hidden');
-            editIcon.innerHTML = `<img src="assets/material-design-icons/pencil-box.svg"></img>`;
+            const editIconImg = document.createElement('img');
+            editIconImg.src = 'assets/material-design-icons/pencil-box.svg';
+            editIcon.append(editIconImg);
             titleContainer.append(editIcon);
             editIcon.addEventListener('click', (event) => {
                 event.stopPropagation();

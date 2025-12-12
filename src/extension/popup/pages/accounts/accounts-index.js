@@ -115,9 +115,22 @@ export class PageAccounts extends Component {
         info.classList.add('end');
         info.style.textAlign = 'center';
         info.style.marginTop = '30px';
-        info.innerHTML = `
-            <a href="https://www.grindwallet.com/en/security/" target="_blank" style="color: #f1e6fd;">Security</a> &bull; <a href="https://www.grindwallet.com/en/privacy/" target="_blank" style="color: #f1e6fd;">Privacy</a>
-        `;
+
+        const securityLink = document.createElement('a');
+        securityLink.href = 'https://www.grindwallet.com/en/security/';
+        securityLink.target = '_blank';
+        securityLink.style.color = '#f1e6fd';
+        securityLink.textContent = 'Security';
+
+        const separator = document.createTextNode(' • ');
+
+        const privacyLink = document.createElement('a');
+        privacyLink.href = 'https://www.grindwallet.com/en/privacy/';
+        privacyLink.target = '_blank';
+        privacyLink.style.color = '#f1e6fd';
+        privacyLink.textContent = 'Privacy';
+
+        info.append(securityLink, separator, privacyLink);
         this.element.append(info);
 
         // Render wallets
@@ -158,16 +171,23 @@ export class PageAccounts extends Component {
      */
 
     renderNoWallets() {
-        this.content.innerHTML = `
-            <div class="biglogo backlight" style="background-image: url(assets/icon728.png); margin-bottom: 40px;"></div>
-            <h2>
-                <img src="assets/material-design-icons/wallet-white.svg">
-                <br>
-                You don't have any wallet account,<br>
-                create a new one or import an existing one<br>
-                from the recovery phrase.
-            </h2>
-        `;
+        this.content.replaceChildren();
+
+        const logo = document.createElement('div');
+        logo.classList.add('biglogo', 'backlight');
+        logo.style.backgroundImage = 'url(assets/icon728.png)';
+        logo.style.marginBottom = '40px';
+
+        const heading = document.createElement('h2');
+        const icon = document.createElement('img');
+        icon.src = 'assets/material-design-icons/wallet-white.svg';
+        heading.append(icon, document.createElement('br'));
+
+        heading.append(`You don't have any wallet account,`, document.createElement('br'));
+        heading.append('create a new one or import an existing one', document.createElement('br'));
+        heading.append('from the recovery phrase.');
+
+        this.content.append(logo, heading);
     }
 
     /**

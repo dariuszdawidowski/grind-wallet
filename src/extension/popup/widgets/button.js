@@ -36,7 +36,7 @@ export class Button extends Component {
         // Text
         this.text = document.createElement('span');
         this.text.classList.add('text');
-        this.text.innerHTML = args.text;
+        this.text.textContent = args.text;
         this.element.append(this.text);
 
         // Spinner
@@ -70,11 +70,11 @@ export class Button extends Component {
     }
 
     set(text) {
-        this.text.innerHTML = text;
+        this.text.textContent = text;
     }
 
     get() {
-        return this.text.innerHTML;
+        return this.text.textContent;
     }
 
     enable() {
@@ -175,7 +175,7 @@ export class ButtonDescription extends Component {
     }
 
     set(text) {
-        this.element.innerHTML = text;
+        this.element.textContent = text;
     }
 
 }

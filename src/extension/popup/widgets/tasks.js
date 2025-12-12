@@ -43,7 +43,14 @@ export class TaskManager extends Component {
         // Open tasks
         const openTasks = document.createElement('div');
         openTasks.classList.add('task-link');
-        openTasks.innerHTML = 'Click to open the task<img src="assets/material-design-icons/chevron-right-black.svg" width="20" height="20" style="margin-bottom: -6px;">';
+        const openTasksText = document.createElement('span');
+        openTasksText.textContent = 'Click to open the task';
+        const openTasksIcon = document.createElement('img');
+        openTasksIcon.src = 'assets/material-design-icons/chevron-right-black.svg';
+        openTasksIcon.width = 20;
+        openTasksIcon.height = 20;
+        openTasksIcon.style.marginBottom = '-6px';
+        openTasks.append(openTasksText, openTasksIcon);
         left.append(openTasks);
 
         // Right

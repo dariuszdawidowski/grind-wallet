@@ -40,7 +40,7 @@ import { TaskManager } from '/src/extension/popup/widgets/tasks.js';
 import { AddressBook } from '/src/extension/popup/menus/address-book.js';
 import { TabBar } from '/src/extension/popup/widgets/tab-bar.js';
 const { version } = require('/package.json');
-import { idlFactory as idlFactoryBackend } from '/../grind-backend/.dfx/local/canisters/grind-backend/service.did.js';
+import { idlFactory as idlFactoryBackend } from '/src/blockchain/InternetComputer/candid/grind-backend.did.js';
 
 // Development mode
 if (process.env.DEV_MODE === '1') import('/src/extension/popup/dev-mode.js');

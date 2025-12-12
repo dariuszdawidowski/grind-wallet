@@ -24,7 +24,20 @@ export class StepsBox extends Component {
             stepContent.innerHTML = html;
         }
         else {
-            this.element.innerHTML += `<div data-nr="${nr}" class="step"><div class="step-nr">${nr}</div><div class="step-content">${html}</div></div>`;
+            const step = document.createElement('div');
+            step.dataset.nr = nr;
+            step.classList.add('step');
+
+            const stepNr = document.createElement('div');
+            stepNr.classList.add('step-nr');
+            stepNr.textContent = nr;
+
+            const stepContent = document.createElement('div');
+            stepContent.classList.add('step-content');
+            stepContent.innerHTML = html;
+
+            step.append(stepNr, stepContent);
+            this.element.append(step);
         }
     }
 
@@ -40,7 +53,7 @@ export class StepsBox extends Component {
                 step.classList.add('done');
                 step.classList.remove('current');
                 const stepNrContent = step.querySelector('.step-nr');
-                stepNrContent.innerHTML = '&#10003;';
+                stepNrContent.textContent = '✓';
             }
             else if (stepNr === nr) {
                 step.classList.add('current');

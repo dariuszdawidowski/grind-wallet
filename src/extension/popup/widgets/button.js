@@ -140,7 +140,14 @@ export class ButtLink extends Component {
     constructor(args) {
         super(args);
 
-        this.icon = ('icon' in args) ? `<img src="${args.icon}">` : '→';
+        this.icon = null; 
+        if ('icon' in args) {
+            this.icon = document.createElement('img');
+            this.icon.src = args.icon;
+        }
+        else {
+            this.icon = document.createTextNode('→');
+        }
 
         // Build
         this.element.classList.add('buttlink');
@@ -149,7 +156,10 @@ export class ButtLink extends Component {
     }
 
     set(text) {
-        this.element.innerHTML = text + ' ' + this.icon;
+        this.element.textContent = '';
+        this.element.append(text);
+        this.element.append(' ');
+        this.element.append(this.icon);
     }
 
 }

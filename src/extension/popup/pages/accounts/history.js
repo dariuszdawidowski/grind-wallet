@@ -300,10 +300,17 @@ export class SheetTransactionHistory extends Component {
         if (subtitle) {
             const subtitleElement = document.createElement('div');
             subtitleElement.classList.add('subtitle');
-            let badge = '';
-            if (other === 'own') badge = ' <span class="own">own</span>';
-            else if (other === 'suspicious') badge = ' <span class="own suspicious">suspicious</span>';
-            subtitleElement.innerHTML = subtitle + badge;
+            const badge = document.createElement('span');
+            badge.classList.add('own');
+            if (other === 'own') {
+                badge.textContent = 'own';
+            }
+            else if (other === 'suspicious') {
+                badge.classList.add('suspicious');
+                badge.textContent = 'suspicious';
+            }
+            subtitleElement.append(document.createTextNode(subtitle));
+            subtitleElement.append(badge);
             desc.append(subtitleElement);
         }
 
@@ -312,12 +319,13 @@ export class SheetTransactionHistory extends Component {
             const amountElement = document.createElement('div');
             if (type.endsWith('.error')) amountElement.style.textDecoration = 'line-through';
             amountElement.classList.add('amount');
-            let text = '';
-            if (op) text = op;
-            text += formatCurrency(icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals), 4);
-            text += '<br>';
-            text += (kind === 'token') ? this.wallet.tokens.get(canisterId).symbol : '';
-            amountElement.innerHTML = text;
+            const text = document.createElement('div');
+            if (op) text.textContent = op;
+            text.textContent += formatCurrency(icpt2ICP(amount, this.wallet.tokens.get(canisterId).decimals), 4);
+            amountElement.append(text);
+            const symbol = document.createElement('div');
+            symbol.textContent = (kind === 'token') ? this.wallet.tokens.get(canisterId).symbol : '';
+            amountElement.append(symbol);
             parent.append(amountElement);
         }
 

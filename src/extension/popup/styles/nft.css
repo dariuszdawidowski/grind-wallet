@@ -32,6 +32,13 @@
     cursor: pointer;
 }
 
+.cover .nft-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
 .cover svg, .cover svg image {
     width: 100%;
     height: 100%;

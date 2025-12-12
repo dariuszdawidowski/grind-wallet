@@ -22,21 +22,24 @@ export class NFTImage extends Component {
         // Coin shape
         this.element.classList.add('nft-image');
       
-        // Image in buffer
-        if ('image' in args) {
-            this.render(args.image);
-        }
+        (async () => {
 
-        // Load cached NFT image
-        else (async () => {
-            try {
-                const image = await this.app.cache.image.load(`nft:${args.canisterId}:${args.nftId}`);
-                this.render(image);
+            // Image in buffer
+            if ('image' in args) {
+                await this.render(args.image);
             }
 
-            // Fallback icon
-            catch(error) {
-                this.element.style.backgroundImage = `url('assets/material-design-icons/image.svg')`;
+            // Load cached NFT image
+            else {
+                try {
+                    const image = await this.app.cache.image.load(`nft:${args.canisterId}:${args.nftId}`);
+                    await this.render(image);
+                }
+
+                // Fallback icon
+                catch(error) {
+                    this.element.style.backgroundImage = `url('assets/material-design-icons/image.svg')`;
+                }
             }
         })();
 
@@ -46,18 +49,16 @@ export class NFTImage extends Component {
      * Render image
      */
 
-    render(image) {
-        this.element.innerHTML = sanitizeSVG(image);
-        /* TODO: use after resolve links
+    async render(image) {
         // SVG
         if (image.startsWith('<svg') || image.startsWith('<?xml')) {
-            const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
+            const dataUrl = `data:image/svg+xml;base64,${btoa(await sanitizeSVG(image))}`;
             this.element.style.backgroundImage = `url('${dataUrl}')`;
         }
         // Raster
         else {
             this.element.style.backgroundImage = `url('${image}')`;
-        }*/
+        }
     }
 
 }

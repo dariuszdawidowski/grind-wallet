@@ -122,7 +122,7 @@ export async function hashString(str) {
  * @returns {string|null} Sanitized SVG or null if invalid
  */
 
-export function sanitizeSVG(svg) {
+export async function sanitizeSVG(svg) {
     try {
         const parser = new DOMParser();
         const doc = parser.parseFromString(svg, 'image/svg+xml');
@@ -150,7 +150,33 @@ export function sanitizeSVG(svg) {
                 }
             });
         });
-        
+
+        // Resolve embedded images
+        const imageElements = svgElement.querySelectorAll('image');
+        for (const imgEl of imageElements) {
+            const hrefNS = imgEl.getAttributeNS('http://www.w3.org/1999/xlink', 'href')
+            const hrefHT = imgEl.getAttribute('href');
+            const href = hrefNS || hrefHT;
+            if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+                try {
+                    const response = await fetch(href);
+                    const blob = await response.blob();
+                    const reader = new FileReader();
+                    const dataUrl = await new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = () => reject('Failed to read image blob as Data URL.');
+                        reader.readAsDataURL(blob);
+                    });
+                    if (hrefNS) imgEl.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataUrl);
+                    else if (hrefHT) imgEl.setAttribute('href', dataUrl);
+                }
+                catch (error) {
+                    console.error('Failed to fetch and embed image:', error);
+                    imgEl.remove();
+                }
+            }
+        }
+      
         return new XMLSerializer().serializeToString(svgElement);
     }
     catch (error) {

@@ -22,32 +22,34 @@ export class TokenImage extends Component {
         // Coin shape
         this.element.classList.add('token-image');
 
-        // Image in buffer
-        if ('image' in args) {
-            this.render(args.image);
-        }
-
-        // ICP logo
-        else if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
-            this.element.style.backgroundImage = `url('assets/tokens/icp.svg')`;
-        }
-
-        // Load cached token image
-        else (async () => {
-            try {
-                const image = await this.app.cache.image.load(`token:${args.canisterId}`);
-                if (image) {
-                    this.render(image);
-                }
-                // Fallback placeholder
-                else {
-                    if ('symbol' in args) this.element.innerText = args.symbol;
-                }
+        (async () => {
+            // Image in buffer
+            if ('image' in args) {
+                awaitthis.render(args.image);
             }
 
-            // Fallback placeholder
-            catch(error) {
-                if ('symbol' in args) this.element.innerText = args.symbol;
+            // ICP logo
+            else if (args.canisterId == this.app.ICP_LEDGER_CANISTER_ID) {
+                this.element.style.backgroundImage = `url('assets/tokens/icp.svg')`;
+            }
+
+            // Load cached token image
+            else {
+                try {
+                    const image = await this.app.cache.image.load(`token:${args.canisterId}`);
+                    if (image) {
+                        await this.render(image);
+                    }
+                    // Fallback placeholder
+                    else {
+                        if ('symbol' in args) this.element.innerText = args.symbol;
+                    }
+                }
+
+                // Fallback placeholder
+                catch(error) {
+                    if ('symbol' in args) this.element.innerText = args.symbol;
+                }
             }
         })();
 
@@ -57,14 +59,13 @@ export class TokenImage extends Component {
      * Render image
      */
 
-    render(image) {
+    async render(image) {
         // Clear placeholder for non-square and non-cicular images
         this.element.style.backgroundColor = 'transparent';
         // SVG
         if (image.startsWith('<svg') || image.startsWith('<?xml')) {
-            const dataUrl = `data:image/svg+xml;base64,${btoa(sanitizeSVG(image))}`;
+            const dataUrl = `data:image/svg+xml;base64,${btoa(await sanitizeSVG(image))}`;
             this.element.style.backgroundImage = `url('${dataUrl}')`;
-            console.log('SVG token image rendered');
         }
         // Raster
         else {

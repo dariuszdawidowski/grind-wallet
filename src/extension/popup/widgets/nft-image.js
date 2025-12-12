@@ -50,6 +50,8 @@ export class NFTImage extends Component {
      */
 
     async render(image) {
+        // Clear placeholder for non-square and non-cicular images
+        this.element.style.backgroundColor = 'transparent';
         // SVG
         if (image.startsWith('<svg') || image.startsWith('<?xml')) {
             const dataUrl = `data:image/svg+xml;base64,${btoa(await sanitizeSVG(image))}`;

@@ -29,8 +29,14 @@ export class SheetAccountExchange extends Component {
         // Header
         const h3 = document.createElement('h3');
         h3.style.fontWeight = 'bold';
-        if (token.symbol != 'ckBTC') h3.innerHTML = `${token.symbol} token exchange is not implemented yet.<br>Currently only one pair available (BTC&rarr;ckBTC)`;
-        else h3.innerHTML = `Mint BTC&rarr;ckBTC`;
+        if (token.symbol != 'ckBTC') {
+            h3.appendChild(document.createTextNode(`${token.symbol} token exchange is not implemented yet.`));
+            h3.appendChild(document.createElement('br'));
+            h3.appendChild(document.createTextNode('Currently only one pair available (BTC→ckBTC)'));
+        }
+        else {
+            h3.appendChild(document.createTextNode('Mint BTC→ckBTC'));
+        }
         this.element.append(h3);
 
         // Token box (from)

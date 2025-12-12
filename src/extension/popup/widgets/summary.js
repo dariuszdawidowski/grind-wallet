@@ -38,13 +38,7 @@ export class SummaryBox extends Component {
             const contentElement = document.createElement('span');
             contentElement.classList.add('summary-row-content');
             newRow.append(contentElement);
-            // if (content instanceof HTMLElement) {
-                contentElement.append(content);
-            // }
-            // else {
-            //     contentElement.innerHTML = content;
-            // }
-            
+            contentElement.append(content);
             this.element.append(newRow);
         }
 
@@ -56,12 +50,7 @@ export class SummaryBox extends Component {
             // Append content
             const contentElement = rowElement.querySelector('.summary-row-content');
             contentElement.replaceChildren();
-            // if (content instanceof HTMLElement) {
-                contentElement.append(content);
-            // }
-            // else {
-            //     contentElement.innerHTML = content;
-            // }
+            contentElement.append(content);
         }
 
     }

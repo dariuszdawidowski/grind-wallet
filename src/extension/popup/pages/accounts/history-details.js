@@ -102,11 +102,21 @@ export class SheetHistoryDetails extends Component {
         if (recipient.type == 'own' || recipient.type == 'known') this.contractorBox.row('Name', recipient.name);
         if (transaction.type.startsWith('recv')) this.contractorBox.row('Address', this.renderAddressLink(transaction.from));
         else if (transaction.type.startsWith('send')) this.contractorBox.row('Address', this.renderAddressLink(transaction.to));
+        
+        const poisoningWarning = document.createElement('span');
+        poisoningWarning.append('No! Wallet address poisoning suspected (');
+        const learnLink = document.createElement('a');
+        learnLink.href = 'https://www.google.com/search?q=wallet+poisoning';
+        learnLink.target = '_blank';
+        learnLink.textContent = 'learn more';
+        poisoningWarning.append(learnLink);
+        poisoningWarning.append(')');
+
         this.contractorBox.row(
             'Trusted',
             recipient.type == 'own' ? 'Yes (own wallet)' :
             recipient.type == 'known' ? 'Yes (from address book)' :
-            recipient.type == 'suspicious' ? 'No! Wallet address poisoning suspected (<a href="https://www.google.com/search?q=wallet+poisoning" target="_blank">learn more</a>)' :
+            recipient.type == 'suspicious' ? poisoningWarning :
             'Unknown'
         );
         this.append(this.contractorBox);
@@ -150,11 +160,19 @@ export class SheetHistoryDetails extends Component {
      */
 
     renderCanisterLink(canisterId) {
-        let buffer = '<a href="https://dashboard.internetcomputer.org/canister/' + canisterId + '" target="_blank">';
-        buffer += shortAddress(canisterId);
-        buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
-        buffer += '</a>';
-        return buffer;
+        const container = document.createElement('span');
+
+        const link = document.createElement('a');
+        link.href = `https://dashboard.internetcomputer.org/canister/${canisterId}`;
+        link.target = '_blank';
+        link.textContent = shortAddress(canisterId);
+
+        const icon = document.createElement('img');
+        icon.src = 'assets/material-design-icons/open-in-new.svg';
+        link.append(icon);
+
+        container.append(link);
+        return container;
     }
 
     /**
@@ -162,19 +180,26 @@ export class SheetHistoryDetails extends Component {
      */
 
     renderTokenInfoLink(canisterId, wallet) {
+        const container = document.createElement('span');
+
         const token = wallet.tokens.get(canisterId);
-        let buffer = '';
         if (token) {
-            buffer += `<span>${token.name} (${token.symbol})</span>`;
-            buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
-            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
-            buffer += '</a>';
-        } else {
-            buffer += `<a href="https://dashboard.internetcomputer.org/canister/${canisterId}" target="_blank">`;
-            buffer += '<img src="assets/material-design-icons/open-in-new.svg">';
-            buffer += '</a>';
+            const tokenLabel = document.createElement('span');
+            tokenLabel.textContent = `${token.name} (${token.symbol})`;
+            container.append(tokenLabel);
         }
-        return buffer;
+
+        const dashboardLink = document.createElement('a');
+        dashboardLink.href = `https://dashboard.internetcomputer.org/canister/${canisterId}`;
+        dashboardLink.target = '_blank';
+
+        const icon = document.createElement('img');
+        icon.src = 'assets/material-design-icons/open-in-new.svg';
+        icon.alt = '';
+        dashboardLink.append(icon);
+        container.append(dashboardLink);
+
+        return container;
     }
 
 }

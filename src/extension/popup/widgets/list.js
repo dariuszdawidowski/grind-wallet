@@ -235,7 +235,7 @@ export class ListView extends Component {
         // Contacts container
         const container = document.createElement('div');
         container.classList.add('container');
-        this.element.appendChild(container);
+        this.element.append(container);
 
         // Entry clicked
         if (onClickEntry) container.addEventListener('click', (event) => {
@@ -317,7 +317,7 @@ export class ListView extends Component {
         const entry = document.createElement('div');
         entry.dataset.value = id;
         entry.classList.add('entry');
-        container.appendChild(entry);
+        container.append(entry);
 
         // Avatar
         if (avatar) entry.append(new Avatar({
@@ -386,7 +386,7 @@ export class ListView extends Component {
             right.classList.add('icon');
             const iconImg = document.createElement('img');
             iconImg.src = icon;
-            right.appendChild(iconImg);
+            right.append(iconImg);
             entry.append(right);
         }
 

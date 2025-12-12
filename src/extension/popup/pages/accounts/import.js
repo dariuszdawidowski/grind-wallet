@@ -18,9 +18,9 @@ export class SheetImportAccount extends Component {
 
         // H3
         const header = document.createElement('h3');
-        header.append(document.createTextNode('This action will import the Internet Computer'));
+        header.append('This action will import the Internet Computer');
         header.append(document.createElement('br'));
-        header.append(document.createTextNode('blockchain account from the recovery phrase.'));
+        header.append('blockchain account from the recovery phrase.');
         this.element.append(header);
 
         // Name

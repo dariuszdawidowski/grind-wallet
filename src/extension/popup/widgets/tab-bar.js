@@ -114,13 +114,13 @@ export class TabBarIcon extends Component {
         // Icon
         this.iconElement = document.createElement('img');
         this.iconElement.src = args.icon.deselected;
-        this.element.appendChild(this.iconElement);
+        this.element.append(this.iconElement);
 
         // Title
         if (args.title) {
             this.titleElement = document.createElement('span');
             this.titleElement.textContent = args.title;
-            this.element.appendChild(this.titleElement);
+            this.element.append(this.titleElement);
             this.iconElement.classList.add('with-title');
         }
 

@@ -88,7 +88,7 @@ export class Gamelet extends Component {
             const deltaX = Math.cos(radians) * velocity;
             const deltaY = Math.sin(radians) * velocity;
 
-            document.body.appendChild(particle);
+            document.body.append(particle);
 
             // Animate particle
             const startTime = Date.now();

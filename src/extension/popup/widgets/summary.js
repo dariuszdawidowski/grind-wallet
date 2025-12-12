@@ -32,20 +32,20 @@ export class SummaryBox extends Component {
             const titleElement = document.createElement('span');
             titleElement.classList.add('summary-row-title');
             titleElement.innerText = `${title}:`;
-            newRow.appendChild(titleElement);
+            newRow.append(titleElement);
             
             // Append content
             const contentElement = document.createElement('span');
             contentElement.classList.add('summary-row-content');
-            newRow.appendChild(contentElement);
-            if (content instanceof HTMLElement) {
-                contentElement.appendChild(content);
-            }
-            else {
-                contentElement.innerHTML = content;
-            }
+            newRow.append(contentElement);
+            // if (content instanceof HTMLElement) {
+                contentElement.append(content);
+            // }
+            // else {
+            //     contentElement.innerHTML = content;
+            // }
             
-            this.element.appendChild(newRow);
+            this.element.append(newRow);
         }
 
         // Update existing content
@@ -56,12 +56,12 @@ export class SummaryBox extends Component {
             // Append content
             const contentElement = rowElement.querySelector('.summary-row-content');
             contentElement.replaceChildren();
-            if (content instanceof HTMLElement) {
-                contentElement.appendChild(content);
-            }
-            else {
-                contentElement.innerHTML = content;
-            }
+            // if (content instanceof HTMLElement) {
+                contentElement.append(content);
+            // }
+            // else {
+            //     contentElement.innerHTML = content;
+            // }
         }
 
     }

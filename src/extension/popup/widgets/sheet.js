@@ -163,11 +163,9 @@ export class Sheet extends Component {
 
     show() {
         if (!this.open) {
-            // Change state
-            this.open = true;
-            // Show animation
             this.element.style.display = 'flex';
             setTimeout(() => {
+                this.open = true;
                 this.element.classList.add('visible');
             }, 10);
         }
@@ -179,12 +177,10 @@ export class Sheet extends Component {
 
     hide() {
         if (this.open) {
-            // Change state
-            this.open = false;
-            // Hide animation
             this.element.classList.remove('visible');
             setTimeout(() => {
                 this.element.style.display = 'none';
+                this.open = false;
             }, 500);
         }
     }
